@@ -174,8 +174,12 @@
     let asSwipeRaf_61724 = null;
 
     // Build slides once per filter
+    // Build slides once per filter
     let asSlidesKey_61724 = null; // "Family|0,1,2"
     let asLastStagedIndex_61724 = null;
+
+    // Slide gap (px) for track swipe layout
+    const asSlideGap_61724 = 22;
 
     /* =========================
        HELPERS
@@ -481,12 +485,13 @@
         img.fetchPriority = i === pos ? "high" : "auto";
       }
     }
-
-    function asStageMobileSlides_61724(force) {
+ function asStageMobileSlides_61724(force) {
       const slides = asGetMobileSlides_61724();
       if (!slides.length) return;
 
       const w = asGetMobileWidth_61724();
+      const step = w + asSlideGap_61724;
+
       const pos = asActiveFamilyIndexes_61724.indexOf(asActiveGlobalIndex_61724);
       if (pos < 0) return;
 
@@ -507,7 +512,7 @@
         prevSlide.style.opacity = "1";
         prevSlide.style.visibility = "visible";
         prevSlide.style.zIndex = "1";
-        prevSlide.style.transform = `translateX(${-w}px)`;
+        prevSlide.style.transform = `translateX(${-step}px)`;
       }
 
       if (nextSlide) {
@@ -515,7 +520,7 @@
         nextSlide.style.opacity = "1";
         nextSlide.style.visibility = "visible";
         nextSlide.style.zIndex = "1";
-        nextSlide.style.transform = `translateX(${w}px)`;
+        nextSlide.style.transform = `translateX(${step}px)`;
       }
 
       if (activeSlide) {
@@ -536,6 +541,7 @@
         if (!slides.length) return;
 
         const w = asGetMobileWidth_61724();
+        const step = w + asSlideGap_61724;
 
         const pos = asActiveFamilyIndexes_61724.indexOf(asActiveGlobalIndex_61724);
         if (pos < 0) return;
@@ -551,21 +557,23 @@
 
         if (dx < 0 && next) {
           next.style.transition = "transform 0s";
-          next.style.transform = `translateX(${w + dx}px)`;
+          next.style.transform = `translateX(${step + dx}px)`;
         } else if (dx > 0 && prev) {
           prev.style.transition = "transform 0s";
-          prev.style.transform = `translateX(${-w + dx}px)`;
+          prev.style.transform = `translateX(${-step + dx}px)`;
         }
       });
     }
 
-    function asEndDragMobile_61724(dx) {
+   function asEndDragMobile_61724(dx) {
       asCancelSwipeRaf_61724();
 
       const slides = asGetMobileSlides_61724();
       if (!slides.length) return;
 
       const w = asGetMobileWidth_61724();
+      const step = w + asSlideGap_61724;
+
       const pos = asActiveFamilyIndexes_61724.indexOf(asActiveGlobalIndex_61724);
       if (pos < 0) return;
 
@@ -592,7 +600,7 @@
       if (goNext) {
         if (active) {
           active.style.transition = "transform 0.25s var(--as-ease)";
-          active.style.transform = `translateX(${-w}px)`;
+          active.style.transform = `translateX(${-step}px)`;
         }
         if (next) {
           next.style.transition = "transform 0.25s var(--as-ease), opacity 0.15s var(--as-ease)";
@@ -606,7 +614,7 @@
       if (goPrev) {
         if (active) {
           active.style.transition = "transform 0.25s var(--as-ease)";
-          active.style.transform = `translateX(${w}px)`;
+          active.style.transform = `translateX(${step}px)`;
         }
         if (prev) {
           prev.style.transition = "transform 0.25s var(--as-ease), opacity 0.15s var(--as-ease)";
@@ -624,10 +632,10 @@
       }
       if (dx < 0 && next) {
         next.style.transition = "transform 0.2s var(--as-ease)";
-        next.style.transform = `translateX(${w}px)`;
+        next.style.transform = `translateX(${step}px)`;
       } else if (dx > 0 && prev) {
         prev.style.transition = "transform 0.2s var(--as-ease)";
-        prev.style.transform = `translateX(${-w}px)`;
+        prev.style.transform = `translateX(${-step}px)`;
       }
       if (active) active.addEventListener("transitionend", finish, { once: true });
       else finish();
