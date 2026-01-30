@@ -1,4 +1,4 @@
- :root{
+:root{
     --as-bg: #ffffff;
     --as-text: #0e1318;
     --as-muted: rgba(14,19,24,.65);
@@ -26,6 +26,9 @@
     --as-thumb-size: 78px;
     --as-thumb-radius: 12px;
     --as-hero-radius: 18px;
+
+    /* Gap between slides inside hero track */
+    --as-hero-slide-gap: 12px;
 
     --as-focus: 0 0 0 4px rgba(113,155,255,.35);
   }
@@ -287,10 +290,13 @@
     touch-action: pan-y;
   }
 
-  .as-hero-slide{
+.as-hero-slide{
     position: absolute;
-    inset: 0;
-    width: 100%;
+    top: 0;
+    bottom: 0;
+    left: calc(var(--as-hero-slide-gap) / 2);
+    right: calc(var(--as-hero-slide-gap) / 2);
+    width: auto;
     height: 100%;
     border-radius: 0px;
     overflow:hidden;
