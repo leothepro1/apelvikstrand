@@ -157,7 +157,7 @@
       return;
     }
 
-    /* =========================
+   /* =========================
        STATE
        ========================= */
     let asActiveFamily_61724 = null;
@@ -173,7 +173,10 @@
     let asDragging_61724 = false;
     let asSwipeRaf_61724 = null;
 
-    // Build slides once per filter
+    // Programmatic multi-step navigation (thumb jump)
+    let asProgrammaticNav_61724 = false;
+    let asProgrammaticNavAbort_61724 = false;
+
     // Build slides once per filter
     let asSlidesKey_61724 = null; // "Family|0,1,2"
     let asLastStagedIndex_61724 = null;
@@ -458,9 +461,9 @@
         img.srcset = asBuildSrcsetUpload_55219(data.src, widths, slideDims.w, slideDims.h);
         img.sizes = isDesktop ? "(min-width: 900px) 70vw, 92vw" : "92vw";
 
-        slide.appendChild(img);
+          slide.appendChild(img);
         slide.addEventListener("click", () => {
-          asSetActiveGlobalIndex_61724(globalIdx, { focusThumb: false });
+          asGoToGlobalIndexAnimated_61724(globalIdx, { focusThumb: false });
         });
 
         asHeroTrack_91827.appendChild(slide);
@@ -769,9 +772,9 @@
         img.srcset = asBuildSrcsetUpload_55219(data.src, [120, 156, 220], thumbDims.w, thumbDims.h);
         img.sizes = asIsMobile_61724() ? "70px" : "78px";
 
-        btn.appendChild(img);
+           btn.appendChild(img);
         btn.addEventListener("click", () =>
-          asSetActiveGlobalIndex_61724(globalIdx, { focusThumb: false })
+          asGoToGlobalIndexAnimated_61724(globalIdx, { focusThumb: false })
         );
 
         asThumbs_91827.appendChild(btn);
@@ -790,7 +793,7 @@
       asUpdateCounterAndNav_61724();
     }
 
-    function asSetActiveGlobalIndex_61724(globalIdx, opts) {
+   function asSetActiveGlobalIndex_61724(globalIdx, opts) {
       asActiveGlobalIndex_61724 = globalIdx;
 
       const btns = asThumbs_91827.querySelectorAll(".as-thumb-btn");
@@ -800,6 +803,154 @@
       });
 
       asRenderHeroAndThumbs_61724({ keepFocus: !!(opts && opts.focusThumb) });
+    }
+
+    function asClearProgrammaticNav_61724() {
+      asProgrammaticNav_61724 = false;
+      asProgrammaticNavAbort_61724 = false;
+    }
+
+    function asAnimateOneStep_61724(dir, onDone) {
+      // dir: +1 (next) or -1 (prev)
+      if (!asDialog_91827.open) {
+        onDone && onDone(false);
+        return;
+      }
+
+      const slides = asGetMobileSlides_61724();
+      if (!slides.length) {
+        onDone && onDone(false);
+        return;
+      }
+
+      // Ensure we start from a staged state
+      asStageMobileSlides_61724(true);
+
+      const w = asGetMobileWidth_61724();
+      const step = w + asSlideGap_61724;
+
+      const pos = asActiveFamilyIndexes_61724.indexOf(asActiveGlobalIndex_61724);
+      if (pos < 0) {
+        onDone && onDone(false);
+        return;
+      }
+
+      const nextPos = pos + dir;
+      if (nextPos < 0 || nextPos >= slides.length) {
+        onDone && onDone(false);
+        return;
+      }
+
+      const active = slides[pos] || null;
+      const next = slides[nextPos] || null;
+
+      if (!active || !next) {
+        onDone && onDone(false);
+        return;
+      }
+
+      // Ensure both are visible for the animation
+      active.style.opacity = "1";
+      active.style.visibility = "visible";
+      next.style.opacity = "1";
+      next.style.visibility = "visible";
+
+      // Place next on the correct side before animating
+      if (dir > 0) {
+        next.style.transform = `translateX(${step}px)`;
+      } else {
+        next.style.transform = `translateX(${-step}px)`;
+      }
+
+      // Animate
+      const cleanupAndDone = () => {
+        // IMPORTANT: update state AFTER the card animation completes
+        const targetGlobalIdx = asActiveFamilyIndexes_61724[nextPos];
+        asSetActiveGlobalIndex_61724(targetGlobalIdx, { focusThumb: false });
+        onDone && onDone(true);
+      };
+
+      // Force reflow so starting transforms apply before transitions
+      // eslint-disable-next-line no-unused-expressions
+      active.offsetHeight;
+
+      active.style.transition = "transform 0.25s var(--as-ease)";
+      next.style.transition = "transform 0.25s var(--as-ease), opacity 0.15s var(--as-ease)";
+
+      if (dir > 0) {
+        active.style.transform = `translateX(${-step}px)`;
+        next.style.transform = "translateX(0px)";
+      } else {
+        active.style.transform = `translateX(${step}px)`;
+        next.style.transform = "translateX(0px)";
+      }
+
+      active.addEventListener("transitionend", cleanupAndDone, { once: true });
+    }
+
+    function asGoToGlobalIndexAnimated_61724(targetGlobalIdx, opts) {
+      if (!asDialog_91827.open) {
+        asSetActiveGlobalIndex_61724(targetGlobalIdx, { focusThumb: !!(opts && opts.focusThumb) });
+        return;
+      }
+
+      const curPos = asActiveFamilyIndexes_61724.indexOf(asActiveGlobalIndex_61724);
+      const targetPos = asActiveFamilyIndexes_61724.indexOf(targetGlobalIdx);
+
+      // If target is not in current family (shouldn't happen from thumbs), fallback to direct set
+      if (curPos < 0 || targetPos < 0) {
+        asSetActiveGlobalIndex_61724(targetGlobalIdx, { focusThumb: !!(opts && opts.focusThumb) });
+        return;
+      }
+
+      const diff = targetPos - curPos;
+      const steps = Math.abs(diff);
+
+      // Same / adjacent = direct set (no need to simulate multi-swipe)
+      if (steps <= 1) {
+        asSetActiveGlobalIndex_61724(targetGlobalIdx, { focusThumb: !!(opts && opts.focusThumb) });
+        return;
+      }
+
+      // Abort any current programmatic nav and start a new one
+      asProgrammaticNavAbort_61724 = true;
+
+      // Start fresh on next tick
+      requestAnimationFrame(() => {
+        asProgrammaticNavAbort_61724 = false;
+        asProgrammaticNav_61724 = true;
+
+        const dir = diff > 0 ? 1 : -1;
+
+        const run = () => {
+          if (asProgrammaticNavAbort_61724 || !asDialog_91827.open) {
+            asClearProgrammaticNav_61724();
+            return;
+          }
+
+          const nowPos = asActiveFamilyIndexes_61724.indexOf(asActiveGlobalIndex_61724);
+          if (nowPos === targetPos) {
+            // Final focus (optional)
+            if (opts && opts.focusThumb) {
+              asRenderHeroAndThumbs_61724({ keepFocus: true });
+            }
+            asClearProgrammaticNav_61724();
+            return;
+          }
+
+          asAnimateOneStep_61724(dir, (ok) => {
+            if (!ok) {
+              // Fallback: snap directly if animation couldn't run
+              asSetActiveGlobalIndex_61724(targetGlobalIdx, { focusThumb: !!(opts && opts.focusThumb) });
+              asClearProgrammaticNav_61724();
+              return;
+            }
+            run();
+          });
+        };
+
+        run();
+      });
     }
 
     /* =========================
