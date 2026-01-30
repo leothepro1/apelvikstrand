@@ -181,6 +181,9 @@
     let asSlidesKey_61724 = null; // "Family|0,1,2"
     let asLastStagedIndex_61724 = null;
 
+    // Thumbs cache key (så vi inte rebuildar thumbs vid varje bildbyte)
+    let asThumbsKey_61724 = null; // "Family|0,1,2"
+
     // Slide gap (px) for track swipe layout
     const asSlideGap_61724 = 22;
 
@@ -755,74 +758,96 @@
       );
     }
 
-    /* =========================
-       RENDER HERO + THUMBS
-       ========================= */
+    function asSyncThumbStates_61724() {
+      const btns = asThumbs_91827.querySelectorAll(".as-thumb-btn");
+      let activeBtn = null;
+
+      btns.forEach((b) => {
+        const isActive = b.id.endsWith("_" + String(asActiveGlobalIndex_61724).padStart(4, "0"));
+        b.setAttribute("aria-current", isActive ? "true" : "false");
+        if (isActive) activeBtn = b;
+      });
+
+      return activeBtn;
+    }
+
     function asRenderHeroAndThumbs_61724(opts) {
       // 1) Hero slides: build only when filter changes
       asEnsureHeroSlidesBuilt_61724();
 
-      // 2) Thumbs rebuild
-      asThumbs_91827.innerHTML = "";
+      // 2) Thumbs: bygg bara om när filtret/ordningen ändras (inte vid varje bildbyte)
+      const nextThumbsKey =
+        String(asActiveFamily_61724 || "") + "|" + asActiveFamilyIndexes_61724.join(",");
 
-      const thumbDims = asThumbDims_61724();
-      let activeThumbBtn = null;
+      const mustRebuildThumbs =
+        asThumbsKey_61724 !== nextThumbsKey ||
+        asThumbs_91827.querySelectorAll(".as-thumb-btn").length !== asActiveFamilyIndexes_61724.length;
 
-      for (let i = 0; i < asActiveFamilyIndexes_61724.length; i++) {
-        const globalIdx = asActiveFamilyIndexes_61724[i];
-        const data = asImages_61724[globalIdx];
+      if (mustRebuildThumbs) {
+        asThumbsKey_61724 = nextThumbsKey;
+        asThumbs_91827.innerHTML = "";
 
-        const btn = document.createElement("button");
-        btn.type = "button";
-        btn.className = "as-thumb-btn";
-        btn.id = "asprThumbBtn_91827_" + String(globalIdx).padStart(4, "0");
-        btn.setAttribute("aria-label", "Välj bild: " + (data.alt || "Bild " + (i + 1)));
-        btn.setAttribute("aria-current", globalIdx === asActiveGlobalIndex_61724 ? "true" : "false");
+        const thumbDims = asThumbDims_61724();
 
-        const img = document.createElement("img");
-        img.className = "as-thumb-img";
-        img.alt = data.alt || "";
-        img.loading = "lazy";
-        img.decoding = "async";
-        img.src = asCldFromUploadUrl_55219(data.src, thumbDims.w, thumbDims.h);
-        img.srcset = asBuildSrcsetUpload_55219(data.src, [120, 156, 220], thumbDims.w, thumbDims.h);
-        img.sizes = asIsMobile_61724() ? "70px" : "78px";
+        for (let i = 0; i < asActiveFamilyIndexes_61724.length; i++) {
+          const globalIdx = asActiveFamilyIndexes_61724[i];
+          const data = asImages_61724[globalIdx];
 
-           btn.appendChild(img);
-        btn.addEventListener("click", () =>
-          asGoToGlobalIndexAnimated_61724(globalIdx, { focusThumb: false })
-        );
+          const btn = document.createElement("button");
+          btn.type = "button";
+          btn.className = "as-thumb-btn";
+          btn.id = "asprThumbBtn_91827_" + String(globalIdx).padStart(4, "0");
+          btn.setAttribute("aria-label", "Välj bild: " + (data.alt || "Bild " + (i + 1)));
 
-        asThumbs_91827.appendChild(btn);
+          const img = document.createElement("img");
+          img.className = "as-thumb-img";
+          img.alt = data.alt || "";
+          img.loading = "lazy";
+          img.decoding = "async";
+          img.src = asCldFromUploadUrl_55219(data.src, thumbDims.w, thumbDims.h);
+          img.srcset = asBuildSrcsetUpload_55219(data.src, [120, 156, 220], thumbDims.w, thumbDims.h);
+          img.sizes = asIsMobile_61724() ? "70px" : "78px";
 
-        if (globalIdx === asActiveGlobalIndex_61724) activeThumbBtn = btn;
+          btn.appendChild(img);
+          btn.addEventListener("click", () =>
+            asGoToGlobalIndexAnimated_61724(globalIdx, { focusThumb: false })
+          );
+
+          asThumbs_91827.appendChild(btn);
+        }
       }
 
+      // 3) Uppdatera bara active-state + ev scroll (ingen rebuild => inget blink)
+      const activeThumbBtn = asSyncThumbStates_61724();
+
       if (activeThumbBtn) {
-        // IMPORTANT: undvik att något “drar med sig” layout under swipe
-        // (särskilt i "Alla" där thumbs-raden är längst)
         if (!asDragging_61724) {
           asScrollToThumb_61724(activeThumbBtn, { behavior: "auto" });
         }
         if (opts && opts.keepFocus) activeThumbBtn.focus({ preventScroll: true });
       }
 
-      // 3) Stage now (no blank frame)
+      // 4) Stage slides + counters/nav
       asStageMobileSlides_61724(true);
-
       asUpdateCounterAndNav_61724();
     }
 
-   function asSetActiveGlobalIndex_61724(globalIdx, opts) {
+  function asSetActiveGlobalIndex_61724(globalIdx, opts) {
       asActiveGlobalIndex_61724 = globalIdx;
 
-      const btns = asThumbs_91827.querySelectorAll(".as-thumb-btn");
-      btns.forEach((b) => {
-        const isActive = b.id.endsWith("_" + String(globalIdx).padStart(4, "0"));
-        b.setAttribute("aria-current", isActive ? "true" : "false");
-      });
+      // INGEN rebuild här -> bara UI-sync
+      const activeThumbBtn = asSyncThumbStates_61724();
 
-      asRenderHeroAndThumbs_61724({ keepFocus: !!(opts && opts.focusThumb) });
+      if (activeThumbBtn && !asDragging_61724) {
+        asScrollToThumb_61724(activeThumbBtn, { behavior: "auto" });
+      }
+
+      asStageMobileSlides_61724(true);
+      asUpdateCounterAndNav_61724();
+
+      if (opts && opts.focusThumb && activeThumbBtn) {
+        activeThumbBtn.focus({ preventScroll: true });
+      }
     }
 
     function asClearProgrammaticNav_61724() {
