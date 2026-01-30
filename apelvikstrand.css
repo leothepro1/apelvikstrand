@@ -289,18 +289,14 @@
     overflow: hidden;
     touch-action: pan-y;
   }
-
-.as-hero-slide{
+  .as-hero-slide{
     position: absolute;
-    top: 0;
-    bottom: 0;
-    left: calc(var(--as-hero-slide-gap) / 2);
-    right: calc(var(--as-hero-slide-gap) / 2);
-    width: auto;
+    inset: 0; /* IMPORTANT: slide-container alltid full bredd, så kanterna "driftar" inte */
+    width: 100%;
     height: 100%;
     border-radius: 0px;
-    overflow:hidden;
-    background: rgb(18, 17, 16);
+    overflow: hidden; /* track klipper fortfarande */
+    background: transparent; /* gap ska vara "inne i kortet", inte på containern */
     opacity: 0;
     visibility: hidden;
     transform: translateX(0px);
@@ -322,12 +318,13 @@
     visibility: visible;
     z-index: 1;
   }
-
   .as-hero-slide img{
-    width:100%;
+    width: calc(100% - var(--as-hero-slide-gap)); /* gap skapas här */
     height: 100%;
+    margin: 0 auto; /* centrerar kortet */
     object-fit: cover;
     display:block;
+    border-radius: 12px; /* valfritt, gör kort-känsla */
     user-select: none;
     -webkit-user-drag: none;
     pointer-events: none;
