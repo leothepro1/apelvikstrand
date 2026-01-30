@@ -853,22 +853,30 @@ function asRenderHeroAndThumbs_61724(opts) {
 }
 
  function asSetActiveGlobalIndex_61724(globalIdx, opts) {
+  const o = opts || {};
+  const silentStage = !!o.silentStage;
+
   asActiveGlobalIndex_61724 = globalIdx;
 
   // INGEN rebuild här -> bara UI-sync
   const activeThumbBtn = asSyncThumbStates_61724();
 
-  // IMPORTANT: During multi-step programmatic nav, do NOT scroll thumbs every step (causes jitter/blink perception)
-  if (activeThumbBtn && !asDragging_61724 && !asProgrammaticNav_61724) {
+  // IMPORTANT: During multi-step programmatic nav (or silentStage), do NOT scroll thumbs every step.
+  if (activeThumbBtn && !asDragging_61724 && !asProgrammaticNav_61724 && !silentStage) {
     asScrollToThumb_61724(activeThumbBtn, { behavior: "auto" });
   }
 
-  asStageMobileSlides_61724(true);
-  asUpdateCounterAndNav_61724();
+  // IMPORTANT: During programmatic multi-step stepping, we stage manually (to avoid snap + blink).
+  if (!silentStage) {
+    asStageMobileSlides_61724(true);
+    asUpdateCounterAndNav_61724();
+  }
 
-  if (opts && opts.focusThumb && activeThumbBtn) {
+  if (o.focusThumb && activeThumbBtn) {
     activeThumbBtn.focus({ preventScroll: true });
   }
+
+  return activeThumbBtn || null;
 }
 
     function asClearProgrammaticNav_61724() {
@@ -876,85 +884,97 @@ function asRenderHeroAndThumbs_61724(opts) {
       asProgrammaticNavAbort_61724 = false;
     }
 
-    function asAnimateOneStep_61724(dir, onDone) {
-      // dir: +1 (next) or -1 (prev)
-      if (!asDialog_91827.open) {
-        onDone && onDone(false);
-        return;
-      }
+   function asAnimateOneStep_61724(dir, onDone) {
+  // dir: +1 (next) or -1 (prev)
+  if (!asDialog_91827.open) {
+    onDone && onDone(false);
+    return;
+  }
 
-      const slides = asGetMobileSlides_61724();
-      if (!slides.length) {
-        onDone && onDone(false);
-        return;
-      }
+  const slides = asGetMobileSlides_61724();
+  if (!slides.length) {
+    onDone && onDone(false);
+    return;
+  }
 
-      // Ensure we start from a staged state
-      asStageMobileSlides_61724(true);
+  const w = asGetMobileWidth_61724();
+  const step = w + asSlideGap_61724;
 
-      const w = asGetMobileWidth_61724();
-      const step = w + asSlideGap_61724;
+  const pos = asActiveFamilyIndexes_61724.indexOf(asActiveGlobalIndex_61724);
+  if (pos < 0) {
+    onDone && onDone(false);
+    return;
+  }
 
-      const pos = asActiveFamilyIndexes_61724.indexOf(asActiveGlobalIndex_61724);
-      if (pos < 0) {
-        onDone && onDone(false);
-        return;
-      }
+  const nextPos = pos + dir;
+  if (nextPos < 0 || nextPos >= slides.length) {
+    onDone && onDone(false);
+    return;
+  }
 
-      const nextPos = pos + dir;
-      if (nextPos < 0 || nextPos >= slides.length) {
-        onDone && onDone(false);
-        return;
-      }
+  const active = slides[pos] || null;
+  const next = slides[nextPos] || null;
 
-      const active = slides[pos] || null;
-      const next = slides[nextPos] || null;
+  if (!active || !next) {
+    onDone && onDone(false);
+    return;
+  }
 
-      if (!active || !next) {
-        onDone && onDone(false);
-        return;
-      }
+  // Ensure both are visible for the animation (no global reset/hide in the middle of steps)
+  active.style.opacity = "1";
+  active.style.visibility = "visible";
+  active.style.zIndex = "2";
 
-      // Ensure both are visible for the animation
-      active.style.opacity = "1";
-      active.style.visibility = "visible";
-      next.style.opacity = "1";
-      next.style.visibility = "visible";
+  next.style.opacity = "1";
+  next.style.visibility = "visible";
+  next.style.zIndex = "1";
 
-      // Place next on the correct side before animating
-      if (dir > 0) {
-        next.style.transform = `translateX(${step}px)`;
-      } else {
-        next.style.transform = `translateX(${-step}px)`;
-      }
+  // Hard-set starting positions with transitions off (prevents "snap then blink")
+  active.style.transition = "transform 0s";
+  next.style.transition = "transform 0s";
 
-      // Animate
-      const cleanupAndDone = () => {
-        // IMPORTANT: update state AFTER the card animation completes
-        const targetGlobalIdx = asActiveFamilyIndexes_61724[nextPos];
-        asSetActiveGlobalIndex_61724(targetGlobalIdx, { focusThumb: false });
-        onDone && onDone(true);
-      };
+  if (dir > 0) {
+    next.style.transform = `translateX(${step}px)`;
+  } else {
+    next.style.transform = `translateX(${-step}px)`;
+  }
 
-      // Force reflow so starting transforms apply before transitions
-      // eslint-disable-next-line no-unused-expressions
-      active.offsetHeight;
+  // Force layout so the starting transforms apply
+  // eslint-disable-next-line no-unused-expressions
+  active.offsetHeight;
 
-      active.style.transition = "transform 0.25s var(--as-ease)";
-      next.style.transition = "transform 0.25s var(--as-ease), opacity 0.15s var(--as-ease)";
+  // Animate one card-step (exactly like a normal swipe)
+  active.style.transition = "transform 0.25s var(--as-ease)";
+  next.style.transition = "transform 0.25s var(--as-ease)";
 
-      if (dir > 0) {
-        active.style.transform = `translateX(${-step}px)`;
-        next.style.transform = "translateX(0px)";
-      } else {
-        active.style.transform = `translateX(${step}px)`;
-        next.style.transform = "translateX(0px)";
-      }
+  if (dir > 0) {
+    active.style.transform = `translateX(${-step}px)`;
+    next.style.transform = "translateX(0px)";
+  } else {
+    active.style.transform = `translateX(${step}px)`;
+    next.style.transform = "translateX(0px)";
+  }
 
-      active.addEventListener("transitionend", cleanupAndDone, { once: true });
-    }
+  const cleanupAndDone = (e) => {
+    // Guard: only finish on the transform transition
+    if (e && e.propertyName && e.propertyName !== "transform") return;
 
- function asGoToGlobalIndexAnimated_61724(targetGlobalIdx, opts) {
+    // IMPORTANT: update state AFTER the card animation completes,
+    // but do NOT trigger full restage/scroll during programmatic stepping.
+    const targetGlobalIdx = asActiveFamilyIndexes_61724[nextPos];
+    asSetActiveGlobalIndex_61724(targetGlobalIdx, { focusThumb: false, silentStage: true });
+
+    // Prepare clean staged positions for the next step (still in programmatic mode => no hiding)
+    asStageMobileSlides_61724(true);
+    asUpdateCounterAndNav_61724();
+
+    onDone && onDone(true);
+  };
+
+  active.addEventListener("transitionend", cleanupAndDone, { once: true });
+}
+
+function asGoToGlobalIndexAnimated_61724(targetGlobalIdx, opts) {
   if (!asDialog_91827.open) {
     asSetActiveGlobalIndex_61724(targetGlobalIdx, { focusThumb: !!(opts && opts.focusThumb) });
     return;
@@ -988,17 +1008,28 @@ function asRenderHeroAndThumbs_61724(opts) {
     // IMPORTANT: set programmatic mode BEFORE stepping so we don't reset/hide everything between steps
     asProgrammaticNav_61724 = true;
 
-    // Stage once (normal) so only prev/active/next are visible before we start stepping
-    // (this prevents accumulated visible slides)
+    // Temporarily disable interactions during stepping (prevents double clicks / competing transitions)
+    const prevTrackPE = asHeroTrack_91827.style.pointerEvents;
+    const prevThumbsPE = asThumbs_91827.style.pointerEvents;
+    asHeroTrack_91827.style.pointerEvents = "none";
+    asThumbs_91827.style.pointerEvents = "none";
+
+    // Stage once so we have a clean baseline (prev/active/next placed correctly)
     asStageMobileSlides_61724(true);
+    asUpdateCounterAndNav_61724();
 
     const dir = diff > 0 ? 1 : -1;
 
     const finishProgrammatic = () => {
-      // Leave programmatic mode and do a final clean stage + (optional) one scrollIntoView for the final thumb.
+      // Leave programmatic mode
       asProgrammaticNav_61724 = false;
       asProgrammaticNavAbort_61724 = false;
 
+      // Restore interactions
+      asHeroTrack_91827.style.pointerEvents = prevTrackPE || "";
+      asThumbs_91827.style.pointerEvents = prevThumbsPE || "";
+
+      // Final clean stage (now normal hiding rules apply again)
       asStageMobileSlides_61724(true);
       asUpdateCounterAndNav_61724();
 
@@ -1012,10 +1043,20 @@ function asRenderHeroAndThumbs_61724(opts) {
       }
     };
 
+    const abortProgrammatic = () => {
+      asProgrammaticNav_61724 = false;
+      asProgrammaticNavAbort_61724 = false;
+
+      asHeroTrack_91827.style.pointerEvents = prevTrackPE || "";
+      asThumbs_91827.style.pointerEvents = prevThumbsPE || "";
+
+      asStageMobileSlides_61724(true);
+      asUpdateCounterAndNav_61724();
+    };
+
     const run = () => {
       if (asProgrammaticNavAbort_61724 || !asDialog_91827.open) {
-        asProgrammaticNav_61724 = false;
-        asProgrammaticNavAbort_61724 = false;
+        abortProgrammatic();
         return;
       }
 
@@ -1028,11 +1069,13 @@ function asRenderHeroAndThumbs_61724(opts) {
       asAnimateOneStep_61724(dir, (ok) => {
         if (!ok) {
           // Fallback: snap directly if animation couldn't run
-          asProgrammaticNav_61724 = false;
+          abortProgrammatic();
           asSetActiveGlobalIndex_61724(targetGlobalIdx, { focusThumb: !!(opts && opts.focusThumb) });
           return;
         }
-        run();
+
+        // Tiny defer so each step feels like a real swipe and avoids "batching" paints
+        setTimeout(run, 0);
       });
     };
 
