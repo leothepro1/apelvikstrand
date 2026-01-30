@@ -74,7 +74,7 @@
   .as-grid-hero{
     grid-column: 1;
     grid-row: 1;
-    aspect-ratio: 1.67778 / 1;           /* stable height while loading */
+    aspect-ratio: 1.37778 / 1;           /* stable height while loading */
   }
 
   .as-grid-right{
