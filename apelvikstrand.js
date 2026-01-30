@@ -249,18 +249,34 @@
       return out;
     }
 
-    function asScrollToThumb_61724(btnEl) {
+    function asScrollToThumb_61724(btnEl, opts) {
       if (!btnEl) return;
+
+      const c = asThumbs_91827;
+      if (!c) return;
+
+      // Desktop: OK att använda scrollIntoView (scrollar inom thumbs-kolumnen)
       if (asIsDesktop_61724()) {
-        const c = asThumbs_91827;
         const r = btnEl.getBoundingClientRect();
         const cr = c.getBoundingClientRect();
         if (r.top < cr.top || r.bottom > cr.bottom) {
           btnEl.scrollIntoView({ block: "nearest", inline: "nearest" });
         }
-      } else {
-        btnEl.scrollIntoView({ block: "nearest", inline: "center" });
+        return;
       }
+
+      // Mobile: scrolla ENDAST thumbs-containern (aldrig body/modal-body)
+      const behavior = opts && opts.behavior ? opts.behavior : "smooth";
+
+      const max = Math.max(0, c.scrollWidth - c.clientWidth);
+
+      // centera knappen i thumbs-raden
+      const targetLeft =
+        btnEl.offsetLeft - (c.clientWidth / 2) + (btnEl.offsetWidth / 2);
+
+      const nextLeft = Math.max(0, Math.min(max, Math.round(targetLeft)));
+
+      c.scrollTo({ left: nextLeft, behavior });
     }
 
     function asCancelSwipeRaf_61724() {
@@ -783,7 +799,11 @@
       }
 
       if (activeThumbBtn) {
-        asScrollToThumb_61724(activeThumbBtn);
+        // IMPORTANT: undvik att något “drar med sig” layout under swipe
+        // (särskilt i "Alla" där thumbs-raden är längst)
+        if (!asDragging_61724) {
+          asScrollToThumb_61724(activeThumbBtn, { behavior: "auto" });
+        }
         if (opts && opts.keepFocus) activeThumbBtn.focus({ preventScroll: true });
       }
 
