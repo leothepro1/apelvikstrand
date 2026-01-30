@@ -277,7 +277,7 @@
   /* ---------- HERO (DIALOG) ---------- */
   .as-hero-wrap{
     position: relative;
-    border-radius: var(--as-hero-radius);
+    border-radius: 0px;
     overflow:hidden;
     background: #101316;
     width: 100%;
@@ -306,7 +306,7 @@
     opacity: 0;
     visibility: hidden;
     transform: translateX(0px);
-    transition: transform 0.25s var(--as-ease), opacity 0.12s var(--as-ease);
+    transition: transform 0.75s var(--as-ease), opacity 0.75s var(--as-ease);
     will-change: transform;
     backface-visibility: hidden;
     -webkit-backface-visibility: hidden;
@@ -325,12 +325,12 @@
     z-index: 1;
   }
   .as-hero-slide img{
-    width: calc(100% - var(--as-hero-slide-gap)); /* gap skapas här */
+    width: 100%; /* gap skapas här */
     height: 100%;
     margin: 0 auto; /* centrerar kortet */
     object-fit: cover;
     display:block;
-    border-radius: 12px; /* valfritt, gör kort-känsla */
+    border-radius: 0px; /* valfritt, gör kort-känsla */
     user-select: none;
     -webkit-user-drag: none;
     pointer-events: none;
@@ -356,72 +356,85 @@
     -webkit-backdrop-filter: blur(10px);
     font-variant-numeric: tabular-nums;
   }
+.as-thumbs{
+  display: flex;
+  flex-direction: row;
+  gap: 8px;
+  max-height: min(70vh, 640px);
+  padding-right: 0px;
 
-  .as-thumbs{
-    display: flex;
-    flex-direction: row;
-    gap: 8px;
-    max-height: min(70vh, 640px);
-    padding-right: 0px;
+  width: 100%;
+  max-width: 100%;
+  min-width: 0;
 
-    width: 100%;
-    max-width: 100%;
-    min-width: 0;
+  overflow-x: auto;    /* IMPORTANT: Alla-filtret (många thumbs) får inte göra hela layouten bredare */
+  overflow-y: hidden;
+  overscroll-behavior-x: contain;
+  -webkit-overflow-scrolling: touch;
 
-    overflow-x: auto;    /* IMPORTANT: Alla-filtret (många thumbs) får inte göra hela layouten bredare */
-    overflow-y: hidden;
-    overscroll-behavior-x: contain;
-    -webkit-overflow-scrolling: touch;
-  }
+  /* IMPORTANT: isolate thumbs so hero repaint doesn’t “flash” the row */
+  contain: layout paint;
+  transform: translateZ(0);
+  will-change: scroll-position;
+}
 
-  .as-thumbs::-webkit-scrollbar{ display:none; }
+.as-thumbs::-webkit-scrollbar{ display:none; }
 
-  .as-thumb-btn{
-    flex: 0 0 auto;
-    width: 5.25rem;
-    border-radius: 8px;
-    overflow: hidden;
-    padding: 0;
-    cursor: pointer;
-    position: relative;
-    outline: none;
-    transition: transform var(--as-dur) var(--as-ease), border-color var(--as-dur) var(--as-ease), opacity var(--as-dur) var(--as-ease);
-    -webkit-tap-highlight-color: transparent;
-    aspect-ratio: 1 / 1;
-    opacity: 0.5;
-  }
+.as-thumb-btn{
+  flex: 0 0 auto;
+  width: 5.25rem;
+  border-radius: 8px;
+  overflow: hidden;
+  padding: 0;
+  cursor: pointer;
+  position: relative;
+  outline: none;
 
-  .as-thumb-btn:focus-visible{ box-shadow: var(--as-focus); }
+  /* IMPORTANT: remove opacity transition (common cause of perceived “blink”) */
+  transition: transform var(--as-dur) var(--as-ease), border-color var(--as-dur) var(--as-ease);
 
-  .as-thumb-btn[aria-current="true"]{
-    border-color: rgba(255,255,255,.45);
-    opacity: 1;
-  }
+  -webkit-tap-highlight-color: transparent;
+  aspect-ratio: 1 / 1;
+  opacity: 0.5;
 
-  .as-thumb-img{
-    width:100%;
-    height:100%;
-    object-fit: cover;
-    display:block;
-  }
+  /* promote each thumb to its own layer */
+  transform: translateZ(0);
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+}
+
+.as-thumb-btn:focus-visible{ box-shadow: var(--as-focus); }
+
+.as-thumb-btn[aria-current="true"]{
+  border-color: rgba(255,255,255,.45);
+  opacity: 1;
+}
+
+.as-thumb-img{
+  width:100%;
+  height:100%;
+  object-fit: cover;
+  display:block;
+
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+}
 
  @media (max-width: 899px){
     .as-nav-btn{ display:none !important; }
     .as-thumbs{ display:flex !important; }
 
-    .as-thumbs{
-      width: 100%;
-      max-width: 100%;
-      min-width: 0;
-      max-height: none;
-
-      overflow-x: auto;  /* lås thumbs till egen scroller */
-      overflow-y: hidden;
-
-      -webkit-overflow-scrolling: touch;
-      gap: 10px;
-      padding: 12px 2px 0 2px;
-      justify-content: flex-start;
+.as-thumbs {
+        width: 100%;
+        max-width: 100%;
+        min-width: 0;
+        max-height: none;
+        overflow-x: auto;
+        overflow-y: hidden;
+        -webkit-overflow-scrolling: touch;
+        gap: 10px;
+        padding: 2px 0px;
+        justify-content: flex-start;
     }
 .as-close-btn {
     top: 0.9em;
