@@ -491,7 +491,11 @@
       padding: var(--as-pad-mobile);
       margin-top: 62px;
     }
-
+.as-filter-row,.as-thumbs {
+    padding-left: 17px;
+    position: relative;
+    padding-right: 17px;
+}
     .as-grid-right{
       grid-template-columns: repeat(4, auto) !important;
     }
