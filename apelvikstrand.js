@@ -252,35 +252,50 @@
       return out;
     }
 
-    function asScrollToThumb_61724(btnEl, opts) {
-      if (!btnEl) return;
+   function asScrollToThumb_61724(btnEl, opts) {
+  if (!btnEl) return;
 
-      const c = asThumbs_91827;
-      if (!c) return;
+  const c = asThumbs_91827;
+  if (!c) return;
 
-      // Desktop: OK att använda scrollIntoView (scrollar inom thumbs-kolumnen)
-      if (asIsDesktop_61724()) {
-        const r = btnEl.getBoundingClientRect();
-        const cr = c.getBoundingClientRect();
-        if (r.top < cr.top || r.bottom > cr.bottom) {
-          btnEl.scrollIntoView({ block: "nearest", inline: "nearest" });
-        }
-        return;
-      }
-
-      // Mobile: scrolla ENDAST thumbs-containern (aldrig body/modal-body)
-      const behavior = opts && opts.behavior ? opts.behavior : "smooth";
-
-      const max = Math.max(0, c.scrollWidth - c.clientWidth);
-
-      // centera knappen i thumbs-raden
-      const targetLeft =
-        btnEl.offsetLeft - (c.clientWidth / 2) + (btnEl.offsetWidth / 2);
-
-      const nextLeft = Math.max(0, Math.min(max, Math.round(targetLeft)));
-
-      c.scrollTo({ left: nextLeft, behavior });
+  // Desktop: OK att använda scrollIntoView (scrollar inom thumbs-kolumnen)
+  if (asIsDesktop_61724()) {
+    const r = btnEl.getBoundingClientRect();
+    const cr = c.getBoundingClientRect();
+    if (r.top < cr.top || r.bottom > cr.bottom) {
+      btnEl.scrollIntoView({ block: "nearest", inline: "nearest" });
     }
+    return;
+  }
+
+  // Mobile: scrolla ENDAST thumbs-containern (aldrig body/modal-body)
+  const behavior = opts && opts.behavior ? opts.behavior : "auto";
+
+  const padding = 24; // px “safe zone” so we don’t micro-scroll each step
+  const leftEdge = c.scrollLeft + padding;
+  const rightEdge = c.scrollLeft + c.clientWidth - padding;
+
+  const btnLeft = btnEl.offsetLeft;
+  const btnRight = btnEl.offsetLeft + btnEl.offsetWidth;
+
+  // If already comfortably in view -> do nothing (prevents constant recentering)
+  if (btnLeft >= leftEdge && btnRight <= rightEdge) return;
+
+  const max = Math.max(0, c.scrollWidth - c.clientWidth);
+
+  // Scroll just enough to bring it into view (nearest strategy)
+  let nextLeft = c.scrollLeft;
+
+  if (btnLeft < leftEdge) {
+    nextLeft = btnLeft - padding;
+  } else if (btnRight > rightEdge) {
+    nextLeft = btnRight - c.clientWidth + padding;
+  }
+
+  nextLeft = Math.max(0, Math.min(max, Math.round(nextLeft)));
+
+  c.scrollTo({ left: nextLeft, behavior });
+}
 
     function asCancelSwipeRaf_61724() {
       if (asSwipeRaf_61724 != null) {
