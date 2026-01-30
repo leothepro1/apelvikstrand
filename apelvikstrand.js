@@ -330,16 +330,21 @@
       return Math.max(320, track.clientWidth || track.getBoundingClientRect().width || window.innerWidth);
     }
 
-    function asResetSlideClasses_61724(slides) {
-      slides.forEach((sl) => {
-        sl.classList.remove("is-active", "is-prev", "is-next");
-        sl.style.transform = "translateX(0px)";
-        sl.style.opacity = "0";
-        sl.style.visibility = "hidden";
-        sl.style.zIndex = "0";
-        sl.style.transition = "";
-      });
+   function asResetSlideClasses_61724(slides) {
+  slides.forEach((sl) => {
+    sl.classList.remove("is-active", "is-prev", "is-next");
+    sl.style.transform = "translateX(0px)";
+    sl.style.zIndex = "0";
+    sl.style.transition = "";
+
+    // IMPORTANT: Under programmatic multi-step nav we must NOT "hide all" each step,
+    // otherwise you get the blink/hiccup between steps.
+    if (!asProgrammaticNav_61724) {
+      sl.style.opacity = "0";
+      sl.style.visibility = "hidden";
     }
+  });
+}
 
     /* =========================
        FRONT GRID INIT (ONLY 5 LOAD)
@@ -785,85 +790,86 @@
 
       return activeBtn;
     }
+function asRenderHeroAndThumbs_61724(opts) {
+  // 1) Hero slides: build only when filter changes
+  asEnsureHeroSlidesBuilt_61724();
 
-    function asRenderHeroAndThumbs_61724(opts) {
-      // 1) Hero slides: build only when filter changes
-      asEnsureHeroSlidesBuilt_61724();
+  // 2) Thumbs: bygg bara om när filtret/ordningen ändras (inte vid varje bildbyte)
+  const nextThumbsKey =
+    String(asActiveFamily_61724 || "") + "|" + asActiveFamilyIndexes_61724.join(",");
 
-      // 2) Thumbs: bygg bara om när filtret/ordningen ändras (inte vid varje bildbyte)
-      const nextThumbsKey =
-        String(asActiveFamily_61724 || "") + "|" + asActiveFamilyIndexes_61724.join(",");
+  const mustRebuildThumbs =
+    asThumbsKey_61724 !== nextThumbsKey ||
+    asThumbs_91827.querySelectorAll(".as-thumb-btn").length !== asActiveFamilyIndexes_61724.length;
 
-      const mustRebuildThumbs =
-        asThumbsKey_61724 !== nextThumbsKey ||
-        asThumbs_91827.querySelectorAll(".as-thumb-btn").length !== asActiveFamilyIndexes_61724.length;
+  if (mustRebuildThumbs) {
+    asThumbsKey_61724 = nextThumbsKey;
+    asThumbs_91827.innerHTML = "";
 
-      if (mustRebuildThumbs) {
-        asThumbsKey_61724 = nextThumbsKey;
-        asThumbs_91827.innerHTML = "";
+    const thumbDims = asThumbDims_61724();
 
-        const thumbDims = asThumbDims_61724();
+    for (let i = 0; i < asActiveFamilyIndexes_61724.length; i++) {
+      const globalIdx = asActiveFamilyIndexes_61724[i];
+      const data = asImages_61724[globalIdx];
 
-        for (let i = 0; i < asActiveFamilyIndexes_61724.length; i++) {
-          const globalIdx = asActiveFamilyIndexes_61724[i];
-          const data = asImages_61724[globalIdx];
+      const btn = document.createElement("button");
+      btn.type = "button";
+      btn.className = "as-thumb-btn";
+      btn.id = "asprThumbBtn_91827_" + String(globalIdx).padStart(4, "0");
+      btn.setAttribute("aria-label", "Välj bild: " + (data.alt || "Bild " + (i + 1)));
 
-          const btn = document.createElement("button");
-          btn.type = "button";
-          btn.className = "as-thumb-btn";
-          btn.id = "asprThumbBtn_91827_" + String(globalIdx).padStart(4, "0");
-          btn.setAttribute("aria-label", "Välj bild: " + (data.alt || "Bild " + (i + 1)));
+      const img = document.createElement("img");
+      img.className = "as-thumb-img";
+      img.alt = data.alt || "";
+      img.loading = "lazy";
+      img.decoding = "async";
+      img.src = asCldFromUploadUrl_55219(data.src, thumbDims.w, thumbDims.h);
+      img.srcset = asBuildSrcsetUpload_55219(data.src, [120, 156, 220], thumbDims.w, thumbDims.h);
+      img.sizes = asIsMobile_61724() ? "70px" : "78px";
 
-          const img = document.createElement("img");
-          img.className = "as-thumb-img";
-          img.alt = data.alt || "";
-          img.loading = "lazy";
-          img.decoding = "async";
-          img.src = asCldFromUploadUrl_55219(data.src, thumbDims.w, thumbDims.h);
-          img.srcset = asBuildSrcsetUpload_55219(data.src, [120, 156, 220], thumbDims.w, thumbDims.h);
-          img.sizes = asIsMobile_61724() ? "70px" : "78px";
+      btn.appendChild(img);
+      btn.addEventListener("click", () =>
+        asGoToGlobalIndexAnimated_61724(globalIdx, { focusThumb: false })
+      );
 
-          btn.appendChild(img);
-          btn.addEventListener("click", () =>
-            asGoToGlobalIndexAnimated_61724(globalIdx, { focusThumb: false })
-          );
-
-          asThumbs_91827.appendChild(btn);
-        }
-      }
-
-      // 3) Uppdatera bara active-state + ev scroll (ingen rebuild => inget blink)
-      const activeThumbBtn = asSyncThumbStates_61724();
-
-      if (activeThumbBtn) {
-        if (!asDragging_61724) {
-          asScrollToThumb_61724(activeThumbBtn, { behavior: "auto" });
-        }
-        if (opts && opts.keepFocus) activeThumbBtn.focus({ preventScroll: true });
-      }
-
-      // 4) Stage slides + counters/nav
-      asStageMobileSlides_61724(true);
-      asUpdateCounterAndNav_61724();
+      asThumbs_91827.appendChild(btn);
     }
+  }
 
-  function asSetActiveGlobalIndex_61724(globalIdx, opts) {
-      asActiveGlobalIndex_61724 = globalIdx;
+  // 3) Uppdatera bara active-state + ev scroll (ingen rebuild => inget blink)
+  const activeThumbBtn = asSyncThumbStates_61724();
 
-      // INGEN rebuild här -> bara UI-sync
-      const activeThumbBtn = asSyncThumbStates_61724();
-
-      if (activeThumbBtn && !asDragging_61724) {
-        asScrollToThumb_61724(activeThumbBtn, { behavior: "auto" });
-      }
-
-      asStageMobileSlides_61724(true);
-      asUpdateCounterAndNav_61724();
-
-      if (opts && opts.focusThumb && activeThumbBtn) {
-        activeThumbBtn.focus({ preventScroll: true });
-      }
+  if (activeThumbBtn) {
+    // IMPORTANT: During multi-step programmatic nav, do NOT auto-scroll thumbs every step (causes jitter)
+    if (!asDragging_61724 && !asProgrammaticNav_61724) {
+      asScrollToThumb_61724(activeThumbBtn, { behavior: "auto" });
     }
+    if (opts && opts.keepFocus) activeThumbBtn.focus({ preventScroll: true });
+  }
+
+  // 4) Stage slides + counters/nav
+  asStageMobileSlides_61724(true);
+  asUpdateCounterAndNav_61724();
+}
+
+ function asSetActiveGlobalIndex_61724(globalIdx, opts) {
+  asActiveGlobalIndex_61724 = globalIdx;
+
+  // INGEN rebuild här -> bara UI-sync
+  const activeThumbBtn = asSyncThumbStates_61724();
+
+  // IMPORTANT: During multi-step programmatic nav, do NOT scroll thumbs every step (causes jitter/blink perception)
+  if (activeThumbBtn && !asDragging_61724 && !asProgrammaticNav_61724) {
+    asScrollToThumb_61724(activeThumbBtn, { behavior: "auto" });
+  }
+
+  asStageMobileSlides_61724(true);
+  asUpdateCounterAndNav_61724();
+
+  if (opts && opts.focusThumb && activeThumbBtn) {
+    activeThumbBtn.focus({ preventScroll: true });
+  }
+}
 
     function asClearProgrammaticNav_61724() {
       asProgrammaticNav_61724 = false;
@@ -948,70 +954,91 @@
       active.addEventListener("transitionend", cleanupAndDone, { once: true });
     }
 
-    function asGoToGlobalIndexAnimated_61724(targetGlobalIdx, opts) {
-      if (!asDialog_91827.open) {
-        asSetActiveGlobalIndex_61724(targetGlobalIdx, { focusThumb: !!(opts && opts.focusThumb) });
-        return;
+ function asGoToGlobalIndexAnimated_61724(targetGlobalIdx, opts) {
+  if (!asDialog_91827.open) {
+    asSetActiveGlobalIndex_61724(targetGlobalIdx, { focusThumb: !!(opts && opts.focusThumb) });
+    return;
+  }
+
+  const curPos = asActiveFamilyIndexes_61724.indexOf(asActiveGlobalIndex_61724);
+  const targetPos = asActiveFamilyIndexes_61724.indexOf(targetGlobalIdx);
+
+  // If target is not in current family (shouldn't happen from thumbs), fallback to direct set
+  if (curPos < 0 || targetPos < 0) {
+    asSetActiveGlobalIndex_61724(targetGlobalIdx, { focusThumb: !!(opts && opts.focusThumb) });
+    return;
+  }
+
+  const diff = targetPos - curPos;
+  const steps = Math.abs(diff);
+
+  // Same / adjacent = direct set (no need to simulate multi-swipe)
+  if (steps <= 1) {
+    asSetActiveGlobalIndex_61724(targetGlobalIdx, { focusThumb: !!(opts && opts.focusThumb) });
+    return;
+  }
+
+  // Abort any current programmatic nav and start a new one
+  asProgrammaticNavAbort_61724 = true;
+
+  // Start fresh on next tick
+  requestAnimationFrame(() => {
+    asProgrammaticNavAbort_61724 = false;
+
+    // IMPORTANT: set programmatic mode BEFORE stepping so we don't reset/hide everything between steps
+    asProgrammaticNav_61724 = true;
+
+    // Stage once (normal) so only prev/active/next are visible before we start stepping
+    // (this prevents accumulated visible slides)
+    asStageMobileSlides_61724(true);
+
+    const dir = diff > 0 ? 1 : -1;
+
+    const finishProgrammatic = () => {
+      // Leave programmatic mode and do a final clean stage + (optional) one scrollIntoView for the final thumb.
+      asProgrammaticNav_61724 = false;
+      asProgrammaticNavAbort_61724 = false;
+
+      asStageMobileSlides_61724(true);
+      asUpdateCounterAndNav_61724();
+
+      const activeThumbBtn = asSyncThumbStates_61724();
+      if (activeThumbBtn && !asDragging_61724) {
+        asScrollToThumb_61724(activeThumbBtn, { behavior: "auto" });
       }
 
-      const curPos = asActiveFamilyIndexes_61724.indexOf(asActiveGlobalIndex_61724);
-      const targetPos = asActiveFamilyIndexes_61724.indexOf(targetGlobalIdx);
-
-      // If target is not in current family (shouldn't happen from thumbs), fallback to direct set
-      if (curPos < 0 || targetPos < 0) {
-        asSetActiveGlobalIndex_61724(targetGlobalIdx, { focusThumb: !!(opts && opts.focusThumb) });
-        return;
+      if (opts && opts.focusThumb && activeThumbBtn) {
+        activeThumbBtn.focus({ preventScroll: true });
       }
+    };
 
-      const diff = targetPos - curPos;
-      const steps = Math.abs(diff);
-
-      // Same / adjacent = direct set (no need to simulate multi-swipe)
-      if (steps <= 1) {
-        asSetActiveGlobalIndex_61724(targetGlobalIdx, { focusThumb: !!(opts && opts.focusThumb) });
-        return;
-      }
-
-      // Abort any current programmatic nav and start a new one
-      asProgrammaticNavAbort_61724 = true;
-
-      // Start fresh on next tick
-      requestAnimationFrame(() => {
+    const run = () => {
+      if (asProgrammaticNavAbort_61724 || !asDialog_91827.open) {
+        asProgrammaticNav_61724 = false;
         asProgrammaticNavAbort_61724 = false;
-        asProgrammaticNav_61724 = true;
+        return;
+      }
 
-        const dir = diff > 0 ? 1 : -1;
+      const nowPos = asActiveFamilyIndexes_61724.indexOf(asActiveGlobalIndex_61724);
+      if (nowPos === targetPos) {
+        finishProgrammatic();
+        return;
+      }
 
-        const run = () => {
-          if (asProgrammaticNavAbort_61724 || !asDialog_91827.open) {
-            asClearProgrammaticNav_61724();
-            return;
-          }
-
-          const nowPos = asActiveFamilyIndexes_61724.indexOf(asActiveGlobalIndex_61724);
-          if (nowPos === targetPos) {
-            // Final focus (optional)
-            if (opts && opts.focusThumb) {
-              asRenderHeroAndThumbs_61724({ keepFocus: true });
-            }
-            asClearProgrammaticNav_61724();
-            return;
-          }
-
-          asAnimateOneStep_61724(dir, (ok) => {
-            if (!ok) {
-              // Fallback: snap directly if animation couldn't run
-              asSetActiveGlobalIndex_61724(targetGlobalIdx, { focusThumb: !!(opts && opts.focusThumb) });
-              asClearProgrammaticNav_61724();
-              return;
-            }
-            run();
-          });
-        };
-
+      asAnimateOneStep_61724(dir, (ok) => {
+        if (!ok) {
+          // Fallback: snap directly if animation couldn't run
+          asProgrammaticNav_61724 = false;
+          asSetActiveGlobalIndex_61724(targetGlobalIdx, { focusThumb: !!(opts && opts.focusThumb) });
+          return;
+        }
         run();
       });
-    }
+    };
+
+    run();
+  });
+}
 
     /* =========================
        OPEN / CLOSE DIALOG
