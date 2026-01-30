@@ -189,21 +189,27 @@
     background: transparent;
     border: none;
     border-radius: 0px;
-    overflow: hidden;
+    overflow: hidden;              /* klipp allt horisontellt */
     box-shadow: none;
     width: 100%;
     max-height: 100%;
     margin: 0 auto;
     max-width: 1250px;
+    max-width: min(1250px, 100vw); /* safety */
   }
-
-  .as-modal-body{ padding: 24px; }
+  .as-modal-body{
+    padding: 24px;
+    overflow-x: hidden;  /* IMPORTANT: stoppa horisontell “drag/scroll” i Alla */
+    max-width: 100%;
+  }
 
   .as-modal-grid{
     align-items: center;
     gap: 14px;
     flex-direction: column;
     display: flex;
+    min-width: 0;        /* IMPORTANT: låt flex-barn krympa istället för att expandera layout */
+    max-width: 100%;
   }
 
   @media (min-width: 900px){
@@ -351,13 +357,21 @@
     font-variant-numeric: tabular-nums;
   }
 
-  /* ---------- THUMBS (DIALOG) ---------- */
   .as-thumbs{
     display: flex;
     flex-direction: row;
     gap: 8px;
     max-height: min(70vh, 640px);
     padding-right: 0px;
+
+    width: 100%;
+    max-width: 100%;
+    min-width: 0;
+
+    overflow-x: auto;    /* IMPORTANT: Alla-filtret (många thumbs) får inte göra hela layouten bredare */
+    overflow-y: hidden;
+    overscroll-behavior-x: contain;
+    -webkit-overflow-scrolling: touch;
   }
 
   .as-thumbs::-webkit-scrollbar{ display:none; }
@@ -391,20 +405,28 @@
     display:block;
   }
 
-  /* Mobile thumbs layout */
-  @media (max-width: 899px){
+ @media (max-width: 899px){
     .as-nav-btn{ display:none !important; }
     .as-thumbs{ display:flex !important; }
 
     .as-thumbs{
       width: 100%;
+      max-width: 100%;
+      min-width: 0;
       max-height: none;
+
+      overflow-x: auto;  /* lås thumbs till egen scroller */
+      overflow-y: hidden;
+
       -webkit-overflow-scrolling: touch;
       gap: 10px;
       padding: 12px 2px 0 2px;
       justify-content: flex-start;
     }
-
+.as-close-btn {
+    top: 0.9em;
+    right: 0.9em;;
+}
     .as-thumb-btn{
       width: 70px;
       aspect-ratio: 1 / 1;
@@ -417,16 +439,15 @@
     }
   }
 
-  /* ---------- FILTER ROW ---------- */
-  .as-filter-row{
+.as-filter-row {
     display: flex;
     gap: 10px;
     padding-right: 0px;
     overflow-x: auto;
-    -webkit-overflow-scrolling: touch;
     scrollbar-width: none;
-    place-content: center;
-  }
+    margin-bottom: 4em;
+    align-items: flex-start;
+}
 
   .as-filter-row::-webkit-scrollbar{ display:none; }
 
