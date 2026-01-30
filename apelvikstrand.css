@@ -1,0 +1,554 @@
+ :root{
+    --as-bg: #ffffff;
+    --as-text: #0e1318;
+    --as-muted: rgba(14,19,24,.65);
+    --as-border: rgba(14,19,24,.12);
+    --as-radius: 18px;
+
+    --as-ease: cubic-bezier(.2,.8,.2,1);
+    --as-dur: 240ms;
+
+    --as-max: 100%;
+    --as-pad-desktop: 0px;
+    --as-pad-mobile: 0px;
+
+    --as-overlay: rgba(0,0,0,.5);
+    --as-modal-bg: #0b0b0b;
+    --as-modal-fg: #ffffff;
+
+    --as-chip-bg: rgba(255,255,255,.10);
+    --as-chip-bg-active: rgba(255,255,255,.18);
+    --as-chip-border: rgba(255,255,255,.18);
+
+    --as-counter-bg: rgba(0,0,0,.55);
+    --as-counter-fg: #ffffff;
+
+    --as-thumb-size: 78px;
+    --as-thumb-radius: 12px;
+    --as-hero-radius: 18px;
+
+    --as-focus: 0 0 0 4px rgba(113,155,255,.35);
+  }
+
+  *{ box-sizing:border-box; }
+  html, body{ height:100%; }
+  body{
+    margin:0;
+    font-family: Inter, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, sans-serif;
+    background: var(--as-bg);
+    color: var(--as-text);
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  /* ---------- PAGE WRAP ---------- */
+  .as-page-wrap{
+    max-width: 100%;
+    margin: 0;
+    margin-top: 82px;
+    padding: var(--as-pad-desktop);
+  }
+
+  /* ---------- WRAPPER ---------- */
+  .as-wrapper{
+    position: relative;
+    border-radius: 0px;
+    overflow: hidden;
+    background: 0px;
+    border: none;
+  }
+
+  /* ---------- GRID (PAGE) ---------- */
+  .as-grid{
+    display: grid;
+    grid-template-columns: 1fr;          /* 100% */
+    grid-template-rows: auto auto;       /* hero + right-stack */
+    gap: 2px;
+    padding: 0px;
+    height: auto;                        /* let it grow on mobile */
+  }
+
+  .as-grid-hero{
+    grid-column: 1;
+    grid-row: 1;
+    aspect-ratio: 1.67778 / 1;           /* stable height while loading */
+  }
+
+  .as-grid-right{
+    grid-column: 1;
+    grid-row: 2;
+    display: grid;
+    grid-template-columns: 1fr;          /* stacked */
+    grid-template-rows: repeat(4, auto);
+    gap: 2px;
+    min-height: 0;
+    height: max-content;
+  }
+
+  .as-grid-right .as-grid-item{
+    aspect-ratio: 1.67778 / 1;           /* consistent shape on mobile */
+  }
+
+  /* ---------- GRID ITEM (PAGE) ---------- */
+  .as-grid-item{
+    position: relative;                  /* canvas för absolut img */
+    display: block;
+    width: 100%;
+    height: auto;
+    overflow: hidden;
+    border: none;
+    padding: 0;
+    background: #111;
+  }
+
+  .as-grid-item img{
+    position: absolute;                  /* fyll hela rutan */
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+  }
+
+  /* ---------- DESKTOP LAYOUT: 50/50, RIGHT 2x2 ---------- */
+  @media (min-width: 900px){
+    .as-grid{
+      grid-template-columns: 1fr 1fr;    /* 50/50 */
+      grid-template-rows: 1fr 1fr;       /* 2 rows */
+      height: max-content;
+    }
+
+    .as-grid-hero{
+      grid-column: 1;
+      grid-row: 1 / span 2;              /* hero spans full height */
+      aspect-ratio: 1.67778 / 1;
+    }
+
+    .as-grid-right{
+      grid-column: 2;
+      grid-row: 1 / span 2;
+      grid-template-columns: 1fr 1fr;    /* 2 columns */
+      grid-template-rows: 1fr 1fr;       /* 2 rows */
+    }
+
+    .as-grid-right .as-grid-item{
+      aspect-ratio: 1.67778 / 1;
+    }
+  }
+
+  /* ---------- COUNTER (PAGE) ---------- */
+  .as-counter{
+    position: absolute;
+    right: 0.5rem;
+    bottom: 0.75rem;
+    z-index: 5;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 6px 12px;
+    border-radius: 999px;
+    background: rgb(247, 245, 243);
+    color: rgb(18, 17, 16);
+    font-size: 0.75rem;
+    line-height: 1;
+    border: 1px solid rgba(255, 255, 255, .14);
+    user-select: none;
+    pointer-events: none;
+    font-variant-numeric: tabular-nums;
+    font-family: Montserrat Variablefont Wght;
+    font-weight: 500;
+  }
+
+  /* ---------- DIALOG ---------- */
+  dialog#asprGalleryDialog_91827{
+    --aspr-dialog-pad: 2rem;
+    position: fixed;
+    inset: 0;
+    margin: 0;
+    border: none;
+    padding: 2rem;
+    width: 100vw;
+    height: 100% !important;
+    max-width: none;
+    background: rgb(18, 17, 16);
+    color: var(--as-modal-fg);
+    max-height: 100%;
+    place-self: center;
+    place-content: center;
+  }
+
+  dialog#asprGalleryDialog_91827::backdrop{
+    background: var(--as-overlay);
+  }
+
+  .as-modal-shell{
+    position: relative;
+    background: transparent;
+    border: none;
+    border-radius: 0px;
+    overflow: hidden;
+    box-shadow: none;
+    width: 100%;
+    max-height: 100%;
+    margin: 0 auto;
+    max-width: 1250px;
+  }
+
+  .as-modal-body{ padding: 24px; }
+
+  .as-modal-grid{
+    align-items: center;
+    gap: 14px;
+    flex-direction: column;
+    display: flex;
+  }
+
+  @media (min-width: 900px){
+    .as-modal-grid{
+      align-items: center;
+      gap: 14px;
+      flex-direction: column;
+      display: flex;
+    }
+  }
+
+  /* ---------- BUTTONS (DIALOG) ---------- */
+  .as-close-btn{
+    position: absolute;
+    top: var(--aspr-dialog-pad);
+    right: var(--aspr-dialog-pad);
+    z-index: 50;
+    width: 36px;
+    height: 36px;
+    border-radius: 999px;
+    background: rgb(247, 245, 243);
+    color: rgb(18, 17, 16);
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: transform var(--as-dur) var(--as-ease), background var(--as-dur) var(--as-ease);
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  .as-close-icon{ width: 18px; height: 18px; display:block; }
+
+  .as-nav-btn{
+    position: absolute;
+    top: 50%;
+    left: var(--aspr-dialog-pad);
+    transform: translateY(-50%);
+    z-index: 50;
+    width: 36px;
+    height: 36px;
+    border-radius: 999px;
+    background: rgb(247, 245, 243);
+    color: rgb(18, 17, 16);
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: transform var(--as-dur) var(--as-ease), background var(--as-dur) var(--as-ease), opacity var(--as-dur) var(--as-ease);
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  .as-nav-btn:focus-visible{ box-shadow: var(--as-focus); outline:none; }
+
+  @media (hover:hover){
+    .as-nav-btn:hover{ background: rgba(255,255,255,.14); }
+  }
+
+  .as-nav-btn:active{ transform: translateY(-50%) scale(.98); }
+
+  .as-nav-btn.as-nav-btn-next{
+    left: auto;
+    right: var(--aspr-dialog-pad);
+  }
+
+  /* ---------- HERO (DIALOG) ---------- */
+  .as-hero-wrap{
+    position: relative;
+    border-radius: var(--as-hero-radius);
+    overflow:hidden;
+    background: #101316;
+    width: 100%;
+  }
+
+  /* Du använder track + slides nu, så hero-img ska alltid vara av */
+  .as-hero-img{ display:none !important; }
+
+  .as-hero-track{
+    display:block;
+    position: relative;
+    width: 100%;
+    height: min(70vh, 640px);
+    border-radius: 0px;
+    overflow: hidden;
+    touch-action: pan-y;
+  }
+
+  .as-hero-slide{
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    border-radius: 0px;
+    overflow:hidden;
+    background: rgb(18, 17, 16);
+    opacity: 0;
+    visibility: hidden;
+    transform: translateX(0px);
+    transition: transform 0.25s var(--as-ease), opacity 0.12s var(--as-ease);
+    will-change: transform;
+    backface-visibility: hidden;
+    -webkit-backface-visibility: hidden;
+  }
+
+  .as-hero-slide.is-active{
+    opacity: 1;
+    visibility: visible;
+    z-index: 2;
+  }
+
+  .as-hero-slide.is-prev,
+  .as-hero-slide.is-next{
+    opacity: 1;
+    visibility: visible;
+    z-index: 1;
+  }
+
+  .as-hero-slide img{
+    width:100%;
+    height: 100%;
+    object-fit: cover;
+    display:block;
+    user-select: none;
+    -webkit-user-drag: none;
+    pointer-events: none;
+  }
+
+  @media (max-width: 899px){
+    .as-hero-track{ height: 276px; }
+  }
+
+  .as-modal-hero-counter{
+    position:absolute;
+    left: 12px;
+    bottom: 12px;
+    z-index:2;
+    padding: 8px 10px;
+    border-radius: 999px;
+    background: rgba(0,0,0,.55);
+    border: 1px solid rgba(255,255,255,.14);
+    color:#fff;
+    font-size: 13px;
+    line-height: 1;
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    font-variant-numeric: tabular-nums;
+  }
+
+  /* ---------- THUMBS (DIALOG) ---------- */
+  .as-thumbs{
+    display: flex;
+    flex-direction: row;
+    gap: 8px;
+    max-height: min(70vh, 640px);
+    padding-right: 0px;
+  }
+
+  .as-thumbs::-webkit-scrollbar{ display:none; }
+
+  .as-thumb-btn{
+    flex: 0 0 auto;
+    width: 5.25rem;
+    border-radius: 8px;
+    overflow: hidden;
+    padding: 0;
+    cursor: pointer;
+    position: relative;
+    outline: none;
+    transition: transform var(--as-dur) var(--as-ease), border-color var(--as-dur) var(--as-ease), opacity var(--as-dur) var(--as-ease);
+    -webkit-tap-highlight-color: transparent;
+    aspect-ratio: 1 / 1;
+    opacity: 0.5;
+  }
+
+  .as-thumb-btn:focus-visible{ box-shadow: var(--as-focus); }
+
+  .as-thumb-btn[aria-current="true"]{
+    border-color: rgba(255,255,255,.45);
+    opacity: 1;
+  }
+
+  .as-thumb-img{
+    width:100%;
+    height:100%;
+    object-fit: cover;
+    display:block;
+  }
+
+  /* Mobile thumbs layout */
+  @media (max-width: 899px){
+    .as-nav-btn{ display:none !important; }
+    .as-thumbs{ display:flex !important; }
+
+    .as-thumbs{
+      width: 100%;
+      max-height: none;
+      -webkit-overflow-scrolling: touch;
+      gap: 10px;
+      padding: 12px 2px 0 2px;
+      justify-content: flex-start;
+    }
+
+    .as-thumb-btn{
+      width: 70px;
+      aspect-ratio: 1 / 1;
+      opacity: 0.75;
+    }
+
+    .as-thumb-btn[aria-current="true"]{
+      opacity: 1;
+      outline: 2px solid #fff;
+    }
+  }
+
+  /* ---------- FILTER ROW ---------- */
+  .as-filter-row{
+    display: flex;
+    gap: 10px;
+    padding-right: 0px;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+    place-content: center;
+  }
+
+  .as-filter-row::-webkit-scrollbar{ display:none; }
+
+  .as-filter-chip{
+    flex: 0 0 auto;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 16px;
+    border-radius: 999px;
+    border: none;
+    background: #403D3B;
+    color: rgba(255, 255, 255, .92);
+    line-height: 1;
+    cursor: pointer;
+    user-select: none;
+    transition: 0.25s ease-in-out;
+    transition: background var(--as-dur) var(--as-ease), transform var(--as-dur) var(--as-ease);
+    white-space: nowrap;
+    font-size: 0.875rem;
+    font-family: 'Montserrat Variablefont Wght', sans-serif !important;
+    font-weight: 500;
+  }
+
+  .as-filter-chip[aria-pressed="true"]{
+    background: rgb(247, 245, 243);
+    color: rgb(18, 17, 16);
+  }
+
+  .as-filter-count{ font-variant-numeric: tabular-nums; }
+
+  /* ---------- BODY LOCK ---------- */
+  body.as-body-lock{
+    overflow: hidden;
+    touch-action: none;
+  }
+
+  /* ---------- MOBILE SPECIALS (YOUR OVERRIDES) ---------- */
+  @media (max-width: 767px){
+    .as-page-wrap{
+      padding: var(--as-pad-mobile);
+      margin-top: 62px;
+    }
+
+    .as-grid-right{
+      grid-template-columns: repeat(4, auto) !important;
+    }
+
+    .as-modal-body{
+      padding: 0px !important;
+    }
+
+    dialog#asprGalleryDialog_91827{
+      padding: 0px !important;
+      width: 100vw;
+      height: 100% !important;
+      max-width: none;
+    }
+
+    .as-grid-right .as-grid-item{
+      aspect-ratio: 1 / 1 !important;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce){
+    *{ transition: none !important; scroll-behavior: auto !important; }
+  }
+</style>
+
+<style id="asprSkeletonStyles_77441">
+  @keyframes asShimmer_77441 {
+    0%   { transform: translateX(-60%); }
+    100% { transform: translateX(60%); }
+  }
+
+  /* Skeleton host */
+  .as-skeleton{
+    position: relative;
+    overflow: hidden;
+    padding: 0px;
+  }
+
+  .as-skeleton > img{
+    position: relative;
+    z-index: 1;
+    object-fit: cover;
+    width: 100%;
+    height: 100%;
+  }
+
+  /* Base layer */
+  .as-skeleton::before{
+    content:"";
+    position:absolute;
+    inset:0;
+    z-index: 2;
+    background: #f0f0f0;
+    opacity: 1;
+    transition: opacity 180ms linear;
+    pointer-events: none;
+  }
+
+  /* Shimmer layer */
+  .as-skeleton::after{
+    content:"";
+    position:absolute;
+    inset:0;
+    z-index: 3;
+    transform: translateX(-60%);
+    background: linear-gradient(90deg,#f0f0f0 25%,#f9f9f9 37%,#f0f0f0 63%);
+    opacity: 1;
+    animation: asShimmer_77441 1.1s ease-in-out infinite;
+    transition: opacity 180ms linear;
+    pointer-events: none;
+  }
+
+  /* When loaded (or errored), fade skeleton out */
+  .as-skeleton.as-loaded::before,
+  .as-skeleton.as-loaded::after{
+    opacity: 0;
+    animation: none;
+  }
+
+  @media (prefers-reduced-motion: reduce){
+    .as-skeleton::after{
+      animation: none;
+    }
+  }
