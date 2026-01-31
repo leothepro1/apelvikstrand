@@ -94,8 +94,9 @@
   {
     id: "asprImgData_0001",
     family: "Interiör",
+         front: "number3",
     alt: "Interiör 6",
-    src: "https://res.cloudinary.com/dmgmoisae/image/upload/v1769872059/jpeg-optimizer_ApelvikStrand_1201_2_zqybmt.jpg",
+    src: "https://res.cloudinary.com/dmgmoisae/image/upload/v1769875259/jpeg-optimizer_bed_s97rag.png",
   },
   {
     id: "asprImgData_0100",
@@ -151,7 +152,6 @@
   // Restaurang
   {
     id: "asprImgData_0200",
-    front: "number3",
     family: "Närområdet",
     alt: "Närområdet 1",
     src: "https://res.cloudinary.com/dmgmoisae/image/upload/v1769874809/jpeg-optimizer_2025_07_11_03_13_52.00_00_12_01.Still001_1_bzpym9.png",
