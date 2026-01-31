@@ -580,56 +580,66 @@ function asInitFrontGrid_61724() {
     /* =========================
        HERO SLIDES (BUILD ONCE PER FILTER)
        ========================= */
-    function asEnsureHeroSlidesBuilt_61724() {
-      const key = String(asActiveFamily_61724 || "") + "|" + asActiveFamilyIndexes_61724.join(",");
-      const existing = asHeroTrack_91827.querySelectorAll(".as-hero-slide").length;
+   function asEnsureHeroSlidesBuilt_61724() {
+  const key = String(asActiveFamily_61724 || "") + "|" + asActiveFamilyIndexes_61724.join(",");
+  const existing = asHeroTrack_91827.querySelectorAll(".as-hero-slide").length;
 
-      if (asSlidesKey_61724 === key && existing === asActiveFamilyIndexes_61724.length) return;
+  if (asSlidesKey_61724 === key && existing === asActiveFamilyIndexes_61724.length) return;
 
-      asSlidesKey_61724 = key;
-      asLastStagedIndex_61724 = null;
+  asSlidesKey_61724 = key;
+  asLastStagedIndex_61724 = null;
 
-      asHeroTrack_91827.innerHTML = "";
+  asHeroTrack_91827.innerHTML = "";
 
-      const isDesktop = asIsDesktop_61724();
-      const slideDims = isDesktop
-        ? {
-            w: Math.max(1000, Math.min(window.innerWidth * 0.78, 1500)),
-            h: Math.max(620, Math.min(window.innerHeight * 0.7, 900)),
-          }
-        : {
-            w: Math.max(720, Math.min(window.innerWidth * 0.92, 1200)),
-            h: Math.max(460, Math.min(window.innerHeight * 0.66, 780)),
-          };
-
-      for (let i = 0; i < asActiveFamilyIndexes_61724.length; i++) {
-        const globalIdx = asActiveFamilyIndexes_61724[i];
-        const data = asImages_61724[globalIdx];
-
-        const slide = document.createElement("div");
-        slide.className = "as-hero-slide";
-        slide.setAttribute("data-as-global-idx", String(globalIdx));
-        slide.setAttribute("data-as-family-pos", String(i));
-
-        const img = document.createElement("img");
-        img.alt = data.alt || "";
-        img.decoding = "async";
-        img.src = asCldFromUploadUrl_55219(data.src, slideDims.w, slideDims.h);
-
-        const widths = isDesktop ? [900, 1100, 1300, 1500] : [720, 900, 1100, 1300];
-        img.srcset = asBuildSrcsetUpload_55219(data.src, widths, slideDims.w, slideDims.h);
-        img.sizes = isDesktop ? "(min-width: 900px) 70vw, 92vw" : "92vw";
-
-          slide.appendChild(img);
-slide.addEventListener("click", () => {
-  asSetActiveGlobalIndex_61724(globalIdx, { focusThumb: false, instantSwap: true });
-});
-
-        asHeroTrack_91827.appendChild(slide);
+  const isDesktop = asIsDesktop_61724();
+  const slideDims = isDesktop
+    ? {
+        w: Math.max(1000, Math.min(window.innerWidth * 0.78, 1500)),
+        h: Math.max(620, Math.min(window.innerHeight * 0.7, 900)),
       }
+    : {
+        w: Math.max(720, Math.min(window.innerWidth * 0.92, 1200)),
+        h: Math.max(460, Math.min(window.innerHeight * 0.66, 780)),
+      };
 
-      asBindMobileSwipe_61724();
-    }
+  for (let i = 0; i < asActiveFamilyIndexes_61724.length; i++) {
+    const globalIdx = asActiveFamilyIndexes_61724[i];
+    const data = asImages_61724[globalIdx];
+
+    const slide = document.createElement("div");
+    slide.className = "as-hero-slide";
+    slide.setAttribute("data-as-global-idx", String(globalIdx));
+    slide.setAttribute("data-as-family-pos", String(i));
+
+    const img = document.createElement("img");
+    img.alt = data.alt || "";
+    img.decoding = "async";
+
+    /* PERF: stoppa mass-laddning vid dialog-open.
+       Alla slides skapas, men browsern får "lazy" som default.
+       asUpdateSlideLoading_61724() uppgraderar bara active/near till eager + high priority. */
+    img.loading = "lazy";
+    img.fetchPriority = "auto";
+
+    img.src = asCldFromUploadUrl_55219(data.src, slideDims.w, slideDims.h);
+
+    const widths = isDesktop ? [900, 1100, 1300, 1500] : [720, 900, 1100, 1300];
+    img.srcset = asBuildSrcsetUpload_55219(data.src, widths, slideDims.w, slideDims.h);
+    img.sizes = isDesktop ? "(min-width: 900px) 70vw, 92vw" : "92vw";
+
+    slide.appendChild(img);
+    slide.addEventListener("click", () => {
+      asSetActiveGlobalIndex_61724(globalIdx, { focusThumb: false, instantSwap: true });
+    });
+
+    asHeroTrack_91827.appendChild(slide);
+  }
+
+  asBindMobileSwipe_61724();
+
+  /* PERF: direkt efter build, sätt rätt loading/fetchPriority för active/near */
+  asUpdateSlideLoading_61724();
+}
 
     function asUpdateSlideLoading_61724() {
       const slides = asGetMobileSlides_61724();
