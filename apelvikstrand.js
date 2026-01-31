@@ -56,101 +56,106 @@
        DATA (REPLACE WITH YOUR URLs)
        ========================= */
 
-    const asImages_61724 = [
-      // Interiör
-      {
-        id: "asprImgData_0001",
-        family: "Interiör",
-        alt: "Interiör 1",
-        src: "https://res.cloudinary.com/dmgmoisae/image/upload/v1769872058/jpeg-optimizer_ApelvikStrand_0967_2_iopudg.jpg",
-      },
-      {
-        id: "asprImgData_0002",
-        family: "Interiör",
-        alt: "Interiör 2",
-        src: "https://res.cloudinary.com/dmgmoisae/image/upload/v1769872058/jpeg-optimizer_ApelvikStrand_1153_1_mi0wzz.jpg",
-      },
-      {
-        id: "asprImgData_0003",
-        family: "Interiör",
-        alt: "Interiör 3",
-        src: "https://res.cloudinary.com/dmgmoisae/image/upload/v1769872058/jpeg-optimizer_ApelvikStrand_1019_3_cmtydp.jpg",
-      },
-      {
-        id: "asprImgData_0003",
-        family: "Interiör",
-        alt: "Interiör 4",
-        src: "https://res.cloudinary.com/dmgmoisae/image/upload/v1769872059/jpeg-optimizer_ApelvikStrand_0594_1_biqek3.jpg",
-      },
-      {
-        id: "asprImgData_0003",
-        family: "Interiör",
-        alt: "Interiör 5",
-        src: "https://res.cloudinary.com/dmgmoisae/image/upload/v1769872059/jpeg-optimizer_ApelvikStrand_0010_3_rzzlat.jpg",
-      },
-             {
-        id: "asprImgData_0003",
-        family: "Interiör",
-        alt: "Interiör 6",
-        src: "https://res.cloudinary.com/dmgmoisae/image/upload/v1769872059/jpeg-optimizer_ApelvikStrand_1201_2_zqybmt.jpg",
-      },
-      {
-        id: "asprImgData_0004",
-        family: "Exteriör",
-        alt: "Exteriör 1",
-        src: "https://res.cloudinary.com/dmgmoisae/image/upload/v1769872360/jpeg-optimizer_ApelvikStrand_0356_2_jvgrhe.jpg",
-      },
-      {
-        id: "asprImgData_0005",
-        family: "Exteriör",
-        alt: "Exteriör 2",
-        src: "https://res.cloudinary.com/dmgmoisae/image/upload/v1769872360/jpeg-optimizer_BOA_0254_6787_mi0uem.jpg",
-      },
-      {
-        id: "asprImgData_0005",
-        family: "Exteriör",
-        alt: "Exteriör 3",
-        src: "https://res.cloudinary.com/dmgmoisae/image/upload/v1769872358/jpeg-optimizer_ApelvikStrand_0304_grhsdv.jpg",
-      },
-             {
-        id: "asprImgData_0005",
-        family: "Exteriör",
-        alt: "Exteriör 4",
-        src: "https://res.cloudinary.com/dmgmoisae/image/upload/v1769872360/jpeg-optimizer_BOA_0286_6819_zkfxdt.jpg",
-      },
-                    {
-        id: "asprImgData_0005",
-        family: "Exteriör",
-        alt: "Exteriör 4",
-        src: "https://res.cloudinary.com/dmgmoisae/image/upload/v1769872361/jpeg-optimizer_BOA_0235_6769_2_nmd28p.jpg",
-      },
-                {
-        id: "asprImgData_0005",
-        family: "Exteriör",
-        alt: "Exteriör 4",
-        src: "https://res.cloudinary.com/dmgmoisae/image/upload/v1769872361/jpeg-optimizer_ApelvikStrand_1238_1_mqwgt1.jpg",
-      },
-                      {
-        id: "asprImgData_0005",
-        family: "Exteriör",
-        alt: "Exteriör 4",
-        src: "https://res.cloudinary.com/dmgmoisae/image/upload/v1769872362/jpeg-optimizer_ApelvikStrand_0045_1_ch30ys.jpg",
-      },
-                      {
-        id: "asprImgData_0005",
-        family: "Exteriör",
-        alt: "Exteriör 4",
-        src: "https://res.cloudinary.com/dmgmoisae/image/upload/v1769872363/jpeg-optimizer_ApelvikStrand_0056_1_m9rjzl.jpg",
-      },
-       
-       // Restaurang
-      {
-        id: "asprImgData_0006",
-        family: "Restaurang",
-        alt: "Restaurang 1",
-        src: "https://res.cloudinary.com/dmgmoisae/image/upload/v1769775234/jpeg-optimizer_ApelvikStrand_0701_xxxxx.jpg",
-      },
-    ];
+ const asImages_61724 = [
+  // Interiör
+  {
+    id: "asprImgData_0056",
+    front: "number3",
+    family: "Interiör",
+    alt: "Interiör 1",
+    src: "https://res.cloudinary.com/dmgmoisae/image/upload/v1769872058/jpeg-optimizer_ApelvikStrand_0967_2_iopudg.jpg",
+  },
+  {
+    id: "asprImgData_0002",
+    front: "number1",
+    family: "Interiör",
+    alt: "Interiör 2",
+    src: "https://res.cloudinary.com/dmgmoisae/image/upload/v1769872058/jpeg-optimizer_ApelvikStrand_1153_1_mi0wzz.jpg",
+  },
+  {
+    id: "asprImgData_0042",
+    front: "number4",
+    family: "Interiör",
+    alt: "Interiör 3",
+    src: "https://res.cloudinary.com/dmgmoisae/image/upload/v1769872058/jpeg-optimizer_ApelvikStrand_1019_3_cmtydp.jpg",
+  },
+  {
+    id: "asprImgData_0012",
+    family: "Interiör",
+    alt: "Interiör 4",
+    src: "https://res.cloudinary.com/dmgmoisae/image/upload/v1769872059/jpeg-optimizer_ApelvikStrand_0594_1_biqek3.jpg",
+  },
+  {
+    id: "asprImgData_0000",
+    family: "Interiör",
+    alt: "Interiör 5",
+    src: "https://res.cloudinary.com/dmgmoisae/image/upload/v1769872059/jpeg-optimizer_ApelvikStrand_0010_3_rzzlat.jpg",
+  },
+  {
+    id: "asprImgData_0001",
+    family: "Interiör",
+    alt: "Interiör 6",
+    src: "https://res.cloudinary.com/dmgmoisae/image/upload/v1769872059/jpeg-optimizer_ApelvikStrand_1201_2_zqybmt.jpg",
+  },
+  {
+    id: "asprImgData_0100",
+    front: "number2",
+    family: "Exteriör",
+    alt: "Exteriör 1",
+    src: "https://res.cloudinary.com/dmgmoisae/image/upload/v1769872360/jpeg-optimizer_ApelvikStrand_0356_2_jvgrhe.jpg",
+  },
+  {
+    id: "asprImgData_0003",
+    family: "Exteriör",
+    alt: "Exteriör 2",
+    src: "https://res.cloudinary.com/dmgmoisae/image/upload/v1769872360/jpeg-optimizer_BOA_0254_6787_mi0uem.jpg",
+  },
+  {
+    id: "asprImgData_0004",
+    family: "Exteriör",
+    alt: "Exteriör 3",
+    src: "https://res.cloudinary.com/dmgmoisae/image/upload/v1769872358/jpeg-optimizer_ApelvikStrand_0304_grhsdv.jpg",
+  },
+  {
+    id: "asprImgData_0005",
+    family: "Exteriör",
+    alt: "Exteriör 5",
+    src: "https://res.cloudinary.com/dmgmoisae/image/upload/v1769872360/jpeg-optimizer_BOA_0286_6819_zkfxdt.jpg",
+  },
+  {
+    id: "asprImgData_0006",
+    family: "Exteriör",
+    alt: "Exteriör 6",
+    src: "https://res.cloudinary.com/dmgmoisae/image/upload/v1769872361/jpeg-optimizer_BOA_0235_6769_2_nmd28p.jpg",
+  },
+  {
+    id: "asprImgData_0007",
+    family: "Exteriör",
+    alt: "Exteriör 7",
+    src: "https://res.cloudinary.com/dmgmoisae/image/upload/v1769872361/jpeg-optimizer_ApelvikStrand_1238_1_mqwgt1.jpg",
+  },
+  {
+    id: "asprImgData_0008",
+    family: "Exteriör",
+    alt: "Exteriör 8",
+    src: "https://res.cloudinary.com/dmgmoisae/image/upload/v1769872362/jpeg-optimizer_ApelvikStrand_0045_1_ch30ys.jpg",
+  },
+  {
+    id: "asprImgData_0009",
+    family: "Exteriör",
+    alt: "Exteriör 9",
+    src: "https://res.cloudinary.com/dmgmoisae/image/upload/v1769872363/jpeg-optimizer_ApelvikStrand_0056_1_m9rjzl.jpg",
+  },
+
+  // Restaurang
+  {
+    id: "asprImgData_0200",
+    front: "number5",
+    family: "Närområdet",
+    alt: "Närområdet 1",
+    src: "https://res.cloudinary.com/dmgmoisae/image/upload/v1769775234/jpeg-optimizer_ApelvikStrand_0701_xxxxx.jpg",
+  },
+];
 
     const asInitialVisibleCount_61724 = 5;
 
@@ -242,21 +247,46 @@
     /* =========================
        HELPERS
        ========================= */
-    function asLockBody_61724(lock) {
-      document.body.classList.toggle("as-body-lock", !!lock);
-    }
+   function asLockBody_61724(lock) {
+  document.body.classList.toggle("as-body-lock", !!lock);
+}
 
-    function asIsDesktop_61724() {
-      return window.matchMedia("(min-width: 900px)").matches;
-    }
-    function asIsMobile_61724() {
-      return !asIsDesktop_61724();
-    }
+function asIsDesktop_61724() {
+  return window.matchMedia("(min-width: 900px)").matches;
+}
+function asIsMobile_61724() {
+  return !asIsDesktop_61724();
+}
 
-    function asSetCounter_61724() {
-      const total = asImages_61724.length;
-      asCounterText_48291.textContent = Math.min(asInitialVisibleCount_61724, total) + "/" + total;
+function asSetCounter_61724() {
+  const total = asImages_61724.length;
+  asCounterText_48291.textContent = Math.min(asInitialVisibleCount_61724, total) + "/" + total;
+}
+
+/* Ny: välj exakt vilka 5 som ska synas på frontsidan via front: "number1"..."number5" */
+function asGetFrontIndexes_61724() {
+  const tags = ["number1", "number2", "number3", "number4", "number5"];
+  const picked = [];
+  const used = new Set();
+
+  // 1) Plocka i exakt ordning number1..number5
+  for (const tag of tags) {
+    const idx = asImages_61724.findIndex((x) => x && x.front === tag);
+    if (idx >= 0 && !used.has(idx)) {
+      picked.push(idx);
+      used.add(idx);
     }
+  }
+
+  // 2) Fyll på med första bästa “resterande” om någon tag saknas
+  for (let i = 0; i < asImages_61724.length && picked.length < 5; i++) {
+    if (used.has(i)) continue;
+    picked.push(i);
+    used.add(i);
+  }
+
+  return picked.slice(0, 5);
+}
 
     function asFrontHeroDims_61724() {
       const rect = asWrapper_48291.getBoundingClientRect();
@@ -401,48 +431,53 @@
     /* =========================
        FRONT GRID INIT (ONLY 5 LOAD)
        ========================= */
-    function asInitFrontGrid_61724() {
-      asSetCounter_61724();
+ function asInitFrontGrid_61724() {
+  asSetCounter_61724();
 
-      const heroDims = asFrontHeroDims_61724();
-      const smallDims = asFrontSmallDims_61724();
+  const heroDims = asFrontHeroDims_61724();
+  const smallDims = asFrontSmallDims_61724();
 
-      for (let i = 0; i < asGridItems.length; i++) {
-        const el = asGridItems[i];
+  const frontIndexes = asGetFrontIndexes_61724(); // <-- styr ordningen för hero + 4 små
 
-        if (i >= asImages_61724.length) {
-          el.btn.style.display = "none";
-          continue;
-        } else {
-          el.btn.style.display = "";
-        }
+  for (let i = 0; i < asGridItems.length; i++) {
+    const el = asGridItems[i];
 
-        const data = asImages_61724[i];
-        const isHero = i === 0;
-        const dims = isHero ? heroDims : smallDims;
+    const globalIdx = frontIndexes[i];
 
-        const aspectW = Math.max(1, Math.round(dims.w));
-        const aspectH = Math.max(1, Math.round(dims.h));
-
-        el.img.src = asCldFromUploadUrl_55219(data.src, aspectW, aspectH);
-
-        const widths = isHero ? [720, 960, 1200, 1440] : [360, 520, 720, 900];
-        el.img.srcset = asBuildSrcsetUpload_55219(data.src, widths, aspectW, aspectH);
-
-        el.img.sizes = isHero
-          ? asIsDesktop_61724()
-            ? "(min-width: 900px) 100vw, 50vw"
-            : "50vw"
-          : asIsDesktop_61724()
-          ? "(min-width: 900px) 25vw, 25vw"
-          : "25vw";
-
-        el.img.alt = data.alt || "Bild " + (i + 1);
-        el.btn.dataset.asIndex = String(i);
-
-        el.btn.onclick = () => asOpenDialogAtIndex_61724(i);
-      }
+    if (globalIdx == null || globalIdx < 0 || globalIdx >= asImages_61724.length) {
+      el.btn.style.display = "none";
+      continue;
+    } else {
+      el.btn.style.display = "";
     }
+
+    const data = asImages_61724[globalIdx];
+    const isHero = i === 0;
+    const dims = isHero ? heroDims : smallDims;
+
+    const aspectW = Math.max(1, Math.round(dims.w));
+    const aspectH = Math.max(1, Math.round(dims.h));
+
+    el.img.src = asCldFromUploadUrl_55219(data.src, aspectW, aspectH);
+
+    const widths = isHero ? [720, 960, 1200, 1440] : [360, 520, 720, 900];
+    el.img.srcset = asBuildSrcsetUpload_55219(data.src, widths, aspectW, aspectH);
+
+    el.img.sizes = isHero
+      ? asIsDesktop_61724()
+        ? "(min-width: 900px) 100vw, 50vw"
+        : "50vw"
+      : asIsDesktop_61724()
+      ? "(min-width: 900px) 25vw, 25vw"
+      : "25vw";
+
+    el.img.alt = data.alt || "Bild " + (i + 1);
+
+    // Viktigt: dataset + onclick ska peka på GLOBALT index i asImages_61724
+    el.btn.dataset.asIndex = String(globalIdx);
+    el.btn.onclick = () => asOpenDialogAtIndex_61724(globalIdx);
+  }
+}
 
     window.addEventListener("resize", () => {
       clearTimeout(asResizeT_61724);
