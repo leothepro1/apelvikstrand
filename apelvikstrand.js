@@ -1142,20 +1142,98 @@ function asGoToGlobalIndexAnimated_61724(targetGlobalIdx, opts) {
       asLockBody_61724(false);
     }
 
-    function asStepFamily_61724(dir) {
-      const pos = asActiveFamilyIndexes_61724.indexOf(asActiveGlobalIndex_61724);
-      if (pos < 0) return;
+ /* AFTER: hela asStepFamily_61724
+   - Pilar + keyboard: behåller “swipe card look” (animerar som ett kort-swipe)
+   - Thumbs/hero-click: fortsatt instantSwap (se dina click-handlers)
+*/
+function asStepFamily_61724(dir) {
+  const pos = asActiveFamilyIndexes_61724.indexOf(asActiveGlobalIndex_61724);
+  if (pos < 0) return;
 
-      const nextPos = pos + dir;
-      if (nextPos < 0 || nextPos >= asActiveFamilyIndexes_61724.length) return;
+  const nextPos = pos + dir;
+  if (nextPos < 0 || nextPos >= asActiveFamilyIndexes_61724.length) return;
 
-asSetActiveGlobalIndex_61724(asActiveFamilyIndexes_61724[nextPos], { focusThumb: false, instantSwap: true });
-    }
+  // Adjacent nav ska kännas som swipe-kort (inte instant)
+  asAnimateAdjacentNav_61724(dir);
+}
 
-    // Buttons
-    asCloseBtn_91827.addEventListener("click", asCloseDialog_61724);
-    asNavPrev_91827.addEventListener("click", () => asStepFamily_61724(-1));
-    asNavNext_91827.addEventListener("click", () => asStepFamily_61724(1));
+/* Ny: animerar exakt ett steg (dir = +1 / -1) med samma “card swipe” känsla */
+function asAnimateAdjacentNav_61724(dir) {
+  if (!asDialog_91827.open) return;
+
+  const slides = asGetMobileSlides_61724();
+  if (!slides.length) {
+    // Fallback: direkt byte om slides inte finns
+    const pos = asActiveFamilyIndexes_61724.indexOf(asActiveGlobalIndex_61724);
+    const nextPos = pos + dir;
+    if (nextPos < 0 || nextPos >= asActiveFamilyIndexes_61724.length) return;
+    asSetActiveGlobalIndex_61724(asActiveFamilyIndexes_61724[nextPos], { focusThumb: false, instantSwap: false });
+    return;
+  }
+
+  const w = asGetMobileWidth_61724();
+  const step = w + asSlideGap_61724;
+
+  const pos = asActiveFamilyIndexes_61724.indexOf(asActiveGlobalIndex_61724);
+  if (pos < 0) return;
+
+  const nextPos = pos + dir;
+  if (nextPos < 0 || nextPos >= slides.length) return;
+
+  const active = slides[pos] || null;
+  const next = slides[nextPos] || null;
+  if (!active || !next) return;
+
+  // Se till att båda är synliga under anim
+  active.style.opacity = "1";
+  active.style.visibility = "visible";
+  active.style.zIndex = "2";
+
+  next.style.opacity = "1";
+  next.style.visibility = "visible";
+  next.style.zIndex = "1";
+
+  // Start-läge utan transitions (så inget “snap”)
+  active.style.setProperty("transition", "none", "important");
+  next.style.setProperty("transition", "none", "important");
+
+  active.style.transform = "translateX(0px)";
+  next.style.transform = dir > 0 ? `translateX(${step}px)` : `translateX(${-step}px)`;
+
+  // Force reflow så startläget appliceras
+  // eslint-disable-next-line no-unused-expressions
+  active.offsetHeight;
+
+  // Kör card-swipe
+  active.style.removeProperty("transition");
+  next.style.removeProperty("transition");
+  active.style.transition = "transform 0.25s var(--as-ease)";
+  next.style.transition = "transform 0.25s var(--as-ease)";
+
+  active.style.transform = dir > 0 ? `translateX(${-step}px)` : `translateX(${step}px)`;
+  next.style.transform = "translateX(0px)";
+
+  const onDone = (e) => {
+    if (e && e.propertyName && e.propertyName !== "transform") return;
+
+    const targetGlobalIdx = asActiveFamilyIndexes_61724[nextPos];
+
+    // Uppdatera state utan att trigga instantSwap
+    asSetActiveGlobalIndex_61724(targetGlobalIdx, { focusThumb: false, silentStage: true });
+
+    // Staga om rent (prev/active/next korrekt)
+    asStageMobileSlides_61724(true, false);
+    asUpdateCounterAndNav_61724();
+  };
+
+  active.addEventListener("transitionend", onDone, { once: true });
+}
+
+
+ /* AFTER: oförändrat (men nu ger asStepFamily_61724 swipe-card anim via asAnimateAdjacentNav_61724) */
+asCloseBtn_91827.addEventListener("click", asCloseDialog_61724);
+asNavPrev_91827.addEventListener("click", () => asStepFamily_61724(-1));
+asNavNext_91827.addEventListener("click", () => asStepFamily_61724(1));
 
     // Click outside shell closes
     asDialog_91827.addEventListener("click", (e) => {
@@ -1171,23 +1249,24 @@ asSetActiveGlobalIndex_61724(asActiveFamilyIndexes_61724[nextPos], { focusThumb:
 
     asDialog_91827.addEventListener("close", () => asLockBody_61724(false));
 
-    // Keyboard nav
-    document.addEventListener("keydown", (e) => {
-      if (!asDialog_91827.open) return;
+  /* AFTER: oförändrat (nu blir även keyboard “swipe card look” via asStepFamily_61724) */
+document.addEventListener("keydown", (e) => {
+  if (!asDialog_91827.open) return;
 
-      if (e.key === "ArrowRight" || e.key === "ArrowDown") {
-        e.preventDefault();
-        asStepFamily_61724(1);
-      }
-      if (e.key === "ArrowLeft" || e.key === "ArrowUp") {
-        e.preventDefault();
-        asStepFamily_61724(-1);
-      }
-      if (e.key === "Escape") {
-        // dialog will close itself, but keep body lock in sync
-        // (close event handler already clears)
-      }
-    });
+  if (e.key === "ArrowRight" || e.key === "ArrowDown") {
+    e.preventDefault();
+    asStepFamily_61724(1);
+  }
+  if (e.key === "ArrowLeft" || e.key === "ArrowUp") {
+    e.preventDefault();
+    asStepFamily_61724(-1);
+  }
+  if (e.key === "Escape") {
+    // dialog will close itself, but keep body lock in sync
+    // (close event handler already clears)
+  }
+});
+
 
     /* =========================
        SKELETON RUNTIME (extracted)
