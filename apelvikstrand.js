@@ -98,16 +98,52 @@
         id: "asprImgData_0004",
         family: "Exteriör",
         alt: "Exteriör 1",
-        src: "https://res.cloudinary.com/dmgmoisae/image/upload/v1769775238/jpeg-optimizer_ApelvikStrand_0138_cdsgzv.jpg",
+        src: "https://res.cloudinary.com/dmgmoisae/image/upload/v1769872360/jpeg-optimizer_ApelvikStrand_0356_2_jvgrhe.jpg",
       },
       {
         id: "asprImgData_0005",
         family: "Exteriör",
         alt: "Exteriör 2",
-        src: "https://res.cloudinary.com/dmgmoisae/image/upload/v1769775235/jpeg-optimizer_ApelvikStrand_0801_xxxxx.jpg",
+        src: "https://res.cloudinary.com/dmgmoisae/image/upload/v1769872360/jpeg-optimizer_BOA_0254_6787_mi0uem.jpg",
       },
-
-      // Restaurang
+      {
+        id: "asprImgData_0005",
+        family: "Exteriör",
+        alt: "Exteriör 3",
+        src: "https://res.cloudinary.com/dmgmoisae/image/upload/v1769872358/jpeg-optimizer_ApelvikStrand_0304_grhsdv.jpg",
+      },
+             {
+        id: "asprImgData_0005",
+        family: "Exteriör",
+        alt: "Exteriör 4",
+        src: "https://res.cloudinary.com/dmgmoisae/image/upload/v1769872360/jpeg-optimizer_BOA_0286_6819_zkfxdt.jpg",
+      },
+                    {
+        id: "asprImgData_0005",
+        family: "Exteriör",
+        alt: "Exteriör 4",
+        src: "https://res.cloudinary.com/dmgmoisae/image/upload/v1769872361/jpeg-optimizer_BOA_0235_6769_2_nmd28p.jpg",
+      },
+                {
+        id: "asprImgData_0005",
+        family: "Exteriör",
+        alt: "Exteriör 4",
+        src: "https://res.cloudinary.com/dmgmoisae/image/upload/v1769872361/jpeg-optimizer_ApelvikStrand_1238_1_mqwgt1.jpg",
+      },
+                      {
+        id: "asprImgData_0005",
+        family: "Exteriör",
+        alt: "Exteriör 4",
+        src: "https://res.cloudinary.com/dmgmoisae/image/upload/v1769872362/jpeg-optimizer_ApelvikStrand_0045_1_ch30ys.jpg",
+      },
+                      {
+        id: "asprImgData_0005",
+        family: "Exteriör",
+        alt: "Exteriör 4",
+        src: "https://res.cloudinary.com/dmgmoisae/image/upload/v1769872363/jpeg-optimizer_ApelvikStrand_0056_1_m9rjzl.jpg",
+      },
+       
+       // Restaurang
       {
         id: "asprImgData_0006",
         family: "Restaurang",
