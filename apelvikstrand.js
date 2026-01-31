@@ -501,8 +501,8 @@
         img.sizes = isDesktop ? "(min-width: 900px) 70vw, 92vw" : "92vw";
 
           slide.appendChild(img);
-  slide.addEventListener("click", () => {
-  asSetActiveGlobalIndex_61724(globalIdx, { focusThumb: false, noScrollThumbs: true });
+slide.addEventListener("click", () => {
+  asSetActiveGlobalIndex_61724(globalIdx, { focusThumb: false, instantSwap: true });
 });
 
         asHeroTrack_91827.appendChild(slide);
@@ -527,54 +527,70 @@
         img.fetchPriority = i === pos ? "high" : "auto";
       }
     }
- function asStageMobileSlides_61724(force) {
-      const slides = asGetMobileSlides_61724();
-      if (!slides.length) return;
+/* AFTER: hela asStageMobileSlides_61724 (instantSwap => inga transitions vid byte) */
+function asStageMobileSlides_61724(force, instantSwap) {
+  const slides = asGetMobileSlides_61724();
+  if (!slides.length) return;
 
-      const w = asGetMobileWidth_61724();
-      const step = w + asSlideGap_61724;
+  const w = asGetMobileWidth_61724();
+  const step = w + asSlideGap_61724;
 
-      const pos = asActiveFamilyIndexes_61724.indexOf(asActiveGlobalIndex_61724);
-      if (pos < 0) return;
+  const pos = asActiveFamilyIndexes_61724.indexOf(asActiveGlobalIndex_61724);
+  if (pos < 0) return;
 
-      if (!force && asLastStagedIndex_61724 === asActiveGlobalIndex_61724 && !asDragging_61724) return;
-      asLastStagedIndex_61724 = asActiveGlobalIndex_61724;
+  if (!force && asLastStagedIndex_61724 === asActiveGlobalIndex_61724 && !asDragging_61724) return;
+  asLastStagedIndex_61724 = asActiveGlobalIndex_61724;
 
-      const prevPos = pos > 0 ? pos - 1 : null;
-      const nextPos = pos < slides.length - 1 ? pos + 1 : null;
+  const prevPos = pos > 0 ? pos - 1 : null;
+  const nextPos = pos < slides.length - 1 ? pos + 1 : null;
 
-      asResetSlideClasses_61724(slides);
+  asResetSlideClasses_61724(slides);
 
-      const activeSlide = slides[pos] || null;
-      const prevSlide = prevPos != null ? slides[prevPos] : null;
-      const nextSlide = nextPos != null ? slides[nextPos] : null;
-
-      if (prevSlide) {
-        prevSlide.classList.add("is-prev");
-        prevSlide.style.opacity = "1";
-        prevSlide.style.visibility = "visible";
-        prevSlide.style.zIndex = "1";
-        prevSlide.style.transform = `translateX(${-step}px)`;
-      }
-
-      if (nextSlide) {
-        nextSlide.classList.add("is-next");
-        nextSlide.style.opacity = "1";
-        nextSlide.style.visibility = "visible";
-        nextSlide.style.zIndex = "1";
-        nextSlide.style.transform = `translateX(${step}px)`;
-      }
-
-      if (activeSlide) {
-        activeSlide.classList.add("is-active");
-        activeSlide.style.opacity = "1";
-        activeSlide.style.visibility = "visible";
-        activeSlide.style.zIndex = "2";
-        activeSlide.style.transform = "translateX(0px)";
-      }
-
-      asUpdateSlideLoading_61724();
+  if (instantSwap) {
+    for (let i = 0; i < slides.length; i++) {
+      slides[i].style.transition = "transform 0s, opacity 0s";
     }
+  }
+
+  const activeSlide = slides[pos] || null;
+  const prevSlide = prevPos != null ? slides[prevPos] : null;
+  const nextSlide = nextPos != null ? slides[nextPos] : null;
+
+  if (prevSlide) {
+    prevSlide.classList.add("is-prev");
+    prevSlide.style.opacity = "1";
+    prevSlide.style.visibility = "visible";
+    prevSlide.style.zIndex = "1";
+    prevSlide.style.transform = `translateX(${-step}px)`;
+  }
+
+  if (nextSlide) {
+    nextSlide.classList.add("is-next");
+    nextSlide.style.opacity = "1";
+    nextSlide.style.visibility = "visible";
+    nextSlide.style.zIndex = "1";
+    nextSlide.style.transform = `translateX(${step}px)`;
+  }
+
+  if (activeSlide) {
+    activeSlide.classList.add("is-active");
+    activeSlide.style.opacity = "1";
+    activeSlide.style.visibility = "visible";
+    activeSlide.style.zIndex = "2";
+    activeSlide.style.transform = "translateX(0px)";
+  }
+
+  if (instantSwap) {
+    requestAnimationFrame(() => {
+      for (let i = 0; i < slides.length; i++) {
+        slides[i].style.transition = "";
+      }
+    });
+  }
+
+  asUpdateSlideLoading_61724();
+}
+
 
     function asApplyDragMobile_61724(dx) {
       asCancelSwipeRaf_61724();
@@ -631,9 +647,9 @@
 
       const finish = () => {
         if (goNext) {
-          asSetActiveGlobalIndex_61724(asActiveFamilyIndexes_61724[pos + 1], { focusThumb: false });
+asSetActiveGlobalIndex_61724(asActiveFamilyIndexes_61724[pos + 1], { focusThumb: false, instantSwap: false });
         } else if (goPrev) {
-          asSetActiveGlobalIndex_61724(asActiveFamilyIndexes_61724[pos - 1], { focusThumb: false });
+asSetActiveGlobalIndex_61724(asActiveFamilyIndexes_61724[pos - 1], { focusThumb: false, instantSwap: false });
         } else {
           asStageMobileSlides_61724();
         }
@@ -790,6 +806,7 @@
 
       return activeBtn;
     }
+     /* AFTER: hela asRenderHeroAndThumbs_61724 (ingen thumb-scroll + instantSwap vid klick) */
 function asRenderHeroAndThumbs_61724(opts) {
   // 1) Hero slides: build only when filter changes
   asEnsureHeroSlidesBuilt_61724();
@@ -828,22 +845,18 @@ function asRenderHeroAndThumbs_61724(opts) {
       img.sizes = asIsMobile_61724() ? "70px" : "78px";
 
       btn.appendChild(img);
-btn.addEventListener("click", () =>
-  asSetActiveGlobalIndex_61724(globalIdx, { focusThumb: false, noScrollThumbs: true })
-);
+      btn.addEventListener("click", () =>
+        asSetActiveGlobalIndex_61724(globalIdx, { focusThumb: false, instantSwap: true })
+      );
 
       asThumbs_91827.appendChild(btn);
     }
   }
 
-  // 3) Uppdatera bara active-state + ev scroll (ingen rebuild => inget blink)
+  // 3) Uppdatera bara active-state (ingen scroll)
   const activeThumbBtn = asSyncThumbStates_61724();
 
   if (activeThumbBtn) {
-    // IMPORTANT: During multi-step programmatic nav, do NOT auto-scroll thumbs every step (causes jitter)
-    if (!asDragging_61724 && !asProgrammaticNav_61724) {
-      asScrollToThumb_61724(activeThumbBtn, { behavior: "auto" });
-    }
     if (opts && opts.keepFocus) activeThumbBtn.focus({ preventScroll: true });
   }
 
@@ -851,34 +864,20 @@ btn.addEventListener("click", () =>
   asStageMobileSlides_61724(true);
   asUpdateCounterAndNav_61724();
 }
+/* AFTER: hela asSetActiveGlobalIndex_61724 (ingen thumb-scroll + instantSwap kan stänga av animation) */
 function asSetActiveGlobalIndex_61724(globalIdx, opts) {
   const o = opts || {};
   const silentStage = !!o.silentStage;
-  const noScrollThumbs = !!o.noScrollThumbs;
+  const instantSwap = !!o.instantSwap;
 
   asActiveGlobalIndex_61724 = globalIdx;
 
   // INGEN rebuild här -> bara UI-sync
   const activeThumbBtn = asSyncThumbStates_61724();
 
-  // IMPORTANT: No thumb auto-scroll when:
-  // - dragging
-  // - programmatic multi-step nav
-  // - silentStage
-  // - explicit noScrollThumbs (thumb/hero click direct swap)
-  if (
-    activeThumbBtn &&
-    !asDragging_61724 &&
-    !asProgrammaticNav_61724 &&
-    !silentStage &&
-    !noScrollThumbs
-  ) {
-    asScrollToThumb_61724(activeThumbBtn, { behavior: "auto" });
-  }
-
   // IMPORTANT: During programmatic multi-step stepping, we stage manually (to avoid snap + blink).
   if (!silentStage) {
-    asStageMobileSlides_61724(true);
+    asStageMobileSlides_61724(true, instantSwap);
     asUpdateCounterAndNav_61724();
   }
 
@@ -888,6 +887,7 @@ function asSetActiveGlobalIndex_61724(globalIdx, opts) {
 
   return activeThumbBtn || null;
 }
+
 
     function asClearProgrammaticNav_61724() {
       asProgrammaticNav_61724 = false;
@@ -1125,7 +1125,7 @@ function asGoToGlobalIndexAnimated_61724(targetGlobalIdx, opts) {
       const nextPos = pos + dir;
       if (nextPos < 0 || nextPos >= asActiveFamilyIndexes_61724.length) return;
 
-      asSetActiveGlobalIndex_61724(asActiveFamilyIndexes_61724[nextPos], { focusThumb: false });
+asSetActiveGlobalIndex_61724(asActiveFamilyIndexes_61724[nextPos], { focusThumb: false, instantSwap: true });
     }
 
     // Buttons
