@@ -62,22 +62,38 @@
         id: "asprImgData_0001",
         family: "Interiör",
         alt: "Interiör 1",
-        src: "https://res.cloudinary.com/dmgmoisae/image/upload/v1769775238/jpeg-optimizer_ApelvikStrand_1238_pqlgq9.jpg",
+        src: "https://res.cloudinary.com/dmgmoisae/image/upload/v1769872058/jpeg-optimizer_ApelvikStrand_0967_2_iopudg.jpg",
       },
       {
         id: "asprImgData_0002",
         family: "Interiör",
         alt: "Interiör 2",
-        src: "https://res.cloudinary.com/dmgmoisae/image/upload/v1769775239/jpeg-optimizer_ApelvikStrand_0010_2_vw5m3b.jpg",
+        src: "https://res.cloudinary.com/dmgmoisae/image/upload/v1769872058/jpeg-optimizer_ApelvikStrand_1153_1_mi0wzz.jpg",
       },
       {
         id: "asprImgData_0003",
         family: "Interiör",
         alt: "Interiör 3",
-        src: "https://res.cloudinary.com/dmgmoisae/image/upload/v1769775239/jpeg-optimizer_ApelvikStrand_0010_2_vw5m3b.jpg",
+        src: "https://res.cloudinary.com/dmgmoisae/image/upload/v1769872058/jpeg-optimizer_ApelvikStrand_1019_3_cmtydp.jpg",
       },
-
-      // Exteriör
+      {
+        id: "asprImgData_0003",
+        family: "Interiör",
+        alt: "Interiör 4",
+        src: "https://res.cloudinary.com/dmgmoisae/image/upload/v1769872059/jpeg-optimizer_ApelvikStrand_0594_1_biqek3.jpg",
+      },
+      {
+        id: "asprImgData_0003",
+        family: "Interiör",
+        alt: "Interiör 5",
+        src: "https://res.cloudinary.com/dmgmoisae/image/upload/v1769872059/jpeg-optimizer_ApelvikStrand_0010_3_rzzlat.jpg",
+      },
+             {
+        id: "asprImgData_0003",
+        family: "Interiör",
+        alt: "Interiör 6",
+        src: "https://res.cloudinary.com/dmgmoisae/image/upload/v1769872059/jpeg-optimizer_ApelvikStrand_1201_2_zqybmt.jpg",
+      },
       {
         id: "asprImgData_0004",
         family: "Exteriör",
