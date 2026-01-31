@@ -140,10 +140,10 @@
   }
 
   /* ---------- COUNTER (PAGE) ---------- */
-  .as-counter{
+.as-counter {
     position: absolute;
     right: 0.5rem;
-    bottom: 0.75rem;
+    bottom: 0.9rem;
     z-index: 5;
     display: inline-flex;
     align-items: center;
@@ -158,10 +158,10 @@
     user-select: none;
     pointer-events: none;
     font-variant-numeric: tabular-nums;
-    font-family: Montserrat Variablefont Wght;
+    font-family: 'Inter Variablefont Opsz Wght';
     font-weight: 500;
-  }
-
+    box-shadow: rgba(60, 64, 67, 0.2) 0px 1px 2px 0px, rgba(60, 64, 67, 0.12) 0px 2px 6px 2px;
+}
   /* ---------- DIALOG ---------- */
   dialog#asprGalleryDialog_91827{
     --aspr-dialog-pad: 2rem;
