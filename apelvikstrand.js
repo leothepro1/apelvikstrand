@@ -67,7 +67,6 @@
   },
   {
     id: "asprImgData_0002",
-    front: "number1",
     family: "Interiör",
     alt: "Interiör 2",
     src: "https://res.cloudinary.com/dmgmoisae/image/upload/v1769872058/jpeg-optimizer_ApelvikStrand_1153_1_mi0wzz.jpg",
@@ -131,6 +130,7 @@
   {
     id: "asprImgData_0007",
     family: "Exteriör",
+         front: "number1",
     alt: "Exteriör 7",
     src: "https://res.cloudinary.com/dmgmoisae/image/upload/v1769872361/jpeg-optimizer_ApelvikStrand_1238_1_mqwgt1.jpg",
   },
