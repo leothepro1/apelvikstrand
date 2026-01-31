@@ -527,7 +527,12 @@ slide.addEventListener("click", () => {
         img.fetchPriority = i === pos ? "high" : "auto";
       }
     }
-/* AFTER: hela asStageMobileSlides_61724 (instantSwap => inga transitions vid byte) */
+/* AFTER: hela asStageMobileSlides_61724
+   Fixar att du “ser swipe” vid klick genom att:
+   1) tvinga transition:none (important) under själva bytet (CSS-transition kan annars trigga)
+   2) vid instantSwap: rendera ENDAST active synlig (prev/next hidden) så inget “passerar förbi”
+   3) återställ transition efter TVÅ rAF (säker paint-separation)
+*/
 function asStageMobileSlides_61724(force, instantSwap) {
   const slides = asGetMobileSlides_61724();
   if (!slides.length) return;
@@ -546,9 +551,11 @@ function asStageMobileSlides_61724(force, instantSwap) {
 
   asResetSlideClasses_61724(slides);
 
+  // HARD KILL transitions under instant swap (CSS kan annars animera transform ändå)
   if (instantSwap) {
     for (let i = 0; i < slides.length; i++) {
-      slides[i].style.transition = "transform 0s, opacity 0s";
+      slides[i].style.setProperty("transition", "none", "important");
+      slides[i].style.setProperty("will-change", "auto", "");
     }
   }
 
@@ -556,40 +563,57 @@ function asStageMobileSlides_61724(force, instantSwap) {
   const prevSlide = prevPos != null ? slides[prevPos] : null;
   const nextSlide = nextPos != null ? slides[nextPos] : null;
 
+  // Vid instantSwap: visa bara active (så inget “swipas förbi” visuellt)
+  if (instantSwap) {
+    for (let i = 0; i < slides.length; i++) {
+      slides[i].style.opacity = "0";
+      slides[i].style.visibility = "hidden";
+      slides[i].style.zIndex = "0";
+    }
+  }
+
+  // Positionera prev/next (behövs för swipe-läge), men håll dem dolda vid instantSwap
   if (prevSlide) {
     prevSlide.classList.add("is-prev");
-    prevSlide.style.opacity = "1";
-    prevSlide.style.visibility = "visible";
     prevSlide.style.zIndex = "1";
     prevSlide.style.transform = `translateX(${-step}px)`;
+    if (!instantSwap) {
+      prevSlide.style.opacity = "1";
+      prevSlide.style.visibility = "visible";
+    }
   }
 
   if (nextSlide) {
     nextSlide.classList.add("is-next");
-    nextSlide.style.opacity = "1";
-    nextSlide.style.visibility = "visible";
     nextSlide.style.zIndex = "1";
     nextSlide.style.transform = `translateX(${step}px)`;
+    if (!instantSwap) {
+      nextSlide.style.opacity = "1";
+      nextSlide.style.visibility = "visible";
+    }
   }
 
   if (activeSlide) {
     activeSlide.classList.add("is-active");
-    activeSlide.style.opacity = "1";
-    activeSlide.style.visibility = "visible";
     activeSlide.style.zIndex = "2";
     activeSlide.style.transform = "translateX(0px)";
+    activeSlide.style.opacity = "1";
+    activeSlide.style.visibility = "visible";
   }
 
   if (instantSwap) {
     requestAnimationFrame(() => {
-      for (let i = 0; i < slides.length; i++) {
-        slides[i].style.transition = "";
-      }
+      requestAnimationFrame(() => {
+        for (let i = 0; i < slides.length; i++) {
+          slides[i].style.removeProperty("transition");
+        }
+      });
     });
   }
 
   asUpdateSlideLoading_61724();
 }
+
 
 
     function asApplyDragMobile_61724(dx) {
@@ -651,7 +675,7 @@ asSetActiveGlobalIndex_61724(asActiveFamilyIndexes_61724[pos + 1], { focusThumb:
         } else if (goPrev) {
 asSetActiveGlobalIndex_61724(asActiveFamilyIndexes_61724[pos - 1], { focusThumb: false, instantSwap: false });
         } else {
-          asStageMobileSlides_61724();
+          asStageMobileSlides_61724(true, false);
         }
       };
 
@@ -719,7 +743,7 @@ asSetActiveGlobalIndex_61724(asActiveFamilyIndexes_61724[pos - 1], { focusThumb:
           asDragStartX_61724 = e.touches[0].clientX;
           asDragCurrentX_61724 = asDragStartX_61724;
           asDragging_61724 = true;
-          asStageMobileSlides_61724(true);
+asStageMobileSlides_61724(true, false);
         },
         { passive: true }
       );
