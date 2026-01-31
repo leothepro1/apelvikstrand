@@ -562,20 +562,22 @@ function asInitFrontGrid_61724() {
       });
     }
 
-    function asApplyFilter_61724(familyName) {
-      const nextIndexes = asFamilyIndexes_61724(familyName);
-      if (!nextIndexes.length) return;
+  function asApplyFilter_61724(familyName) {
+  const nextIndexes = asFamilyIndexes_61724(familyName);
+  if (!nextIndexes.length) return;
 
-      asActiveFamily_61724 = familyName;
-      asActiveFamilyIndexes_61724 = nextIndexes;
+  asActiveFamily_61724 = familyName;
+  asActiveFamilyIndexes_61724 = nextIndexes;
 
-      if (!asActiveFamilyIndexes_61724.includes(asActiveGlobalIndex_61724)) {
-        asActiveGlobalIndex_61724 = asActiveFamilyIndexes_61724[0];
-      }
+  if (!asActiveFamilyIndexes_61724.includes(asActiveGlobalIndex_61724)) {
+    asActiveGlobalIndex_61724 = asActiveFamilyIndexes_61724[0];
+  }
 
-      asSyncChipStates_61724();
-      asRenderHeroAndThumbs_61724({ keepFocus: false });
-    }
+  asSyncChipStates_61724();
+
+  // Filter-byte ska vara instant som thumb-klick (ingen blink / ingen swipe-känsla)
+  asRenderHeroAndThumbs_61724({ keepFocus: false, instantSwap: true });
+}
 
     /* =========================
        HERO SLIDES (BUILD ONCE PER FILTER)
@@ -679,15 +681,15 @@ function asStageMobileSlides_61724(force, instantSwap) {
   const prevPos = pos > 0 ? pos - 1 : null;
   const nextPos = pos < slides.length - 1 ? pos + 1 : null;
 
-  asResetSlideClasses_61724(slides);
-
-  // HARD KILL transitions under instant swap (CSS kan annars animera transform ändå)
+  // HARD KILL transitions BEFORE any hide/reset (annars kan CSS opacity/transform transition blinka)
   if (instantSwap) {
     for (let i = 0; i < slides.length; i++) {
       slides[i].style.setProperty("transition", "none", "important");
       slides[i].style.setProperty("will-change", "auto", "");
     }
   }
+
+  asResetSlideClasses_61724(slides);
 
   const activeSlide = slides[pos] || null;
   const prevSlide = prevPos != null ? slides[prevPos] : null;
@@ -1100,7 +1102,10 @@ function asEnsureThumbWindowBuilt_61724() {
     asThumbs_91827.appendChild(btn);
   }
 }
- function asRenderHeroAndThumbs_61724(opts) {
+function asRenderHeroAndThumbs_61724(opts) {
+  const o = opts || {};
+  const instantSwap = !!o.instantSwap;
+
   // 1) Hero slides: build only when filter changes
   asEnsureHeroSlidesBuilt_61724();
 
@@ -1111,11 +1116,11 @@ function asEnsureThumbWindowBuilt_61724() {
   const activeThumbBtn = asSyncThumbStates_61724();
 
   if (activeThumbBtn) {
-    if (opts && opts.keepFocus) activeThumbBtn.focus({ preventScroll: true });
+    if (o.keepFocus) activeThumbBtn.focus({ preventScroll: true });
   }
 
   // 4) Stage slides + counters/nav
-  asStageMobileSlides_61724(true);
+  asStageMobileSlides_61724(true, instantSwap);
   asUpdateCounterAndNav_61724();
 }
 /* AFTER: hela asSetActiveGlobalIndex_61724 (ingen thumb-scroll + instantSwap kan stänga av animation) */
