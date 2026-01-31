@@ -319,6 +319,73 @@ function asGetFrontIndexes_61724() {
   return picked.slice(0, 5);
 }
 
+/* Ny: URL-trigger för att öppna dialogen med förvalt filter.
+   Stöder:
+   - /dialogopen?exterior                (querystring utan key)
+   - ?dialogopen=exterior                (key/value)
+   - ?family=exterior                    (key/value)
+*/
+function asGetDialogOpenFamilyFromUrl_61724() {
+  try {
+    const raw = String(window.location.search || "").replace(/^\?/, "").trim();
+    if (!raw) return null;
+
+    // 1) Stöd: /dialogopen?exterior (ingen key)
+    // Om raw saknar "=" tolkar vi det som family alias direkt
+    let val = raw.includes("=") ? null : raw;
+
+    // 2) Stöd: ?dialogopen=exterior eller ?family=exterior
+    if (!val) {
+      const sp = new URLSearchParams(window.location.search);
+      val = sp.get("dialogopen") || sp.get("family") || sp.get("familj") || "";
+    }
+
+    val = String(val || "").trim().toLowerCase();
+    if (!val) return null;
+
+    // Mappning alias -> exakt family-namn i din data
+    if (val === "exterior" || val === "exteriör" || val === "exteriorr") return "Exteriör";
+    if (val === "interior" || val === "interiör") return "Interiör";
+    if (val === "naromradet" || val === "närområdet" || val === "naromrade" || val === "när" || val === "nearby")
+      return "Närområdet";
+    if (val === "alla" || val === "all") return "Alla";
+
+    return null;
+  } catch (e) {
+    return null;
+  }
+}
+
+/* Ny: öppna dialogen med vald family som förvald (utan att behöva klicka på en bild) */
+function asOpenDialogWithFamily_61724(familyName) {
+  const nextIndexes = asFamilyIndexes_61724(familyName);
+  if (!nextIndexes.length) return;
+
+  asActiveFamily_61724 = familyName;
+  asActiveFamilyIndexes_61724 = nextIndexes;
+
+  // Default active = första bilden i den familjen
+  asActiveGlobalIndex_61724 = asActiveFamilyIndexes_61724[0];
+
+  asBuildFilters_61724();
+
+  // Öppna dialog
+  if (!asDialog_91827.open) asDialog_91827.showModal();
+  asLockBody_61724(true);
+
+  // Tvinga rebuild av thumbs/hero när layout finns
+  asThumbsKey_61724 = null;
+  asThumbWindowMetaKey_61724 = null;
+  asSlidesKey_61724 = null;
+
+  requestAnimationFrame(() => {
+    requestAnimationFrame(() => {
+      asRenderHeroAndThumbs_61724({ keepFocus: false, instantSwap: true });
+      asCloseBtn_91827.focus({ preventScroll: true });
+    });
+  });
+}
+
     function asFrontHeroDims_61724() {
       const rect = asWrapper_48291.getBoundingClientRect();
       const w = Math.max(600, Math.min(rect.width, 1600));
@@ -1646,12 +1713,24 @@ document.addEventListener("keydown", (e) => {
         obs.observe(r, { childList: true, subtree: true });
       });
     })();
-
-    /* =========================
+ /* =========================
        INIT
        ========================= */
     asInitFrontGrid_61724();
     asSetCounter_61724();
+
+    // Ny: öppna dialogen via URL, t.ex. /dialogopen?exterior eller ?dialogopen=exterior
+    (function asMaybeOpenDialogFromUrl_61724() {
+      const family = asGetDialogOpenFamilyFromUrl_61724();
+      if (!family) return;
+
+      // Vänta en paint så layout/dims finns (stabilt i Webflow)
+      requestAnimationFrame(() => {
+        requestAnimationFrame(() => {
+          asOpenDialogWithFamily_61724(family);
+        });
+      });
+    })();
 
     if (asImages_61724.length < asInitialVisibleCount_61724) {
       for (let i = asImages_61724.length; i < asInitialVisibleCount_61724; i++) {
