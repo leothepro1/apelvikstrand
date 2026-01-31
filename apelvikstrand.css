@@ -361,8 +361,8 @@
   flex-direction: row;
   gap: 8px;
   max-height: min(70vh, 640px);
-  padding-right: 0px;
-
+ padding: 2px 0px;
+    justify-content: center;
   width: 100%;
   max-width: 100%;
   min-width: 0;
@@ -405,9 +405,9 @@
 
 .as-thumb-btn:focus-visible{ box-shadow: var(--as-focus); }
 
-.as-thumb-btn[aria-current="true"]{
-  border-color: rgba(255,255,255,.45);
-  opacity: 1;
+.as-thumb-btn[aria-current="true"] {
+    opacity: 1;
+    outline: 2px solid #fff;
 }
 
 .as-thumb-img{
