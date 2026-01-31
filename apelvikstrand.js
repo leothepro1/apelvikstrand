@@ -969,9 +969,24 @@ function asThumbMetrics_61724() {
   const c = asThumbs_91827;
   const n = (asActiveFamilyIndexes_61724 || []).length;
 
-  const containerW = c ? Math.max(0, c.clientWidth || 0) : 0;
+  // Försök flera källor (dialog kan ge 0 innan paint)
+  let containerW = c ? (c.clientWidth || 0) : 0;
 
-  // Matchar din CSS: desktop .as-thumb-btn = 5.25rem (~84px), mobile = 70px
+  if (containerW < 10 && c) {
+    const r = c.getBoundingClientRect();
+    if (r && r.width) containerW = r.width;
+  }
+
+  // Fallback till modal-shell / viewport om thumbs fortfarande rapporterar 0
+  if (containerW < 10) {
+    containerW =
+      (asModalShell_91827 && (asModalShell_91827.clientWidth || asModalShell_91827.getBoundingClientRect().width)) ||
+      window.innerWidth ||
+      0;
+  }
+
+  containerW = Math.max(0, Math.round(containerW));
+
   const thumbW = asIsMobile_61724() ? 70 : 84;
 
   let gap = 8;
@@ -1407,25 +1422,33 @@ function asGoToGlobalIndexAnimated_61724(targetGlobalIdx, opts) {
   });
 }
 
-    /* =========================
-       OPEN / CLOSE DIALOG
-       ========================= */
-    function asOpenDialogAtIndex_61724(index) {
-      const clicked = asImages_61724[index];
-      asActiveGlobalIndex_61724 = index;
+   function asOpenDialogAtIndex_61724(index) {
+  const clicked = asImages_61724[index];
+  asActiveGlobalIndex_61724 = index;
 
-      // Default filter = family of clicked image
-      asActiveFamily_61724 = clicked.family;
-      asActiveFamilyIndexes_61724 = asFamilyIndexes_61724(asActiveFamily_61724);
+  // Default filter = family of clicked image
+  asActiveFamily_61724 = clicked.family;
+  asActiveFamilyIndexes_61724 = asFamilyIndexes_61724(asActiveFamily_61724);
 
-      asBuildFilters_61724();
-      asRenderHeroAndThumbs_61724({ keepFocus: false });
+  asBuildFilters_61724();
 
-      if (!asDialog_91827.open) asDialog_91827.showModal();
-      asLockBody_61724(true);
+  // 1) Öppna först så thumbs-containern får riktig bredd
+  if (!asDialog_91827.open) asDialog_91827.showModal();
+  asLockBody_61724(true);
 
+  // 2) Tvinga rebuild av thumbs/hero när layout finns (annars blir windowSize=1 första gången)
+  asThumbsKey_61724 = null;
+  asThumbWindowMetaKey_61724 = null;
+  asSlidesKey_61724 = null;
+
+  // 3) Rendera efter paint (2 rAF = säkrare i Webflow/dialog)
+  requestAnimationFrame(() => {
+    requestAnimationFrame(() => {
+      asRenderHeroAndThumbs_61724({ keepFocus: false, instantSwap: true });
       asCloseBtn_91827.focus({ preventScroll: true });
-    }
+    });
+  });
+}
 
     function asCloseDialog_61724() {
       if (asDialog_91827.open) asDialog_91827.close();
