@@ -43,7 +43,13 @@
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
   }
+.as-grid-item img:hover {
+transform: scale(1.035)
+}
 
+.as-grid-item img {
+transition: 0.15s ease-in-out;
+}
   /* ---------- PAGE WRAP ---------- */
   .as-page-wrap{
     max-width: 100%;
