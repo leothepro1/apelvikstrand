@@ -134,7 +134,7 @@
     family: "Exteriör",
          front: "number1",
     alt: "Exteriör 7",
-    src: "https://res.cloudinary.com/dmgmoisae/image/upload/v1769872361/jpeg-optimizer_ApelvikStrand_1238_1_mqwgt1.jpg",
+    src: "https://res.cloudinary.com/dmgmoisae/image/upload/v1769875471/strandhuse21q_hh50lb.png",
   },
   {
     id: "asprImgData_0008",
