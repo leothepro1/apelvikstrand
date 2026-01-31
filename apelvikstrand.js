@@ -20,37 +20,66 @@
        CLOUDINARY (UPLOAD URLS)
        ========================= */
 
-    function asCldFromUploadUrl_55219(uploadUrl, w, h) {
-      const url = String(uploadUrl || "").trim();
+  function asCldFromUploadUrl_55219(uploadUrl, w, h) {
+  const url = String(uploadUrl || "").trim();
 
-      const marker = "/image/upload/";
-      const idx = url.indexOf(marker);
-      if (idx === -1) return url;
+  const marker = "/image/upload/";
+  const idx = url.indexOf(marker);
+  if (idx === -1) return url;
 
-      const base = url.slice(0, idx + marker.length);
-      const rest = url.slice(idx + marker.length);
+  const base = url.slice(0, idx + marker.length);
+  const rest = url.slice(idx + marker.length);
 
-      const t = [
-        "f_auto",
-        "q_auto",
-        "dpr_auto",
-        "c_fill",
-        "g_auto",
-        "w_" + Math.round(w),
-        "h_" + Math.round(h),
-      ].join(",");
+  const t = [
+    "f_auto",
+    "q_auto",
+    "dpr_auto",
+    "c_fill",
+    "g_auto",
+    "w_" + Math.round(w),
+    "h_" + Math.round(h),
+  ].join(",");
 
-      return base + t + "/" + rest;
-    }
+  return base + t + "/" + rest;
+}
 
-    function asBuildSrcsetUpload_55219(uploadUrl, widths, aspectW, aspectH) {
-      return widths
-        .map((w) => {
-          const h = Math.round((w * aspectH) / aspectW);
-          return asCldFromUploadUrl_55219(uploadUrl, w, h) + " " + w + "w";
-        })
-        .join(", ");
-    }
+/* Ny: ingen crop (behåller hela bilden). Används för FRONT-HERO */
+function asCldNoCropFromUploadUrl_55219(uploadUrl, w) {
+  const url = String(uploadUrl || "").trim();
+
+  const marker = "/image/upload/";
+  const idx = url.indexOf(marker);
+  if (idx === -1) return url;
+
+  const base = url.slice(0, idx + marker.length);
+  const rest = url.slice(idx + marker.length);
+
+  const t = [
+    "f_auto",
+    "q_auto",
+    "dpr_auto",
+    "c_limit", // ingen crop, begränsar bara till max-bredd
+    "w_" + Math.round(w),
+  ].join(",");
+
+  return base + t + "/" + rest;
+}
+
+/* Ny: srcset för FRONT-HERO utan crop */
+function asBuildSrcsetNoCropUpload_55219(uploadUrl, widths) {
+  return widths
+    .map((w) => asCldNoCropFromUploadUrl_55219(uploadUrl, w) + " " + w + "w")
+    .join(", ");
+}
+
+function asBuildSrcsetUpload_55219(uploadUrl, widths, aspectW, aspectH) {
+  return widths
+    .map((w) => {
+      const h = Math.round((w * aspectH) / aspectW);
+      return asCldFromUploadUrl_55219(uploadUrl, w, h) + " " + w + "w";
+    })
+    .join(", ");
+}
 
     /* =========================
        DATA (REPLACE WITH YOUR URLs)
@@ -429,10 +458,7 @@ function asGetFrontIndexes_61724() {
   });
 }
 
-    /* =========================
-       FRONT GRID INIT (ONLY 5 LOAD)
-       ========================= */
- function asInitFrontGrid_61724() {
+function asInitFrontGrid_61724() {
   asSetCounter_61724();
 
   const heroDims = asFrontHeroDims_61724();
@@ -459,10 +485,16 @@ function asGetFrontIndexes_61724() {
     const aspectW = Math.max(1, Math.round(dims.w));
     const aspectH = Math.max(1, Math.round(dims.h));
 
-    el.img.src = asCldFromUploadUrl_55219(data.src, aspectW, aspectH);
-
-    const widths = isHero ? [720, 960, 1200, 1440] : [360, 520, 720, 900];
-    el.img.srcset = asBuildSrcsetUpload_55219(data.src, widths, aspectW, aspectH);
+    // FRONT-HERO: ingen crop (c_limit, endast w). Små: behåll c_fill som innan.
+    if (isHero) {
+      el.img.src = asCldNoCropFromUploadUrl_55219(data.src, aspectW);
+      const widths = [720, 960, 1200, 1440];
+      el.img.srcset = asBuildSrcsetNoCropUpload_55219(data.src, widths);
+    } else {
+      el.img.src = asCldFromUploadUrl_55219(data.src, aspectW, aspectH);
+      const widths = [360, 520, 720, 900];
+      el.img.srcset = asBuildSrcsetUpload_55219(data.src, widths, aspectW, aspectH);
+    }
 
     el.img.sizes = isHero
       ? asIsDesktop_61724()
