@@ -1543,24 +1543,16 @@ function asAnimateAdjacentNav_61724(dir) {
 }
 
 
- /* AFTER: oförändrat (men nu ger asStepFamily_61724 swipe-card anim via asAnimateAdjacentNav_61724) */
+/* AFTER: oförändrat (men nu ger asStepFamily_61724 swipe-card anim via asAnimateAdjacentNav_61724) */
 asCloseBtn_91827.addEventListener("click", asCloseDialog_61724);
 asNavPrev_91827.addEventListener("click", () => asStepFamily_61724(-1));
 asNavNext_91827.addEventListener("click", () => asStepFamily_61724(1));
 
-    // Click outside shell closes
-    asDialog_91827.addEventListener("click", (e) => {
-      if (e.target && e.target.closest && e.target.closest("#asprCloseBtn_91827, #asprNavPrev_91827, #asprNavNext_91827"))
-        return;
-
-      const rect = asModalShell_91827.getBoundingClientRect();
-      const x = e.clientX,
-        y = e.clientY;
-      const inside = x >= rect.left && x <= rect.right && y >= rect.top && y <= rect.bottom;
-      if (!inside) asCloseDialog_61724();
-    });
+    // Click on dialog/backdrop should NOT close
+    // (medvetet borttagen click-listener på asDialog_91827)
 
     asDialog_91827.addEventListener("close", () => asLockBody_61724(false));
+
 
   /* AFTER: oförändrat (nu blir även keyboard “swipe card look” via asStepFamily_61724) */
 document.addEventListener("keydown", (e) => {
