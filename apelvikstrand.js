@@ -268,8 +268,9 @@ function asBuildSrcsetUpload_55219(uploadUrl, widths, aspectW, aspectH) {
     let asSlidesKey_61724 = null; // "Family|0,1,2"
     let asLastStagedIndex_61724 = null;
 
-    // Thumbs cache key (så vi inte rebuildar thumbs vid varje bildbyte)
-    let asThumbsKey_61724 = null; // "Family|0,1,2"
+let asThumbsKey_61724 = null; // key för byggd DOM
+let asThumbWindowStart_61724 = 0; // <-- NY: första "pos" i familjelistan som är synlig (0..n-1)
+let asThumbWindowMetaKey_61724 = null; // <-- NY: låser start till aktuell family+list+visible
 
     // Slide gap (px) for track swipe layout
     const asSlideGap_61724 = 22;
@@ -1008,6 +1009,63 @@ function asThumbWindowSize_61724() {
   return Math.max(1, Math.min(perRow, n));
 }
 
+/* AFTER */
+function asThumbWindowMetaKeyBuild_61724() {
+  const list = asActiveFamilyIndexes_61724 || [];
+  const n = list.length;
+  if (!n) return "empty";
+  const visible = Math.max(1, Math.min(asThumbWindowSize_61724(), n));
+  return String(asActiveFamily_61724 || "") + "|" + list.join(",") + "|v" + visible;
+}
+
+/* Ny: uppdatera start ENDAST om active hamnar utanför synligt fönster */
+function asEnsureThumbWindowStart_61724() {
+  const list = asActiveFamilyIndexes_61724 || [];
+  const n = list.length;
+  if (!n) return;
+
+  // Om allt får plats -> ingen windowlogik
+  if (asThumbAllFits_61724()) {
+    asThumbWindowStart_61724 = 0;
+    asThumbWindowMetaKey_61724 = asThumbWindowMetaKeyBuild_61724();
+    return;
+  }
+
+  const visible = Math.max(1, Math.min(asThumbWindowSize_61724(), n));
+  const metaKey = asThumbWindowMetaKeyBuild_61724();
+
+  // Om family/list/visible ändras -> resetta start till 0 (stabilt, ingen "centrering")
+  if (asThumbWindowMetaKey_61724 !== metaKey) {
+    asThumbWindowMetaKey_61724 = metaKey;
+    asThumbWindowStart_61724 = 0;
+  }
+
+  const activePos = list.indexOf(asActiveGlobalIndex_61724);
+  const pos = activePos >= 0 ? activePos : 0;
+
+  // Clamp start (fönstret ska inte wrap:a)
+  const maxStart = Math.max(0, n - visible);
+  asThumbWindowStart_61724 = Math.max(0, Math.min(maxStart, asThumbWindowStart_61724));
+
+  const start = asThumbWindowStart_61724;
+  const end = start + visible - 1;
+
+  // Om active är inom fönstret -> gör ingenting (exakt vad du vill)
+  if (pos >= start && pos <= end) return;
+
+  // Om active ligger efter fönstret -> flytta precis så att den får plats sist
+  if (pos > end) {
+    asThumbWindowStart_61724 = Math.min(maxStart, pos - visible + 1);
+    return;
+  }
+
+  // Om active ligger före fönstret -> flytta precis så att den får plats först
+  if (pos < start) {
+    asThumbWindowStart_61724 = Math.max(0, pos);
+    return;
+  }
+}
+
 function asBuildThumbWindowIndexes_61724() {
   const list = asActiveFamilyIndexes_61724 || [];
   const n = list.length;
@@ -1020,17 +1078,15 @@ function asBuildThumbWindowIndexes_61724() {
 
   const visible = Math.max(1, Math.min(asThumbWindowSize_61724(), n));
 
-  const activePos = list.indexOf(asActiveGlobalIndex_61724);
-  const safeActivePos = activePos >= 0 ? activePos : 0;
+  // Viktigt: säkra start endast vid "utanför fönster"
+  asEnsureThumbWindowStart_61724();
 
-  const half = Math.floor(visible / 2);
-  let start = safeActivePos - half;
-  start = ((start % n) + n) % n;
+  const maxStart = Math.max(0, n - visible);
+  const start = Math.max(0, Math.min(maxStart, asThumbWindowStart_61724));
 
   const out = [];
   for (let i = 0; i < visible; i++) {
-    const pos = (start + i) % n;
-    out.push(list[pos]);
+    out.push(list[start + i]);
   }
   return out;
 }
@@ -1047,14 +1103,13 @@ function asBuildThumbWindowKey_61724() {
 
   const visible = Math.max(1, Math.min(asThumbWindowSize_61724(), n));
 
-  const activePos = list.indexOf(asActiveGlobalIndex_61724);
-  const safeActivePos = activePos >= 0 ? activePos : 0;
+  // Säkerställ start (flytta bara om active är utanför fönstret)
+  asEnsureThumbWindowStart_61724();
 
-  const half = Math.floor(visible / 2);
-  let start = safeActivePos - half;
-  start = ((start % n) + n) % n;
+  const maxStart = Math.max(0, n - visible);
+  const start = Math.max(0, Math.min(maxStart, asThumbWindowStart_61724));
 
-  // Key ändras bara när fönstret faktiskt måste skifta
+  // Key ändras bara när start faktiskt ändras
   return String(asActiveFamily_61724 || "") + "|" + list.join(",") + "|v" + visible + "|s" + start;
 }
 
@@ -1123,16 +1178,14 @@ function asRenderHeroAndThumbs_61724(opts) {
   asStageMobileSlides_61724(true, instantSwap);
   asUpdateCounterAndNav_61724();
 }
-/* AFTER: hela asSetActiveGlobalIndex_61724 (ingen thumb-scroll + instantSwap kan stänga av animation) */
-function asSetActiveGlobalIndex_61724(globalIdx, opts) {
+     function asSetActiveGlobalIndex_61724(globalIdx, opts) {
   const o = opts || {};
   const silentStage = !!o.silentStage;
   const instantSwap = !!o.instantSwap;
 
   asActiveGlobalIndex_61724 = globalIdx;
 
-  // Thumbs: om allt får plats -> bygg full list (ingen reorder).
-  // Annars -> rebuild window när det behövs.
+  // Thumbs: flytta fönstret ENDAST om active är utanför synliga thumbs
   asEnsureThumbWindowBuilt_61724();
 
   const activeThumbBtn = asSyncThumbStates_61724();
