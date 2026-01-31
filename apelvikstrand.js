@@ -501,9 +501,9 @@
         img.sizes = isDesktop ? "(min-width: 900px) 70vw, 92vw" : "92vw";
 
           slide.appendChild(img);
-        slide.addEventListener("click", () => {
-          asGoToGlobalIndexAnimated_61724(globalIdx, { focusThumb: false });
-        });
+  slide.addEventListener("click", () => {
+  asSetActiveGlobalIndex_61724(globalIdx, { focusThumb: false, noScrollThumbs: true });
+});
 
         asHeroTrack_91827.appendChild(slide);
       }
@@ -828,9 +828,9 @@ function asRenderHeroAndThumbs_61724(opts) {
       img.sizes = asIsMobile_61724() ? "70px" : "78px";
 
       btn.appendChild(img);
-      btn.addEventListener("click", () =>
-        asGoToGlobalIndexAnimated_61724(globalIdx, { focusThumb: false })
-      );
+btn.addEventListener("click", () =>
+  asSetActiveGlobalIndex_61724(globalIdx, { focusThumb: false, noScrollThumbs: true })
+);
 
       asThumbs_91827.appendChild(btn);
     }
@@ -851,18 +851,28 @@ function asRenderHeroAndThumbs_61724(opts) {
   asStageMobileSlides_61724(true);
   asUpdateCounterAndNav_61724();
 }
-
- function asSetActiveGlobalIndex_61724(globalIdx, opts) {
+function asSetActiveGlobalIndex_61724(globalIdx, opts) {
   const o = opts || {};
   const silentStage = !!o.silentStage;
+  const noScrollThumbs = !!o.noScrollThumbs;
 
   asActiveGlobalIndex_61724 = globalIdx;
 
   // INGEN rebuild här -> bara UI-sync
   const activeThumbBtn = asSyncThumbStates_61724();
 
-  // IMPORTANT: During multi-step programmatic nav (or silentStage), do NOT scroll thumbs every step.
-  if (activeThumbBtn && !asDragging_61724 && !asProgrammaticNav_61724 && !silentStage) {
+  // IMPORTANT: No thumb auto-scroll when:
+  // - dragging
+  // - programmatic multi-step nav
+  // - silentStage
+  // - explicit noScrollThumbs (thumb/hero click direct swap)
+  if (
+    activeThumbBtn &&
+    !asDragging_61724 &&
+    !asProgrammaticNav_61724 &&
+    !silentStage &&
+    !noScrollThumbs
+  ) {
     asScrollToThumb_61724(activeThumbBtn, { behavior: "auto" });
   }
 
