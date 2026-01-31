@@ -169,7 +169,7 @@
     inset: 0;
     margin: 0;
     border: none;
-    padding: 2rem;
+    padding: 0rem;
     width: 100vw;
     height: 100% !important;
     max-width: none;
@@ -184,28 +184,28 @@
     background: var(--as-overlay);
   }
 
-  .as-modal-shell{
+.as-modal-shell {
     position: relative;
     background: transparent;
     border: none;
     border-radius: 0px;
-    overflow: hidden;              /* klipp allt horisontellt */
+    overflow: hidden;
     box-shadow: none;
     width: 100%;
     max-height: 100%;
     margin: 0 auto;
-    max-width: 1250px;
-    max-width: min(1250px, 100vw); /* safety */
-  }
+    max-width: 1100px;
+    max-width: min(1100px, 100vw);
+}
   .as-modal-body{
-    padding: 24px;
+    padding: 0px;
     overflow-x: hidden;  /* IMPORTANT: stoppa horisontell “drag/scroll” i Alla */
     max-width: 100%;
   }
 
   .as-modal-grid{
     align-items: center;
-    gap: 14px;
+    gap: 1.5rem;
     flex-direction: column;
     display: flex;
     min-width: 0;        /* IMPORTANT: låt flex-barn krympa istället för att expandera layout */
@@ -219,6 +219,15 @@
       flex-direction: column;
       display: flex;
     }
+      .as-hero-track {
+    border-radius: 15px;
+}
+.as-filter-row {
+    gap: 0.5rem;
+    justify-content:center;
+    margin-bottom: 1.5rem;
+
+}
   }
 
   /* ---------- BUTTONS (DIALOG) ---------- */
@@ -359,7 +368,7 @@
 .as-thumbs{
   display: flex;
   flex-direction: row;
-  gap: 8px;
+  gap: 0rem;
   max-height: min(70vh, 640px);
  padding: 2px 0px;
     justify-content: center;
@@ -454,12 +463,12 @@
 
 .as-filter-row {
     display: flex;
-    gap: 10px;
+    gap: 0.5rem;
     padding-right: 0px;
     overflow-x: auto;
     scrollbar-width: none;
-    margin-bottom: 4em;
-    align-items: flex-start;
+    margin-bottom: 4rem;
+    align-items: center;
 }
 
   .as-filter-row::-webkit-scrollbar{ display:none; }
