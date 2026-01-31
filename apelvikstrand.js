@@ -952,9 +952,48 @@ asStageMobileSlides_61724(true, false);
 }
 
 /* Ny: “thumbs följer med i sidled” via fönster (carousel-window) som reordrar items */
-function asThumbVisibleCount_61724() {
-  // Justera fritt (hur många thumbs som ska visas i “fönstret”)
-  return asIsDesktop_61724() ? 9 : 6;
+function asThumbMetrics_61724() {
+  const c = asThumbs_91827;
+  const n = (asActiveFamilyIndexes_61724 || []).length;
+
+  const containerW = c ? Math.max(0, c.clientWidth || 0) : 0;
+
+  // Matchar din CSS: desktop .as-thumb-btn = 5.25rem (~84px), mobile = 70px
+  const thumbW = asIsMobile_61724() ? 70 : 84;
+
+  let gap = 8;
+  if (c) {
+    const cs = window.getComputedStyle(c);
+    const g = cs.gap || cs.columnGap || cs.rowGap;
+    const parsed = parseFloat(g);
+    if (!Number.isNaN(parsed)) gap = parsed;
+  }
+
+  return { n, containerW, thumbW, gap };
+}
+
+function asThumbAllFits_61724() {
+  const m = asThumbMetrics_61724();
+  if (!m.n) return true;
+
+  // Total bredd för alla items i en rad
+  const totalNeeded = m.n * m.thumbW + Math.max(0, m.n - 1) * m.gap;
+
+  // +1 px slack för rounding
+  return totalNeeded <= (m.containerW + 1);
+}
+
+function asThumbWindowSize_61724() {
+  const m = asThumbMetrics_61724();
+  const n = m.n;
+  if (!n) return 0;
+
+  if (asThumbAllFits_61724()) return n;
+
+  // Hur många får plats samtidigt i containern (utan scroll), baserat på faktisk bredd
+  const perRow = Math.max(1, Math.floor((m.containerW + m.gap) / (m.thumbW + m.gap)));
+
+  return Math.max(1, Math.min(perRow, n));
 }
 
 function asBuildThumbWindowIndexes_61724() {
@@ -962,16 +1001,18 @@ function asBuildThumbWindowIndexes_61724() {
   const n = list.length;
   if (!n) return [];
 
-  const visible = Math.max(1, Math.min(asThumbVisibleCount_61724(), n));
+  // Om allt får plats -> bygg hela listan i ordning (ingen reorder)
+  if (asThumbAllFits_61724()) {
+    return list.slice();
+  }
+
+  const visible = Math.max(1, Math.min(asThumbWindowSize_61724(), n));
 
   const activePos = list.indexOf(asActiveGlobalIndex_61724);
   const safeActivePos = activePos >= 0 ? activePos : 0;
 
-  // Starta så att active hamnar ungefär i mitten av fönstret
   const half = Math.floor(visible / 2);
   let start = safeActivePos - half;
-
-  // Wrap start inom [0..n-1]
   start = ((start % n) + n) % n;
 
   const out = [];
@@ -987,7 +1028,12 @@ function asBuildThumbWindowKey_61724() {
   const n = list.length;
   if (!n) return "empty";
 
-  const visible = Math.max(1, Math.min(asThumbVisibleCount_61724(), n));
+  // Om allt får plats -> key för full list (ingen reorder)
+  if (asThumbAllFits_61724()) {
+    return "full|" + String(asActiveFamily_61724 || "") + "|" + list.join(",");
+  }
+
+  const visible = Math.max(1, Math.min(asThumbWindowSize_61724(), n));
 
   const activePos = list.indexOf(asActiveGlobalIndex_61724);
   const safeActivePos = activePos >= 0 ? activePos : 0;
@@ -996,7 +1042,7 @@ function asBuildThumbWindowKey_61724() {
   let start = safeActivePos - half;
   start = ((start % n) + n) % n;
 
-  // Nyckel som ändras när “fönstret” måste skifta
+  // Key ändras bara när fönstret faktiskt måste skifta
   return String(asActiveFamily_61724 || "") + "|" + list.join(",") + "|v" + visible + "|s" + start;
 }
 
@@ -1044,15 +1090,14 @@ function asEnsureThumbWindowBuilt_61724() {
     asThumbs_91827.appendChild(btn);
   }
 }
-   /* AFTER: hela asRenderHeroAndThumbs_61724 (thumbs “följer med” via fönster som skiftar i sidled) */
-function asRenderHeroAndThumbs_61724(opts) {
+ function asRenderHeroAndThumbs_61724(opts) {
   // 1) Hero slides: build only when filter changes
   asEnsureHeroSlidesBuilt_61724();
 
-  // 2) Thumbs: bygg “window” som följer aktiv bild (reorder i sidled)
+  // 2) Thumbs: bygg full list om allt får plats, annars window-reorder
   asEnsureThumbWindowBuilt_61724();
 
-  // 3) Uppdatera active-state i thumbs-fönstret
+  // 3) Uppdatera active-state
   const activeThumbBtn = asSyncThumbStates_61724();
 
   if (activeThumbBtn) {
@@ -1071,13 +1116,12 @@ function asSetActiveGlobalIndex_61724(globalIdx, opts) {
 
   asActiveGlobalIndex_61724 = globalIdx;
 
-  // Ny: se till att thumbs “följer med” (rebuild window om den behöver skifta)
+  // Thumbs: om allt får plats -> bygg full list (ingen reorder).
+  // Annars -> rebuild window när det behövs.
   asEnsureThumbWindowBuilt_61724();
 
-  // UI-sync (nu finns active thumb i fönstret om möjligt)
   const activeThumbBtn = asSyncThumbStates_61724();
 
-  // IMPORTANT: During programmatic multi-step stepping, we stage manually (to avoid snap + blink).
   if (!silentStage) {
     asStageMobileSlides_61724(true, instantSwap);
     asUpdateCounterAndNav_61724();
