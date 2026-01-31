@@ -248,8 +248,18 @@
     -webkit-tap-highlight-color: transparent;
   }
 
-  .as-close-icon{ width: 18px; height: 18px; display:block; }
+.as-close-icon{
+  width: 18px !important;
+  height: 18px !important;
+  min-width: 18px;
+  min-height: 18px;
+  display: block;
+  flex: 0 0 18px;           /* iOS: hindrar “flex shrink” */
+}
 
+.as-close-icon *{
+  vector-effect: non-scaling-stroke; /* om du har strokes */
+}
   .as-nav-btn{
     position: absolute;
     top: 50%;
