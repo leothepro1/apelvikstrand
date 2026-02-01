@@ -24,16 +24,22 @@
     mapboxgl.accessToken =
       "pk.eyJ1IjoicnV0Z2Vyc3NvbiIsImEiOiJjbWwzdjY5N2owcDdiM2RzZWlzaG14MWVjIn0.yMfhGXLf9xq_vzIFSJVcjA";
 
-    // TODO: byt till din publicerade style URL från Mapbox Studio
-    const sektion73StyleUrl = "mapbox://styles/rutgersson/STYLE_ID_HAR";
+    // Publicerad style URL (Mapbox Studio)
+    const sektion73StyleUrl =
+      "mapbox://styles/rutgersson/cml3vbd2s006i01qwezp4cw46";
 
     // Grundinställningar (Apelviken)
     const sektion73Map = new mapboxgl.Map({
       container: sektion73Canvas,
       style: sektion73StyleUrl,
-      center: [12.239, 57.110],
+      center: [12.239, 57.11],
       zoom: 14.3,
       attributionControl: false
+    });
+
+    // Logga tydliga fel om något i stil/tiles blockas
+    sektion73Map.on("error", (e) => {
+      console.error("Mapbox error:", e && e.error ? e.error : e);
     });
 
     // Valfritt: bättre UX för “embedded map”
@@ -52,7 +58,7 @@
       {
         id: "sektion73Pin_reception_0002",
         title: "Reception",
-        lngLat: [12.2260, 57.1108],
+        lngLat: [12.226, 57.1108],
         payload: { type: "reception" }
       }
     ];
@@ -62,6 +68,7 @@
       el.type = "button";
       el.id = pin.id;
       el.setAttribute("aria-label", pin.title);
+
       el.style.width = "34px";
       el.style.height = "34px";
       el.style.borderRadius = "999px";
@@ -92,6 +99,7 @@
 
     function sektion73AddPin(pin) {
       const el = sektion73CreatePinEl(pin);
+
       new mapboxgl.Marker({ element: el, anchor: "center" })
         .setLngLat(pin.lngLat)
         .addTo(sektion73Map);
@@ -105,3 +113,4 @@
     window.sektion73MapInstance = sektion73Map;
   });
 })();
+
