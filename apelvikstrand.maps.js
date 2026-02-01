@@ -82,7 +82,10 @@ const sektion73Tangkorar_4 = {
 
     // Kamera
     const sektion73Pitch = 55;
-    const sektion73Bearing = -20;
+
+    // Visa "från havet in mot land" (väst -> öst):
+    // bearing 90 = öst uppåt i bild (kameran tittar mot öst med pitch)
+    const sektion73Bearing = 90;
 
     const sektion73DisableRotate = true;
 
@@ -661,8 +664,8 @@ const sektion73Pins = [
     label: "Tångkörarvägen 1",
     iconKey: "home",
     ui: {
-      bubbleBg: "rgba(255,255,255,.92)",
-      pointerTop: "rgba(255,255,255,.92)"
+      bubbleBg: "1d1d1b",
+      pointerTop: "1d1d1b"
     },
     lngLat: sektion73Tangkorar.lngLat,
     modal: {
