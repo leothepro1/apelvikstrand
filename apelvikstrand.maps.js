@@ -3,6 +3,7 @@
    - Låst till Apelviken (maxBounds + zoom-intervall)
    - Home: Surbrunnsvägen 2–8, 432 53 Varberg
    - 3D: pitch + bearing + show3dBuildings/show3dObjects (Standard config)
+   - Labels: dölj företag/POI + ortnamn/platser. Behåll vägnamn.
 */
 (function () {
   function sektion73Ready(fn) {
@@ -68,12 +69,27 @@
       pitchWithRotate: false,
       dragRotate: false,
 
-      // Viktigt: Standard style config redan vid init (stabilast)
-      // (Nycklarna är Feature visibility för basemap-importen)
+      // Standard (imports) config direkt vid init (stabilast)
+      // OBS: Nycklarna är "Feature visibility" för basemap-importen.
+      // Vi slår av POI + place labels, men behåller road labels.
       config: {
         basemap: {
           show3dBuildings: true,
-          show3dObjects: true
+          show3dObjects: true,
+
+          // ---- LABEL VISIBILITY ----
+          // Dölj företag/POI (t.ex. Badplats Apelviken, Coop Söder m.fl.)
+          showPointOfInterestLabels: false,
+
+          // Dölj ortnamn/platser (Mariedal, Apelviken, Söderhöjd, osv.)
+          showPlaceLabels: false,
+
+          // Behåll vägar (vägnamn + vägsköldar)
+          showRoadLabels: true
+
+          // Om din template även visar t.ex. transit/landmarks och du vill dölja dem:
+          // showTransitLabels: false,
+          // showLandmarkLabels: false
         }
       }
     });
@@ -96,7 +112,7 @@
     sektion73Map.addControl(new mapboxgl.AttributionControl({ compact: true }), "bottom-right");
 
     /* =========================
-       STANDARD 3D (safety + debug)
+       STANDARD CONFIG (SAFETY)
        ========================= */
 
     function sektion73HasImportsStyle() {
@@ -104,33 +120,32 @@
       return !!(s && Array.isArray(s.imports) && s.imports.length);
     }
 
-    function sektion73ForceStandard3D() {
+    function sektion73ForceStandardConfig() {
       if (typeof sektion73Map.setConfigProperty !== "function") return;
 
-      try {
-        sektion73Map.setConfigProperty("basemap", "show3dBuildings", true);
-        sektion73Map.setConfigProperty("basemap", "show3dObjects", true);
-      } catch (e) {
-        console.warn("Kunde inte sätta Standard 3D-config via setConfigProperty:", e);
-      }
-    }
+      // Tvinga config efter style-load också (för att vara säker vid style reloads)
+      const setSafe = (group, key, value) => {
+        try {
+          sektion73Map.setConfigProperty(group, key, value);
+        } catch (_) {}
+      };
 
-    function sektion73LogStandard3DState() {
-      if (typeof sektion73Map.getConfigProperty !== "function") return;
-      try {
-        const b = sektion73Map.getConfigProperty("basemap", "show3dBuildings");
-        const o = sektion73Map.getConfigProperty("basemap", "show3dObjects");
-        console.log("CONFIG show3dBuildings:", b, "show3dObjects:", o);
-      } catch (e) {
-        // vissa miljöer kan kasta om config inte är redo just då
-      }
+      setSafe("basemap", "show3dBuildings", true);
+      setSafe("basemap", "show3dObjects", true);
+
+      setSafe("basemap", "showPointOfInterestLabels", false);
+      setSafe("basemap", "showPlaceLabels", false);
+      setSafe("basemap", "showRoadLabels", true);
+
+      // Valfritt extra om de finns i din style:
+      // setSafe("basemap", "showTransitLabels", false);
+      // setSafe("basemap", "showLandmarkLabels", false);
     }
 
     /* =========================
        LOAD
        ========================= */
 
-    // För Standard/import är detta bästa eventet
     sektion73Map.on("style.load", () => {
       // 3D vy (pitch + bearing)
       sektion73Map.easeTo({
@@ -142,15 +157,13 @@
       });
 
       if (sektion73HasImportsStyle()) {
-        sektion73ForceStandard3D();
-        // logga efter att vi tvingat config (litet tick ger stabilare output)
-        setTimeout(sektion73LogStandard3DState, 0);
+        sektion73ForceStandardConfig();
       }
 
+      // Debug
       const s = sektion73Map.getStyle();
       console.log("STYLE NAME:", s && s.name);
       console.log("STYLE HAS IMPORTS:", sektion73HasImportsStyle());
-      console.log("LAYER COUNT:", s && s.layers ? s.layers.length : 0);
     });
 
     /* =========================
@@ -267,4 +280,5 @@
     };
   });
 })();
+
 
