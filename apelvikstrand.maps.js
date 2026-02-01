@@ -232,10 +232,11 @@ const sektion73Tangkorar_4 = {
     z-index: 2147483001;
     display: flex;
     flex-direction: column;
-    padding: 0px;
+    padding-bottom: 32px;
     gap: 0px;
     overscroll-behavior: contain;
     border-radius: 20px 0px 0px 20px;
+    overflow: auto;
 }
         #sektion73MapModal.is-open{
           transform:translateX(0);
@@ -345,7 +346,7 @@ const sektion73Tangkorar_4 = {
     font-family: "Manrope", Inter, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, sans-serif;
     margin: 0;
     font-weight: 700;
-    font-size: 28px;
+    font-size: 32px;
 }
 .sektion73ModalBodyP {
     color: rgb(64, 61, 59);
@@ -379,7 +380,7 @@ const sektion73Tangkorar_4 = {
     font-size: 15px;
     font-weight: 700;
 }
-        .sektion73ModalBtnPrimary:{
+        .sektion73ModalBtnPrimary{
           background:var(--sektion73-accent);
         }
              .sektion73ModalBtnPrimary:hover{
@@ -388,7 +389,7 @@ const sektion73Tangkorar_4 = {
                      .sektion73ModalBtnPrimary:active{
           background:#a67b02;
         }
-                .sektion73ModalBtnSecondary:{
+                .sektion73ModalBtnSecondary{
         background: #FFE6A3;
             color: #5A3C00;
         }
