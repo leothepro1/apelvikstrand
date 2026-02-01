@@ -1,9 +1,8 @@
 /* apelvikstrand.maps
-   Apelvikstrand – Interaktiv karta (Mapbox)
+   Apelvikstrand – Interaktiv karta (Mapbox Standard / imports)
    - Låst till Apelviken (maxBounds + zoom-intervall)
    - Home: Surbrunnsvägen 2–8, 432 53 Varberg
-   - Designad upplevelse (mindre UI, låst interaktion, chips som pins)
-   - 3D: pitch + bearing + 3D-byggnader
+   - 3D: pitch + bearing + show3dBuildings/show3dObjects (Standard config)
 */
 (function () {
   function sektion73Ready(fn) {
@@ -32,7 +31,7 @@
 
     const sektion73StyleUrl = "mapbox://styles/rutgersson/cml3w74bd009g01r458nuhgjn";
 
-    // Home: Surbrunnsvägen 2–8, 432 53 Varberg (finjustera gärna vid behov)
+    // Home: Surbrunnsvägen 2–8, 432 53 Varberg
     const sektion73Home = {
       title: "Surbrunnsvägen 2–8",
       lngLat: [12.26197766, 57.08161047]
@@ -67,7 +66,16 @@
       antialias: true,
 
       pitchWithRotate: false,
-      dragRotate: false
+      dragRotate: false,
+
+      // Viktigt: Standard style config redan vid init (stabilast)
+      // (Nycklarna är Feature visibility för basemap-importen)
+      config: {
+        basemap: {
+          show3dBuildings: true,
+          show3dObjects: true
+        }
+      }
     });
 
     sektion73Map.on("error", (e) => {
@@ -88,111 +96,33 @@
     sektion73Map.addControl(new mapboxgl.AttributionControl({ compact: true }), "bottom-right");
 
     /* =========================
-       3D (STANDARD STYLE CONFIG)
+       STANDARD 3D (safety + debug)
        ========================= */
 
-    function sektion73IsStandardImportStyle() {
+    function sektion73HasImportsStyle() {
       const s = sektion73Map.getStyle && sektion73Map.getStyle();
       return !!(s && Array.isArray(s.imports) && s.imports.length);
     }
 
-    function sektion73EnableStandard3D() {
-      // Standard: Feature Visibility → show3dObjects/show3dBuildings :contentReference[oaicite:1]{index=1}
-      if (typeof sektion73Map.setConfigProperty !== "function") return false;
+    function sektion73ForceStandard3D() {
+      if (typeof sektion73Map.setConfigProperty !== "function") return;
 
       try {
-        sektion73Map.setConfigProperty("basemap", "show3dObjects", true);
         sektion73Map.setConfigProperty("basemap", "show3dBuildings", true);
-        // valfritt: sektion73Map.setConfigProperty("basemap", "show3dFacades", true);
-        return true;
+        sektion73Map.setConfigProperty("basemap", "show3dObjects", true);
       } catch (e) {
-        console.warn("Kunde inte sätta Standard 3D-config:", e);
-        return false;
+        console.warn("Kunde inte sätta Standard 3D-config via setConfigProperty:", e);
       }
     }
 
-    /* =========================
-       3D (CLASSIC FALLBACK)
-       ========================= */
-
-    function sektion73FindCompositeSourceId() {
-      const style = sektion73Map.getStyle();
-      if (!style || !style.sources) return null;
-      if (style.sources.composite) return "composite";
-
-      const keys = Object.keys(style.sources);
-      for (let i = 0; i < keys.length; i++) {
-        const k = keys[i];
-        const src = style.sources[k];
-        if (src && src.type === "vector") return k;
-      }
-      return null;
-    }
-
-    function sektion73FindFirstSymbolLayerId() {
-      const style = sektion73Map.getStyle();
-      if (!style || !style.layers) return null;
-      for (let i = 0; i < style.layers.length; i++) {
-        const l = style.layers[i];
-        if (l && l.type === "symbol" && l.layout && l.layout["text-field"]) return l.id;
-      }
-      for (let j = 0; j < style.layers.length; j++) {
-        const l2 = style.layers[j];
-        if (l2 && l2.type === "symbol") return l2.id;
-      }
-      return null;
-    }
-
-    function sektion73Has3DLayer() {
-      const style = sektion73Map.getStyle();
-      if (!style || !style.layers) return false;
-      return style.layers.some((l) => l && l.id === "sektion73-3d-buildings");
-    }
-
-    function sektion73TryAddClassic3DBuildings() {
-      if (sektion73Has3DLayer()) return;
-
-      const sourceId = sektion73FindCompositeSourceId();
-      if (!sourceId) {
-        console.warn("Hittade ingen vector source för 3D-byggnader (composite).");
-        return;
-      }
-
-      const beforeId = sektion73FindFirstSymbolLayerId();
-
+    function sektion73LogStandard3DState() {
+      if (typeof sektion73Map.getConfigProperty !== "function") return;
       try {
-        sektion73Map.addLayer(
-          {
-            id: "sektion73-3d-buildings",
-            source: sourceId,
-            "source-layer": "building",
-            type: "fill-extrusion",
-            minzoom: 13.5,
-            filter: ["any", ["has", "height"], ["has", "render_height"], ["has", "min_height"]],
-            paint: {
-              "fill-extrusion-color": "#d9d4c8",
-              "fill-extrusion-opacity": 0.88,
-              "fill-extrusion-base": [
-                "coalesce",
-                ["to-number", ["get", "min_height"]],
-                ["to-number", ["get", "render_min_height"]],
-                0
-              ],
-              "fill-extrusion-height": [
-                "interpolate",
-                ["linear"],
-                ["zoom"],
-                13.5,
-                0,
-                15.0,
-                ["coalesce", ["to-number", ["get", "height"]], ["to-number", ["get", "render_height"]], 8]
-              ]
-            }
-          },
-          beforeId || undefined
-        );
-      } catch (err) {
-        console.warn("Kunde inte lägga klassiska 3D-byggnader:", err);
+        const b = sektion73Map.getConfigProperty("basemap", "show3dBuildings");
+        const o = sektion73Map.getConfigProperty("basemap", "show3dObjects");
+        console.log("CONFIG show3dBuildings:", b, "show3dObjects:", o);
+      } catch (e) {
+        // vissa miljöer kan kasta om config inte är redo just då
       }
     }
 
@@ -200,9 +130,9 @@
        LOAD
        ========================= */
 
-    // Viktigt: för Standard/import vill vi köra efter style-load (inte bara map load)
+    // För Standard/import är detta bästa eventet
     sektion73Map.on("style.load", () => {
-      // sätt 3D-vy
+      // 3D vy (pitch + bearing)
       sektion73Map.easeTo({
         center: sektion73Home.lngLat,
         zoom: sektion73StartZoom,
@@ -211,23 +141,16 @@
         duration: 900
       });
 
-      // 3D: Standard config först, annars classic fallback
-      if (sektion73IsStandardImportStyle()) {
-        const ok = sektion73EnableStandard3D();
-        if (!ok) {
-          // om config inte funkar av någon anledning, försök inte classic här (det brukar inte hjälpa på Standard)
-          console.warn("Standard/import-style upptäckt, men kunde inte aktivera 3D via config.");
-        }
-      } else {
-        sektion73TryAddClassic3DBuildings();
+      if (sektion73HasImportsStyle()) {
+        sektion73ForceStandard3D();
+        // logga efter att vi tvingat config (litet tick ger stabilare output)
+        setTimeout(sektion73LogStandard3DState, 0);
       }
 
-      // Debug
       const s = sektion73Map.getStyle();
       console.log("STYLE NAME:", s && s.name);
-      console.log("STYLE HAS IMPORTS:", !!(s && s.imports && s.imports.length));
+      console.log("STYLE HAS IMPORTS:", sektion73HasImportsStyle());
       console.log("LAYER COUNT:", s && s.layers ? s.layers.length : 0);
-      console.log("SOURCE KEYS:", s && s.sources ? Object.keys(s.sources) : []);
     });
 
     /* =========================
@@ -344,3 +267,4 @@
     };
   });
 })();
+
