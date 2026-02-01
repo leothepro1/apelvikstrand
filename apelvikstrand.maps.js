@@ -818,33 +818,31 @@ const sektion73Pins = [
     }
   },
    
-  // Tångkörarvägen 1
-  {
+ {
     id: "sektion73Pin_livs_0000",
-    label: "Tångkörarvägen 1",
-    iconKey: "livs",
+    label: "Apelviken Livs",
+    iconKey: "as", // använd en befintlig iconKey som finns i sektion73PinIcons
     ui: {
       bubbleBg: "#fff",
       pointerTop: "#fff"
     },
     lngLat: sektion73livs.lngLat,
     modal: {
-      kicker: "PUNKT",
-      title: "Tångkörarvägen 1",
+      kicker: "BUTIK",
+      title: "Apelviken Livs",
       images: [
-        "https://res.cloudinary.com/dmgmoisae/image/upload/v1769971921/solviken321_myphpm.png",
-        "https://res.cloudinary.com/dmgmoisae/image/upload/v1769971923/bubbel_vvavwe.png",
-        "https://res.cloudinary.com/dmgmoisae/image/upload/v1769971923/sol_qx8kjy.png",
-        "https://res.cloudinary.com/dmgmoisae/image/upload/v1769971923/solviken_pt1mdu.png"
+        "https://picsum.photos/seed/sektion73_livs0/1200/675",
+        "https://picsum.photos/seed/sektion73_livs1/600/450",
+        "https://picsum.photos/seed/sektion73_livs2/600/450",
+        "https://picsum.photos/seed/sektion73_livs3/600/450"
       ],
       imgSrc: "Bildkälla: —",
-      h: "Precis vid havet",
-      p: "Allra närmast stranden och med en bedårande utsikt över Kattegatt och folklivet i viken. På Solviken samlas campinggäster och varbergsbor, flanörer längs strandpromenaden och de som tagit en cykeltur från Läjet. Sommaren fylls av god mat, dofter från grillen, quiz och trubadurer. Höstkvällar med värme och gemyt och en svart vattenyta så långt man ser.Som utomlands hemma. För den stora festen och för den som bara har vägen förbi. För dig som släpar med dig en hel hög goda kamrater och för dig som träffar dem här.",
-      cta1Text: "Visa meny",
-      cta1Href: "https://www.apelviken.se/solviken-meny",
-      cta2Text: "Vägbeskrivning",
-      cta2Href:
-        "https://www.google.com/maps/dir/57.502272,12.087438/Solviken,+T%C3%A5ngk%C3%B6rarv%C3%A4gen+1,+432+54+Varberg/@57.2950696,11.8317533,75989m/data=!3m1!1e3!4m9!4m8!1m1!4e1!1m5!1m1!1s0x46502af989b79f2d:0xfb2919c395412c94!2m2!1d12.2488569!2d57.084622?entry=ttu&g_ep=EgoyMDI2MDEyOC4wIKXMDSoASAFQAw%3D%3D"
+      h: "Apelviken Livs",
+      p: "Livsbutik i Apelviken.",
+      cta1Text: "Öppna i Google",
+      cta1Href: "https://www.google.com/maps/search/?api=1&query=Apelviken%20Livs%2C%20Varberg",
+      cta2Text: "Visa vägen",
+      cta2Href: "https://www.google.com/maps/dir/?api=1&destination=57.084998,12.250247"
     }
   },
   // Tångkörarvägen 1
@@ -1159,7 +1157,24 @@ const sektion73Pins = [
       sektion73MarkersById[pin.id] = { marker, pin };
     }
 
-    sektion73Map.once("load", function () {
+sektion73Map.once("load", function () {
+  // pins (robust)
+  sektion73Pins.forEach((pin) => {
+    try {
+      // minimal guard så en pin utan lngLat inte kraschar allt
+      if (!pin || !Array.isArray(pin.lngLat) || pin.lngLat.length !== 2) {
+        console.warn("Pin saknar giltig lngLat:", pin);
+        return;
+      }
+      sektion73AddPin(pin);
+    } catch (e) {
+      console.error("Pin-rendering kraschade för:", pin && pin.id, e);
+    }
+  });
+
+  sektion73EnsureModalDOM();
+});
+
       // pins
       sektion73Pins.forEach(sektion73AddPin);
 
