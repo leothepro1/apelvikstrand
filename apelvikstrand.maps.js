@@ -220,25 +220,25 @@ const sektion73Tangkorar_4 = {
           pointer-events:auto;
         }
 
-        #sektion73MapModal{
-          position:fixed;
-          right:0;
-          top:0;
-          height:100dvh;
-          width:min(440px, 92vw);
-          background:var(--sektion73-modal-bg);
-          color:var(--sektion73-modal-text);
-          box-shadow:var(--sektion73-modal-shadow);
-          border-left:1px solid var(--sektion73-modal-line);
-          transform:translateX(104%);
-          transition:transform var(--sektion73-modal-dur) var(--sektion73-modal-ease);
-          z-index:2147483001;
-          display:flex;
-          flex-direction:column;
-          padding:18px;
-          gap:14px;
-          overscroll-behavior:contain;
-        }
+#sektion73MapModal {
+    position: fixed;
+    right: 0;
+    top: 0;
+    height: 100dvh;
+    width: min(520px, 92vw);
+    background: var(--sektion73-modal-bg);
+    color: var(--sektion73-modal-text);
+    border: none;
+    transform: translateX(104%);
+    transition: transform var(--sektion73-modal-dur) var(--sektion73-modal-ease);
+    z-index: 2147483001;
+    display: flex;
+    flex-direction: column;
+    padding: 0px;
+    gap: 0px;
+    overscroll-behavior: contain;
+    border-radius: 20px 0px 0px 20px;
+}
         #sektion73MapModal.is-open{
           transform:translateX(0);
         }
@@ -279,17 +279,20 @@ const sektion73Tangkorar_4 = {
           font:800 20px/1.15 system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;
           margin:0;
         }
-        .sektion73ModalClose{
-          width:40px;
-          height:40px;
-          border-radius:12px;
-          border:1px solid var(--sektion73-modal-line);
-          background:#fff;
-          cursor:pointer;
-          display:grid;
-          place-items:center;
-          flex:0 0 auto;
-        }
+.sektion73ModalClose {
+    width: 40px;
+    height: 40px;
+    border-radius: 80px;
+    border: none;
+    background: #fff;
+    cursor: pointer;
+    display: grid;
+    place-items: center;
+    flex: 0 0 auto;
+    position: absolute;
+    top: 20px;
+    right: 20px;
+}
         .sektion73ModalClose svg{ width:18px; height:18px; }
 
         .sektion73ModalGallery{
@@ -383,9 +386,9 @@ const sektion73Tangkorar_4 = {
   display:inline-flex;
   align-items:center;
   justify-content:center;
-  width:82px;
+  width:62px;
   height:auto;
-  flex:0 0 82px;
+  flex:0 0 62px;
   line-height:0;
 }
 .sektion73PinDot {
@@ -396,7 +399,7 @@ const sektion73Tangkorar_4 = {
     display: none;
 }
 #sektion73MapCanvas .sektion73PinBubble .sektion73PinIco svg{
-  width:82px;
+  width:62px;
   height:auto;
   display:block;
   color:currentColor;
@@ -444,10 +447,10 @@ const sektion73Tangkorar_4 = {
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    background: var(--sektion73-pin-bubble-bg, rgba(255,255,255,.92));
+    background: var(--sektion73-pin-bubble-bg, rgba(255, 255, 255, .92));
     height: max-content;
-    padding: 12px;
-    border-radius: 12px;
+    padding: 11px 14px;
+    border-radius: 8px;
 }
       `;
       document.head.appendChild(style);
