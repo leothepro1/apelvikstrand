@@ -332,32 +332,39 @@ const sektion73Tangkorar_4 = {
           display:block;
         }
 
-        .sektion73ModalMeta{
-          display:flex;
-          flex-direction:column;
-          gap:8px;
-        }
+.sektion73ModalMeta {
+    display: flex;
+    flex-direction: column;
+    gap: 0px;
+    padding: 32px 32px 0px;
+}
         .sektion73ModalImgSrc{
           font:600 12px/1.2 system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;
           color:rgba(14,19,24,.55);
           margin:0;
         }
-        .sektion73ModalBodyH{
-          font:800 18px/1.15 system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;
-          margin:0;
-        }
-        .sektion73ModalBodyP{
-          font:500 14px/1.55 system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;
-          color:var(--sektion73-modal-muted);
-          margin:0;
-        }
+.sektion73ModalBodyH {
+    font-family: "Manrope", Inter, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, sans-serif;
+    margin: 0;
+    font-weight: 700;
+    font-size: 28px;
+}
+.sektion73ModalBodyP {
+    color: rgb(64, 61, 59);
+    margin: 0;
+    font-family: 'Inter Variablefont Opsz Wght';
+    font-weight: 400;
+    font-size: 15px;
+    line-height: 1.55em;
+    margin-top: 15px;
+}
 
-        .sektion73ModalActions{
-          margin-top:auto;
-          display:grid;
-          gap:10px;
-          padding-top:8px;
-        }
+.sektion73ModalActions {
+    margin-top: 27px;
+    display: grid;
+    gap: 10px;
+    padding: 0px 32px;
+}
         .sektion73ModalBtn{
           width:100%;
           display:flex;
