@@ -143,18 +143,7 @@ const sektion73Tangkorar_4 = {
       sektion73Map.touchZoomRotate.disableRotation();
     }
 
-<!-- BEFORE -->
-    sektion73Map.addControl(new mapboxgl.AttributionControl({ compact: true }), "bottom-right");
 
-    /* =========================
-       STANDARD CONFIG (SAFETY)
-       ========================= */
-
-    function sektion73HasImportsStyle() {
-      const s = sektion73Map.getStyle && sektion73Map.getStyle();
-      return !!(s && Array.isArray(s.imports) && s.imports.length);
-    }
-<!-- AFTER -->
     sektion73Map.addControl(new mapboxgl.AttributionControl({ compact: true }), "bottom-right");
 
     /* =========================
