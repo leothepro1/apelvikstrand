@@ -888,7 +888,7 @@ const sektion73Pins = [
       cta2Href: "https://www.google.com/maps/dir/57.502272,12.087438/%26Olles,+T%C3%A5ngk%C3%B6rarv%C3%A4gen+10,+432+54+Varberg/@57.297359,11.8315835,75985m/data=!3m1!1e3!4m9!4m8!1m1!4e1!1m5!1m1!1s0x46502b1d2d80b947:0x4bd0492009aae2ae!2m2!1d12.2632701!2d57.0773842?entry=ttu&g_ep=EgoyMDI2MDEyOC4wIKXMDSoASAFQAw%3D%3D"
     }
   },
-   id: "sektion73Pin_tangkorar_0005",
+ id: "sektion73Pin_tangkorar_0005",
     label: "Punkt 5",
     iconKey: "strandkollektivet",
     ui: { bubbleBg: "#A5B99A", pointerTop: "#A5B99A" },
