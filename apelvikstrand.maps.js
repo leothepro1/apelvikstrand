@@ -664,7 +664,7 @@ function sektion73CloseModal() {
   const modal = document.getElementById("sektion73MapModal");
   if (!overlay || !modal) return;
 
-  document.body.classList.remove('sektion73-modal-open');
+  document.body.classList.remove("sektion73-modal-open");
 
   overlay.classList.remove("is-open");
   modal.classList.remove("is-open");
@@ -677,29 +677,20 @@ function sektion73CloseModal() {
     sektion73ActiveMoveEndHandler = null;
   }
 
-if (
-  sektion73Map &&
-  sektion73ReturnView &&
-  typeof sektion73Map.easeTo === "function"
-) {
-  sektion73Map.easeTo({
-    center: sektion73ReturnView.center,
-    zoom: Math.min(sektion73ReturnView.zoom, sektion73MaxZoom),
-    pitch: sektion73ReturnView.pitch,
-    bearing: sektion73ReturnView.bearing,
-    duration: sektion73PinZoomDur,
-    easing: (t) => 1 - Math.pow(1 - t, 3)
-  });
+  const view = sektion73ReturnView || sektion73StartView;
 
-sektion73Map.easeTo({
-  center: pin.lngLat,
-  zoom: sektion73PinZoom,
-  pitch: sektion73Pitch,
-  bearing: sektion73Bearing,
-  duration: sektion73PinZoomDur
-});
+  if (sektion73Map && view && typeof sektion73Map.easeTo === "function") {
+    sektion73Map.easeTo({
+      center: view.center,
+      zoom: Math.min(view.zoom, sektion73MaxZoom),
+      pitch: view.pitch,
+      bearing: view.bearing,
+      duration: sektion73PinZoomDur,
+      easing: (t) => 1 - Math.pow(1 - t, 3)
+    });
   }
 }
+
 
     /* =========================
        PINS (2 st) – zoom först, modal efter "moveend"
@@ -1034,7 +1025,7 @@ const sektion73Pins = [
     let sektion73PendingPinId = null;
     let sektion73ActiveMoveEndHandler = null;
 
-    function sektion73ZoomToPinThenOpenModal(pin) {
+       function sektion73ZoomToPinThenOpenModal(pin) {
       // Stäng ev. befintlig modal direkt (så fokus blir zoom först)
       if (sektion73ModalOpen) sektion73CloseModal();
 
@@ -1043,6 +1034,14 @@ const sektion73Pins = [
         sektion73Map.off("moveend", sektion73ActiveMoveEndHandler);
         sektion73ActiveMoveEndHandler = null;
       }
+
+      // Spara vyn där användaren var innan pin-zoom
+      sektion73ReturnView = {
+        center: sektion73Map.getCenter().toArray(),
+        zoom: sektion73Map.getZoom(),
+        pitch: sektion73Map.getPitch(),
+        bearing: sektion73Map.getBearing()
+      };
 
       sektion73IsZoomingToPin = true;
       sektion73PendingPinId = pin.id;
@@ -1073,6 +1072,7 @@ const sektion73Pins = [
         easing: (t) => 1 - Math.pow(1 - t, 3) // ease-out cubic
       });
     }
+
 
     function sektion73AddPin(pin) {
       const { wrap, btn } = sektion73CreatePinEl(pin);
