@@ -625,142 +625,189 @@ const sektion73PinIcons = {
     };
 
 const sektion73Pins = [
-      {
-        id: "sektion73Pin_tangkorar_0001",
-        label: "Punkt 1",
-        iconKey: "home",
-        ui: {
-          bubbleBg: "rgba(255,255,255,.92)",
-          pointerTop: "rgba(255,255,255,.92)"
-        },
-        lngLat: sektion73Tangkorar_4.lngLat,
-        modal: {
-          kicker: "PUNKT 1",
-          title: "Tångkörarvägen 4",
-          images: [
-            "https://picsum.photos/seed/sektion73_p1_0/1400/800",
-            "https://picsum.photos/seed/sektion73_p1_1/700/525",
-            "https://picsum.photos/seed/sektion73_p1_2/700/525",
-            "https://picsum.photos/seed/sektion73_p1_3/700/525"
-          ],
-          imgSrc: "Bildkälla: —",
-          h: "Rubrik",
-          p: "Brödtext…",
-          cta1Text: "CTA 1",
-          cta1Href: "",
-          cta2Text: "Visa vägen",
-          cta2Href: "https://www.google.com/maps/search/?api=1&query=T%C3%A5ngk%C3%B6rarv%C3%A4gen%204%2C%20432%2054%20Varberg"
-        }
-      },
-      {
-        id: "sektion73Pin_sanatorie_0002",
-        label: "Punkt 2",
-        iconKey: "home",
-        ui: {
-          bubbleBg: "rgba(255,255,255,.92)",
-          pointerTop: "rgba(255,255,255,.92)"
-        },
-        lngLat: sektion73Sanatorie_4.lngLat,
-        modal: {
-          kicker: "PUNKT 2",
-          title: "Sanatorievägen 4",
-          images: [
-            "https://picsum.photos/seed/sektion73_p2_0/1400/800",
-            "https://picsum.photos/seed/sektion73_p2_1/700/525",
-            "https://picsum.photos/seed/sektion73_p2_2/700/525",
-            "https://picsum.photos/seed/sektion73_p2_3/700/525"
-          ],
-          imgSrc: "Bildkälla: —",
-          h: "Rubrik",
-          p: "Brödtext…",
-          cta1Text: "CTA 1",
-          cta1Href: "",
-          cta2Text: "Visa vägen",
-          cta2Href: "https://www.google.com/maps/search/?api=1&query=Sanatoriev%C3%A4gen%204%2C%20432%2053%20Varberg"
-        }
-      },
-      {
-        id: "sektion73Pin_tangkorar_0003",
-        label: "Punkt 3",
-        iconKey: "home",
-        ui: {
-          bubbleBg: "rgba(255,255,255,.92)",
-          pointerTop: "rgba(255,255,255,.92)"
-        },
-        lngLat: sektion73Tangkorar_2.lngLat,
-        modal: {
-          kicker: "PUNKT 3",
-          title: "Tångkörarvägen 2",
-          images: [
-            "https://picsum.photos/seed/sektion73_p3_0/1400/800",
-            "https://picsum.photos/seed/sektion73_p3_1/700/525",
-            "https://picsum.photos/seed/sektion73_p3_2/700/525",
-            "https://picsum.photos/seed/sektion73_p3_3/700/525"
-          ],
-          imgSrc: "Bildkälla: —",
-          h: "Rubrik",
-          p: "Brödtext…",
-          cta1Text: "CTA 1",
-          cta1Href: "",
-          cta2Text: "Visa vägen",
-          cta2Href: "https://www.google.com/maps/search/?api=1&query=T%C3%A5ngk%C3%B6rarv%C3%A4gen%202%2C%20432%2054%20Varberg"
-        }
-      },
-      {
-        id: "sektion73Pin_tangkorar_0004",
-        label: "Punkt 4",
-        iconKey: "home",
-        ui: {
-          bubbleBg: "rgba(255,255,255,.92)",
-          pointerTop: "rgba(255,255,255,.92)"
-        },
-        lngLat: sektion73Tangkorar_10.lngLat,
-        modal: {
-          kicker: "PUNKT 4",
-          title: "Tångkörarvägen 10",
-          images: [
-            "https://picsum.photos/seed/sektion73_p4_0/1400/800",
-            "https://picsum.photos/seed/sektion73_p4_1/700/525",
-            "https://picsum.photos/seed/sektion73_p4_2/700/525",
-            "https://picsum.photos/seed/sektion73_p4_3/700/525"
-          ],
-          imgSrc: "Bildkälla: —",
-          h: "Rubrik",
-          p: "Brödtext…",
-          cta1Text: "CTA 1",
-          cta1Href: "",
-          cta2Text: "Visa vägen",
-          cta2Href: "https://www.google.com/maps/search/?api=1&query=T%C3%A5ngk%C3%B6rarv%C3%A4gen%2010%2C%20432%2054%20Varberg"
-        }
-      },
-      {
-        id: "sektion73Pin_tangkorar_0005",
-        label: "Punkt 5",
-        iconKey: "home",
-        ui: {
-          bubbleBg: "rgba(255,255,255,.92)",
-          pointerTop: "rgba(255,255,255,.92)"
-        },
-        lngLat: sektion73Tangkorar_17.lngLat,
-        modal: {
-          kicker: "PUNKT 5",
-          title: "Tångkörarvägen 17",
-          images: [
-            "https://picsum.photos/seed/sektion73_p5_0/1400/800",
-            "https://picsum.photos/seed/sektion73_p5_1/700/525",
-            "https://picsum.photos/seed/sektion73_p5_2/700/525",
-            "https://picsum.photos/seed/sektion73_p5_3/700/525"
-          ],
-          imgSrc: "Bildkälla: —",
-          h: "Rubrik",
-          p: "Brödtext…",
-          cta1Text: "CTA 1",
-          cta1Href: "",
-          cta2Text: "Visa vägen",
-          cta2Href: "https://www.google.com/maps/search/?api=1&query=T%C3%A5ngk%C3%B6rarv%C3%A4gen%2017%2C%20432%2054%20Varberg"
-        }
-      }
-    ];
+  // HOME (Surbrunnsvägen 2–8)
+  {
+    id: "sektion73Pin_home_0000",
+    label: "Boendet",
+    iconKey: "home",
+    ui: {
+      bubbleBg: "rgba(255,255,255,.92)",
+      pointerTop: "rgba(255,255,255,.92)"
+    },
+    lngLat: sektion73Home.lngLat,
+    modal: {
+      kicker: "HOME",
+      title: "Surbrunnsvägen 2–8",
+      images: [
+        "https://picsum.photos/seed/sektion73_home_0/1400/800",
+        "https://picsum.photos/seed/sektion73_home_1/700/525",
+        "https://picsum.photos/seed/sektion73_home_2/700/525",
+        "https://picsum.photos/seed/sektion73_home_3/700/525"
+      ],
+      imgSrc: "Bildkälla: —",
+      h: "Surbrunnsvägen 2–8",
+      p: "Boendet i Apelviken.",
+      cta1Text: "CTA 1",
+      cta1Href: "",
+      cta2Text: "Visa vägen",
+      cta2Href:
+        "https://www.google.com/maps/search/?api=1&query=Surbrunnsv%C3%A4gen%202-8%2C%20432%2053%20Varberg"
+    }
+  },
+
+  // Tångkörarvägen 1
+  {
+    id: "sektion73Pin_tangkorar1_0000",
+    label: "Tångkörarvägen 1",
+    iconKey: "home",
+    ui: {
+      bubbleBg: "rgba(255,255,255,.92)",
+      pointerTop: "rgba(255,255,255,.92)"
+    },
+    lngLat: sektion73Tangkorar.lngLat,
+    modal: {
+      kicker: "PUNKT",
+      title: "Tångkörarvägen 1",
+      images: [
+        "https://picsum.photos/seed/sektion73_t1_0/1400/800",
+        "https://picsum.photos/seed/sektion73_t1_1/700/525",
+        "https://picsum.photos/seed/sektion73_t1_2/700/525",
+        "https://picsum.photos/seed/sektion73_t1_3/700/525"
+      ],
+      imgSrc: "Bildkälla: —",
+      h: "Rubrik",
+      p: "Brödtext…",
+      cta1Text: "CTA 1",
+      cta1Href: "",
+      cta2Text: "Visa vägen",
+      cta2Href:
+        "https://www.google.com/maps/search/?api=1&query=T%C3%A5ngk%C3%B6rarv%C3%A4gen%201%2C%20432%2054%20Varberg"
+    }
+  },
+
+  // Dina befintliga pins (oförändrade)
+  {
+    id: "sektion73Pin_tangkorar_0001",
+    label: "Punkt 1",
+    iconKey: "home",
+    ui: { bubbleBg: "rgba(255,255,255,.92)", pointerTop: "rgba(255,255,255,.92)" },
+    lngLat: sektion73Tangkorar_4.lngLat,
+    modal: {
+      kicker: "PUNKT 1",
+      title: "Tångkörarvägen 4",
+      images: [
+        "https://picsum.photos/seed/sektion73_p1_0/1400/800",
+        "https://picsum.photos/seed/sektion73_p1_1/700/525",
+        "https://picsum.photos/seed/sektion73_p1_2/700/525",
+        "https://picsum.photos/seed/sektion73_p1_3/700/525"
+      ],
+      imgSrc: "Bildkälla: —",
+      h: "Rubrik",
+      p: "Brödtext…",
+      cta1Text: "CTA 1",
+      cta1Href: "",
+      cta2Text: "Visa vägen",
+      cta2Href: "https://www.google.com/maps/search/?api=1&query=T%C3%A5ngk%C3%B6rarv%C3%A4gen%204%2C%20432%2054%20Varberg"
+    }
+  },
+  {
+    id: "sektion73Pin_sanatorie_0002",
+    label: "Punkt 2",
+    iconKey: "home",
+    ui: { bubbleBg: "rgba(255,255,255,.92)", pointerTop: "rgba(255,255,255,.92)" },
+    lngLat: sektion73Sanatorie_4.lngLat,
+    modal: {
+      kicker: "PUNKT 2",
+      title: "Sanatorievägen 4",
+      images: [
+        "https://picsum.photos/seed/sektion73_p2_0/1400/800",
+        "https://picsum.photos/seed/sektion73_p2_1/700/525",
+        "https://picsum.photos/seed/sektion73_p2_2/700/525",
+        "https://picsum.photos/seed/sektion73_p2_3/700/525"
+      ],
+      imgSrc: "Bildkälla: —",
+      h: "Rubrik",
+      p: "Brödtext…",
+      cta1Text: "CTA 1",
+      cta1Href: "",
+      cta2Text: "Visa vägen",
+      cta2Href: "https://www.google.com/maps/search/?api=1&query=Sanatoriev%C3%A4gen%204%2C%20432%2053%20Varberg"
+    }
+  },
+  {
+    id: "sektion73Pin_tangkorar_0003",
+    label: "Punkt 3",
+    iconKey: "home",
+    ui: { bubbleBg: "rgba(255,255,255,.92)", pointerTop: "rgba(255,255,255,.92)" },
+    lngLat: sektion73Tangkorar_2.lngLat,
+    modal: {
+      kicker: "PUNKT 3",
+      title: "Tångkörarvägen 2",
+      images: [
+        "https://picsum.photos/seed/sektion73_p3_0/1400/800",
+        "https://picsum.photos/seed/sektion73_p3_1/700/525",
+        "https://picsum.photos/seed/sektion73_p3_2/700/525",
+        "https://picsum.photos/seed/sektion73_p3_3/700/525"
+      ],
+      imgSrc: "Bildkälla: —",
+      h: "Rubrik",
+      p: "Brödtext…",
+      cta1Text: "CTA 1",
+      cta1Href: "",
+      cta2Text: "Visa vägen",
+      cta2Href: "https://www.google.com/maps/search/?api=1&query=T%C3%A5ngk%C3%B6rarv%C3%A4gen%202%2C%20432%2054%20Varberg"
+    }
+  },
+  {
+    id: "sektion73Pin_tangkorar_0004",
+    label: "Punkt 4",
+    iconKey: "home",
+    ui: { bubbleBg: "rgba(255,255,255,.92)", pointerTop: "rgba(255,255,255,.92)" },
+    lngLat: sektion73Tangkorar_10.lngLat,
+    modal: {
+      kicker: "PUNKT 4",
+      title: "Tångkörarvägen 10",
+      images: [
+        "https://picsum.photos/seed/sektion73_p4_0/1400/800",
+        "https://picsum.photos/seed/sektion73_p4_1/700/525",
+        "https://picsum.photos/seed/sektion73_p4_2/700/525",
+        "https://picsum.photos/seed/sektion73_p4_3/700/525"
+      ],
+      imgSrc: "Bildkälla: —",
+      h: "Rubrik",
+      p: "Brödtext…",
+      cta1Text: "CTA 1",
+      cta1Href: "",
+      cta2Text: "Visa vägen",
+      cta2Href: "https://www.google.com/maps/search/?api=1&query=T%C3%A5ngk%C3%B6rarv%C3%A4gen%2010%2C%20432%2054%20Varberg"
+    }
+  },
+  {
+    id: "sektion73Pin_tangkorar_0005",
+    label: "Punkt 5",
+    iconKey: "home",
+    ui: { bubbleBg: "rgba(255,255,255,.92)", pointerTop: "rgba(255,255,255,.92)" },
+    lngLat: sektion73Tangkorar_17.lngLat,
+    modal: {
+      kicker: "PUNKT 5",
+      title: "Tångkörarvägen 17",
+      images: [
+        "https://picsum.photos/seed/sektion73_p5_0/1400/800",
+        "https://picsum.photos/seed/sektion73_p5_1/700/525",
+        "https://picsum.photos/seed/sektion73_p5_2/700/525",
+        "https://picsum.photos/seed/sektion73_p5_3/700/525"
+      ],
+      imgSrc: "Bildkälla: —",
+      h: "Rubrik",
+      p: "Brödtext…",
+      cta1Text: "CTA 1",
+      cta1Href: "",
+      cta2Text: "Visa vägen",
+      cta2Href: "https://www.google.com/maps/search/?api=1&query=T%C3%A5ngk%C3%B6rarv%C3%A4gen%2017%2C%20432%2054%20Varberg"
+    }
+  }
+];
+
 
     function sektion73CreatePinEl(pin) {
       const wrap = document.createElement("div");
