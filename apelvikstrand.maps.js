@@ -664,8 +664,8 @@ const sektion73Pins = [
     label: "Tångkörarvägen 1",
     iconKey: "home",
     ui: {
-      bubbleBg: "1d1d1b",
-      pointerTop: "1d1d1b"
+      bubbleBg: "#1d1d1b",
+      pointerTop: "#1d1d1b"
     },
     lngLat: sektion73Tangkorar.lngLat,
     modal: {
