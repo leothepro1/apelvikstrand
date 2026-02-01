@@ -90,7 +90,7 @@ const sektion73Tangkorar_4 = {
     const sektion73DisableRotate = true;
 
     // Zoom vid pin-klick
-    const sektion73PinZoom = 17.35;
+    const sektion73PinZoom = 23.35;
     const sektion73PinZoomDur = 950;
 
     // Modal animation
