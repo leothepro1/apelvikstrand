@@ -104,7 +104,7 @@ const sektion73Tangkorar_4 = {
        MAP INIT
        ========================= */
 
-    const sektion73Map = new mapboxgl.Map({
+   const sektion73Map = new mapboxgl.Map({
       container: sektion73Canvas,
       style: sektion73StyleUrl,
       center: sektion73Home.lngLat,
@@ -144,6 +144,149 @@ const sektion73Tangkorar_4 = {
     }
 
     sektion73Map.addControl(new mapboxgl.AttributionControl({ compact: true }), "bottom-right");
+
+    function sektion73Clamp_11001(n, a, b) {
+      return Math.max(a, Math.min(b, n));
+    }
+
+    function sektion73InitZoomControl_11002(map) {
+      if (!map || typeof map.getContainer !== "function") return;
+
+      const container = map.getContainer();
+      if (!container) return;
+
+      if (document.getElementById("sektion73ZoomCtl")) return;
+
+      const ctl = document.createElement("div");
+      ctl.id = "sektion73ZoomCtl";
+      ctl.className = "";
+      ctl.setAttribute("aria-label", "Zoom");
+
+      const btn = document.createElement("button");
+      btn.id = "sektion73ZoomToggle";
+      btn.type = "button";
+      btn.setAttribute("aria-expanded", "false");
+      btn.setAttribute("aria-controls", "sektion73ZoomSlider");
+      btn.innerHTML = `
+        <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
+          <path d="M10.5 18a7.5 7.5 0 1 1 0-15 7.5 7.5 0 0 1 0 15z" stroke="currentColor" stroke-width="2"/>
+          <path d="M16.2 16.2 21 21" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+          <path d="M10.5 7.5v6" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+          <path d="M7.5 10.5h6" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+        </svg>
+      `;
+
+      const sliderWrap = document.createElement("div");
+      sliderWrap.id = "sektion73ZoomSlider";
+      sliderWrap.setAttribute("role", "slider");
+      sliderWrap.setAttribute("tabindex", "0");
+      sliderWrap.setAttribute("aria-label", "Zoom slider");
+      sliderWrap.setAttribute("aria-valuemin", String(sektion73MinZoom));
+      sliderWrap.setAttribute("aria-valuemax", String(sektion73MaxZoom));
+      sliderWrap.setAttribute("aria-valuenow", String(map.getZoom()));
+
+      const track = document.createElement("div");
+      track.id = "sektion73ZoomTrack";
+
+      const thumb = document.createElement("div");
+      thumb.id = "sektion73ZoomThumb";
+
+      sliderWrap.appendChild(track);
+      sliderWrap.appendChild(thumb);
+
+      ctl.appendChild(btn);
+      ctl.appendChild(sliderWrap);
+
+      container.appendChild(ctl);
+
+      let isOpen = false;
+      let isDragging = false;
+
+      function setOpen(next) {
+        isOpen = !!next;
+        if (isOpen) {
+          ctl.classList.add("is-open");
+          btn.setAttribute("aria-expanded", "true");
+        } else {
+          ctl.classList.remove("is-open");
+          btn.setAttribute("aria-expanded", "false");
+        }
+      }
+
+      function zoomToPct(clientX) {
+        const rect = track.getBoundingClientRect();
+        if (!rect || rect.width <= 0) return;
+
+        const x = clientX - rect.left;
+        const pct = sektion73Clamp_11001(x / rect.width, 0, 1);
+        const z = sektion73MinZoom + pct * (sektion73MaxZoom - sektion73MinZoom);
+        map.setZoom(z);
+      }
+
+      function syncThumb() {
+        const z = map.getZoom();
+        const pct = (z - sektion73MinZoom) / (sektion73MaxZoom - sektion73MinZoom);
+        const clamped = sektion73Clamp_11001(pct, 0, 1);
+        thumb.style.left = (clamped * 100).toFixed(4) + "%";
+        sliderWrap.setAttribute("aria-valuenow", String(z.toFixed(2)));
+      }
+
+      btn.addEventListener("click", () => setOpen(!isOpen));
+
+      const onPointerDown = (e) => {
+        if (!isOpen) return;
+        isDragging = true;
+        thumb.classList.add("is-dragging");
+        try {
+          thumb.setPointerCapture(e.pointerId);
+        } catch (_) {}
+        zoomToPct(e.clientX);
+      };
+
+      const onPointerMove = (e) => {
+        if (!isOpen || !isDragging) return;
+        zoomToPct(e.clientX);
+      };
+
+      const onPointerUp = (e) => {
+        if (!isDragging) return;
+        isDragging = false;
+        thumb.classList.remove("is-dragging");
+        try {
+          thumb.releasePointerCapture(e.pointerId);
+        } catch (_) {}
+      };
+
+      track.addEventListener("pointerdown", onPointerDown);
+      thumb.addEventListener("pointerdown", onPointerDown);
+      window.addEventListener("pointermove", onPointerMove, { passive: true });
+      window.addEventListener("pointerup", onPointerUp, { passive: true });
+      window.addEventListener("pointercancel", onPointerUp, { passive: true });
+
+      sliderWrap.addEventListener("keydown", (e) => {
+        if (!isOpen) return;
+        const step = 0.25;
+        const z = map.getZoom();
+
+        if (e.key === "ArrowRight" || e.key === "ArrowUp") {
+          e.preventDefault();
+          map.setZoom(sektion73Clamp_11001(z + step, sektion73MinZoom, sektion73MaxZoom));
+        } else if (e.key === "ArrowLeft" || e.key === "ArrowDown") {
+          e.preventDefault();
+          map.setZoom(sektion73Clamp_11001(z - step, sektion73MinZoom, sektion73MaxZoom));
+        } else if (e.key === "Escape") {
+          e.preventDefault();
+          setOpen(false);
+        }
+      });
+
+      map.on("zoom", syncThumb);
+      map.on("load", syncThumb);
+      syncThumb();
+      setOpen(false);
+    }
+
+    sektion73InitZoomControl_11002(sektion73Map);
 
     /* =========================
        STANDARD CONFIG (SAFETY)
@@ -190,7 +333,7 @@ const sektion73Tangkorar_4 = {
 
   
 
-    function sektion73InjectModalCSS() {
+ function sektion73InjectModalCSS() {
       if (document.getElementById("sektion73MapModalStyle")) return;
 
       const style = document.createElement("style");
@@ -230,304 +373,335 @@ const sektion73Tangkorar_4 = {
     width: min(520px, 92vw);
     background: var(--sektion73-modal-bg);
     color: var(--sektion73-modal-text);
-    border: none;
-    transform: translateX(104%);
+    box-shadow: var(--sektion73-modal-shadow);
+    transform: translateX(100%);
     transition: transform var(--sektion73-modal-dur) var(--sektion73-modal-ease);
     z-index: 2147483001;
     display: flex;
     flex-direction: column;
-    padding-bottom: 32px;
-    gap: 0px;
-    overscroll-behavior: contain;
-    border-radius: 20px 0px 0px 20px;
-    overflow: auto;
+    overflow: hidden;
+    border-left: 1px solid var(--sektion73-modal-line);
 }
-        #sektion73MapModal.is-open{
-          transform:translateX(0);
+
+#sektion73MapModal.is-open {
+    transform: translateX(0);
+}
+
+body.sektion73-modal-open{
+          overflow:hidden;
+          position:fixed;
+          width:100%;
         }
 
-        @media (max-width: 768px){
-          #sektion73MapModal{
-            left:0;
-            right:0;
-            top:auto;
-            bottom:0;
-            width:100%;
-            height:min(84dvh, 720px);
-            border-left:none;
-            border-top:1px solid var(--sektion73-modal-line);
-            border-top-left-radius:var(--sektion73-radius);
-            border-top-right-radius:var(--sektion73-radius);
-            transform:translateY(104%);
-          }
-          #sektion73MapModal.is-open{
-            transform:translateY(0);
-          }
-        }
-
-        .sektion73ModalTop{
+.sektion73ModalTop{
+          padding:18px 18px 12px;
           display:flex;
-          align-items:flex-start;
+          align-items:center;
           justify-content:space-between;
           gap:12px;
+          border-bottom:1px solid var(--sektion73-modal-line);
         }
-        .sektion73ModalKicker{
-          font:700 12px/1.2 system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;
-          color:rgba(14,19,24,.55);
-          text-transform:uppercase;
-          letter-spacing:.08em;
-          margin:0 0 6px 0;
-        }
-        .sektion73ModalTitle{
-          font:800 20px/1.15 system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;
+
+.sektion73ModalTitle{
           margin:0;
-        }
-.sektion73ModalClose {
-    width: 40px;
-    height: 40px;
-    border-radius: 80px;
-    border: none;
-    background: #fff;
-    cursor: pointer;
-    display: grid;
-    place-items: center;
-    flex: 0 0 auto;
-    position: absolute;
-    top: 20px;
-    right: 20px;
-}
-        .sektion73ModalClose svg{ width:18px; height:18px; }
-
-        .sektion73ModalGallery{
-          display:grid;
-          gap:2px;
-        }
-.sektion73ModalGalleryTop {
-    width: 100%;
-    aspect-ratio: 1.67778 / 1;
-    border-radius: 20px 0px 0px 0px;
-    overflow: hidden;
-    border: none;
-}
-@keyframes shimmer {
-    0% {
-        background-position: -468px 0;
-    }
-    100% {
-        background-position: 468px 0;
-    }
-}
-
-.skeleton-loader {
-    background-color: #f1f3f4;
-    background-image: linear-gradient(90deg, 
-        rgba(255,255,255,0) 0, 
-        rgba(255,255,255,0.4) 50%, 
-        rgba(255,255,255,0) 100%
-    );
-    background-size: 600px 100%;
-    background-repeat: no-repeat;
-    animation: shimmer 1.5s infinite linear;
-}
-
-.skeleton-loader:not([src]) {
-    min-height: 100%;
-    min-width: 100%;
-}
-        .sektion73ModalGalleryTop img{
-          width:100%;
-          height:100%;
-          object-fit:cover;
-          display:block;
-        }
-.sektion73ModalGalleryRow {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 2px;
-}
-.sektion73ModalThumb {
-    aspect-ratio: 1.37778 / 1;
-    border-radius: 0px;
-    overflow: hidden;
-    border: none;
-    object-fit: cover;
-}
-        .sektion73ModalThumb img{
-          width:100%;
-          height:100%;
-          object-fit:cover;
-          display:block;
+          font-size:18px;
+          line-height:1.2;
+          letter-spacing:-0.01em;
         }
 
-.sektion73ModalMeta {
-    display: flex;
-    flex-direction: column;
-    gap: 0px;
-    padding: 32px 32px 0px;
-}
-        .sektion73ModalImgSrc{
-          font:600 12px/1.2 system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;
-          color:rgba(14,19,24,.55);
-          margin:0;
-        }
-.sektion73ModalBodyH {
-    font-family: "Manrope", Inter, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, sans-serif;
-    margin: 0;
-    font-weight: 700;
-    font-size: 32px;
-}
-.sektion73ModalBodyP {
-    color: rgb(64, 61, 59);
-    margin: 0;
-    font-family: 'Inter Variablefont Opsz Wght';
-    font-weight: 400;
-    font-size: 15px;
-    line-height: 1.55em;
-    margin-top: 15px;
-}
-
-.sektion73ModalActions {
-    margin-top: 27px;
-    display: flex;
-    padding: 0px 32px;
-    flex-direction: row;
-    gap: 12px;
-}
-.sektion73ModalBtn {
-    width: 100%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 12px;
-    padding: 11px 13px;
-    border-radius: 8px;
-    border: none;
-    transition: 0.15s ease-in-out;
-    cursor: pointer;
-    font-family: "Manrope", Inter, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, sans-serif;
-    color: var(--sektion73-modal-text);
-    font-size: 15px;
-    font-weight: 700;
-}
-        .sektion73ModalBtnPrimary{
-          background:var(--sektion73-accent);
-        }
-             .sektion73ModalBtnPrimary:hover{
-          background:#d89f00;
-        }
-                     .sektion73ModalBtnPrimary:active{
-          background:#a67b02;
-        }
-                [id="sektion73ModalCtaSecondary"] {
-    background: #FFE6A3;
-    color: #5A3C00;
-    border: none;
-}
-
-[id="sektion73ModalCtaSecondary"]:hover {
-    background: #FFD870;
-}
-
-[id="sektion73ModalCtaSecondary"]:active {
-    background: #FFD157;
-}
-.sektion73ModalBtn svg {
-    display: none;
-}
-
-#sektion73MapCanvas .sektion73PinBubble .sektion73PinIco{
-  display:inline-flex;
-  align-items:center;
-  justify-content:center;
-  width:52px;
-  height:auto;
-  flex:0 0 52px;
-  line-height:0;
-}
-        body.sektion73-modal-open {
-          overflow: hidden;
-          position: fixed;
-          width: 100%;
-          height: 100%;
-          touch-action: none;
-        }
-.sektion73PinDot {
-    width: 10px;
-    height: 10px;
-    border-radius: 999px;
-    background: var(--sektion73-accent);
-    display: none;
-}
-#sektion73MapCanvas .sektion73PinBubble .sektion73PinIco svg{
-  width:52px;
-  height:auto;
-  display:block;
-  color:currentColor;
-}
-
-/* Mono-loggor: gör så att paths ärver färg från currentColor */
-#sektion73MapCanvas .sektion73PinWrap[data-icon-key="solviken"] .sektion73PinIco svg,
-#sektion73MapCanvas .sektion73PinWrap[data-icon-key="brittas"] .sektion73PinIco svg,
-#sektion73MapCanvas .sektion73PinWrap[data-icon-key="strandkollektivet"] .sektion73PinIco svg{
-  fill: currentColor;
-}
-#sektion73MapCanvas .sektion73PinWrap[data-icon-key="solviken"] .sektion73PinIco svg *,
-#sektion73MapCanvas .sektion73PinWrap[data-icon-key="brittas"] .sektion73PinIco svg *,
-#sektion73MapCanvas .sektion73PinWrap[data-icon-key="strandkollektivet"] .sektion73PinIco svg *{
-  fill: currentColor !important;
-}
-
-#sektion73MapCanvas .sektion73PinBubble{
-  gap:10px;
-}
-.sektion73PinWrap {
-    display: inline-flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 0px;
-    transform: translateZ(0);
-}
-       /* PER-PIN: färger styrs via CSS-variabler på .sektion73PinWrap */
-        .sektion73PinBubble{
-          padding:10px 12px;
+.sektion73ModalClose{
+          border:1px solid var(--sektion73-modal-line);
+          background:rgba(255,255,255,.92);
+          width:40px;
+          height:40px;
           border-radius:999px;
-          background:var(--sektion73-pin-bubble-bg, rgba(255,255,255,.92));
-          backdrop-filter: blur(10px);
-          border:1px solid rgba(0,0,0,.14);
-          box-shadow:0 16px 36px rgba(0,0,0,.20);
-          font:900 13px/1 system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;
-          color:#0e1318;
-          white-space:nowrap;
-          cursor:pointer;
-          user-select:none;
           display:inline-flex;
           align-items:center;
+          justify-content:center;
+          cursor:pointer;
+          transition:transform .18s ease, background .18s ease;
+        }
+.sektion73ModalClose:hover{transform:translateY(-1px)}
+.sektion73ModalClose:active{transform:translateY(0px) scale(.98)}
+
+.sektion73ModalBody{
+          padding:16px 18px 20px;
+          overflow:auto;
+          -webkit-overflow-scrolling:touch;
+        }
+
+.sektion73ModalHero{
+          border-radius:14px;
+          overflow:hidden;
+          background:#f1f3f4;
+          aspect-ratio: 16 / 10;
+          display:flex;
+          align-items:center;
+          justify-content:center;
+        }
+.sektion73ModalHero img{
+          width:100%;
+          height:100%;
+          object-fit:cover;
+          display:block;
+        }
+
+.sektion73ModalMeta{
+          padding-top:14px;
+          display:flex;
+          flex-direction:column;
           gap:10px;
         }
 
-        .sektion73PinPointer{
-          width:0;
-          height:0;
-          border-left:5px solid transparent;
-          border-right:5px solid transparent;
-          border-top:5px solid var(--sektion73-pin-pointer-top, rgba(255,255,255,.92));
-          filter: drop-shadow(0 6px 8px rgba(0,0,0,.18));
+.sektion73ModalRow{
+          display:flex;
+          gap:10px;
+          align-items:flex-start;
         }
-.sektion73PinBtn {
-    all: unset;
-    cursor: pointer;
+
+.sektion73ModalIco{
+          width:38px;
+          height:38px;
+          border-radius:12px;
+          display:inline-flex;
+          align-items:center;
+          justify-content:center;
+          background:rgba(242,178,0,.16);
+          flex:0 0 auto;
+        }
+.sektion73ModalIco svg{width:20px;height:20px}
+
+.sektion73ModalLabel{
+          font-size:12px;
+          letter-spacing:.02em;
+          text-transform:uppercase;
+          color:var(--sektion73-modal-muted);
+          margin:0;
+        }
+.sektion73ModalValue{
+          margin:0;
+          font-size:15px;
+          line-height:1.35;
+          color:var(--sektion73-modal-text);
+        }
+
+.sektion73ModalActions{
+          padding-top:10px;
+          display:flex;
+          gap:10px;
+          flex-wrap:wrap;
+        }
+
+.sektion73ModalBtn{
+          border:0;
+          background:var(--sektion73-accent);
+          color:#121110;
+          border-radius:999px;
+          padding:12px 14px;
+          font-weight:650;
+          cursor:pointer;
+          display:inline-flex;
+          align-items:center;
+          gap:10px;
+          transition:transform .18s ease, filter .18s ease;
+          text-decoration:none;
+        }
+.sektion73ModalBtn:hover{transform:translateY(-1px)}
+.sektion73ModalBtn:active{transform:translateY(0px) scale(.98)}
+.sektion73ModalBtn svg{width:18px;height:18px}
+
+        .skeleton-loader{
+          background: linear-gradient(90deg, #f1f3f4 0%, #eaeef1 40%, #f1f3f4 80%);
+          background-size: 200% 100%;
+          animation: sektion73Shimmer 1.1s ease-in-out infinite;
+        }
+        @keyframes sektion73Shimmer{
+          0%{background-position: 200% 0}
+          100%{background-position: -200% 0}
+        }
+
+        @media (max-width: 860px){
+#sektion73MapModal{
+            width:100vw;
+            height: min(78dvh, 640px);
+            top:auto;
+            bottom:0;
+            right:0;
+            transform:translateY(100%);
+            border-left:0;
+            border-top:1px solid var(--sektion73-modal-line);
+            border-top-left-radius:18px;
+            border-top-right-radius:18px;
+          }
+#sektion73MapModal.is-open{transform:translateY(0)}
+        }
+        .sektion73PinWrap{
+          display:flex;
+          align-items:center;
+          justify-content:center;
+          position:relative;
+        }
+
+        .sektion73PinBtn{
+          display:inline-flex;
+          align-items:center;
+          gap:10px;
+          border:0;
+          cursor:pointer;
+          border-radius:999px;
+          padding:10px 12px;
+          background:rgba(255,255,255,.94);
+          box-shadow:0 10px 30px rgba(0,0,0,.18);
+          transform:translateY(0);
+          transition:transform .18s ease, box-shadow .18s ease;
+          white-space:nowrap;
+          font:600 14px/1.1 system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;
+          color:#0e1318;
+        }
+        .sektion73PinBtn:hover{
+          transform:translateY(-1px);
+          box-shadow:0 18px 40px rgba(0,0,0,.22);
+        }
+        .sektion73PinBtn:active{
+          transform:translateY(0) scale(.98);
+          box-shadow:0 14px 34px rgba(0,0,0,.20);
+        }
+        .sektion73PinDot{
+          width:10px;height:10px;border-radius:999px;
+          background:var(--sektion73-accent);
+          box-shadow:0 0 0 3px rgba(242,178,0,.22);
+          flex:0 0 auto;
+        }
+        .sektion73PinName{font-weight:700}
+        .sektion73PinSub{font-weight:600; opacity:.78}
+
+        /* optional “bubble” above dot */
+.sektion73PinBubble{
+    position: absolute;
+    top: -8px;
+    left: 50%;
+    transform: translate(-50%, -100%);
     display: inline-flex;
+    gap: 8px;
     align-items: center;
-    justify-content: center;
+    font: 700 12px/1 system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;
+    color: #0e1318;
+    border: 1px solid rgba(14,19,24,.14);
+    box-shadow: 0 14px 40px rgba(0,0,0,.14);
     background: var(--sektion73-pin-bubble-bg, rgba(255, 255, 255, .92));
     height: max-content;
     padding: 11px 14px;
     border-radius: 8px;
 }
+
+        /* =========================
+           ZOOM CONTROL (BOTTOM-LEFT)
+           ========================= */
+        #sektion73ZoomCtl{
+          position:absolute;
+          left:12px;
+          bottom:12px;
+          z-index:3;
+          display:flex;
+          align-items:center;
+          gap:10px;
+          height:44px;
+          width:44px;
+          padding:0;
+          border-radius:999px;
+          background:rgba(255,255,255,.92);
+          border:1px solid rgba(14,19,24,.14);
+          box-shadow:0 14px 40px rgba(0,0,0,.14);
+          overflow:hidden;
+          transition:width .34s cubic-bezier(.2,.8,.2,1), background .18s ease, box-shadow .18s ease, transform .18s ease;
+          transform:translateY(0);
+          pointer-events:auto;
+          -webkit-tap-highlight-color:transparent;
+        }
+
+        #sektion73ZoomCtl.is-open{
+          width:240px;
+        }
+
+        #sektion73ZoomToggle{
+          width:44px;
+          height:44px;
+          border:0;
+          background:transparent;
+          display:inline-flex;
+          align-items:center;
+          justify-content:center;
+          cursor:pointer;
+          flex:0 0 auto;
+          color:#0e1318;
+          transition:transform .18s ease;
+        }
+        #sektion73ZoomToggle:hover{transform:translateY(-1px)}
+        #sektion73ZoomToggle:active{transform:translateY(0) scale(.98)}
+        #sektion73ZoomToggle svg{width:20px;height:20px;display:block}
+
+        #sektion73ZoomSlider{
+          position:relative;
+          height:44px;
+          flex:1 1 auto;
+          padding-right:14px;
+          padding-left:2px;
+          display:flex;
+          align-items:center;
+          opacity:0;
+          transform:translateX(-10px);
+          pointer-events:none;
+          transition:opacity .22s ease, transform .34s cubic-bezier(.2,.8,.2,1);
+        }
+        #sektion73ZoomCtl.is-open #sektion73ZoomSlider{
+          opacity:1;
+          transform:translateX(0);
+          pointer-events:auto;
+        }
+
+        #sektion73ZoomTrack{
+          width:100%;
+          height:8px;
+          border-radius:999px;
+          background:rgba(14,19,24,.14);
+          position:relative;
+        }
+
+        #sektion73ZoomThumb{
+          position:absolute;
+          top:50%;
+          left:0%;
+          transform:translate(-50%,-50%);
+          width:18px;
+          height:18px;
+          border-radius:999px;
+          background:var(--sektion73-accent);
+          box-shadow:0 10px 22px rgba(0,0,0,.16);
+          border:3px solid rgba(255,255,255,.92);
+          transition:transform .12s ease;
+          will-change:left;
+          touch-action:none;
+        }
+        #sektion73ZoomThumb.is-dragging{
+          transform:translate(-50%,-50%) scale(1.05);
+        }
+
+        @media (max-width: 520px){
+          #sektion73ZoomCtl.is-open{width:220px}
+        }
       `;
       document.head.appendChild(style);
+
+      if (document.getElementById("sektion73MapZoomStyle")) return;
+      const styleZoom = document.createElement("style");
+      styleZoom.id = "sektion73MapZoomStyle";
+      styleZoom.textContent = `
+        /* zoom control is already defined inside sektion73MapModalStyle for shared tokens */
+      `;
+      document.head.appendChild(styleZoom);
     }
 
+    
     function sektion73EnsureModalDOM() {
       sektion73InjectModalCSS();
 
@@ -550,57 +724,47 @@ const sektion73Tangkorar_4 = {
 
         modal.innerHTML = `
           <div class="sektion73ModalTop">
-            <div></div>
-            <button class="sektion73ModalClose" type="button" id="sektion73ModalCloseBtn" aria-label="Stäng">
+            <h3 class="sektion73ModalTitle" id="sektion73ModalTitle">Plats</h3>
+            <button class="sektion73ModalClose" type="button" aria-label="Stäng">
               <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
-                <path d="M7 7l10 10M17 7L7 17" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"/>
+                <path d="M7 7l10 10M17 7L7 17" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
               </svg>
             </button>
           </div>
+          <div class="sektion73ModalBody">
+            <div class="sektion73ModalHero">
+              <img id="sektion73ModalImg" alt="" class="skeleton-loader" />
+            </div>
+            <div class="sektion73ModalMeta">
+              <div class="sektion73ModalRow">
+                <div class="sektion73ModalIco" aria-hidden="true">
+                  <svg viewBox="0 0 24 24" fill="none">
+                    <path d="M12 21s7-5.1 7-11a7 7 0 10-14 0c0 5.9 7 11 7 11z" stroke="currentColor" stroke-width="2"/>
+                    <path d="M12 10.5a2.2 2.2 0 100-4.4 2.2 2.2 0 000 4.4z" stroke="currentColor" stroke-width="2"/>
+                  </svg>
+                </div>
+                <div>
+                  <p class="sektion73ModalLabel">Adress</p>
+                  <p class="sektion73ModalValue" id="sektion73ModalAddr">—</p>
+                </div>
+              </div>
 
-        <div class="sektion73ModalGallery">
-    <div class="sektion73ModalGalleryTop">
-        <img id="sektion73ModalImg0" alt="" loading="lazy" class="skeleton-loader">
-    </div>
-    <div class="sektion73ModalGalleryRow">
-        <div class="sektion73ModalThumb"><img id="sektion73ModalImg1" alt="" loading="lazy" class="skeleton-loader"></div>
-        <div class="sektion73ModalThumb"><img id="sektion73ModalImg2" alt="" loading="lazy" class="skeleton-loader"></div>
-        <div class="sektion73ModalThumb"><img id="sektion73ModalImg3" alt="" loading="lazy" class="skeleton-loader"></div>
-    </div>
-</div>
-
-          <div class="sektion73ModalMeta">
-            <p class="sektion73ModalImgSrc" id="sektion73ModalImgSrc">Bildkälla: —</p>
-            <h3 class="sektion73ModalBodyH" id="sektion73ModalBodyH">Rubrik</h3>
-            <p class="sektion73ModalBodyP" id="sektion73ModalBodyP">Brödtext…</p>
-          </div>
-
-          <div class="sektion73ModalActions">
-            <button class="sektion73ModalBtn sektion73ModalBtnPrimary" type="button" id="sektion73ModalCtaPrimary">
-              <span id="sektion73ModalCtaPrimaryTxt">Primär CTA</span>
-              <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
-                <path d="M9 6l6 6-6 6" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/>
-              </svg>
-            </button>
-
-            <button class="sektion73ModalBtn" type="button" id="sektion73ModalCtaSecondary">
-              <span id="sektion73ModalCtaSecondaryTxt">Sekundär CTA</span>
-              <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
-                <path d="M9 6l6 6-6 6" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/>
-              </svg>
-            </button>
+              <div class="sektion73ModalActions">
+                <a class="sektion73ModalBtn" id="sektion73ModalMaps" href="#" target="_blank" rel="noopener">
+                  <span>Öppna i Maps</span>
+                  <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                    <path d="M7 17L17 7" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                    <path d="M9 7h8v8" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                  </svg>
+                </a>
+              </div>
+            </div>
           </div>
         `;
-
-
         document.body.appendChild(modal);
 
-        const closeBtn = document.getElementById("sektion73ModalCloseBtn");
-        if (closeBtn) closeBtn.addEventListener("click", sektion73CloseModal);
-
-        document.addEventListener("keydown", (e) => {
-          if (e.key === "Escape") sektion73CloseModal();
-        });
+        const closeBtn = modal.querySelector(".sektion73ModalClose");
+        closeBtn.addEventListener("click", sektion73CloseModal);
       }
 
       return { overlay, modal };
@@ -713,7 +877,7 @@ johns: `
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 142.3 53.8"><path d="M82.3 29.7H60c-.5 0-.9.4-.9.9v22.3c0 .5.4.9.9.9h22.3c.5 0 .9-.4.9-.9V30.6c0-.5-.4-.9-.9-.9m-6.9 21.2-1.1-3.3H68l-1.1 3.3H62l6.8-18.2h4.8l6.8 18.2h-4.9ZM23.2 0H.9C.4 0 0 .4 0 .9v22.3c0 .5.4.9.9.9h22.3c.5 0 .9-.4.9-.9V.9c0-.5-.4-.9-.9-.9m-5.5 15.2c0 4.1-2.1 6.1-6.4 6.1s-6.4-2.8-6.4-6.8v-.8h4.5v1.7c0 1.2.7 1.9 1.8 1.9s1.7-.6 1.7-2.4V2.8h4.7v12.4Zm53.4 22.5L69 44.1h4.1zM41.6 6.6c-3.1 0-4.2 2.7-4.2 5.4s1.2 5.4 4.2 5.4 4.2-2.7 4.2-5.4-1.2-5.4-4.2-5.4M82.3 0H60c-.5 0-.9.4-.9.9v22.3c0 .5.4.9.9.9h22.3c.5 0 .9-.4.9-.9V.9c0-.5-.4-.9-.9-.9M79 21.2h-4.7v-7.5h-6.2v7.5h-4.7V3h4.7v6.6h6.2V3H79zm-26.2 8.5H30.5c-.5 0-.9.4-.9.9v22.3c0 .5.4.9.9.9h22.3c.5 0 .9-.4.9-.9V30.6c0-.5-.4-.9-.9-.9m-4.6 21.2H35V32.7h4.7v14.1h8.5zM52.8 0H30.5c-.5 0-.9.4-.9.9v22.3c0 .5.4.9.9.9h22.3c.5 0 .9-.4.9-.9V.9c0-.5-.4-.9-.9-.9M41.6 21.5c-5.7 0-9-4.2-9-9.5s3.2-9.5 9-9.5 9 4.2 9 9.5-3.2 9.5-9 9.5m99.8 8.2h-22.3c-.5 0-.9.4-.9.9v22.3c0 .5.4.9.9.9h22.3c.5 0 .9-.4.9-.9V30.6c0-.5-.4-.9-.9-.9m-3.7 21.2h-14.8V32.7h14.5v3.8h-9.8v3.2h8.9v3.7h-8.9v3.5h10V51ZM111.9 0H89.6c-.5 0-.9.4-.9.9v22.3c0 .5.4.9.9.9h22.3c.5 0 .9-.4.9-.9V.9c0-.5-.4-.9-.9-.9m-3.3 21.2h-4.9L97.4 9.9v11.3h-4.5V3h4.9l6.3 11.2V3h4.5zM12.4 36.4H9.2v4.7h3.2c1.5 0 2.5-.6 2.5-2.3s-1.1-2.4-2.5-2.4m10.8-6.7H.9c-.5 0-.9.4-.9.9v22.3c0 .5.4.9.9.9h22.3c.5 0 .9-.4.9-.9V30.6c0-.5-.4-.9-.9-.9M13.1 44.8H9.2v6.1H4.5V32.7h8.6c3.4 0 6.6 1.6 6.6 5.9s-2.6 6.3-6.6 6.3Zm98.8-15.1H89.6c-.5 0-.9.4-.9.9v22.3c0 .5.4.9.9.9h22.3c.5 0 .9-.4.9-.9V30.6c0-.5-.4-.9-.9-.9M101 47.2c2.2 0 3.5-1.3 3.7-3.4h4.7c-.3 4.7-3.7 7.4-8.3 7.4S92 47 92 41.7s3.6-9.5 9.1-9.5 8.2 2.5 8.3 6.9h-4.7c-.3-1.8-1.7-2.8-3.7-2.8-3.1 0-4.2 2.7-4.2 5.4s1.2 5.4 4.2 5.4ZM141.4 0h-22.3c-.5 0-.9.4-.9.9v22.3c0 .5.4.9.9.9h22.3c.5 0 .9-.4.9-.9V.9c0-.5-.4-.9-.9-.9m-11.1 21.5c-4.2 0-7.9-1.8-7.9-6.5h4.7c.1 2.1 1.4 2.8 3.4 2.8s2.9-.5 2.9-1.9-2.6-1.9-5.2-2.7c-2.6-.7-5.3-1.9-5.3-5.2s4-5.5 7.4-5.5 7.3 1.8 7.3 5.9h-4.7c0-1.7-1.5-2.2-2.9-2.2s-2.3.4-2.3 1.6 2.6 1.7 5.3 2.4c2.6.7 5.3 2 5.3 5.3s-3.9 6.1-7.9 6.1Z" style="fill:#fff"/></svg>
    `,
 da: `<svg id="Lager_1" xmlns="http://www.w3.org/2000/svg" version="1.1" viewBox="0 0 131.4 60.6"><defs><style>.st0{fill:#1d1d1b}</style></defs><path d="M59.2 52.6c-.5-.3-.6-.7-.4-1.1.2-.3.6-.5 1.1-.2s.6.6.3 1c-.2.4-.6.5-1 .3m4.6 5.7c-.2 0-.8-.3-1.2-.5.4-.9 1.4-3.8 1.5-4.2.2-.6.4-1.1.5-1.6.2-.6.4-1.4.5-1.7.3.1.7.2 1.2.4 1.4.5 2.2 1.8 1.9 2.8-.4 1.1-1 1.4-1.5 1.4.4.5.9 1.2.6 2-.4 1.2-1.7 2.1-3.4 1.5Zm1.3-3.5c-.1.3-.3.9-.5 1.3-.1.4-.2.7-.4 1.1l.3.1c.6.2 1.1-.1 1.4-.9.2-.7 0-1.4-.9-1.6Zm1-3c-.1.3-.6 1.7-.8 2.1.6.3 1.3.2 1.5-.6.2-.7-.1-1.2-.8-1.5Zm7.5 8.8c-1.1 0-2.2-1.6-1.9-4.5.2-2.8 1-3.9 2.7-3.8 1.3.1 2.5 1.1 2.2 4.2s-2 4.1-3 4Zm.6-7c-.6 0-.9.9-1.1 2.6-.2 2 .1 3.1.8 3.2.5 0 1.2-1.3 1.4-2.9.2-2.4-.4-2.9-1.1-2.9m8.7 6.8h-1.4c0-.6-.5-3.9-.7-4.6-.2-1.2-.5-2.7-.6-3.2.4-.2.9-.3 1.2-.3 2-.3 3.5.4 3.9 3 .5 2.9-.8 4.9-2.4 5.1m-1.2-7c.3 1.9.7 4.4 1 5.8h.1c1-.2 1.4-2 1.1-3.7-.4-2.1-1.2-2.2-2.2-2.1m12.7 3.5c-.3 0-.9.3-1.3.5-.8.3-1.6.6-2.1.8-.2-.6-.8-2.1-1.3-3.4-.6-1.5-1.5-3.3-1.8-4 .4-.2 1.1-.6 1.3-.7.4-.2 1.6-.7 2.1-.9 0 .4.2.9.3 1.2-.4.1-1.2.4-1.6.5-.2 0-.4.2-.5.2.3.7.5 1.2.8 1.9.2 0 .5-.2.7-.3.1 0 .8-.4 1.1-.6.1.3.3.7.5 1.1-.4.2-.8.3-1.1.4-.2 0-.5.2-.7.3.2.7.7 1.7 1.1 2.4.2 0 .4-.2.5-.2s1.2-.5 1.7-.7c0 .3.2.8.3 1.2Zm7.9-5.7c-.2.5-.7 1.1-1 1.2-1.3 1-3 .9-4.8-1.6-2.1-2.7-.7-4.2 1-5.7.3.3.5.5.9.8-.1 0-.3.2-.4.3-1 .8-1.8 1.9-.4 3.8 1.2 1.6 2.3 2 3.1 1.3l.1-.1c-.4-.5-1.2-1.5-1.5-1.8-.2.1-.5.3-.6.4-.3-.4-.4-.6-.7-.9.6-.4 1.3-.8 1.8-1.2.4.5 1.5 2.3 2.5 3.5m6.2-5.9c-.4-.2-1.1-.5-1.5-.8s-.1 0-.2-.1c-.2.2-.8 1-.9 1.2.2.3 1 1.1 1.2 1.4-.4.2-.9.5-1.2.7-.3-.4-2.6-3.3-4.4-5.2s-.7-.7-.8-.9c.2-.3.6-.9.7-1.1.4.2 7.1 3.3 7.6 3.5-.2.3-.4.9-.6 1.2Zm-5.6-2.8c.4.5 1.9 2 2.1 2.3.1-.2.5-.7.6-.9-.4-.2-2.2-1.2-2.8-1.4Zm6-4.5c-.3.5-.7.6-1.1.5-.3-.2-.5-.6-.3-1.1s.6-.6 1-.4.5.6.3 1Z" style="fill:#855e21"/><path class="st0" d="M29.5 18c0 .1 0 .4-.1.5-1 3.2-6.9 15-16.3 16.2-6 .7-12.5-2.8-13-7.2C-1.2 17 18.7 2 34.2.1 40.6-.7 45.5 1.6 46.1 7c.3 2.1-.3 5.1-1.6 9.1C52.8 8.5 58.6 2.5 63.9 1.9c2.1-.3 5.9 1.7 6.1 3.5.7 6-12.6 22-11.3 32.3.4 3.4 2.2 4.4 4.2 4.2.2 0 .5 0 .6.3 0 .2-.4.4-.9.5-2.5.3-8.1-1.1-8.7-5.8-1.3-10.8 12-27.8 11.4-32.6 0-.8-.7-1.1-1.6-1-5.1.6-11.9 7.9-20.3 15.9-5.9 13.5-9.7 23.9-14.9 24.5-1.8.2-4.4-.6-4.6-2.3-.3-2.6 5.9-10.9 13.3-19.1 2.6-6.9 4.3-13 3.9-16.6-.4-3.3-1.8-5.2-7-4.6C19.8 2.8 3.2 18 4.6 29.1c.4 3.3 2.6 4.8 5.7 4.4 11.4-1.4 16.9-12.3 18.1-15.1.2-.5.3-.7.6-.8.3 0 .4.2.4.4Zm-3.7 23.7c.9-.1 5.7-6.9 9.3-14.9-5.2 6-10.1 12.9-9.9 14.5s.2.4.6.3Z"/><path class="st0" d="M74.5 20.9c.1 1.1-6.4 9.6-6.1 11.8 0 .7.5.7.8.7 4-.5 10.5-7.5 10.5-7.5s.2-.3.4-.3c.1 0 .3.1.3.2s-.5.6-.6.8c0 0-7.1 7.7-11.3 8.2-1 .1-3.7-.9-3.9-2.8-.3-2.6 4.5-9.6 5.4-12.5.2-.4.4-.9 1.1-1 1.6-.2 3.3 1.2 3.4 2.3Zm5.1-10.7c0 .4-.6 1.8-1.1 2.1-.4.2-1.4.7-2 .9-1.2.5-1.4 1.2-1.8 1.2s-.7-.3-.7-.5c-.2-1.4 1.9-4.6 1.8-6s.2-.5.5-.5c1.2-.2 3.3 1.8 3.4 2.7Z"/><path class="st0" d="M81.4 34.2c-3.3.4-5.8-2.9-6-4.5 0-.4.2-.9.9-1 1.2-.1 3.3.2 6.6-.1.1-.6.2-1.3.1-2-.1-1.2-.3-2.2-.8-3-1.3 1.7-1.8 2.2-2.6 3s-.2.2-.3.2-.3 0-.3-.2.2-.4.5-.7c0 0 .9-.9 2.3-2.9-.4-.7-.9-1.4-1-2.4-.3-2.1 2.6-4.9 4.2-5.1 1-.1 2.8 1.2 2.9 2.1s-3.9 3.1-3.7 4.7c.3 2.5 2.3 2.9 2.9 5.5 1.8-.5 4-1.5 5.7-3.5 0 0 .2-.3.4-.3.1 0 .3.1.3.2s-.4.6-.6.8c-1.7 1.9-3.5 2.8-5.6 3.5.3 2.4-2.8 5.3-5.9 5.7m1.3-4.9c-2.4.1-4.8 0-5.6 0-.2 0-.3 0-.3.3s.8 1.7 2.9 1.5c.8-.1 2.2-.3 3-1.9Z"/><path class="st0" d="M94.7 32.5c-3.3.4-5.8-2.9-6-4.5 0-.4.2-.9.9-1 1.2-.1 3.3.2 6.6-.1.1-.6.2-1.3.1-2-.1-1.2-.3-2.2-.8-3-1.3 1.7-1.8 2.2-2.6 3s-.2.2-.3.2-.3 0-.3-.2.2-.4.5-.7c0 0 .9-.9 2.3-2.9-.4-.7-.9-1.4-1-2.4-.3-2.1 2.6-4.9 4.2-5.1 1-.1 2.8 1.2 2.9 2.1s-3.9 3.1-3.7 4.7c.3 2.5 2.3 2.9 2.9 5.5 1.8-.5 4-1.5 5.7-3.5 0 0 .2-.3.4-.3s.3.1.3.2-.4.6-.6.8c-1.7 1.9-3.5 2.8-5.6 3.5.3 2.4-2.8 5.3-5.9 5.6Zm1.2-4.8c-2.4.1-4.8 0-5.6 0-.2 0-.3 0-.3.3s.8 1.7 2.9 1.5c.8-.1 2.2-.3 3-1.9Z"/><path class="st0" d="M121.6 20.6c.2 0 .3.1.3.2s-.4.6-.6.8c0 0-5.7 7-10.7 7.6-3.4.4-5.7-1.2-6.1-4.2-.6-5.2 4.7-11.4 7.9-11.8 2-.2 3.2 1.7 3.3 2.4.2 1.4-3 4.8-6.4 7.2v2c.2 1.8 1.2 3 2.7 2.8 3.4-.4 9.1-6.8 9.1-6.8s.2-.3.4-.3Zm-7.6-4.7c0-.2-.1-.4-.4-.4-1 .1-2.9 2.1-4.4 6.4 2.5-2.1 4.9-5 4.7-6Z"/><path class="st0" d="M123.8 18.5c-1.4 1.8-2.5 3-2.5 3-.1.1-.2.3-.3.3s-.3 0-.3-.2.2-.4.5-.8c0 0 .9-1 2.3-2.8-.4-.7-1-1.5-1.2-2.4-.3-2.1 2.6-5 4.3-5.2 1.1-.1 2.9 1.2 3 2 0 .8-4 3.2-3.8 4.7.2 2 1.7 2.7 2.5 4.6 2.1 0 3 .6 3.1.8 0 .3-.4.7-.7.7-.2 0-.8-.5-2.1-.7 0 .3.2.5.2.9.3 2.5-2.7 5.3-5.8 5.6-3.4.4-6.4-2-6.6-3.5 0-.5.4-.9 1-1.2 1-.5 4.4-1.7 7.2-2.3v-.6c-.2-1.4-.3-2.2-.8-3Zm-6 7.1c0 .4 1.3.8 3.4.5s3-1.7 3.3-3.4c-3.3.8-5.3 1.9-6.2 2.3-.4.2-.5.4-.5.5ZM29.5 18c0 .1 0 .4-.1.5-1 3.2-6.9 15-16.3 16.2-6 .7-12.5-2.8-13-7.2C-1.2 17 18.7 2 34.2.1 40.6-.7 45.5 1.6 46.1 7c.3 2.1-.3 5.1-1.6 9.1C52.8 8.5 58.6 2.5 63.9 1.9c2.1-.3 5.9 1.7 6.1 3.5.7 6-12.6 22-11.3 32.3.4 3.4 2.2 4.4 4.2 4.2.2 0 .5 0 .6.3 0 .2-.4.4-.9.5-2.5.3-8.1-1.1-8.7-5.8-1.3-10.8 12-27.8 11.4-32.6 0-.8-.7-1.1-1.6-1-5.1.6-11.9 7.9-20.3 15.9-5.9 13.5-9.7 23.9-14.9 24.5-1.8.2-4.4-.6-4.6-2.3-.3-2.6 5.9-10.9 13.3-19.1 2.6-6.9 4.3-13 3.9-16.6-.4-3.3-1.8-5.2-7-4.6C19.8 2.8 3.2 18 4.6 29.1c.4 3.3 2.6 4.8 5.7 4.4 11.4-1.4 16.9-12.3 18.1-15.1.2-.5.3-.7.6-.8.3 0 .4.2.4.4Zm-3.7 23.7c.9-.1 5.7-6.9 9.3-14.9-5.2 6-10.1 12.9-9.9 14.5s.2.4.6.3ZM74 14c0 .2.3.5.7.5.3 0 .6-.7 1.8-1.2.6-.2 1.6-.7 2-.9.5-.3 1.2-1.7 1.1-2.1-.1-.9-2.1-2.9-3.4-2.7-.3 0-.5.5-.5.5.2 1.4-2 4.5-1.8 6Z"/><path class="st0" d="M128.3 21.8c-.8-1.8-2.2-2.6-2.5-4.6-.2-1.6 3.9-4 3.8-4.7 0-.8-1.8-2.2-3-2-1.7.2-4.6 3.1-4.3 5.2.1 1 .7 1.7 1.2 2.4-1.4 1.8-2.3 2.9-2.4 2.9-.3.4-1.7 1.9-3.4 3.4-.1 0-.2 0-.3.1-.5.3-.9.5-1 .9-1.5 1.2-3.1 2.2-4.4 2.3-1.5.2-2.5-1-2.7-2.8 0-.4-.1-1.7 0-2 3.3-2.5 6.5-5.8 6.4-7.2 0-.6-1.3-2.6-3.3-2.4-3 .4-8 6-7.9 11-1.3 1-2.8 1.6-4 2-.6-2.6-2.6-3-2.9-5.5-.2-1.6 3.8-3.8 3.7-4.7s-1.9-2.2-2.9-2.1c-1.6.2-4.4 3-4.2 5.1.1 1 .6 1.7 1 2.4-1.2 1.7-2 2.6-2.2 2.8v.1c-1.7 1.9-3.9 2.9-5.6 3.4-.6-2.6-2.6-3-2.9-5.5-.2-1.6 3.8-3.8 3.7-4.7s-1.9-2.2-2.9-2.1c-1.6.2-4.4 3-4.2 5.1.1 1 .6 1.7 1 2.4-1.3 1.9-2.3 2.9-2.3 2.9-.2.2-1.3 1.4-2.7 2.7h-.5c-.8 0-1 .6-.9 1v.2c-2 1.7-4.4 3.3-6.3 3.6-.3 0-.7 0-.8-.7-.3-2.2 6.3-10.7 6.1-11.8-.1-1.1-1.9-2.5-3.4-2.3-.7 0-1 .6-1.1 1-.9 2.9-5.7 9.9-5.4 12.5.2 1.9 2.9 2.9 3.9 2.8 2.1-.3 5-2.3 7.3-4.3.7 1.7 3 4 5.8 3.6 3.1-.4 6.2-3.3 5.9-5.7.5-.1.9-.3 1.3-.5.2 1.6 2.7 4.9 6 4.5 3.1-.4 6.2-3.3 5.9-5.6 1.4-.4 2.7-1 3.9-1.9.4 3 2.7 4.6 6.1 4.2 2-.2 4.2-1.6 6-3 .7 1.5 3.4 3.3 6.4 2.9 3.1-.4 6.1-3.1 5.8-5.6 0-.3-.1-.6-.2-.9 1.3.3 1.9.8 2.1.7.3 0 .7-.4.7-.7 0-.2-.9-.8-3.1-.8Zm-48.6 9.4c-2.1.3-2.8-1.2-2.9-1.5 0-.2 0-.3.3-.3h5.6c-.8 1.6-2.2 1.8-3 1.9Zm3.2-2.6c-2.2.2-4 .1-5.2 0l2-2c.1-.1.3-.4.5-.5.5-.6 1.1-1.2 2.1-2.5.4.8.6 1.7.8 3 0 .8 0 1.4-.1 2Zm10 1c-2.1.3-2.8-1.2-2.9-1.5 0-.2 0-.3.3-.3h5.6c-.8 1.6-2.2 1.8-3 1.9Zm3.3-2.6c-2.5.2-4.3 0-5.5 0 .8-.5 1.6-1.2 2.3-2l.1-.1c.7-.8 1.2-1.3 2.5-2.9.4.8.6 1.7.8 3 0 .8 0 1.4-.1 2Zm17.4-11.5c.3 0 .4.2.4.4.1 1-2.2 4-4.7 6 1.5-4.3 3.4-6.3 4.4-6.4Zm7.6 10.6c-2.1.3-3.4-.1-3.4-.5 0-.2 0-.3.5-.5 1-.5 3-1.6 6.2-2.3-.3 1.7-1.1 3.1-3.3 3.4Zm3.4-4c-1.7.4-3.7 1-5.2 1.5 1.2-1.2 1.9-2.1 1.9-2.1s.1-.2.2-.3c.4-.5 1.3-1.5 2.3-2.7.4.8.6 1.5.8 3z"/></svg>`,
-surfcenter: `<svg id="Lager_1" xmlns="http://www.w3.org/2000/svg" version="1.1" viewBox="0 0 170.1 58"><defs><style>.st0,.st1{fill:#fff}.st1{fill-rule:evenodd}</style></defs><path class="st0" d="m10.5 19.1.7.5.7 1.8.5.6v1.2c.1 0-.5.8-.5.8H11c0 .1-1.1 0-1.1 0l-.3-.8h-.2L9 24.3l-.3.5-.3 1.5.3 1.2-.3 1.4.8.3.9 2.8 1.1 2.4-.5 1.3V38l-1.9 3.6-.9.9-.8 2-.5.4-.6.2-.6.7-1.3.9v1.2l-1.1 1-.6.9h-.5c0 .1-.8-.3-.8-.3l-.6.3-.8-.5v-.8c.1 0 1.6-2.1 1.6-2.1V46l.6-.6 1.3-.4.9-1.3 1.8-1.3.3-1.4.4-1.5v-2.9l.2-1.4v-.6l-.6-.8L4.9 31l-.4-1.3-.4-.6-.4-3.5.5-1.5-.4-.4v-1.3c.1 0 3.6-3.5 3.6-3.5h.5c0-.1 1-.3 1-.3H9c0-.1 1.2.1 1.2.1Zm8.9 3.7.2.7-.3.8-.4 1.1v1.1l-.4.9-.3 1.4-.2 1v.8l.6.5h.5l.7.3.7-.3.7-.9.6-1.1.2-1.1.2-.8v-.6c-.1 0 .2-.9.2-.9v-.8l.2-1.4.4-.6h1.1l1.9.6.6.6.5 1.5v1.1c-.1 0 0 .8 0 .8v1.1l-.3.9v1c-.1 0 .3.9.3.9l.6.4.6-.6h.6c0-.1 2-1.1 2-1.1h.6c0 .1.3.5.3.5l-.4 1.4-.5.6-1.4.8-.9.4-1 .8-.9.3-.9.4h-.9c0-.1-.9 0-.9 0l-.8-.5-.3-.6-.8-.9-.4.6-.6.8-.9.7-.9.4h-1.2l-1.5-.6-.6-.6-.4-.5-.7-.4-.4-.5-.3-.8v-.8l-.1-1.1.3-1.1-.2-.7V28c.1 0 .1-.7.1-.7l.3-.8v-1.8l.5-.9.9-.8 1.8-.3 1.6.2Z"/><path class="st0" d="m35.4 18.6.8.2.6.4.4.4.6.8v1.2l.6.4v1l.3 1.1h1.8c0 .1.4-.1.4-.1l1.5.4 1.1.5.8.8.5 1 .6.8.6 1.2v2.9l.1.9.4 1 1.1.7h1.1l1.2-.4.9-.4.8-.3.3.3v.8l-.3.6v.8c-.1 0-.9.5-.9.5l-.8.2H49c0 .1-1.4.4-1.4.4l-1.8-.3-1.1-.2-.9-.4h-.4l-.8-1.3-.7-1.1-.4-1.1-.4-1.4.2-1.3v-1.1c.1 0-.4-.8-.4-.8l-.6-.9-.9-.3h-.8l-.3.9-.3 1.4-.4.7v.8l-.5.9-.4.8-.6.6-.5.6-.8.9-.3.4-.6.4h-.6c0 .1-.9.8-.9.8l-.8-.3-.4-1.1.4-.8.5-.4h.6c0-.1.6-.6.6-.6l.7-.9.8-1.8.8-1.1.4-1.7-.2-.9-.8-.4-.8-.8-.8-1-.3-.6v-1.2c-.1 0 0-1 0-1l.5-1.5.7-.7.6-.4.6-.2Zm-.5 2.9v.6c-.1 0 0 .6 0 .6l.4.7.4.3h.8l-.2-1.1-.4-.8-.2-.3-.6-.2-.3.3ZM64 0h.1c0 .1 1.1.3 1.1.3l1.4.6 1.1 1 .3 1.6v.4l.4.7-.6 5.9-.3 1.2-.5.6v1.3c-.1 0-.6.6-.6.6l-.7 2.6v.6l-1 .9-.4 1.1-1 1.8-.4.6-.6.8-.2.5-2.8 2.5-.4.5v.3l1.7.8h.6l5.1 3.7.2.4.8.9 1.1 1.8v1.1c-.1 0 .3 1.4.3 1.4l.4 2v1.4c.1 0 .5.9.5.9v1.3l.8 1.8.4 2.8v1.6l-.5 1.8v2.5l-.9 1.9-.3 1.5-.6.6-.9 1.1-.8.4h-1.3c0-.1-1.5-.8-1.5-.8h-1.1c0 .1-.8-.6-.8-.6l-.8-.5-1.1-1.1-1.3-2L58 52l-.6-1.5-.8-.8-1.3-3.7-.6-1.4-.4-2.8v-.9l-.4-1.4v-1l-.5-5.2v-.8c-.1 0 .4-1.8.4-1.8v-1.3c.1 0 0-.8 0-.8l-.6-.6-.8.3-.3-.3-1.1-.2v-.6h.7c0-.1.8-.8.8-.8l.7-.3.9-.8.3-4.7.3-.4-.3-1.1.6-2.3v-1l.7-3 .3-.8v-1.4c.1 0 .6-1.6.6-1.6l.9-.6-.2-.6 1.8-3.3 1-1.3.9-.4.8-1.4 1.9-1.5h.4Zm-5.9 31.3.3 2-.4 2.5v5.3l-.3.5.4 1.7.5 4 1.1 2.4.3 1.3.6.5 1.5 1.9 2.5 1.5h.6c0 .1 1.2-.3 1.2-.3l.5-1.3.2-3.3-.7-1.3v-4c-.1 0-.9-1.5-.9-1.5l-.3-.6v-.9l-.5-1.4-.3-1.4v-.3c.1 0-.1-1.3-.1-1.3v-.6l-.5-.2-.3-.8-.8-.9-.3-.8-1.1-.3-.5-.8v-1c-.1 0-1.5-1.4-1.5-1.4l-.9-1.4-.3-.2v2.3Zm5-26.7-1.7 1.5-.6 1.4-.8 1.4-1 2.9v1.1c-.1 0 .1 2.6.1 2.6l-.4 1.3-.3 2.5v.8l-.2 3.4h.2l3-2.6.7-1.6.5-.4-.3-.6.2-.9.8-.5.8-1.6v-.9l.6-1.2v-2.6c.1 0 .4-1.6.4-1.6V7.1c.1 0 .1-1.3.1-1.3v-.4c-.1 0-.4-1.4-.4-1.4l-.6-.2-1 .6Z"/><path class="st0" d="m78.6 20.6.6.3h.5l1.3.6 1 1.3.5 1v1.3c.1 0-.3 1.4-.3 1.4l-.6 1.8-.9.9-1.3.6h-.8c0 .1-.6-.1-.6-.1h-1l-.6-.5-.5-1.2-.2-1.1.4-1 .6-.4.5-.3h.7l.6.5.3.7v.8h.9l.3-.6v-1.1l-.2-1.2-.4-.6-1.4-.6h-.6l-1.3.4-1.2 1.4-.3.5-.4 1.1v.9l.3.6-.2.9.9 2.4 1.3.8.8 1 2 .3 1.8.5 1.7-.2 1.7.4 2.1-.6.6-.4h.9c0 .1.4.6.4.6v.6l-2.3 1.4-1 .4h-1.1l-.6.4-.9.4-.7.3-2.8.3-1.8-.3-.8-.3h-.8c0 .1-.4-.3-.4-.3L72.5 35l-2.1-2.3-.5-1.6v-3.4c.1 0 .8-2.1.8-2.1l1.4-2.7.6-.8h.1l1.7-1.4 2.1-.4h1.6Zm16.6-.5 2.3.5 1.3.9.3.8.4 1.1.2 1.1v.9l-.3 1.1-.4.4-.4.7-.9.9-1.1.7-.8.2-.8.5-.8.2.4.9v.8l.3.9.6.6.9.8.8.3h.4l.6.3h.8c0-.1.6.1.6.1l.9.2 1.1-.3 1-.4h.8l1.1-.6.9-.3h.8l.4.4v.5c-.1 0-.5.7-.5.7l-.4.4-.5.8-.6.6-1 .4-.8.6-1 .4h-.8l-.9.4h-1l-1.1-.8-.8.3h-1.6l-1.2-.4-1.3-1.1-.8-.3-1-1.2-.3-.2-.6-.7-.3-.8-.3-.9-.8-1.1-.2-1.3-.4-.4-.3-.7v-2.8l.3-1.1.5-.7.4-.9.6-.4.5-.3V22c.1 0 .9-.6.9-.6l.6-.6 1.4-.4 2-.2Zm-.9 2.7-.4.6-.4.9.2.5-.4.8v1.1c-.1 0 .4 1.1.4 1.1l1.3-.4.5-.7.9-.3.4-1 .5-1v-1.5l-.3-.6h-1.8l-.8.4Z"/><path class="st0" d="m108.4 22.5.6.4 1.4.4.2.5-.2.8v1.6c.1 0 .8-1.2.8-1.2l.7-.6h1.1c0-.1.9.4.9.4l.8.8.3 1.1.8 1 .2.7.4.8v.8c.1 0 .8.7.8.7l.4.7.6.7.8.3h1.1l.7.4.6-.3.8-.2.6.3v.7l-.4.9-.5.4-.6.3-.8.4-1.3.3-1.3-.3-1.6-.4-1.1-.8-.9-.8v-.5c-.1 0-.6-.6-.6-.6l-.3-.6-.6-.6-.6-1.3-.6-.2h-.6l-.3 1.3v.9c.1 0 0 1.3 0 1.3v1.1c.1 0 .1.8.1.8v.5l-.8.6h-2.3c0 .1-.7-.3-.7-.3l-.4-.6v-1.4c-.1 0-.1-.9-.1-.9l-.3-1.1v-1.2l-.2-.9v-1.1l.2-.8v-.9l.3-1.6v-1.7l.8-.6h.8ZM128 11.9v.3c.1 0 .8-.3.8-.3h.8l.5.4.6 1v.9c-.1 0-.4 1.1-.4 1.1v1c.1 0-.1.6-.1.6v.8c-.1 0 0 .1 0 .1l.9-.3.6.3h.8l.5-.3h1.6l2.3-1.4h1l.3.2v.7c.1 0-.3.6-.3.6l-3 2.3h-1l-1.1.4-1.1.4h-.6l-1.1-.3-.4.9v.6l-.9 2.8v.8c-.1 0-.8 1.8-.8 1.8v1.8l.2.8-.6.9v.6l.4.3 2.4-1.1 1.5.2.6.6v.3c-.1 0-2.7 2-2.7 2l-.9 1-.3.9-1.8.9-.8 1.1h-.7c0-.1-.6-.5-.6-.5l-1-2.8v-2l.4-2.2v-1.5c.1 0-.2-1.1-.2-1.1v-1.2l.8-1.6.5-2.6v-.4c.1 0 .1-2 .1-2l-1.5-.4v-.9l.8-1.6.4-.6h1.8l.2-1.5.6-1.4v-.6c-.1 0 0-1 0-1h.4Z"/><path class="st0" d="m141.8 20.1 2.3.5 1.3.9.3.8.4 1.1.2 1.1v.9l-.3 1.1-.4.4-.4.7-.9.9-1.1.7-.8.2-.8.5-.8.2.4.9v.8l.3.9.6.6.9.8.8.3h.4l.6.3h.8c0-.1.6.1.6.1l.9.2 1.1-.3 1-.4h.8l1.1-.6.9-.3h.8l.4.4v.5c-.1 0-.5.7-.5.7l-.4.4-.5.8-.6.6-1 .4-.8.6-1 .4h-.8l-.9.4h-1l-1.1-.8-.8.3h-1.6l-1.2-.4-1.3-1.1-.8-.3-1-1.2-.3-.2-.6-.7-.3-.8-.3-.9-.8-1.1-.2-1.3-.4-.4-.3-.7v-2.8l.3-1.1.5-.7.4-.9.6-.4.5-.3V22c.1 0 .9-.6.9-.6l.6-.6 1.4-.4 2-.2Zm-.9 2.7-.4.6-.4.9.2.5-.4.8v1.1c-.1 0 .4 1.1.4 1.1l1.3-.4.5-.7.9-.3.4-1 .5-1v-1.5l-.3-.6h-1.8l-.8.4Z"/><path class="st0" d="m153.6 18.2.8.2.6.4.4.4.6.8v1.2l.6.4v1l.3 1.1h1.8c0 .1.4-.1.4-.1l1.5.4 1.1.5.8.8.5 1 .6.8.6 1.2v2.9l.1.9.4 1 1.1.7h1.1l1.2-.4.9-.4.8-.3.3.3v.8l-.3.6v.8c-.1 0-.9.5-.9.5l-.8.2h-.9c0 .1-1.4.4-1.4.4L164 36l-1.1-.2-.9-.4h-.4l-.8-1.3-.7-1.1-.4-1.1-.4-1.4.2-1.3v-1.1c.1 0-.4-.8-.4-.8l-.6-.9-.9-.3h-.8l-.3.9-.3 1.4-.4.7v.8l-.5.9-.4.8-.6.6-.5.6-.8.9-.3.4-.6.4h-.6c0 .1-.9.8-.9.8l-.8-.3-.4-1.1.4-.8.5-.4h.6c0-.1.6-.6.6-.6l.7-.9.8-1.8.8-1.1.4-1.7-.2-.9-.8-.4-.8-.8-.8-1-.3-.6v-1.2c-.1 0 0-1 0-1l.5-1.5.7-.7.6-.4.6-.2Zm-.5 2.8v.6c-.1 0 0 .6 0 .6l.4.7.4.3h.8l-.2-1.1-.4-.8-.2-.3-.6-.2-.3.3Z"/><path class="st1" d="M85.3 51.9h-.7v-.6s-.2.1-.3.2c-.1 0-.2.2-.3.2s-.3.1-.4.2h-.1v-.8c.2 0 .4 0 .5-.2.2-.1.4-.3.6-.4V49h-1.1v-.7c.3 0 .7 0 1.1-.1v-.6q0-.15-.3-.3c-.1 0-.2-.1-.4-.1h-.4v-.8h.8c.2 0 .4.2.6.3s.3.3.4.6c0 .2.1.5.1.9v3.7Zm-1.8.1H83c-.4 0-.7-.2-1-.5s-.4-.7-.4-1.2 0-.7.2-1q.15-.45.6-.6c.3-.1.6-.2 1-.3v.7H83c-.2 0-.4.2-.5.3-.1.2-.2.4-.2.6s0 .5.2.7.4.2.7.2h.2v.8Zm0-4.8h-.6c-.2 0-.5.2-.7.3v-.9c.1 0 .4 0 .6-.2h.8v.8Zm7.7 1.9c0 .4 0 .8-.2 1.2 0 .4-.2.7-.4.9l-.6.6c-.2.1-.5.2-.7.2v-.8c.3 0 .6-.2.8-.5q.3-.45.3-1.5c0-1.05 0-1.1-.3-1.4-.2-.3-.5-.5-.8-.5v-.9h.3c.5 0 .9.3 1.2.7.3.5.4 1.2.4 2M89.3 52h-.6c-.2 0-.4-.2-.6-.3V54h-.7v-7.3h.7v.6c.2-.2.4-.4.7-.5.2 0 .3-.2.5-.2v.9c-.2 0-.4 0-.6.2-.2.1-.4.3-.6.4v3.1c.2.1.4.2.5.2h.6v.8Zm7.6-2.7h-2v-.7h1.2c0-.5 0-.8-.3-1.1-.2-.3-.5-.4-.9-.4v-.7h.1c.6 0 1 .2 1.4.6.3.4.5 1 .5 1.8zm-2 1.9h.3c.3 0 .6 0 .9-.2.3-.1.5-.3.6-.4v1c-.3.1-.5.2-.8.3-.3 0-.5.1-.8.1h-.3v-.8Zm0-1.9h-1.3c0 .3 0 .6.1.9 0 .3.2.5.3.6.1.2.3.3.5.3h.3v.8c-.6 0-1.1-.3-1.4-.7q-.6-.75-.6-2.1c0-1.35.2-1.6.6-2.1s.8-.7 1.4-.8v.7c-.4 0-.6.2-.9.4-.2.3-.4.6-.4 1.1h1.3v.7Zm13.1-3.7h-.7v-.9h.7zm0 6.3h-.7v-5.4h.7zm10.8-2.6h-2v-.7h1.3c0-.5-.1-.8-.3-1.1s-.5-.4-.9-.4v-.7h.1c.6 0 1.1.2 1.4.6s.5 1 .5 1.8v.5Zm-2 1.9h.3c.3 0 .6 0 .9-.2.3-.1.5-.3.6-.4v1c-.3.1-.5.2-.8.3-.3 0-.5.1-.8.1h-.3v-.8Zm0-1.9h-1.3c0 .3 0 .6.1.9 0 .3.2.5.3.6.1.2.3.3.5.3h.3v.8c-.6 0-1-.3-1.4-.7q-.6-.75-.6-2.1c0-1.35.2-1.6.6-2.1s.8-.7 1.4-.8v.7c-.4 0-.6.2-.9.4-.2.3-.4.6-.4 1.1h1.3v.7Zm20.9 0h-2v-.7h1.3c0-.5 0-.8-.3-1.1-.2-.3-.5-.4-.9-.4v-.7h.1c.6 0 1 .2 1.4.6.3.4.5 1 .5 1.8v.5Zm-2 1.9h.3c.3 0 .6 0 .9-.2.3-.1.5-.3.6-.4v1c-.3.1-.5.2-.8.3-.3 0-.5.1-.8.1h-.3v-.8Zm0-1.9h-1.2c0 .3 0 .6.1.9 0 .3.2.5.3.6.1.2.3.3.5.3h.3v.8c-.6 0-1-.3-1.4-.7q-.6-.75-.6-2.1c0-1.35.2-1.6.6-2.1s.8-.7 1.4-.8v.7c-.3 0-.6.2-.8.4-.2.3-.4.6-.4 1.1h1.2v.7Z"/><path class="st0" d="M98.9 44.4h.7v7.5h-.7z"/><path class="st1" d="m105.5 46.5-1.7 5.4h-.8l-1.7-5.4h.8l1.3 4.3 1.4-4.3zm8.4 5.4h-.9l-1.8-2.4-.5.6v1.8h-.7v-7.5h.7v4.8l2.2-2.7h.9l-2.1 2.5zm10.5 0h-.7v-3.8c0-.2 0-.4-.1-.5 0-.1-.2-.2-.3-.3-.1 0-.3-.1-.5-.1s-.4 0-.6.2c-.2.1-.4.3-.6.5v4h-.7v-5.4h.7v.6c.2-.2.5-.4.7-.6.3-.1.5-.2.8-.2.5 0 .8.2 1.1.5.2.3.4.9.4 1.5v3.5Zm8-1.6c0 .5-.2.9-.5 1.2s-.8.5-1.4.5-.6 0-.9-.1c-.3 0-.5-.2-.7-.3v-1c.2.2.5.4.8.5s.6.2.8.2.6 0 .8-.2q.3-.15.3-.6c0-.45 0-.4-.2-.5 0-.1-.3-.2-.6-.3 0 0-.2 0-.4-.1-.2 0-.3 0-.5-.1-.4-.1-.7-.3-.8-.6-.2-.3-.2-.5-.2-.9s0-.4.1-.6c0-.2.2-.4.3-.5.1-.2.3-.3.6-.4.2 0 .5-.1.8-.1s.5 0 .8.1c.3 0 .5.2.7.3v1c-.2-.2-.4-.3-.7-.4s-.5-.2-.8-.2-.5 0-.7.2q-.3.15-.3.6c0 .45 0 .4.2.5.1.1.3.2.5.3.1 0 .3 0 .5.1.2 0 .3 0 .4.1.3 0 .6.3.8.5s.3.6.3.9Zm-5.5 1.6c.4 0 .7-.3.7-.7s-.3-.7-.7-.7-.7.3-.7.7.3.7.7.7"/></svg>`
+surfcenter: `<svg id="Lager_1" xmlns="http://www.w3.org/2000/svg" version="1.1" viewBox="0 0 170.1 58"><defs><style>.st0{fill:#fff}</style></defs><path class="st0" d="m10.5 19.1.7.5.7 1.8.5.6v1.2c.1 0-.5.8-.5.8H11c0 .1-1.1 0-1.1 0l-.3-.8h-.2L9 24.3l-.3.5-.3 1.5.3 1.2-.3 1.4.8.3.9 2.8 1.1 2.4-.5 1.3V38l-1.9 3.6-.9.9-.8 2-.5.4-.6.2-.6.7-1.3.9v1.2l-1.1 1-.6.9h-.5c0 .1-.8-.3-.8-.3l-.6.3-.8-.5v-.8c.1 0 1.6-2.1 1.6-2.1V46l.6-.6 1.3-.4.9-1.3 1.8-1.3.3-1.4.4-1.5v-2.9l.2-1.4v-.6l-.6-.8L4.9 31l-.4-1.3-.4-.6-.4-3.5.5-1.5-.4-.4v-1.3c.1 0 3.6-3.5 3.6-3.5h.5c0-.1 1-.3 1-.3H9c0-.1 1.2.1 1.2.1Zm8.9 3.7.2.7-.3.8-.4 1.1v1.1l-.4.9-.3 1.4-.2 1v.8l.6.5h.5l.7.3.7-.3.7-.9.6-1.1.2-1.1.2-.8v-.6c-.1 0 .2-.9.2-.9v-.8l.2-1.4.4-.6h1.1l1.9.6.6.6.5 1.5v1.1c-.1 0 0 .8 0 .8v1.1l-.3.9v1c-.1 0 .3.9.3.9l.6.4.6-.6h.6c0-.1 2-1.1 2-1.1h.6c0 .1.3.5.3.5l-.4 1.4-.5.6-1.4.8-.9.4-1 .8-.9.3-.9.4h-.9c0-.1-.9 0-.9 0l-.8-.5-.3-.6-.8-.9-.4.6-.6.8-.9.7-.9.4h-1.2l-1.5-.6-.6-.6-.4-.5-.7-.4-.4-.5-.3-.8v-.8l-.1-1.1.3-1.1-.2-.7V28c.1 0 .1-.7.1-.7l.3-.8v-1.8l.5-.9.9-.8 1.8-.3 1.6.2Z"/><path class="st0" d="m35.4 18.6.8.2.6.4.4.4.6.8v1.2l.6.4v1l.3 1.1h1.8c0 .1.4-.1.4-.1l1.5.4 1.1.5.8.8.5 1 .6.8.6 1.2v2.9l.1.9.4 1 1.1.7h1.1l1.2-.4.9-.4.8-.3.3.3v.8l-.3.6v.8c-.1 0-.9.5-.9.5l-.8.2H49c0 .1-1.4.4-1.4.4l-1.8-.3-1.1-.2-.9-.4h-.4l-.8-1.3-.7-1.1-.4-1.1-.4-1.4.2-1.3v-1.1c.1 0-.4-.8-.4-.8l-.6-.9-.9-.3h-.8l-.3.9-.3 1.4-.4.7v.8l-.5.9-.4.8-.6.6-.5.6-.8.9-.3.4-.6.4h-.6c0 .1-.9.8-.9.8l-.8-.3-.4-1.1.4-.8.5-.4h.6c0-.1.6-.6.6-.6l.7-.9.8-1.8.8-1.1.4-1.7-.2-.9-.8-.4-.8-.8-.8-1-.3-.6v-1.2c-.1 0 0-1 0-1l.5-1.5.7-.7.6-.4.6-.2Zm-.5 2.9v.6c-.1 0 0 .6 0 .6l.4.7.4.3h.8l-.2-1.1-.4-.8-.2-.3-.6-.2-.3.3ZM64 0h.1c0 .1 1.1.3 1.1.3l1.4.6 1.1 1 .3 1.6v.4l.4.7-.6 5.9-.3 1.2-.5.6v1.3c-.1 0-.6.6-.6.6l-.7 2.6v.6l-1 .9-.4 1.1-1 1.8-.4.6-.6.8-.2.5-2.8 2.5-.4.5v.3l1.7.8h.6l5.1 3.7.2.4.8.9 1.1 1.8v1.1c-.1 0 .3 1.4.3 1.4l.4 2v1.4c.1 0 .5.9.5.9v1.3l.8 1.8.4 2.8v1.6l-.5 1.8v2.5l-.9 1.9-.3 1.5-.6.6-.9 1.1-.8.4h-1.3c0-.1-1.5-.8-1.5-.8h-1.1c0 .1-.8-.6-.8-.6l-.8-.5-1.1-1.1-1.3-2L58 52l-.6-1.5-.8-.8-1.3-3.7-.6-1.4-.4-2.8v-.9l-.4-1.4v-1l-.5-5.2v-.8c-.1 0 .4-1.8.4-1.8v-1.3c.1 0 0-.8 0-.8l-.6-.6-.8.3-.3-.3-1.1-.2v-.6h.7c0-.1.8-.8.8-.8l.7-.3.9-.8.3-4.7.3-.4-.3-1.1.6-2.3v-1l.7-3 .3-.8v-1.4c.1 0 .6-1.6.6-1.6l.9-.6-.2-.6 1.8-3.3 1-1.3.9-.4.8-1.4 1.9-1.5h.4Zm-5.9 31.3.3 2-.4 2.5v5.3l-.3.5.4 1.7.5 4 1.1 2.4.3 1.3.6.5 1.5 1.9 2.5 1.5h.6c0 .1 1.2-.3 1.2-.3l.5-1.3.2-3.3-.7-1.3v-4c-.1 0-.9-1.5-.9-1.5l-.3-.6v-.9l-.5-1.4-.3-1.4v-.3c.1 0-.1-1.3-.1-1.3v-.6l-.5-.2-.3-.8-.8-.9-.3-.8-1.1-.3-.5-.8v-1c-.1 0-1.5-1.4-1.5-1.4l-.9-1.4-.3-.2v2.3Zm5-26.7-1.7 1.5-.6 1.4-.8 1.4-1 2.9v1.1c-.1 0 .1 2.6.1 2.6l-.4 1.3-.3 2.5v.8l-.2 3.4h.2l3-2.6.7-1.6.5-.4-.3-.6.2-.9.8-.5.8-1.6v-.9l.6-1.2v-2.6c.1 0 .4-1.6.4-1.6V7.1c.1 0 .1-1.3.1-1.3v-.4c-.1 0-.4-1.4-.4-1.4l-.6-.2-1 .6Z"/><path class="st0" d="m78.6 20.6.6.3h.5l1.3.6 1 1.3.5 1v1.3c.1 0-.3 1.4-.3 1.4l-.6 1.8-.9.9-1.3.6h-.8c0 .1-.6-.1-.6-.1h-1l-.6-.5-.5-1.2-.2-1.1.4-1 .6-.4.5-.3h.7l.6.5.3.7v.8h.9l.3-.6v-1.1l-.2-1.2-.4-.6-1.4-.6h-.6l-1.3.4-1.2 1.4-.3.5-.4 1.1v.9l.3.6-.2.9.9 2.4 1.3.8.8 1 2 .3 1.8.5 1.7-.2 1.7.4 2.1-.6.6-.4h.9c0 .1.4.6.4.6v.6l-2.3 1.4-1 .4h-1.1l-.6.4-.9.4-.7.3-2.8.3-1.8-.3-.8-.3h-.8c0 .1-.4-.3-.4-.3L72.5 35l-2.1-2.3-.5-1.6v-3.4c.1 0 .8-2.1.8-2.1l1.4-2.7.6-.8h.1l1.7-1.4 2.1-.4h1.6Zm16.6-.5 2.3.5 1.3.9.3.8.4 1.1.2 1.1v.9l-.3 1.1-.4.4-.4.7-.9.9-1.1.7-.8.2-.8.5-.8.2.4.9v.8l.3.9.6.6.9.8.8.3h.4l.6.3h.8c0-.1.6.1.6.1l.9.2 1.1-.3 1-.4h.8l1.1-.6.9-.3h.8l.4.4v.5c-.1 0-.5.7-.5.7l-.4.4-.5.8-.6.6-1 .4-.8.6-1 .4h-.8l-.9.4h-1l-1.1-.8-.8.3h-1.6l-1.2-.4-1.3-1.1-.8-.3-1-1.2-.3-.2-.6-.7-.3-.8-.3-.9-.8-1.1-.2-1.3-.4-.4-.3-.7v-2.8l.3-1.1.5-.7.4-.9.6-.4.5-.3V22c.1 0 .9-.6.9-.6l.6-.6 1.4-.4 2-.2Zm-.9 2.7-.4.6-.4.9.2.5-.4.8v1.1c-.1 0 .4 1.1.4 1.1l1.3-.4.5-.7.9-.3.4-1 .5-1v-1.5l-.3-.6h-1.8l-.8.4Z"/><path class="st0" d="m108.4 22.5.6.4 1.4.4.2.5-.2.8v1.6c.1 0 .8-1.2.8-1.2l.7-.6h1.1c0-.1.9.4.9.4l.8.8.3 1.1.8 1 .2.7.4.8v.8c.1 0 .8.7.8.7l.4.7.6.7.8.3h1.1l.7.4.6-.3.8-.2.6.3v.7l-.4.9-.5.4-.6.3-.8.4-1.3.3-1.3-.3-1.6-.4-1.1-.8-.9-.8v-.5c-.1 0-.6-.6-.6-.6l-.3-.6-.6-.6-.6-1.3-.6-.2h-.6l-.3 1.3v.9c.1 0 0 1.3 0 1.3v1.1c.1 0 .1.8.1.8v.5l-.8.6h-2.3c0 .1-.7-.3-.7-.3l-.4-.6v-1.4c-.1 0-.1-.9-.1-.9l-.3-1.1v-1.2l-.2-.9v-1.1l.2-.8v-.9l.3-1.6v-1.7l.8-.6h.8ZM128 11.9v.3c.1 0 .8-.3.8-.3h.8l.5.4.6 1v.9c-.1 0-.4 1.1-.4 1.1v1c.1 0-.1.6-.1.6v.8c-.1 0 0 .1 0 .1l.9-.3.6.3h.8l.5-.3h1.6l2.3-1.4h1l.3.2v.7c.1 0-.3.6-.3.6l-3 2.3h-1l-1.1.4-1.1.4h-.6l-1.1-.3-.4.9v.6l-.9 2.8v.8c-.1 0-.8 1.8-.8 1.8v1.8l.2.8-.6.9v.6l.4.3 2.4-1.1 1.5.2.6.6v.3c-.1 0-2.7 2-2.7 2l-.9 1-.3.9-1.8.9-.8 1.1h-.7c0-.1-.6-.5-.6-.5l-1-2.8v-2l.4-2.2v-1.5c.1 0-.2-1.1-.2-1.1v-1.2l.8-1.6.5-2.6v-.4c.1 0 .1-2 .1-2l-1.5-.4v-.9l.8-1.6.4-.6h1.8l.2-1.5.6-1.4v-.6c-.1 0 0-1 0-1h.4Z"/><path class="st0" d="m141.8 20.1 2.3.5 1.3.9.3.8.4 1.1.2 1.1v.9l-.3 1.1-.4.4-.4.7-.9.9-1.1.7-.8.2-.8.5-.8.2.4.9v.8l.3.9.6.6.9.8.8.3h.4l.6.3h.8c0-.1.6.1.6.1l.9.2 1.1-.3 1-.4h.8l1.1-.6.9-.3h.8l.4.4v.5c-.1 0-.5.7-.5.7l-.4.4-.5.8-.6.6-1 .4-.8.6-1 .4h-.8l-.9.4h-1l-1.1-.8-.8.3h-1.6l-1.2-.4-1.3-1.1-.8-.3-1-1.2-.3-.2-.6-.7-.3-.8-.3-.9-.8-1.1-.2-1.3-.4-.4-.3-.7v-2.8l.3-1.1.5-.7.4-.9.6-.4.5-.3V22c.1 0 .9-.6.9-.6l.6-.6 1.4-.4 2-.2Zm-.9 2.7-.4.6-.4.9.2.5-.4.8v1.1c-.1 0 .4 1.1.4 1.1l1.3-.4.5-.7.9-.3.4-1 .5-1v-1.5l-.3-.6h-1.8l-.8.4Z"/><path class="st0" d="m153.6 18.2.8.2.6.4.4.4.6.8v1.2l.6.4v1l.3 1.1h1.8c0 .1.4-.1.4-.1l1.5.4 1.1.5.8.8.5 1 .6.8.6 1.2v2.9l.1.9.4 1 1.1.7h1.1l1.2-.4.9-.4.8-.3.3.3v.8l-.3.6v.8c-.1 0-.9.5-.9.5l-.8.2h-.9c0 .1-1.4.4-1.4.4L164 36l-1.1-.2-.9-.4h-.4l-.8-1.3-.7-1.1-.4-1.1-.4-1.4.2-1.3v-1.1c.1 0-.4-.8-.4-.8l-.6-.9-.9-.3h-.8l-.3.9-.3 1.4-.4.7v.8l-.5.9-.4.8-.6.6-.5.6-.8.9-.3.4-.6.4h-.6c0 .1-.9.8-.9.8l-.8-.3-.4-1.1.4-.8.5-.4h.6c0-.1.6-.6.6-.6l.7-.9.8-1.8.8-1.1.4-1.7-.2-.9-.8-.4-.8-.8-.8-1-.3-.6v-1.2c-.1 0 0-1 0-1l.5-1.5.7-.7.6-.4.6-.2Zm-.5 2.8v.6c-.1 0 0 .6 0 .6l.4.7.4.3h.8l-.2-1.1-.4-.8-.2-.3-.6-.2-.3.3Z"/></svg>`
 
 };
 
