@@ -115,6 +115,12 @@
         duration: 900
       });
     });
+sektion73Map.once("load", () => {
+  const s = sektion73Map.getStyle();
+  console.log("STYLE NAME:", s && s.name);
+  console.log("STYLE ID:", s && s.id);
+  console.log("LAYER COUNT:", s && s.layers ? s.layers.length : 0);
+});
 
     /* =========================
        PINS
