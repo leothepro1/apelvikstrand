@@ -175,19 +175,15 @@ const sektion73Tangkorar_4 = {
        LOAD
        ========================= */
 
-    sektion73Map.on("style.load", () => {
-      sektion73Map.easeTo({
-        center: sektion73Home.lngLat,
-        zoom: sektion73StartZoom,
-        pitch: sektion73Pitch,
-        bearing: sektion73Bearing,
-        duration: 900
-      });
+ sektion73Map.on("style.load", () => {
+  sektion73Map.setPitch(sektion73Pitch);
+  sektion73Map.setBearing(sektion73Bearing);
 
-      if (sektion73HasImportsStyle()) {
-        sektion73ForceStandardConfig();
-      }
-    });
+  if (sektion73HasImportsStyle()) {
+    sektion73ForceStandardConfig();
+  }
+});
+
 
   
 
@@ -609,12 +605,15 @@ const sektion73Tangkorar_4 = {
 
   let sektion73ModalOpen = false;
 
-    const sektion73StartView = {
-      center: sektion73Home.lngLat,
-      zoom: sektion73StartZoom,
-      pitch: sektion73Pitch,
-      bearing: sektion73Bearing
-    };
+const sektion73StartView = {
+  center: sektion73Home.lngLat,
+  zoom: sektion73StartZoom,
+  pitch: sektion73Pitch,
+  bearing: sektion73Bearing
+};
+
+// Dynamiskt sparad vy (användarens senaste läge)
+let sektion73ReturnView = null;
 
 function sektion73OpenModal(payload) {
   const { overlay, modal } = sektion73EnsureModalDOM();
@@ -678,15 +677,27 @@ function sektion73CloseModal() {
     sektion73ActiveMoveEndHandler = null;
   }
 
-  if (sektion73Map && typeof sektion73Map.easeTo === "function") {
-    sektion73Map.easeTo({
-      center: sektion73StartView.center,
-      zoom: Math.min(sektion73StartView.zoom, sektion73MaxZoom),
-      pitch: sektion73StartView.pitch,
-      bearing: sektion73StartView.bearing,
-      duration: sektion73PinZoomDur,
-      easing: (t) => 1 - Math.pow(1 - t, 3)
-    });
+if (
+  sektion73Map &&
+  sektion73ReturnView &&
+  typeof sektion73Map.easeTo === "function"
+) {
+  sektion73Map.easeTo({
+    center: sektion73ReturnView.center,
+    zoom: Math.min(sektion73ReturnView.zoom, sektion73MaxZoom),
+    pitch: sektion73ReturnView.pitch,
+    bearing: sektion73ReturnView.bearing,
+    duration: sektion73PinZoomDur,
+    easing: (t) => 1 - Math.pow(1 - t, 3)
+  });
+
+sektion73Map.easeTo({
+  center: pin.lngLat,
+  zoom: sektion73PinZoom,
+  pitch: sektion73Pitch,
+  bearing: sektion73Bearing,
+  duration: sektion73PinZoomDur
+});
   }
 }
 
