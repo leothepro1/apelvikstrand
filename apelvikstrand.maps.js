@@ -85,7 +85,7 @@ const sektion73Tangkorar_4 = {
 
     // Visa "från havet in mot land" (väst -> öst):
     // bearing 90 = öst uppåt i bild (kameran tittar mot öst med pitch)
-    const sektion73Bearing = 65;
+    const sektion73Bearing = 45;
 
     const sektion73DisableRotate = true;
 
