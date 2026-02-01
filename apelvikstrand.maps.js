@@ -132,16 +132,20 @@ const sektion73Tangkorar_4 = {
       console.error("Mapbox error:", e && e.error ? e.error : e);
     });
 
-    sektion73Map.setMinZoom(sektion73MinZoom);
+     sektion73Map.setMinZoom(sektion73MinZoom);
     sektion73Map.setMaxZoom(sektion73MaxZoom);
 
-    sektion73Map.scrollZoom.disable();
+    // Tillåt scroll-zoom (in/ut med mus-hjul / trackpad)
+    sektion73Map.scrollZoom.enable();
+
+    // Behåll dubbelklick-zoom avstängt (som du haft)
     sektion73Map.doubleClickZoom.disable();
 
     if (sektion73DisableRotate) {
       sektion73Map.dragRotate.disable();
       sektion73Map.touchZoomRotate.disableRotation();
     }
+
 
 
     sektion73Map.addControl(new mapboxgl.AttributionControl({ compact: true }), "bottom-right");
