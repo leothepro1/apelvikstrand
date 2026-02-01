@@ -179,12 +179,40 @@ const sektion73Tangkorar_4 = {
        LOAD
        ========================= */
 
- sektion73Map.on("style.load", () => {
+sektion73Map.on("style.load", () => {
   sektion73Map.setPitch(sektion73Pitch);
   sektion73Map.setBearing(sektion73Bearing);
 
   if (sektion73HasImportsStyle()) {
     sektion73ForceStandardConfig();
+  }
+
+  if (typeof sektion73Map.setConfigProperty === "function") {
+    try {
+      // LAND USE / NATUR
+      sektion73Map.setConfigProperty(
+        "basemap",
+        "colorCommercialLanduse",
+        "hsl(32, 20%, 84%)"
+      );
+      sektion73Map.setConfigProperty(
+        "basemap",
+        "colorGreenspace",
+        "hsl(86, 27%, 48%)"
+      );
+      sektion73Map.setConfigProperty(
+        "basemap",
+        "colorWater",
+        "hsl(199, 33%, 57%)"
+      );
+      sektion73Map.setConfigProperty(
+        "basemap",
+        "colorLand",
+        "hsl(40, 33%, 98%)"
+      );
+    } catch (e) {
+      console.warn("Mapbox Standard config properties stöds inte:", e);
+    }
   }
 });
 
