@@ -569,10 +569,28 @@
        PINS (2 st) – zoom först, modal efter "moveend"
        ========================= */
 
+  const sektion73PinIcons = {
+      home: `
+        <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
+          <path d="M4 11.2 12 4l8 7.2" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/>
+          <path d="M6.5 10.8V20h11V10.8" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/>
+          <path d="M10.2 20v-5.2h3.6V20" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+      `,
+      food: `
+        <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
+          <path d="M6.2 3.8v6.6M8.8 3.8v6.6M6.2 10.4c0 1.5 1.2 2.7 2.7 2.7v7.1" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/>
+          <path d="M14.6 3.8v8.1c0 1.1.9 2 2 2h.9v6.3" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/>
+          <path d="M20.3 3.8c-1.5.6-2.4 2.1-2.4 3.7v6.4" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/>
+        </svg>
+      `
+    };
+
     const sektion73Pins = [
       {
         id: "sektion73Pin_surbrunn_0000",
         label: "Boendet",
+        iconKey: "home",
         lngLat: sektion73Home.lngLat,
         modal: {
           kicker: "BOENDE",
@@ -595,6 +613,7 @@
       {
         id: "sektion73Pin_tangkorar_0001",
         label: "Restaurang",
+        iconKey: "food",
         lngLat: sektion73Tangkorar.lngLat,
         modal: {
           kicker: "MAT & DRYCK",
@@ -630,11 +649,13 @@
       dot.className = "sektion73PinDot";
       dot.setAttribute("aria-hidden", "true");
 
-      const txt = document.createElement("span");
-      txt.textContent = pin.label;
+      const ico = document.createElement("span");
+      ico.className = "sektion73PinIco";
+      ico.setAttribute("aria-hidden", "true");
+      ico.innerHTML = sektion73PinIcons[pin.iconKey] || sektion73PinIcons.home;
 
       btn.appendChild(dot);
-      btn.appendChild(txt);
+      btn.appendChild(ico);
 
       const pointer = document.createElement("div");
       pointer.className = "sektion73PinPointer";
