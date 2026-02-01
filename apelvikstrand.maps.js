@@ -297,30 +297,30 @@ const sektion73Tangkorar_4 = {
 
         .sektion73ModalGallery{
           display:grid;
-          gap:10px;
+          gap:2px;
         }
-        .sektion73ModalGalleryTop{
-          width:100%;
-          aspect-ratio: 16/9;
-          border-radius:14px;
-          overflow:hidden;
-          background:#f1f3f4;
-          border:1px solid var(--sektion73-modal-line);
-        }
+.sektion73ModalGalleryTop {
+    width: 100%;
+    aspect-ratio: 1.67778 / 1;
+    border-radius: 20px 0px 0px 0px;
+    overflow: hidden;
+    background: #f1f3f4;
+    border: none;
+}
         .sektion73ModalGalleryTop img{
           width:100%;
           height:100%;
           object-fit:cover;
           display:block;
         }
-        .sektion73ModalGalleryRow{
-          display:grid;
-          grid-template-columns:repeat(3, 1fr);
-          gap:10px;
-        }
+.sektion73ModalGalleryRow {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 2px;
+}
         .sektion73ModalThumb{
-          aspect-ratio: 4/3;
-          border-radius:14px;
+          aspect-ratio: 1.67778 / 1;
+          border-radius:0px;
           overflow:hidden;
           background:#f1f3f4;
           border:1px solid var(--sektion73-modal-line);
@@ -691,8 +691,8 @@ const sektion73Pins = [
         "https://picsum.photos/seed/sektion73_t1_3/700/525"
       ],
       imgSrc: "Bildkälla: —",
-      h: "Rubrik",
-      p: "Brödtext…",
+      h: "Precis vid havet",
+      p: "Allra närmast stranden och med en bedårande utsikt över Kattegatt och folklivet i viken. På Solviken samlas campinggäster och varbergsbor, flanörer längs strandpromenaden och de som tagit en cykeltur från Läjet. Sommaren fylls av god mat, dofter från grillen, quiz och trubadurer. Höstkvällar med värme och gemyt och en svart vattenyta så långt man ser.Som utomlands hemma. För den stora festen och för den som bara har vägen förbi. För dig som släpar med dig en hel hög goda kamrater och för dig som träffar dem här.",
       cta1Text: "CTA 1",
       cta1Href: "",
       cta2Text: "Visa vägen",
@@ -718,8 +718,8 @@ const sektion73Pins = [
         "https://picsum.photos/seed/sektion73_p1_3/700/525"
       ],
       imgSrc: "Bildkälla: —",
-      h: "Rubrik",
-      p: "Brödtext…",
+      h: "A place by the sea",
+      p: "John’s Place ligger i ett lågt trähus mitt på Apelvikens strand. Maten lagas över öppen eld med råvaror som följer säsong, och rummen är varma även när vädret är ruffigt. Hit kommer man för att äta nära havet, i en miljö som vuxit fram långsamt och känns mer som ett hem än en restaurang.",
       cta1Text: "CTA 1",
       cta1Href: "",
       cta2Text: "Visa vägen",
@@ -742,8 +742,8 @@ const sektion73Pins = [
         "https://picsum.photos/seed/sektion73_p2_3/700/525"
       ],
       imgSrc: "Bildkälla: —",
-      h: "Rubrik",
-      p: "Brödtext…",
+      h: "Härligt okomplicerat",
+      p: "Kort sagt, en okomplicerad restaurang vid poolkanten. För alla, lika mycket för campinggäster och för dig som bor i Varberg, som kvällsflanörer utmed strandpromenaden. För dig som söker svalka i en välhumlad pilsner eller härlig sangria och när du tröttnat på poolplask långt före barnen. Och för frukost, hemlagad, rejäl streetfood. Du slinker in lite som du är; badtofflor, shorts och håret fortfarande vått efter badet eller kostym om du föredrar det. En samlingsplats i hjärtat av campingplatsen där du tar en kaffe, läser tidningen eller bara kollar folk en stund.",
       cta1Text: "CTA 1",
       cta1Href: "",
       cta2Text: "Visa vägen",
@@ -790,8 +790,8 @@ const sektion73Pins = [
         "https://picsum.photos/seed/sektion73_p4_3/700/525"
       ],
       imgSrc: "Bildkälla: —",
-      h: "Rubrik",
-      p: "Brödtext…",
+      h: "Längst söderut i Apelviken",
+      p: "&Olles ligger längst ner i viken, nära sanden och med gott om plats runtomkring. Det är ett ställe som fungerar bäst när det är folk i rörelse. Drop in är vanligt, borden delas och stämningen byggs av gästerna själva. Mat, dryck och musik samsas under samma tak och dagarna glider ofta över i kväll utan tydlig gräns.",
       cta1Text: "CTA 1",
       cta1Href: "",
       cta2Text: "Visa vägen",
