@@ -2,8 +2,7 @@
    Apelvikstrand – Interaktiv karta (Mapbox)
    - Låst till Apelviken (maxBounds + zoom-intervall)
    - Utgår från en "home"-punkt
-   - Mindre "google mappig": döljer Mapbox UI (logo/attribution), tar bort navigation,
-     och kan (valfritt) stänga av interaktion för en mer “designad” upplevelse.
+   - Mindre "google mappig": mindre UI, låst interaktion, chips som pins
    - Custom pins (modal kopplas på senare)
 */
 (function () {
@@ -32,9 +31,9 @@
     mapboxgl.accessToken =
       "pk.eyJ1IjoicnV0Z2Vyc3NvbiIsImEiOiJjbWwzdjY5N2owcDdiM2RzZWlzaG14MWVjIn0.yMfhGXLf9xq_vzIFSJVcjA";
 
-    // Publicerad style URL (Mapbox Studio)
+    // ✅ NY: Publicerad style URL (Mapbox Studio)
     const sektion73StyleUrl =
-      "mapbox://styles/rutgersson/cml3vbd2s006i01qwezp4cw46";
+      "mapbox://styles/rutgersson/cml3w74bd009g01r458nuhgjn";
 
     // Startpunkt (home)
     const sektion73Home = {
@@ -87,7 +86,6 @@
     sektion73Map.setMaxZoom(sektion73MaxZoom);
 
     // Interaktion – gör det mer “karta i UI” än “navigationskarta”
-    // (du kan kommentera bort om du vill ha full frihet)
     sektion73Map.scrollZoom.disable();         // av: scroll-zoom (bra för inbäddat)
     sektion73Map.doubleClickZoom.disable();    // av: dubbelklick zoom
     if (sektion73DisableRotate) {
@@ -98,29 +96,24 @@
       sektion73Map.setPitch(0);
     }
 
-    // Ta bort standard-knappar (+/-) helt
-    // (om du vill behålla: kommentera bort dessa två rader)
-    // OBS: vi lade aldrig till NavigationControl nu, så inga knappar ska synas
-
     // Lägg tillbaka en kompakt attribution i hörn (REKOMMENDERAT för compliance)
     // Om du verkligen vill dölja: kommentera bort.
     sektion73Map.addControl(new mapboxgl.AttributionControl({ compact: true }), "bottom-right");
 
-    // För att minska "kart-app"-känslan: gör kartan lite mjukare vid loads
+    // Mjuk “fly-in” vid load
     sektion73Map.once("load", () => {
-      // mjuk "fly" in i området, känns mer premium
       sektion73Map.easeTo({
         center: sektion73Home.lngLat,
         zoom: sektion73StartZoom,
         duration: 900
       });
+
+      // Debug: verifiera att rätt style laddas
+      const s = sektion73Map.getStyle();
+      console.log("STYLE NAME:", s && s.name);
+      console.log("STYLE ID:", s && s.id);
+      console.log("LAYER COUNT:", s && s.layers ? s.layers.length : 0);
     });
-sektion73Map.once("load", () => {
-  const s = sektion73Map.getStyle();
-  console.log("STYLE NAME:", s && s.name);
-  console.log("STYLE ID:", s && s.id);
-  console.log("LAYER COUNT:", s && s.layers ? s.layers.length : 0);
-});
 
     /* =========================
        PINS
@@ -153,7 +146,7 @@ sektion73Map.once("load", () => {
       el.id = pin.id;
       el.setAttribute("aria-label", pin.title);
 
-      // Lite mer “brand”: chip-känsla istället för klassisk pin
+      // “brand”: chip-känsla
       el.style.display = "inline-flex";
       el.style.alignItems = "center";
       el.style.gap = "10px";
@@ -167,8 +160,9 @@ sektion73Map.once("load", () => {
       el.style.whiteSpace = "nowrap";
       el.style.font = "600 13px/1 system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif";
       el.style.color = "#0e1318";
+      el.style.paddingInline = "12px";
 
-      // Accent-dot (guld)
+      // Accent-dot
       const dot = document.createElement("span");
       dot.setAttribute("aria-hidden", "true");
       dot.style.width = "10px";
@@ -184,7 +178,7 @@ sektion73Map.once("load", () => {
       label.style.opacity = "0.95";
       el.appendChild(label);
 
-      // Hover/active (subtilt)
+      // Hover
       el.addEventListener("mouseenter", () => {
         el.style.transform = "translateY(-1px)";
         el.style.boxShadow = "0 16px 34px rgba(0,0,0,.20)";
@@ -195,13 +189,15 @@ sektion73Map.once("load", () => {
       });
 
       el.addEventListener("click", function () {
-        // TODO: ersätt med riktig modal (nästa steg)
-        // sektion73OpenModal(pin)
         console.log("Pin klick:", pin.title, pin.payload);
 
-        // “return to home” beteende för home-pin (känns mindre app, mer UI)
+        // “return to home” för home-pin
         if (pin.payload && pin.payload.type === "home") {
-          sektion73Map.easeTo({ center: sektion73Home.lngLat, zoom: sektion73StartZoom, duration: 650 });
+          sektion73Map.easeTo({
+            center: sektion73Home.lngLat,
+            zoom: sektion73StartZoom,
+            duration: 650
+          });
         }
       });
 
@@ -224,11 +220,10 @@ sektion73Map.once("load", () => {
       sektion73Pins.forEach(sektion73AddPin);
     });
 
-    // Exponera map om du vill debugga i konsolen (valfritt)
+    // Exponera map för debug (valfritt)
     window.sektion73MapInstance = sektion73Map;
 
-    // Hjälpfunktion för att snabbt få exakta bounds när du har rätt zoom/utsnitt:
-    // Kör i console: sektion73PrintBounds()
+    // Hjälp: logga bounds för exakt låsning när du ställt utsnitt perfekt
     window.sektion73PrintBounds = function () {
       const b = sektion73Map.getBounds();
       const sw = b.getSouthWest();
