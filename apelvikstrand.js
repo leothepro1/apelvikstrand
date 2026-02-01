@@ -44,32 +44,13 @@
 }
 
 
-function asCldVideoFromUploadUrl_55219(uploadUrl, w, h) {
-  const url = String(uploadUrl || "").trim();
-
-  const marker = "/video/upload/";
-  const idx = url.indexOf(marker);
-  if (idx === -1) return url;
-
-  const base = url.slice(0, idx + marker.length);
-  const rest = url.slice(idx + marker.length);
-
-  // vc_auto ger optimal codec/container, f_auto väljer format (t.ex. mp4/webm)
-  // ac_none säkerställer inget ljud
-  const t = [
-    "f_auto",
-    "q_auto",
-    "dpr_auto",
-    "vc_auto",
-    "ac_none",
-    "c_fill",
-    "g_auto",
-    "w_" + Math.round(w),
-    "h_" + Math.round(h),
-  ].join(",");
-
-  return base + t + "/" + rest;
+function asCldVideoFromUploadUrl_55219(uploadUrl) {
+  // VIKTIGT:
+  // Video ska INTE gå via Cloudinary-transforms.
+  // Rå upload-URL krävs för korrekt playback i alla browsers.
+  return String(uploadUrl || "").trim();
 }
+
 
 /* Ny: poster/thumbnail från video (still frame) */
 function asCldPosterFromVideoUploadUrl_55219(uploadUrl, w, h) {
@@ -925,9 +906,10 @@ host.classList.add("as-loaded");
       vid.preload = desiredPreload;
 
       // Sätt src först när vi faktiskt är near/active
-      if (baseSrc && !vid.getAttribute("src")) {
-        vid.src = asCldVideoFromUploadUrl_55219(baseSrc, dims.w, dims.h);
-      }
+if (baseSrc && !vid.getAttribute("src")) {
+  vid.src = asCldVideoFromUploadUrl_55219(baseSrc);
+}
+
 
      if (isActive) {
   // Säkra muted/playsinline även om browser tappat state
