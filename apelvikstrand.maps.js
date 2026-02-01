@@ -410,9 +410,9 @@ const sektion73Tangkorar_4 = {
   display:inline-flex;
   align-items:center;
   justify-content:center;
-  width:62px;
+  width:52px;
   height:auto;
-  flex:0 0 62px;
+  flex:0 0 52px;
   line-height:0;
 }
         body.sektion73-modal-open {
@@ -430,7 +430,7 @@ const sektion73Tangkorar_4 = {
     display: none;
 }
 #sektion73MapCanvas .sektion73PinBubble .sektion73PinIco svg{
-  width:62px;
+  width:52px;
   height:auto;
   display:block;
   color:currentColor;
@@ -678,18 +678,18 @@ const sektion73Pins = [
     label: "Boendet",
     iconKey: "as",
     ui: {
-      bubbleBg: "rgba(255,255,255,.92)",
-      pointerTop: "rgba(255,255,255,.92)"
+      bubbleBg: "#F6F3F1",
+      pointerTop: "#F6F3F1"
     },
     lngLat: sektion73Home.lngLat,
     modal: {
       kicker: "HOME",
       title: "Surbrunnsvägen 2–8",
       images: [
-        "https://picsum.photos/seed/sektion73_home_0/1400/800",
-        "https://picsum.photos/seed/sektion73_home_1/700/525",
-        "https://picsum.photos/seed/sektion73_home_2/700/525",
-        "https://picsum.photos/seed/sektion73_home_3/700/525"
+        "https://res.cloudinary.com/dmgmoisae/image/upload/v1769872360/jpeg-optimizer_ApelvikStrand_0356_2_jvgrhe.jpg",
+        "https://res.cloudinary.com/dmgmoisae/image/upload/v1769872059/jpeg-optimizer_ApelvikStrand_0010_3_rzzlat.jpg",
+        "https://res.cloudinary.com/dmgmoisae/image/upload/v1769872058/jpeg-optimizer_ApelvikStrand_1153_1_mi0wzz.jpg",
+        "https://res.cloudinary.com/dmgmoisae/image/upload/v1769875471/strandhuse21q_hh50lb.png"
       ],
       imgSrc: "Bildkälla: —",
       h: "Surbrunnsvägen 2–8",
@@ -716,10 +716,10 @@ const sektion73Pins = [
       kicker: "PUNKT",
       title: "Tångkörarvägen 1",
       images: [
-        "https://picsum.photos/seed/sektion73_t1_0/1400/800",
-        "https://picsum.photos/seed/sektion73_t1_1/700/525",
-        "https://picsum.photos/seed/sektion73_t1_2/700/525",
-        "https://picsum.photos/seed/sektion73_t1_3/700/525"
+        "https://res.cloudinary.com/dmgmoisae/image/upload/v1769971921/solviken321_myphpm.png",
+        "https://res.cloudinary.com/dmgmoisae/image/upload/v1769971923/bubbel_vvavwe.png",
+        "https://res.cloudinary.com/dmgmoisae/image/upload/v1769971923/sol_qx8kjy.png",
+        "https://res.cloudinary.com/dmgmoisae/image/upload/v1769971923/solviken_pt1mdu.png"
       ],
       imgSrc: "Bildkälla: —",
       h: "Precis vid havet",
@@ -743,10 +743,10 @@ const sektion73Pins = [
       kicker: "PUNKT 1",
       title: "Tångkörarvägen 4",
       images: [
-        "https://picsum.photos/seed/sektion73_p1_0/1400/800",
-        "https://picsum.photos/seed/sektion73_p1_1/700/525",
-        "https://picsum.photos/seed/sektion73_p1_2/700/525",
-        "https://picsum.photos/seed/sektion73_p1_3/700/525"
+        "https://res.cloudinary.com/dmgmoisae/image/upload/v1769971995/64be59cd-56ce-4fc7-8c64-6094ec83203e_xlrtd5.jpg",
+        "https://res.cloudinary.com/dmgmoisae/image/upload/v1769972003/2f763ab2-4f67-49ad-b759-7926fcc74c78_bzgnuc.jpg",
+        "https://res.cloudinary.com/dmgmoisae/image/upload/v1769972008/253f9f0f-e31b-4654-bc1a-7d8190b84ae6_l2gxmv.jpg",
+        "https://res.cloudinary.com/dmgmoisae/image/upload/v1769972018/DSF0505_k8gcge.jpg"
       ],
       imgSrc: "Bildkälla: —",
       h: "A place by the sea",
@@ -767,10 +767,10 @@ const sektion73Pins = [
       kicker: "PUNKT 2",
       title: "Sanatorievägen 4",
       images: [
-        "https://picsum.photos/seed/sektion73_p2_0/1400/800",
-        "https://picsum.photos/seed/sektion73_p2_1/700/525",
-        "https://picsum.photos/seed/sektion73_p2_2/700/525",
-        "https://picsum.photos/seed/sektion73_p2_3/700/525"
+        "https://res.cloudinary.com/dmgmoisae/image/upload/v1769971746/nisses_axsb1p.png",
+        "https://res.cloudinary.com/dmgmoisae/image/upload/v1769971689/68b2a7_3cf511320cef420e9b792866ff63be9b_mv2_y3gzxq.jpg",
+        "https://res.cloudinary.com/dmgmoisae/image/upload/v1769971684/68b2a7_1a49d240ef664fcd9020bd989aa99175_mv2_ecjt6f.jpg",
+        "https://res.cloudinary.com/dmgmoisae/image/upload/v1769971668/original_hz62hj.jpg"
       ],
       imgSrc: "Bildkälla: —",
       h: "Härligt okomplicerat",
@@ -791,10 +791,10 @@ const sektion73Pins = [
       kicker: "PUNKT 3",
       title: "Tångkörarvägen 2",
       images: [
-        "https://picsum.photos/seed/sektion73_p3_0/1400/800",
-        "https://picsum.photos/seed/sektion73_p3_1/700/525",
-        "https://picsum.photos/seed/sektion73_p3_2/700/525",
-        "https://picsum.photos/seed/sektion73_p3_3/700/525"
+        "https://res.cloudinary.com/dmgmoisae/image/upload/v1769972155/brittas_mayy5x.png",
+        "https://res.cloudinary.com/dmgmoisae/image/upload/v1769972152/jh_riqe6e.png",
+        "https://res.cloudinary.com/dmgmoisae/image/upload/v1769972154/78_emx1je.png",
+        "https://res.cloudinary.com/dmgmoisae/image/upload/v1769972157/832_nhwoaf.png"
       ],
       imgSrc: "Bildkälla: —",
       h: "Rubrik",
@@ -809,16 +809,16 @@ const sektion73Pins = [
     id: "sektion73Pin_tangkorar_0004",
     label: "Punkt 4",
     iconKey: "olles",
-    ui: { bubbleBg: "#222222", pointerTop: "#222222" },
+    ui: { bubbleBg: "#fff", pointerTop: "#fff" },
     lngLat: sektion73Tangkorar_10.lngLat,
     modal: {
       kicker: "PUNKT 4",
       title: "Tångkörarvägen 10",
       images: [
-        "https://picsum.photos/seed/sektion73_p4_0/1400/800",
-        "https://picsum.photos/seed/sektion73_p4_1/700/525",
-        "https://picsum.photos/seed/sektion73_p4_2/700/525",
-        "https://picsum.photos/seed/sektion73_p4_3/700/525"
+        "https://res.cloudinary.com/dmgmoisae/image/upload/v1769972291/olles321_agkca3.png",
+        "https://res.cloudinary.com/dmgmoisae/image/upload/v1769972289/olles2_oudzkl.png",
+        "https://res.cloudinary.com/dmgmoisae/image/upload/v1769972289/olles5_wst8fl.png",
+        "https://res.cloudinary.com/dmgmoisae/image/upload/v1769972288/olles3_nj8cgt.png"
       ],
       imgSrc: "Bildkälla: —",
       h: "Längst söderut i Apelviken",
