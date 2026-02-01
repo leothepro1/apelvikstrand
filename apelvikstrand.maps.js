@@ -1159,21 +1159,6 @@ const sektion73Pins = [
 
 sektion73Map.once("load", function () {
   // pins (robust)
-  sektion73Pins.forEach((pin) => {
-    try {
-      // minimal guard så en pin utan lngLat inte kraschar allt
-      if (!pin || !Array.isArray(pin.lngLat) || pin.lngLat.length !== 2) {
-        console.warn("Pin saknar giltig lngLat:", pin);
-        return;
-      }
-      sektion73AddPin(pin);
-    } catch (e) {
-      console.error("Pin-rendering kraschade för:", pin && pin.id, e);
-    }
-  });
-
-  sektion73EnsureModalDOM();
-});
 
       // pins
       sektion73Pins.forEach(sektion73AddPin);
