@@ -700,11 +700,11 @@ const sektion73Pins = [
       imgSrc: "Bildkälla: —",
       h: "Precis vid havet",
       p: "Allra närmast stranden och med en bedårande utsikt över Kattegatt och folklivet i viken. På Solviken samlas campinggäster och varbergsbor, flanörer längs strandpromenaden och de som tagit en cykeltur från Läjet. Sommaren fylls av god mat, dofter från grillen, quiz och trubadurer. Höstkvällar med värme och gemyt och en svart vattenyta så långt man ser.Som utomlands hemma. För den stora festen och för den som bara har vägen förbi. För dig som släpar med dig en hel hög goda kamrater och för dig som träffar dem här.",
-      cta1Text: "CTA 1",
-      cta1Href: "",
-      cta2Text: "Visa vägen",
+      cta1Text: "Visa meny",
+      cta1Href: "https://www.apelviken.se/solviken-meny",
+      cta2Text: "Vägbeskrivning",
       cta2Href:
-        "https://www.google.com/maps/search/?api=1&query=T%C3%A5ngk%C3%B6rarv%C3%A4gen%201%2C%20432%2054%20Varberg"
+        "https://www.google.com/maps/dir/57.502272,12.087438/Solviken,+T%C3%A5ngk%C3%B6rarv%C3%A4gen+1,+432+54+Varberg/@57.2950696,11.8317533,75989m/data=!3m1!1e3!4m9!4m8!1m1!4e1!1m5!1m1!1s0x46502af989b79f2d:0xfb2919c395412c94!2m2!1d12.2488569!2d57.084622?entry=ttu&g_ep=EgoyMDI2MDEyOC4wIKXMDSoASAFQAw%3D%3D"
     }
   },
 
@@ -727,10 +727,10 @@ const sektion73Pins = [
       imgSrc: "Bildkälla: —",
       h: "A place by the sea",
       p: "John’s Place ligger i ett lågt trähus mitt på Apelvikens strand. Maten lagas över öppen eld med råvaror som följer säsong, och rummen är varma även när vädret är ruffigt. Hit kommer man för att äta nära havet, i en miljö som vuxit fram långsamt och känns mer som ett hem än en restaurang.",
-      cta1Text: "CTA 1",
-      cta1Href: "",
-      cta2Text: "Visa vägen",
-      cta2Href: "https://www.google.com/maps/search/?api=1&query=T%C3%A5ngk%C3%B6rarv%C3%A4gen%204%2C%20432%2054%20Varberg"
+      cta1Text: "Visa meny",
+      cta1Href: "https://johnsplace.nu/meny/",
+      cta2Text: "Vägbeskrivning",
+      cta2Href: "https://www.google.com/maps/dir/57.502272,12.087438/John's+Place,+T%C3%A5ngk%C3%B6rarv%C3%A4gen+4,+432+54+Varberg/@57.2969173,11.831503,75986m/data=!3m2!1e3!4b1!4m9!4m8!1m1!4e1!1m5!1m1!1s0x46502afeb21e2233:0x56c03d695b7db20b!2m2!1d12.2580971!2d57.083388?entry=ttu&g_ep=EgoyMDI2MDEyOC4wIKXMDSoASAFQAw%3D%3D"
     }
   },
   {
@@ -751,10 +751,10 @@ const sektion73Pins = [
       imgSrc: "Bildkälla: —",
       h: "Härligt okomplicerat",
       p: "Kort sagt, en okomplicerad restaurang vid poolkanten. För alla, lika mycket för campinggäster och för dig som bor i Varberg, som kvällsflanörer utmed strandpromenaden. För dig som söker svalka i en välhumlad pilsner eller härlig sangria och när du tröttnat på poolplask långt före barnen. Och för frukost, hemlagad, rejäl streetfood. Du slinker in lite som du är; badtofflor, shorts och håret fortfarande vått efter badet eller kostym om du föredrar det. En samlingsplats i hjärtat av campingplatsen där du tar en kaffe, läser tidningen eller bara kollar folk en stund.",
-      cta1Text: "CTA 1",
-      cta1Href: "",
+      cta1Text: "Visa meny",
+      cta1Href: "https://www.apelviken.se/nisses-bodega",
       cta2Text: "Visa vägen",
-      cta2Href: "https://www.google.com/maps/search/?api=1&query=Sanatoriev%C3%A4gen%204%2C%20432%2053%20Varberg"
+      cta2Href: "https://www.google.com/maps/dir/57.502272,12.087438/Nisses+Bodega,+Sanatoriev%C3%A4gen+4,+432+53+Varberg/@57.2983075,11.831503,75983m/data=!3m2!1e3!4b1!4m9!4m8!1m1!4e1!1m5!1m1!1s0x4653ede147d2886f:0xfee8375fc04e0d5f!2m2!1d12.2478293!2d57.0854771?entry=ttu&g_ep=EgoyMDI2MDEyOC4wIKXMDSoASAFQAw%3D%3D"
     }
   },
   {
@@ -775,10 +775,10 @@ const sektion73Pins = [
       imgSrc: "Bildkälla: —",
       h: "Rubrik",
       p: "Brödtext…",
-      cta1Text: "CTA 1",
-      cta1Href: "",
-      cta2Text: "Visa vägen",
-      cta2Href: "https://www.google.com/maps/search/?api=1&query=T%C3%A5ngk%C3%B6rarv%C3%A4gen%202%2C%20432%2054%20Varberg"
+      cta1Text: "Läs mer",
+      cta1Href: "https://brittas.se/",
+      cta2Text: "Vägbeskrivning",
+      cta2Href: "https://www.google.com/maps/dir/57.502272,12.087438/Brittas+Strandveranda,+T%C3%A5ngk%C3%B6rarv%C3%A4gen+2,+432+54+Varberg/@57.1433862,12.1356372,21761m/data=!3m1!1e3!4m9!4m8!1m1!4e1!1m5!1m1!1s0x46502afeb21e2233:0x2d47a8d67dec7ee4!2m2!1d12.2552089!2d57.084749?entry=ttu&g_ep=EgoyMDI2MDEyOC4wIKXMDSoASAFQAw%3D%3D"
     }
   },
   {
@@ -799,10 +799,10 @@ const sektion73Pins = [
       imgSrc: "Bildkälla: —",
       h: "Längst söderut i Apelviken",
       p: "&Olles ligger längst ner i viken, nära sanden och med gott om plats runtomkring. Det är ett ställe som fungerar bäst när det är folk i rörelse. Drop in är vanligt, borden delas och stämningen byggs av gästerna själva. Mat, dryck och musik samsas under samma tak och dagarna glider ofta över i kväll utan tydlig gräns.",
-      cta1Text: "CTA 1",
-      cta1Href: "",
-      cta2Text: "Visa vägen",
-      cta2Href: "https://www.google.com/maps/search/?api=1&query=T%C3%A5ngk%C3%B6rarv%C3%A4gen%2010%2C%20432%2054%20Varberg"
+      cta1Text: "Visa meny",
+      cta1Href: "https://www.olles.nu/meny/",
+      cta2Text: "Vägbeskrivning",
+      cta2Href: "https://www.google.com/maps/dir/57.502272,12.087438/%26Olles,+T%C3%A5ngk%C3%B6rarv%C3%A4gen+10,+432+54+Varberg/@57.297359,11.8315835,75985m/data=!3m1!1e3!4m9!4m8!1m1!4e1!1m5!1m1!1s0x46502b1d2d80b947:0x4bd0492009aae2ae!2m2!1d12.2632701!2d57.0773842?entry=ttu&g_ep=EgoyMDI2MDEyOC4wIKXMDSoASAFQAw%3D%3D"
     }
   },
   {
