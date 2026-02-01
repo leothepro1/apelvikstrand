@@ -461,6 +461,18 @@ const sektion73Tangkorar_4 = {
   color:currentColor;
 }
 
+/* Mono-loggor: gör så att paths ärver färg från currentColor */
+#sektion73MapCanvas .sektion73PinWrap[data-icon-key="solviken"] .sektion73PinIco svg,
+#sektion73MapCanvas .sektion73PinWrap[data-icon-key="brittas"] .sektion73PinIco svg,
+#sektion73MapCanvas .sektion73PinWrap[data-icon-key="strandkollektivet"] .sektion73PinIco svg{
+  fill: currentColor;
+}
+#sektion73MapCanvas .sektion73PinWrap[data-icon-key="solviken"] .sektion73PinIco svg *,
+#sektion73MapCanvas .sektion73PinWrap[data-icon-key="brittas"] .sektion73PinIco svg *,
+#sektion73MapCanvas .sektion73PinWrap[data-icon-key="strandkollektivet"] .sektion73PinIco svg *{
+  fill: currentColor !important;
+}
+
 #sektion73MapCanvas .sektion73PinBubble{
   gap:10px;
 }
