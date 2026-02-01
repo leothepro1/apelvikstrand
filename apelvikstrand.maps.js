@@ -389,21 +389,22 @@ const sektion73Tangkorar_4 = {
                      .sektion73ModalBtnPrimary:active{
           background:#a67b02;
         }
-                .sektion73ModalBtnSecondary{
-        background: #FFE6A3;
-            color: #5A3C00;
-        }
-             .sektion73ModalBtnSecondary:hover{
-          background:#FFD870;
-        }
-                     .sektion73ModalBtnSecondary:active{
-          background:#FFD157;
-        }
-        .sektion73ModalBtn svg{
-          width:18px;
-          height:18px;
-          flex:0 0 auto;
-        }
+                [id="sektion73ModalCtaSecondary"] {
+    background: #FFE6A3;
+    color: #5A3C00;
+    border: none;
+}
+
+[id="sektion73ModalCtaSecondary"]:hover {
+    background: #FFD870;
+}
+
+[id="sektion73ModalCtaSecondary"]:active {
+    background: #FFD157;
+}
+.sektion73ModalBtn svg {
+    display: none;
+}
 
 #sektion73MapCanvas .sektion73PinBubble .sektion73PinIco{
   display:inline-flex;
@@ -893,7 +894,7 @@ const sektion73Pins = [
 
       // micro hover
       btn.addEventListener("mouseenter", () => {
-        btn.style.transform = "translateY(-1px)";
+        btn.style.transform = "translateY(0px)";
         btn.style.boxShadow = "0 18px 40px rgba(0,0,0,.22)";
       });
       btn.addEventListener("mouseleave", () => {
