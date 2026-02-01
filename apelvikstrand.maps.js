@@ -351,18 +351,44 @@
           flex:0 0 auto;
         }
 
-        /* ====== PINS ====== */
-        .sektion73PinWrap{
-          display:inline-flex;
-          flex-direction:column;
-          align-items:center;
-          gap:6px;
-          transform:translateZ(0);
-        }
+#sektion73MapCanvas .sektion73PinBubble .sektion73PinIco{
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  width:82px;
+  height:auto;
+  flex:0 0 82px;
+  line-height:0;
+}
+.sektion73PinDot {
+    width: 10px;
+    height: 10px;
+    border-radius: 999px;
+    background: var(--sektion73-accent);
+    display: none;
+}
+#sektion73MapCanvas .sektion73PinBubble .sektion73PinIco svg{
+  width:82px;
+  height:auto;
+  display:block;
+  color:currentColor;
+}
+
+#sektion73MapCanvas .sektion73PinBubble{
+  gap:10px;
+}
+.sektion73PinWrap {
+    display: inline-flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0px;
+    transform: translateZ(0);
+}
+       /* PER-PIN: färger styrs via CSS-variabler på .sektion73PinWrap */
         .sektion73PinBubble{
           padding:10px 12px;
           border-radius:999px;
-          background:rgba(255,255,255,.92);
+          background:var(--sektion73-pin-bubble-bg, rgba(255,255,255,.92));
           backdrop-filter: blur(10px);
           border:1px solid rgba(0,0,0,.14);
           box-shadow:0 16px 36px rgba(0,0,0,.20);
@@ -375,28 +401,26 @@
           align-items:center;
           gap:10px;
         }
-        .sektion73PinDot{
-          width:10px;
-          height:10px;
-          border-radius:999px;
-          background:var(--sektion73-accent);
-          box-shadow:0 0 0 3px rgba(242,178,0,.22);
-        }
+
         .sektion73PinPointer{
           width:0;
           height:0;
           border-left:10px solid transparent;
           border-right:10px solid transparent;
-          border-top:12px solid rgba(255,255,255,.92);
+          border-top:12px solid var(--sektion73-pin-pointer-top, rgba(255,255,255,.92));
           filter: drop-shadow(0 6px 8px rgba(0,0,0,.18));
         }
-        .sektion73PinBtn{
-          all:unset;
-          cursor:pointer;
-          display:inline-flex;
-          align-items:center;
-          justify-content:center;
-        }
+.sektion73PinBtn {
+    all: unset;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    background: #FCFBF8;
+    height: max-content;
+    padding: 12px;
+    border-radius: 12px;
+}
       `;
       document.head.appendChild(style);
     }
@@ -578,11 +602,16 @@
       `
     };
 
-    const sektion73Pins = [
+ <!-- BEFORE -->
+const sektion73Pins = [
       {
         id: "sektion73Pin_surbrunn_0000",
         label: "Boendet",
         iconKey: "home",
+        ui: {
+          bubbleBg: "rgba(255,255,255,.92)",
+          pointerTop: "rgba(255,255,255,.92)"
+        },
         lngLat: sektion73Home.lngLat,
         modal: {
           kicker: "BOENDE",
@@ -606,6 +635,10 @@
         id: "sektion73Pin_tangkorar_0001",
         label: "Restaurang",
         iconKey: "food",
+        ui: {
+          bubbleBg: "#FCFBF8",
+          pointerTop: "#FCFBF8"
+        },
         lngLat: sektion73Tangkorar.lngLat,
         modal: {
           kicker: "MAT & DRYCK",
@@ -631,6 +664,13 @@
       const wrap = document.createElement("div");
       wrap.className = "sektion73PinWrap";
       wrap.id = pin.id;
+
+      // PER-PIN CSS vars (endast färger)
+      const bubbleBg = (pin.ui && pin.ui.bubbleBg) ? String(pin.ui.bubbleBg) : "rgba(255,255,255,.92)";
+      const pointerTop = (pin.ui && pin.ui.pointerTop) ? String(pin.ui.pointerTop) : bubbleBg;
+
+      wrap.style.setProperty("--sektion73-pin-bubble-bg", bubbleBg);
+      wrap.style.setProperty("--sektion73-pin-pointer-top", pointerTop);
 
       const btn = document.createElement("button");
       btn.type = "button";
@@ -668,6 +708,7 @@
 
       return { wrap, btn };
     }
+
 
     const sektion73MarkersById = Object.create(null);
     let sektion73IsZoomingToPin = false;
