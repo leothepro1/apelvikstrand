@@ -363,23 +363,40 @@ const sektion73Tangkorar_4 = {
     gap: 10px;
     padding: 0px 32px;
 }
-        .sektion73ModalBtn{
-          width:100%;
-          display:flex;
-          align-items:center;
-          justify-content:space-between;
-          gap:12px;
-          padding:12px 14px;
-          border-radius:14px;
-          border:1px solid var(--sektion73-modal-line);
-          background:#fff;
-          cursor:pointer;
-          font:800 14px/1 system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;
-          color:var(--sektion73-modal-text);
-        }
-        .sektion73ModalBtnPrimary{
+.sektion73ModalBtn {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+    padding: 11px 13px;
+    border-radius: 8px;
+    border: none;
+    transition: 0.15s ease-in-out;
+    cursor: pointer;
+    font-family: "Manrope", Inter, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, sans-serif;
+    color: var(--sektion73-modal-text);
+    font-size: 15px;
+    font-weight: 700;
+}
+        .sektion73ModalBtnPrimary:{
           background:var(--sektion73-accent);
-          border-color:rgba(0,0,0,.08);
+        }
+             .sektion73ModalBtnPrimary:hover{
+          background:#d89f00;
+        }
+                     .sektion73ModalBtnPrimary:active{
+          background:#a67b02;
+        }
+                .sektion73ModalBtnSecondary:{
+        background: #FFE6A3;
+            color: #5A3C00;
+        }
+             .sektion73ModalBtnSecondary:hover{
+          background:#FFD870;
+        }
+                     .sektion73ModalBtnSecondary:active{
+          background:#FFD157;
         }
         .sektion73ModalBtn svg{
           width:18px;
