@@ -43,7 +43,7 @@
   return base + t + "/" + rest;
 }
 
-/* Ny: video-url (Cloudinary) – byggs först när Video används / när slide är near/active */
+
 function asCldVideoFromUploadUrl_55219(uploadUrl, w, h) {
   const url = String(uploadUrl || "").trim();
 
@@ -263,14 +263,13 @@ const asImages_61724 = [
   },
 ];
 
-/* Video-manifest (LAZY): injiceras i asImages_61724 först när Video-filtret används */
 const asVideosLazy_61724 = [
   {
     id: "asprVidData_0301",
     family: "Video",
     type: "video",
     alt: "Video 1",
-    src: "https://res.cloudinary.com/dmgmoisae/video/upload/v1769999999/apelvik_video_01.mp4",
+    src: "https://res.cloudinary.com/dmgmoisae/video/upload/v1769706196/2025_07_11_03_13_52_1_zgswq7.mp4",
   },
   {
     id: "asprVidData_0302",
