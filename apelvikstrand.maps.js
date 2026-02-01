@@ -89,7 +89,7 @@ const sektion73Tangkorar_4 = {
     ];
 
     const sektion73MinZoom = 13.2;
-    const sektion73MaxZoom = 19.6;
+    const sektion73MaxZoom = 17.9;
     const sektion73StartZoom = 15.7;
 
     // Kamera
@@ -103,7 +103,7 @@ const sektion73Tangkorar_4 = {
 
     // Zoom vid pin-klick
     const sektion73PinZoom = 23.35;
-    const sektion73PinZoomDur = 1150;
+    const sektion73PinZoomDur = 950;
 
     // Mol animation
     const sektion73ModalDurMs = 420;
@@ -283,12 +283,12 @@ function sektion73CreateNudgeEl() {
   closeBtn.style.position = "absolute";
   closeBtn.style.top = "10px";
   closeBtn.style.right = "10px";
-  closeBtn.style.width = "34px";
-  closeBtn.style.height = "34px";
+  closeBtn.style.width = "auto";
+  closeBtn.style.height = "auto";
   closeBtn.style.borderRadius = "999px";
   closeBtn.style.display = "grid";
   closeBtn.style.placeItems = "center";
-  closeBtn.style.background = "rgba(14,19,24,.06)";
+  closeBtn.style.background = "transparent";
 
   closeBtn.innerHTML = `
     <svg viewBox="0 0 24 24" fill="none" aria-hidden="true" style="width:18px;height:18px;display:block;">
@@ -307,9 +307,9 @@ function sektion73CreateNudgeEl() {
   const ico = document.createElement("div");
   ico.id = "sektion73MapNudgeIco";
   ico.style.flex = "0 0 auto";
-  ico.style.width = "44px";
-  ico.style.height = "44px";
-  ico.style.borderRadius = "12px";
+  ico.style.width = "34px";
+  ico.style.height = "34px";
+  ico.style.borderRadius = "80px";
   ico.style.background = "#FFE6A3";
   ico.style.display = "grid";
   ico.style.placeItems = "center";
@@ -343,7 +343,8 @@ function sektion73CreateNudgeEl() {
   btn.style.alignItems = "center";
   btn.style.justifyContent = "center";
   btn.style.gap = "10px";
-  btn.style.padding = "10px 12px";
+    btn.style.justifySelf = "end"; 
+  btn.style.padding = "5px 9px";
   btn.style.borderRadius = "8px";
   btn.style.background = "#f2b200";
   btn.style.color = "#121110";
