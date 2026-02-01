@@ -316,10 +316,7 @@ function sektion73CreateNudgeEl() {
   ico.style.color = "#5A3C00";
 
   ico.innerHTML = `
-    <svg viewBox="0 0 24 24" fill="none" aria-hidden="true" style="width:22px;height:22px;display:block;">
-      <path d="M12 21s7-4.6 7-11a7 7 0 0 0-14 0c0 6.4 7 11 7 11Z" stroke="currentColor" stroke-width="2.2" stroke-linejoin="round"/>
-      <path d="M12 12.2a2.2 2.2 0 1 0 0-4.4 2.2 2.2 0 0 0 0 4.4Z" stroke="currentColor" stroke-width="2.2"/>
-    </svg>
+<svg fill="currentcolor" height="20" width="20" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 255.355 255.355" xml:space="preserve"><path d="M213.46 25.231 190.484 2.257a6 6 0 0 0-8.485 8.486l12.186 12.185h-57.498a6 6 0 0 0 0 12h58.593l-12.69 12.691a5.997 5.997 0 0 0 .001 8.485c1.171 1.171 2.707 1.757 4.242 1.757s3.071-.586 4.243-1.758l22.386-22.387a6 6 0 0 0-.002-8.485m-20.882 70.998c-6.353-4.247-12.952-5.882-18.102-6.433-6.639-8.882-16.194-13.731-27.209-13.731-2.417 0-4.878.231-7.35.69-6.537-7.471-15.521-11.542-25.64-11.542q-.28 0-.561.005l-.044-36.846c-.01-8.464-3.266-16.01-9.166-21.249C99.335 2.529 92.503 0 85.268 0c-7.751 0-15.191 2.998-20.414 8.226-5.239 5.247-8.004 12.236-7.994 20.215l.065 53.176.041 33.746c-7.589 4.058-12.836 10.48-15.268 18.75-3.747 12.739-.761 29.146 9.129 50.159 6.509 13.827 14.322 25.925 18.063 31.441l1.658 22.07c.741 9.854 9.062 17.572 18.942 17.572l78.648-.097c9.488-.012 17.575-7.115 18.81-16.523l3.055-23.263c18.568-29.113 25.378-59.282 20.237-89.681-2.798-16.546-11.149-25.209-17.662-29.562m-13.251 113.66a7 7 0 0 0-1.074 2.896l-3.203 24.39c-.456 3.479-3.419 5.867-6.928 5.871l-78.623-.117h-.009c-3.659 0-6.701-2.607-6.976-6.258l-1.759-23.302a6.8 6.8 0 0 0-1.212-3.386c-7.197-10.457-47.38-71.446-14.839-85.049a6.93 6.93 0 0 0 4.265-6.414l-.109-90.101c-.014-10.947 8.197-16.423 16.408-16.423 8.195 0 16.391 5.462 16.404 16.389l.051 42.288c.005 3.916 3.193 6.986 6.973 6.986q.544.001 1.101-.086c1.39-.219 2.899-.36 4.48-.36 5.906 0 12.797 1.978 18.077 9.293 1.311 1.816 3.411 2.811 5.589 2.811.611 0 1.23-.078 1.839-.239 2.07-.547 4.661-1.013 7.484-1.013 6.17 0 13.447 2.225 18.814 10.681a6.07 6.07 0 0 0 4.911 2.824c7.091.256 23.55 3.363 27.416 26.223 3.585 21.188 1.934 49.616-19.08 82.096"/></svg>
   `;
 
   const body = document.createElement("div");
@@ -331,11 +328,11 @@ function sektion73CreateNudgeEl() {
 
   const text = document.createElement("div");
   text.id = "sektion73MapNudgeText";
-  text.style.fontFamily = 'system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif';
+  text.style.fontFamily = 'Inter Variablefont Opsz Wght';
   text.style.fontSize = "14px";
-  text.style.lineHeight = "1.35";
-  text.style.fontWeight = "800";
-  text.textContent = "Behöver du vägbeskrivning hit?";
+  text.style.lineHeight = "1.45";
+  text.style.fontWeight = "500";
+  text.textContent = "Svep åt höger eller vänster för att flytta runt på kartan.";
 
   const btn = document.createElement("button");
   btn.type = "button";
@@ -347,14 +344,14 @@ function sektion73CreateNudgeEl() {
   btn.style.justifyContent = "center";
   btn.style.gap = "10px";
   btn.style.padding = "10px 12px";
-  btn.style.borderRadius = "10px";
+  btn.style.borderRadius = "8px";
   btn.style.background = "#f2b200";
   btn.style.color = "#121110";
-  btn.style.fontFamily = 'system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif';
+  btn.style.fontFamily = '"Manrope", Inter, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, sans-serif';
   btn.style.fontSize = "14px";
   btn.style.fontWeight = "900";
   btn.style.width = "max-content";
-  btn.textContent = "Visa vägen";
+  btn.textContent = "Nästa";
 
   body.appendChild(text);
   body.appendChild(btn);
@@ -380,15 +377,13 @@ function sektion73CreateNudgeEl() {
 
     // Byt ikon + text, ta bort knappen
     ico.innerHTML = `
-      <svg viewBox="0 0 24 24" fill="none" aria-hidden="true" style="width:22px;height:22px;display:block;">
-        <path d="M20 6 9 17l-5-5" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/>
-      </svg>
+<svg fill="currentcolor" height="20" width="20" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 297 297" xml:space="preserve"><path d="M252.07 167.87c-4.949-29.482-26.585-35.193-35.98-36.267-6.673-8.979-16.33-13.892-27.432-13.892-2.664 0-5.165.28-7.412.697-6.587-7.587-15.832-11.686-26.139-11.686-.209 0-.906.002-.906.005v-9.013c15-9.416 24.883-25.934 24.883-44.716 0-29.225-23.635-53-52.859-53S73.066 23.775 73.066 53c0 18.65 10.135 35.069 24.135 44.518v43.873l-.429-1.012c-5.388-8.765-13.937-13.786-23.688-13.787-10.507-.001-20.581 5.932-25.753 15.112-4.941 8.77-4.662 18.985.701 28.089l62.342 119.392c2.486 4.759 7.382 7.815 12.751 7.815h87.757c7.578 0 13.879-6.025 14.343-13.59l2.04-33.263c21.767-33.503 28.962-57.507 24.805-82.277M85.136 53c0-22.607 18.508-41 41.115-41s40.776 18.393 40.776 41c0 11.592-4.826 22.066-12.826 29.531V69.753c0-3.05-.842-8.673-.842-8.673.761-2.562 1.259-5.271 1.259-8.08 0-15.649-12.643-28.335-28.293-28.335-15.648 0-28.313 12.686-28.313 28.335 0 2.568.364 5.053 1.005 7.419-.017.052-.199.101-.216.152-.909 2.859-1.599 5.939-1.599 9.182v12.484C90.201 74.793 85.136 64.438 85.136 53m130.696 192.648a2.4 2.4 0 0 0-.39 1.16l-2.196 35.866c-.076 1.25-1.112 2.325-2.365 2.325h-87.757c-.883 0-1.692-.591-2.1-1.373l-62.485-119.64c-7.93-13.086 3.246-25.37 14.658-25.369 5.049 0 10.146 2.388 13.653 8.176l7.994 12.275c1.653 2.54 3.943 3.674 6.438 3.674 4.107 0 7.918-3.088 7.918-8.077V69.753c0-11.035 8.224-16.552 16.5-16.552s16.5 5.517 16.5 16.552v48.273c0 1.346 1.381 2.376 2.637 2.376.236 0 .618-.037.86-.114 2.311-.744 5.794-1.564 9.619-1.564 6.569 0 14.385 2.422 19.857 11.809a2.55 2.55 0 0 0 2.181 1.262c.278 0 .57-.049.845-.15 2.201-.81 6.048-1.932 10.454-1.932 6.133 0 13.357 2.176 18.744 10.4 1.285 1.962 3.461 3.149 5.801 3.282 7.438.422 23.267 4.01 27.036 26.462 3.619 21.557-2.617 42.796-24.402 75.791"/></svg>
     `;
-    ico.style.background = "rgba(14,19,24,.06)";
-    ico.style.color = "#0e1318";
+    ico.style.background = "rgb(255, 230, 163)";
+    ico.style.color = "rgb(90, 60, 0)";
 
-    text.style.fontWeight = "800";
-    text.textContent = "Toppen. Du hittar vägbeskrivning via knappen i modalen.";
+    text.style.fontWeight = "500";
+    text.textContent = "Tryck på ett objekt för att läsa mer information.";
 
     if (btn && btn.parentNode) btn.parentNode.removeChild(btn);
   });
