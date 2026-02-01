@@ -480,7 +480,14 @@
       return { overlay, modal };
     }
 
-    let sektion73ModalOpen = false;
+  let sektion73ModalOpen = false;
+
+    const sektion73StartView = {
+      center: sektion73Home.lngLat,
+      zoom: sektion73StartZoom,
+      pitch: sektion73Pitch,
+      bearing: sektion73Bearing
+    };
 
     function sektion73OpenModal(payload) {
       const { overlay, modal } = sektion73EnsureModalDOM();
@@ -536,6 +543,26 @@
       overlay.classList.remove("is-open");
       modal.classList.remove("is-open");
       sektion73ModalOpen = false;
+
+      // Cancel ev. pending "zoom-then-open" så modal inte öppnas igen efter moveend
+      sektion73IsZoomingToPin = false;
+      sektion73PendingPinId = null;
+      if (sektion73ActiveMoveEndHandler) {
+        sektion73Map.off("moveend", sektion73ActiveMoveEndHandler);
+        sektion73ActiveMoveEndHandler = null;
+      }
+
+      // Zooma ut till startläget (samma transition, fast tvärtom)
+      if (sektion73Map && typeof sektion73Map.easeTo === "function") {
+        sektion73Map.easeTo({
+          center: sektion73StartView.center,
+          zoom: Math.min(sektion73StartView.zoom, sektion73MaxZoom),
+          pitch: sektion73StartView.pitch,
+          bearing: sektion73StartView.bearing,
+          duration: sektion73PinZoomDur,
+          easing: (t) => 1 - Math.pow(1 - t, 3) // ease-out cubic
+        });
+      }
     }
 
     /* =========================
@@ -632,10 +659,17 @@
     const sektion73MarkersById = Object.create(null);
     let sektion73IsZoomingToPin = false;
     let sektion73PendingPinId = null;
+    let sektion73ActiveMoveEndHandler = null;
 
     function sektion73ZoomToPinThenOpenModal(pin) {
       // Stäng ev. befintlig modal direkt (så fokus blir zoom först)
       if (sektion73ModalOpen) sektion73CloseModal();
+
+      // Safety: rensa tidigare moveend-hook om man klickar snabbt mellan pins
+      if (sektion73ActiveMoveEndHandler) {
+        sektion73Map.off("moveend", sektion73ActiveMoveEndHandler);
+        sektion73ActiveMoveEndHandler = null;
+      }
 
       sektion73IsZoomingToPin = true;
       sektion73PendingPinId = pin.id;
@@ -646,6 +680,7 @@
         if (sektion73PendingPinId !== pin.id) return;
 
         sektion73Map.off("moveend", onMoveEnd);
+        sektion73ActiveMoveEndHandler = null;
 
         sektion73IsZoomingToPin = false;
         sektion73PendingPinId = null;
@@ -653,6 +688,7 @@
         sektion73OpenModal(pin.modal);
       };
 
+      sektion73ActiveMoveEndHandler = onMoveEnd;
       sektion73Map.on("moveend", onMoveEnd);
 
       sektion73Map.easeTo({
