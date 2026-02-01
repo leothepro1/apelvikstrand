@@ -44,7 +44,29 @@
       title: "Tångkörarvägen 1",
       lngLat: [12.2488165, 57.084682]
     };
+  // 2) Sanatorievägen 4, 432 53 Varberg
+    const sektion73Sanatorie_4 = {
+      title: "Sanatorievägen 4",
+      lngLat: [12.24786400, 57.08797000]
+    };
 
+    // 3) Tångkörarvägen 2, 432 54 Varberg
+    const sektion73Tangkorar_2 = {
+      title: "Tångkörarvägen 2",
+      lngLat: [12.25519800, 57.08474700]
+    };
+
+    // 4) Tångkörarvägen 10, 432 54 Varberg
+    const sektion73Tangkorar_10 = {
+      title: "Tångkörarvägen 10",
+      lngLat: [12.26327010, 57.07738420]
+    };
+
+    // 5) Tångkörarvägen 17, 432 54 Varberg
+    const sektion73Tangkorar_17 = {
+      title: "Tångkörarvägen 17",
+      lngLat: [12.26374100, 57.07980300]
+    };
     // Bounds (justera vid behov)
     const sektion73Bounds = [
       [12.235, 57.070], // SW
