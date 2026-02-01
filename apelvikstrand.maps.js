@@ -923,54 +923,63 @@ const sektion73Pins = [
 ];
 
 
-    function sektion73CreatePinEl(pin) {
-      const wrap = document.createElement("div");
-      wrap.className = "sektion73PinWrap";
-      wrap.id = pin.id;
+  function sektion73CreatePinEl(pin) {
+  const wrap = document.createElement("div");
+  wrap.className = "sektion73PinWrap";
+  wrap.id = pin.id;
 
-      // PER-PIN CSS vars (endast färger)
-      const bubbleBg = (pin.ui && pin.ui.bubbleBg) ? String(pin.ui.bubbleBg) : "rgba(255,255,255,.92)";
-      const pointerTop = (pin.ui && pin.ui.pointerTop) ? String(pin.ui.pointerTop) : bubbleBg;
+  /* NYTT: gör iconKey tillgängligt för CSS */
+  wrap.dataset.iconKey = String(pin.iconKey || "home");
 
-      wrap.style.setProperty("--sektion73-pin-bubble-bg", bubbleBg);
-      wrap.style.setProperty("--sektion73-pin-pointer-top", pointerTop);
+  // PER-PIN CSS vars (endast färger)
+  const bubbleBg = (pin.ui && pin.ui.bubbleBg) ? String(pin.ui.bubbleBg) : "rgba(255,255,255,.92)";
+  const pointerTop = (pin.ui && pin.ui.pointerTop) ? String(pin.ui.pointerTop) : bubbleBg;
 
-      const btn = document.createElement("button");
-      btn.type = "button";
-      btn.className = "sektion73PinBubble sektion73PinBtn";
-      btn.setAttribute("aria-label", pin.label);
+  wrap.style.setProperty("--sektion73-pin-bubble-bg", bubbleBg);
+  wrap.style.setProperty("--sektion73-pin-pointer-top", pointerTop);
 
-      const dot = document.createElement("span");
-      dot.className = "sektion73PinDot";
-      dot.setAttribute("aria-hidden", "true");
+  /* NYTT: sätt icon/text-färg för mörka bubblor (Solviken/Brittas etc) */
+  const sektion73ForceWhiteKeys = new Set(["solviken", "brittas", "strandkollektivet"]);
+  if (sektion73ForceWhiteKeys.has(String(pin.iconKey || "").toLowerCase())) {
+    wrap.style.color = "#ffffff";      // currentColor
+  }
 
-      const ico = document.createElement("span");
-      ico.className = "sektion73PinIco";
-      ico.setAttribute("aria-hidden", "true");
-      ico.innerHTML = sektion73PinIcons[pin.iconKey] || sektion73PinIcons.home;
+  const btn = document.createElement("button");
+  btn.type = "button";
+  btn.className = "sektion73PinBubble sektion73PinBtn";
+  btn.setAttribute("aria-label", pin.label);
 
-      btn.appendChild(dot);
-      btn.appendChild(ico);
+  const dot = document.createElement("span");
+  dot.className = "sektion73PinDot";
+  dot.setAttribute("aria-hidden", "true");
 
-      const pointer = document.createElement("div");
-      pointer.className = "sektion73PinPointer";
-      pointer.setAttribute("aria-hidden", "true");
+  const ico = document.createElement("span");
+  ico.className = "sektion73PinIco";
+  ico.setAttribute("aria-hidden", "true");
+  ico.innerHTML = sektion73PinIcons[pin.iconKey] || sektion73PinIcons.home;
 
-      wrap.appendChild(btn);
-      wrap.appendChild(pointer);
+  btn.appendChild(dot);
+  btn.appendChild(ico);
 
-      // micro hover
-      btn.addEventListener("mouseenter", () => {
-        btn.style.transform = "translateY(0px)";
-        btn.style.boxShadow = "0 18px 40px rgba(0,0,0,.22)";
-      });
-      btn.addEventListener("mouseleave", () => {
-        btn.style.transform = "translateY(0)";
-        btn.style.boxShadow = "0 16px 36px rgba(0,0,0,.20)";
-      });
+  const pointer = document.createElement("div");
+  pointer.className = "sektion73PinPointer";
+  pointer.setAttribute("aria-hidden", "true");
 
-      return { wrap, btn };
-    }
+  wrap.appendChild(btn);
+  wrap.appendChild(pointer);
+
+  // micro hover
+  btn.addEventListener("mouseenter", () => {
+    btn.style.transform = "translateY(0px)";
+    btn.style.boxShadow = "0 18px 40px rgba(0,0,0,.22)";
+  });
+  btn.addEventListener("mouseleave", () => {
+    btn.style.transform = "translateY(0)";
+    btn.style.boxShadow = "0 16px 36px rgba(0,0,0,.20)";
+  });
+
+  return { wrap, btn };
+}
 
 
     const sektion73MarkersById = Object.create(null);
