@@ -269,7 +269,7 @@ const asVideosLazy_61724 = [
     family: "Video",
     type: "video",
     alt: "Video 1",
-    src: "https://res.cloudinary.com/dmgmoisae/video/upload/v1769706196/2025_07_11_03_13_52_1_zgswq7.mp4",
+    src: "https://res.cloudinary.com/dmgmoisae/video/upload/v1769951279/2025_07_11_03_13_52_3_njlkpo.mp4",
   },
   {
     id: "asprVidData_0302",
