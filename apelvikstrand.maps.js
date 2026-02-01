@@ -825,7 +825,7 @@ const sektion73Pins = [
  {
     id: "sektion73Pin_livs_0000",
     label: "Apelviken Livs",
-    iconKey: "as", // använd en befintlig iconKey som finns i sektion73PinIcons
+    iconKey: "livs", // använd en befintlig iconKey som finns i sektion73PinIcons
     ui: {
       bubbleBg: "#fff",
       pointerTop: "#fff"
