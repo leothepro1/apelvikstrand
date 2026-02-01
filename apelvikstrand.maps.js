@@ -81,11 +81,11 @@ const sektion73Tangkorar_4 = {
     const sektion73StartZoom = 14.7;
 
     // Kamera
-    const sektion73Pitch = 55;
+    const sektion73Pitch = 45;
 
     // Visa "från havet in mot land" (väst -> öst):
     // bearing 90 = öst uppåt i bild (kameran tittar mot öst med pitch)
-    const sektion73Bearing = 90;
+    const sektion73Bearing = 82;
 
     const sektion73DisableRotate = true;
 
