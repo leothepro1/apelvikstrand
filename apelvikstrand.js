@@ -834,7 +834,12 @@ function asApplyFilter_61724(familyName) {
   // Bas-src (Cloudinary video) – src sätts lazy i asUpdateSlideLoading_61724
   vid.setAttribute("data-as-video-src", String(data.src || ""));
 
-  slide.appendChild(vid);
+slide.appendChild(vid);
+
+/* FIX: skeleton-runtime lyssnar bara på <img>
+   Video-slides måste manuellt markeras som "loaded" */
+const host = slide.closest(".as-skeleton") || slide;
+host.classList.add("as-loaded");
 } else {
       // IMAGE SLIDE
       const img = document.createElement("img");
