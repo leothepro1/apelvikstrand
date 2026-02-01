@@ -444,12 +444,10 @@
         modal.setAttribute("aria-modal", "true");
         modal.setAttribute("aria-label", "Information");
 
+    <!-- AFTER -->
         modal.innerHTML = `
           <div class="sektion73ModalTop">
-            <div>
-              <p class="sektion73ModalKicker" id="sektion73ModalKicker">PLATS</p>
-              <h2 class="sektion73ModalTitle" id="sektion73ModalTitle">Titel</h2>
-            </div>
+            <div></div>
             <button class="sektion73ModalClose" type="button" id="sektion73ModalCloseBtn" aria-label="Stäng">
               <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
                 <path d="M7 7l10 10M17 7L7 17" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"/>
@@ -491,6 +489,7 @@
           </div>
         `;
 
+
         document.body.appendChild(modal);
 
         const closeBtn = document.getElementById("sektion73ModalCloseBtn");
@@ -516,9 +515,7 @@
     function sektion73OpenModal(payload) {
       const { overlay, modal } = sektion73EnsureModalDOM();
 
-      // Populate
-      document.getElementById("sektion73ModalKicker").textContent = payload.kicker || "PLATS";
-      document.getElementById("sektion73ModalTitle").textContent = payload.title || "";
+          // Populate
       document.getElementById("sektion73ModalImgSrc").textContent = payload.imgSrc || "Bildkälla: —";
       document.getElementById("sektion73ModalBodyH").textContent = payload.h || "";
       document.getElementById("sektion73ModalBodyP").textContent = payload.p || "";
