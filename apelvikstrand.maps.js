@@ -1,7 +1,7 @@
 /* apelvikstrand.maps
    Apelvikstrand – Interaktiv karta (Mapbox)
    - Låst till Apelviken (maxBounds + zoom-intervall)
-   - Utgår från en "home"-punkt
+   - Utgår från en "home"-punkt (Surbrunnsvägen 2–8)
    - Designad upplevelse (mindre UI, låst interaktion, chips som pins)
    - 3D: pitch + bearing + 3D-byggnader (fill-extrusion) när möjligt
 */
@@ -19,7 +19,9 @@
     if (!sektion73Canvas) return;
 
     if (!window.mapboxgl) {
-      console.error("Mapbox GL JS saknas. Kontrollera att mapbox-gl.js laddas före apelvikstrand.maps");
+      console.error(
+        "Mapbox GL JS saknas. Kontrollera att mapbox-gl.js laddas före apelvikstrand.maps"
+      );
       return;
     }
 
@@ -30,17 +32,20 @@
     mapboxgl.accessToken =
       "pk.eyJ1IjoicnV0Z2Vyc3NvbiIsImEiOiJjbWwzdjY5N2owcDdiM2RzZWlzaG14MWVjIn0.yMfhGXLf9xq_vzIFSJVcjA";
 
-    const sektion73StyleUrl =
-      "mapbox://styles/rutgersson/cml3w74bd009g01r458nuhgjn";
+    const sektion73StyleUrl = "mapbox://styles/rutgersson/cml3w74bd009g01r458nuhgjn";
 
+    // Startadress: Surbrunnsvägen 2–8, 432 53 Varberg
+    // Koordinater från extern listing-källa (kan finjusteras vid behov):
+    // Lat 57.08161047, Lng 12.26197766
     const sektion73Home = {
-      title: "Apelvikstrand",
-      lngLat: [12.239, 57.11]
+      title: "Surbrunnsvägen 2–8",
+      lngLat: [12.26197766, 57.08161047]
     };
 
+    // Rimliga bounds runt Apelvikstrand/Apelviken (håll kartan "på plats")
     const sektion73Bounds = [
-      [12.215, 57.100], // SW
-      [12.260, 57.125]  // NE
+      [12.235, 57.070], // SW
+      [12.285, 57.095]  // NE
     ];
 
     const sektion73MinZoom = 13.2;
@@ -67,6 +72,10 @@
       maxBounds: sektion73Bounds,
 
       attributionControl: false,
+
+      // Viktigt för snygga 3D-kanter (fill-extrusion)
+      antialias: true,
+
       pitchWithRotate: false,
       dragRotate: false
     });
@@ -99,7 +108,8 @@
       const style = sektion73Map.getStyle();
       if (!style || !style.sources) return null;
       if (style.sources.composite) return "composite";
-      // fallback: hitta en vektor-källa som ser ut som basemap/composite
+
+      // fallback: hitta första vektor-källa
       const keys = Object.keys(style.sources);
       for (let i = 0; i < keys.length; i++) {
         const k = keys[i];
@@ -112,11 +122,28 @@
     function sektion73Has3DBuildingsLayer() {
       const style = sektion73Map.getStyle();
       if (!style || !style.layers) return false;
-      return style.layers.some((l) => l && l.type === "fill-extrusion");
+      return style.layers.some((l) => l && l.id === "sektion73-3d-buildings");
+    }
+
+    function sektion73FindFirstSymbolLayerId() {
+      const style = sektion73Map.getStyle();
+      if (!style || !style.layers) return null;
+      for (let i = 0; i < style.layers.length; i++) {
+        const l = style.layers[i];
+        if (l && l.type === "symbol" && l.layout && l.layout["text-field"]) {
+          return l.id;
+        }
+      }
+      // fallback: första symbol-lagret överhuvudtaget
+      for (let j = 0; j < style.layers.length; j++) {
+        const l2 = style.layers[j];
+        if (l2 && l2.type === "symbol") return l2.id;
+      }
+      return null;
     }
 
     function sektion73TryAdd3DBuildings() {
-      // Om stilen redan har 3D-byggnader, lägg inte dubbelt
+      // lägg inte dubbelt
       if (sektion73Has3DBuildingsLayer()) return;
 
       const sourceId = sektion73FindCompositeSourceId();
@@ -125,27 +152,73 @@
         return;
       }
 
-      // Lägg överst så de syns (men under pins/markers som ändå är DOM)
+      // Lägg under labels (symbol) så att text/ikoner ligger ovanpå byggnaderna
+      const beforeId = sektion73FindFirstSymbolLayerId();
+
+      // OBS: Många stilar har "building" som source-layer. Om din custom style saknar den
+      // behöver du inkludera Mapbox Streets (composite) eller ett building-tileset i stilen.
       try {
-        sektion73Map.addLayer({
-          id: "sektion73-3d-buildings",
-          source: sourceId,
-          "source-layer": "building",
-          type: "fill-extrusion",
-          minzoom: 14.2,
-          filter: ["any",
-            ["==", ["get", "extrude"], "true"],
-            ["==", ["get", "extrude"], true]
-          ],
-          paint: {
-            "fill-extrusion-color": "#d9d4c8",
-            "fill-extrusion-height": ["coalesce", ["to-number", ["get", "height"]], 6],
-            "fill-extrusion-base": ["coalesce", ["to-number", ["get", "min_height"]], 0],
-            "fill-extrusion-opacity": 0.85
-          }
-        });
+        sektion73Map.addLayer(
+          {
+            id: "sektion73-3d-buildings",
+            source: sourceId,
+            "source-layer": "building",
+            type: "fill-extrusion",
+
+            // börja synas lite tidigare, och "väx in" med zoom
+            minzoom: 13.5,
+
+            // Tåligare filter: rendera alla features med height om den finns,
+            // annars ge en liten default-height så du ändå ser extrusion.
+            // (Detta gör att du inte blir beroende av en "extrude"-property.)
+            filter: ["any", ["has", "height"], ["has", "render_height"], ["has", "min_height"]],
+
+            paint: {
+              "fill-extrusion-color": "#d9d4c8",
+              "fill-extrusion-opacity": 0.88,
+
+              "fill-extrusion-base": [
+                "coalesce",
+                ["to-number", ["get", "min_height"]],
+                ["to-number", ["get", "render_min_height"]],
+                0
+              ],
+
+              "fill-extrusion-height": [
+                "interpolate",
+                ["linear"],
+                ["zoom"],
+                13.5,
+                0,
+                15.0,
+                [
+                  "coalesce",
+                  ["to-number", ["get", "height"]],
+                  ["to-number", ["get", "render_height"]],
+                  8
+                ]
+              ]
+            }
+          },
+          beforeId || undefined
+        );
+
+        // Sätt ljus för 3D (valfritt men hjälper att se "volym")
+        try {
+          sektion73Map.setLight({
+            anchor: "viewport",
+            color: "white",
+            intensity: 0.45,
+            position: [1.4, 210, 30]
+          });
+        } catch (e) {
+          // äldre/olika style-implementationer kan ignorera detta
+        }
       } catch (err) {
-        console.warn("Kunde inte lägga 3D-byggnader:", err);
+        console.warn(
+          "Kunde inte lägga 3D-byggnader. Vanligaste orsaken är att stilen saknar source-layer 'building' i sin vektor-källa:",
+          err
+        );
       }
     }
 
@@ -180,7 +253,7 @@
     const sektion73Pins = [
       {
         id: "sektion73Pin_home_0000",
-        title: "Apelvikstrand",
+        title: "Surbrunnsvägen 2–8",
         lngLat: sektion73Home.lngLat,
         payload: { type: "home" }
       },
