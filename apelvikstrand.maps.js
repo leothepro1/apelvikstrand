@@ -81,8 +81,8 @@ const sektion73Tangkorar_4 = {
     ];
 
     const sektion73MinZoom = 13.2;
-    const sektion73MaxZoom = 18.6;
-    const sektion73StartZoom = 16.7;
+    const sektion73MaxZoom = 19.6;
+    const sektion73StartZoom = 15.7;
 
     // Kamera
     const sektion73Pitch = 65;
