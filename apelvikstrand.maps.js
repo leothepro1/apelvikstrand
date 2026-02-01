@@ -36,7 +36,7 @@
     // Home: Surbrunnsvägen 2–8, 432 53 Varberg
     const sektion73Home = {
       title: "Surbrunnsvägen 2–8",
-      lngLat: [12.26197766, 57.08161047]
+      lngLat: [12.262921, 57.081185]
     };
 
     // Tångkörarvägen 1, 432 54 Varberg (koordinater från karta-länk)
@@ -51,7 +51,7 @@
     };
 const sektion73Tangkorar_4 = {
   title: "Tångkörarvägen 4",
-  lngLat: [12.25870200, 57.08208910]
+  lngLat: [12.258103, 57.083380]
 };
     // 3) Tångkörarvägen 2, 432 54 Varberg
     const sektion73Tangkorar_2 = {
@@ -76,9 +76,9 @@ const sektion73Tangkorar_4 = {
       [12.285, 57.095] // NE
     ];
 
-    const sektion73MinZoom = 13.2;
+    const sektion73MinZoom = 19.2;
     const sektion73MaxZoom = 17.6;
-    const sektion73StartZoom = 14.7;
+    const sektion73StartZoom = 19.7;
 
     // Kamera
     const sektion73Pitch = 65;
@@ -706,8 +706,8 @@ const sektion73Pins = [
     label: "Boendet",
     iconKey: "as",
     ui: {
-      bubbleBg: "#F6F3F1",
-      pointerTop: "#F6F3F1"
+      bubbleBg: "#fff",
+      pointerTop: "#fff"
     },
     lngLat: sektion73Home.lngLat,
     modal: {
