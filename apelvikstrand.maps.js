@@ -472,19 +472,20 @@ function sektion73InjectModalCSS() {
     }
 
     @media (max-width: 768px){
-      #sektion73MapModal{
-        left:0;
-        right:0;
-        top:auto;
-        bottom:0;
-        width:100%;
-        height:min(84dvh, 720px);
-        border-left:none;
-        border-top:1px solid var(--sektion73-modal-line);
-        border-top-left-radius:var(--sektion73-radius);
-        border-top-right-radius:var(--sektion73-radius);
-        transform:translateY(104%);
-      }
+#sektion73MapModal {
+        left: 0;
+        right: 0;
+        top: auto;
+        bottom: 0;
+        width: 100%;
+        height: min(94dvh, 720px);
+        border-left: none;
+        border-top: 1px solid var(--sektion73-modal-line);
+        border-top-left-radius: 20px;
+        border-top-right-radius: 20px;
+        transform: translateY(104%);
+        border-bottom-left-radius: 0px;
+    }
       #sektion73MapModal.is-open{
         transform:translateY(0);
       }
@@ -971,13 +972,13 @@ const sektion73Pins = [
         "https://res.cloudinary.com/dmgmoisae/image/upload/v1769875471/strandhuse21q_hh50lb.png"
       ],
       imgSrc: "Bildkälla: —",
-      h: "Surbrunnsvägen 2–8",
-      p: "Boendet i Apelviken.",
-      cta1Text: "CTA 1",
-      cta1Href: "",
-      cta2Text: "Visa vägen",
+      h: "Apelvikstrand",
+      p: "Apelvikstrand är platsen att bo på när man vill vara nära havet och nära vardagen i viken. Här bor man i strandhus och lägenheter med egen dörr, eget tempo och kort väg ner till stranden, maten och livet runtomkring. Det är enkelt att komma och gå, lätt att stanna inne eller vara ute hela dagen. Ett boende som följer platsen, snarare än tvärtom.",
+      cta1Text: "Boka",
+      cta1Href: "https://apelvikstrand.webflow.io/maps#",
+      cta2Text: "Visa boenden",
       cta2Href:
-        "https://www.google.com/maps/search/?api=1&query=Surbrunnsv%C3%A4gen%202-8%2C%20432%2053%20Varberg"
+        "https://apelvikstrand.webflow.io/strandhusen"
     }
   },
 
@@ -1001,7 +1002,7 @@ const sektion73Pins = [
         "https://res.cloudinary.com/dmgmoisae/image/upload/v1769971923/solviken_pt1mdu.png"
       ],
       imgSrc: "Bildkälla: —",
-      h: "Precis vid havet",
+      h: "Restaurang Solviken",
       p: "Allra närmast stranden och med en bedårande utsikt över Kattegatt och folklivet i viken. På Solviken samlas campinggäster och varbergsbor, flanörer längs strandpromenaden och de som tagit en cykeltur från Läjet. Sommaren fylls av god mat, dofter från grillen, quiz och trubadurer. Höstkvällar med värme och gemyt och en svart vattenyta så långt man ser.Som utomlands hemma. För den stora festen och för den som bara har vägen förbi. För dig som släpar med dig en hel hög goda kamrater och för dig som träffar dem här.",
       cta1Text: "Visa meny",
       cta1Href: "https://www.apelviken.se/solviken-meny",
@@ -1029,8 +1030,8 @@ const sektion73Pins = [
         "https://res.cloudinary.com/dmgmoisae/image/upload/v1769981778/jpeg-optimizer__olles11_zlhlgw.png",
         "https://res.cloudinary.com/dmgmoisae/image/upload/v1769981815/68b2a7_de72b5f91dc54bcdbcfc8714b514e253_mv2_kfel0e.jpg"
       ],
-      h: "Vikens affär och café",
-      p: "Apelviken Livs & Strandcafé är den lokala butiken som de flesta bara kallar affär’n. Här finns det man behöver för dagen vid stranden eller på campingen. Nybakade frallor tidigt på morgonen, kaffe som går att ta med, enklare mat, glass och ett brett sortiment för vardag och semester. Öppet under säsong och i ständig rörelse från morgon till kväll.",
+      h: "Apelviken Livs & Strandcafé ",
+      p: "Vikens lokala butik som de flesta bara kallar affär’n. Här finns det man behöver för dagen vid stranden eller på campingen. Nybakade frallor tidigt på morgonen, kaffe som går att ta med, enklare mat, glass och ett brett sortiment för vardag och semester. Öppet under säsong och i ständig rörelse från morgon till kväll.",
       cta1Text: "Öppna i Google",
       cta1Href: "https://www.apelviken.se/apelvikenlivs",
       cta2Text: "Vägbeskrivning",
@@ -1057,7 +1058,7 @@ const sektion73Pins = [
         "https://static.wixstatic.com/media/68b2a7_877bd500f095424698cc8359e7289382~mv2.jpg/v1/fill/w_571,h_401,al_c,q_80,usm_0.66_1.00_0.01,enc_avif,quality_auto/68b2a7_877bd500f095424698cc8359e7289382~mv2.jpg"
       ],
       h: "Apelvikens surfcenter",
-      p: "Apelvikens Surfcenter är platsen där surfkulturen i viken tar form. Här har människor lärt sig stå på brädan i decennier, med havet precis intill och vädret som medspelare. Kurser och uthyrning anpassas efter dagens förhållanden, ibland vindsurf, ibland vågsurf, ibland SUP. Oavsett nivå handlar det om att komma ut på vattnet, läsa vinden och ta med sig ett nytt minne hem.",
+      p: "Platsen där surfkulturen i viken tar form. Här har människor lärt sig stå på brädan i decennier, med havet precis intill och vädret som medspelare. Kurser och uthyrning anpassas efter dagens förhållanden, ibland vindsurf, ibland vågsurf, ibland SUP. Oavsett nivå handlar det om att komma ut på vattnet, läsa vinden och ta med sig ett nytt minne hem.",
       cta1Text: "Läs mer",
       cta1Href: "https://www.apelviken.se/surfcenter",
       cta2Text: "Vägbeskrivning",
@@ -1083,7 +1084,7 @@ const sektion73Pins = [
         "https://res.cloudinary.com/dmgmoisae/image/upload/v1769972018/DSF0505_k8gcge.jpg"
       ],
       imgSrc: "Bildkälla: —",
-      h: "A place by the sea",
+      h: "John’s Place",
       p: "John’s Place ligger i ett lågt trähus mitt på Apelvikens strand. Maten lagas över öppen eld med råvaror som följer säsong, och rummen är varma även när vädret är ruffigt. Hit kommer man för att äta nära havet, i en miljö som vuxit fram långsamt och känns mer som ett hem än en restaurang.",
       cta1Text: "Visa meny",
       cta1Href: "https://johnsplace.nu/meny/",
@@ -1107,12 +1108,12 @@ const sektion73Pins = [
         "https://res.cloudinary.com/dmgmoisae/image/upload/v1769971668/original_hz62hj.jpg"
       ],
       imgSrc: "Bildkälla: —",
-      h: "Härligt ",
-      p: "Kort sagt, en okomplicerad restaurang vid poolkanten. För alla, lika mycket för campinggäster och för dig som bor i Varberg, som kvällsflanörer utmed strandpromenaden. För dig som söker svalka i en välhumlad pilsner eller härlig sangria och när du tröttnat på poolplask långt före barnen. Och för frukost, hemlagad, rejäl streetfood. Du slinker in lite som du är; badtofflor, shorts och håret fortfarande vått efter badet eller kostym om du föredrar det. En samlingsplats i hjärtat av campingplatsen där du tar en kaffe, läser tidningen eller bara kollar folk en stund.",
-      cta1Text: "Visa meny",
-      cta1Href: "https://www.apelviken.se/nisses-bodega",
+      h: "Destination Apelviken",
+      p: "Beläget strax söder om Varbergs stadskärna, med gång- och cykelavstånd till både strand och centrum. Platsen har vuxit fram över tid, från enkel tältplats till ett sammanhållet område med camping, hotell, aktiviteter och restauranger. Ett vardagsliv som pågår året runt, med mycket nära och utan behov av att ta bilen.",
+      cta1Text: "Läs meny",
+      cta1Href: "https://www.apelviken.se/",
       cta2Text: "Visa vägen",
-      cta2Href: "https://www.google.com/maps/dir/57.502272,12.087438/Nisses+Bodega,+Sanatoriev%C3%A4gen+4,+432+53+Varberg/@57.2983075,11.831503,75983m/data=!3m2!1e3!4b1!4m9!4m8!1m1!4e1!1m5!1m1!1s0x4653ede147d2886f:0xfee8375fc04e0d5f!2m2!1d12.2478293!2d57.0854771?entry=ttu&g_ep=EgoyMDI2MDEyOC4wIKXMDSoASAFQAw%3D%3D"
+      cta2Href: "https://www.google.com/maps/dir/57.502272,12.087438/Destination+Apelviken+AB,+Sanatoriev%C3%A4gen+4,+432+53+Varberg/@57.2985223,11.831482,75982m/data=!3m1!1e3!4m9!4m8!1m1!4e1!1m5!1m1!1s0x46502af829613979:0x5e859dbc3c4cea18!2m2!1d12.2478642!2d57.0879688?entry=ttu&g_ep=EgoyMDI2MDEyOC4wIKXMDSoASAFQAw%3D%3D"
     }
   },
   {
@@ -1131,8 +1132,8 @@ const sektion73Pins = [
         "https://res.cloudinary.com/dmgmoisae/image/upload/v1769972157/832_nhwoaf.png"
       ],
       imgSrc: "Bildkälla: —",
-      h: "Rubrik",
-      p: "Brödtext…",
+      h: "Brittas Strandveranda",
+      p: "Vikens ställe för enkla, rejäla rätter och fruktiga drinkar, ofta med sand kvar mellan tårna. Hit droppar man in utan planer, sitter nära andra och låter musik, utsikt och umgänge ta plats. Kvällarna blir sällan korta och stämningen formas av dem som råkar vara där just då.",
       cta1Text: "Läs mer",
       cta1Href: "https://brittas.se/",
       cta2Text: "Vägbeskrivning",
@@ -1155,7 +1156,7 @@ const sektion73Pins = [
         "https://res.cloudinary.com/dmgmoisae/image/upload/v1769972288/olles3_nj8cgt.png"
       ],
       imgSrc: "Bildkälla: —",
-      h: "Längst söderut i Apelviken",
+      h: "&Olles",
       p: "&Olles ligger längst ner i viken, nära sanden och med gott om plats runtomkring. Det är ett ställe som fungerar bäst när det är folk i rörelse. Drop in är vanligt, borden delas och stämningen byggs av gästerna själva. Mat, dryck och musik samsas under samma tak och dagarna glider ofta över i kväll utan tydlig gräns.",
       cta1Text: "Visa meny",
       cta1Href: "https://www.olles.nu/meny/",
@@ -1173,14 +1174,14 @@ const sektion73Pins = [
       kicker: "PUNKT 5",
       title: "Tångkörarvägen 17",
       images: [
-        "https://picsum.photos/seed/sektion73_p5_0/1400/800",
-        "https://picsum.photos/seed/sektion73_p5_1/700/525", 
-        "https://picsum.photos/seed/sektion73_p5_2/700/525",
-        "https://picsum.photos/seed/sektion73_p5_3/700/525"
+        "https://res.cloudinary.com/dmgmoisae/image/upload/v1769982595/jpeg-optimizer_vcbcvb_swupbf.png",
+        "https://res.cloudinary.com/dmgmoisae/image/upload/v1769982593/jpeg-optimizer_hus_pwiwnt.png", 
+        "https://res.cloudinary.com/dmgmoisae/image/upload/v1769982592/jpeg-optimizer_vbccvb_ezbwed.png",
+        "https://res.cloudinary.com/dmgmoisae/image/upload/v1769982596/jpeg-optimizer_dddfgs_a5obtp.png"
       ],
       imgSrc: "Bildkälla: —",
-      h: "Strandkollektivet",
-      p: "Tångkörarvägen 17, en unik plats mitt i Apelviken med en egen karaktär och atmosfär.",
+      h: "Monique",
+      p: "Med inspiration från otaliga resor och intryck från kulturer, människor, mat och dryck har Monique vuxit fram. En plats vid stranden där all den inspiration världen gett får ta form. En plats där möten sker, stunder njuts och minnen skapas.",
       cta1Text: "Läs mer",
       cta1Href: "https://strandkollektivet.se",
       cta2Text: "Visa vägen",
@@ -1206,7 +1207,7 @@ const sektion73Pins = [
         "https://res.cloudinary.com/dmgmoisae/image/upload/v1769971668/original_hz62hj.jpg"
       ],
       imgSrc: "Bildkälla: —",
-        h: "Härligt okomplicerat",
+        h: "Nisses Bodega",
       p: "Kort sagt, en okomplicerad restaurang vid poolkanten. För alla, lika mycket för campinggäster och för dig som bor i Varberg, som kvällsflanörer utmed strandpromenaden. För dig som söker svalka i en välhumlad pilsner eller härlig sangria och när du tröttnat på poolplask långt före barnen. Och för frukost, hemlagad, rejäl streetfood. Du slinker in lite som du är; badtofflor, shorts och håret fortfarande vått efter badet eller kostym om du föredrar det. En samlingsplats i hjärtat av campingplatsen där du tar en kaffe, läser tidningen eller bara kollar folk en stund.",
       cta1Text: "Visa meny",
       cta1Href: "https://www.apelviken.se/nisses-bodega",
@@ -1265,11 +1266,11 @@ const sektion73Pins = [
   // micro hover
   btn.addEventListener("mouseenter", () => {
     btn.style.transform = "translateY(0px)";
-    btn.style.boxShadow = "0 18px 40px rgba(0,0,0,.22)";
+    btn.style.boxShadow = "none";
   });
   btn.addEventListener("mouseleave", () => {
     btn.style.transform = "translateY(0)";
-    btn.style.boxShadow = "0 16px 36px rgba(0,0,0,.20)";
+    btn.style.boxShadow = "none";
   });
 
   return { wrap, btn };
