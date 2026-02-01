@@ -143,6 +143,7 @@ const sektion73Tangkorar_4 = {
       sektion73Map.touchZoomRotate.disableRotation();
     }
 
+<!-- BEFORE -->
     sektion73Map.addControl(new mapboxgl.AttributionControl({ compact: true }), "bottom-right");
 
     /* =========================
@@ -153,6 +154,295 @@ const sektion73Tangkorar_4 = {
       const s = sektion73Map.getStyle && sektion73Map.getStyle();
       return !!(s && Array.isArray(s.imports) && s.imports.length);
     }
+<!-- AFTER -->
+    sektion73Map.addControl(new mapboxgl.AttributionControl({ compact: true }), "bottom-right");
+
+    /* =========================
+       ZOOM SLIDER (BOTTOM-LEFT)
+       - Toggle-knapp (cirkulär) som expanderar åt höger och reveal:ar en horisontell range-slider.
+       - Slider zoomar in/ut live.
+       - Användarens valda zoom sparas och används när man "zoomar tillbaka" från pin/modal.
+       ========================= */
+
+    let sektion73UserZoom = null;
+
+    function sektion73InjectZoomControlCSS() {
+      if (document.getElementById("sektion73MapZoomCtrlStyle")) return;
+
+      const style = document.createElement("style");
+      style.id = "sektion73MapZoomCtrlStyle";
+      style.textContent = `
+        .sektion73ZoomCtrl{
+          font-family: system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;
+          pointer-events: auto;
+        }
+
+        .sektion73ZoomCtrlRoot{
+          display:flex;
+          align-items:center;
+          justify-content:flex-start;
+          gap:10px;
+          padding:8px;
+          border-radius:999px;
+          background: rgba(255,255,255,.92);
+          backdrop-filter: blur(10px);
+          border: 1px solid rgba(0,0,0,.14);
+          box-shadow: 0 16px 36px rgba(0,0,0,.20);
+          overflow:hidden;
+        }
+
+        .sektion73ZoomCtrlRoot.is-collapsed .sektion73ZoomRangeWrap{
+          max-width:0px;
+          opacity:0;
+          transform: translateX(-8px);
+          pointer-events:none;
+        }
+
+        .sektion73ZoomRangeWrap{
+          max-width: 190px;
+          opacity:1;
+          transform: translateX(0);
+          transition: max-width 360ms cubic-bezier(.2,.8,.2,1), opacity 260ms cubic-bezier(.2,.8,.2,1), transform 360ms cubic-bezier(.2,.8,.2,1);
+          will-change: max-width, opacity, transform;
+        }
+
+        .sektion73ZoomRange{
+          width: 180px;
+          height: 20px;
+          margin:0;
+          -webkit-appearance:none;
+          appearance:none;
+          background: transparent;
+        }
+
+        .sektion73ZoomRange:focus{ outline:none; }
+
+        .sektion73ZoomRange::-webkit-slider-runnable-track{
+          height: 6px;
+          border-radius: 999px;
+          background: rgba(14,19,24,.14);
+        }
+        .sektion73ZoomRange::-webkit-slider-thumb{
+          -webkit-appearance:none;
+          appearance:none;
+          width: 16px;
+          height: 16px;
+          border-radius: 999px;
+          background: #f2b200;
+          border: 2px solid rgba(255,255,255,.92);
+          box-shadow: 0 10px 24px rgba(0,0,0,.18);
+          margin-top: -5px;
+        }
+
+        .sektion73ZoomRange::-moz-range-track{
+          height: 6px;
+          border-radius: 999px;
+          background: rgba(14,19,24,.14);
+        }
+        .sektion73ZoomRange::-moz-range-thumb{
+          width: 16px;
+          height: 16px;
+          border-radius: 999px;
+          background: #f2b200;
+          border: 2px solid rgba(255,255,255,.92);
+          box-shadow: 0 10px 24px rgba(0,0,0,.18);
+        }
+
+        .sektion73ZoomToggleBtn{
+          width: 40px;
+          height: 40px;
+          border-radius: 999px;
+          border: none;
+          background: #ffffff;
+          cursor: pointer;
+          display:grid;
+          place-items:center;
+          flex: 0 0 40px;
+          transition: transform 360ms cubic-bezier(.2,.8,.2,1);
+        }
+        .sektion73ZoomToggleBtn:active{
+          transform: scale(.98);
+        }
+        .sektion73ZoomToggleBtn svg{
+          width: 18px;
+          height: 18px;
+          display:block;
+          color: #0e1318;
+        }
+
+        /* gör så att Mapbox-controls inte påverkar layout runtom */
+        .mapboxgl-ctrl-bottom-left .sektion73ZoomCtrl{
+          margin: 0 0 6px 6px;
+        }
+      `;
+      document.head.appendChild(style);
+    }
+
+    function sektion73ClampZoom(z) {
+      const n = Number(z);
+      if (!Number.isFinite(n)) return sektion73StartZoom;
+      return Math.max(sektion73MinZoom, Math.min(sektion73MaxZoom, n));
+    }
+
+    function sektion73ApplyUserZoom(z, map) {
+      const next = sektion73ClampZoom(z);
+      sektion73UserZoom = next;
+
+      // Viktigt: detta är zoomen vi "återgår" till från pin/modal
+      if (typeof sektion73StartView === "object" && sektion73StartView) {
+        sektion73StartView.zoom = next;
+      }
+
+      if (map && typeof map.setZoom === "function") {
+        map.setZoom(next);
+      }
+    }
+
+    function sektion73InstallZoomControl() {
+      sektion73InjectZoomControlCSS();
+
+      function Sektion73ZoomSliderControl() {}
+
+      Sektion73ZoomSliderControl.prototype.onAdd = function (map) {
+        this._map = map;
+
+        const ctrl = document.createElement("div");
+        ctrl.className = "mapboxgl-ctrl sektion73ZoomCtrl";
+
+        const root = document.createElement("div");
+        root.className = "sektion73ZoomCtrlRoot is-collapsed";
+        root.id = "sektion73ZoomCtrlRoot";
+
+        const rangeWrap = document.createElement("div");
+        rangeWrap.className = "sektion73ZoomRangeWrap";
+
+        const range = document.createElement("input");
+        range.type = "range";
+        range.className = "sektion73ZoomRange";
+        range.id = "sektion73ZoomRange";
+        range.min = String(sektion73MinZoom);
+        range.max = String(sektion73MaxZoom);
+        range.step = "0.01";
+
+        // start: om användaren inte har rört slider → använd startzoom
+        range.value = String(sektion73ClampZoom(sektion73UserZoom == null ? sektion73StartZoom : sektion73UserZoom));
+
+        const toggleBtn = document.createElement("button");
+        toggleBtn.type = "button";
+        toggleBtn.className = "sektion73ZoomToggleBtn";
+        toggleBtn.id = "sektion73ZoomToggleBtn";
+        toggleBtn.setAttribute("aria-label", "Zoom");
+        toggleBtn.setAttribute("aria-expanded", "false");
+        toggleBtn.innerHTML = `
+          <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
+            <path d="M11 4a7 7 0 1 0 0 14 7 7 0 0 0 0-14Z" stroke="currentColor" stroke-width="2.2"/>
+            <path d="M20 20l-3.6-3.6" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/>
+            <path d="M11 8v6M8 11h6" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/>
+          </svg>
+        `;
+
+        let isDragging = false;
+
+        const setSliderFromMapZoom = () => {
+          if (!this._map) return;
+          if (isDragging) return;
+          const z = this._map.getZoom();
+          range.value = String(sektion73ClampZoom(z));
+        };
+
+        toggleBtn.addEventListener("click", () => {
+          const collapsed = root.classList.toggle("is-collapsed");
+          toggleBtn.setAttribute("aria-expanded", collapsed ? "false" : "true");
+
+          // När man öppnar: synca thumb till aktuell zoom direkt
+          if (!collapsed) setSliderFromMapZoom();
+        });
+
+        range.addEventListener("pointerdown", () => {
+          isDragging = true;
+        });
+
+        const endDrag = () => {
+          isDragging = false;
+        };
+        range.addEventListener("pointerup", endDrag);
+        range.addEventListener("pointercancel", endDrag);
+        range.addEventListener("lostpointercapture", endDrag);
+
+        range.addEventListener("input", () => {
+          const next = sektion73ClampZoom(range.value);
+
+          // Markera som "användar-zoom" och spara för återgång från pin
+          sektion73UserZoom = next;
+          if (typeof sektion73StartView === "object" && sektion73StartView) {
+            sektion73StartView.zoom = next;
+          }
+
+          // Live zoom (ingen easing, direkt)
+          if (this._map && typeof this._map.setZoom === "function") {
+            this._map.setZoom(next);
+          }
+        });
+
+        // Om zoom ändras via andra gester (t.ex. touch) och det inte är pin-zoom:
+        // behandla det som användarens zoom och spara som återgångsvy.
+        const onZoomEnd = () => {
+          if (!this._map) return;
+
+          // ignorera den zoom som sker när man klickar pin (den ska inte bli "user zoom")
+          if (typeof sektion73IsZoomingToPin === "boolean" && sektion73IsZoomingToPin) return;
+
+          const z = sektion73ClampZoom(this._map.getZoom());
+          sektion73UserZoom = z;
+          if (typeof sektion73StartView === "object" && sektion73StartView) {
+            sektion73StartView.zoom = z;
+          }
+          setSliderFromMapZoom();
+        };
+
+        this._map.on("zoom", setSliderFromMapZoom);
+        this._map.on("zoomend", onZoomEnd);
+
+        rangeWrap.appendChild(range);
+        root.appendChild(rangeWrap);
+        root.appendChild(toggleBtn);
+        ctrl.appendChild(root);
+
+        this._root = ctrl;
+        this._handlers = { setSliderFromMapZoom, onZoomEnd };
+
+        return ctrl;
+      };
+
+      Sektion73ZoomSliderControl.prototype.onRemove = function () {
+        if (this._map && this._handlers) {
+          this._map.off("zoom", this._handlers.setSliderFromMapZoom);
+          this._map.off("zoomend", this._handlers.onZoomEnd);
+        }
+        if (this._root && this._root.parentNode) this._root.parentNode.removeChild(this._root);
+        this._map = undefined;
+      };
+
+      // Installera control i bottom-left
+      sektion73Map.addControl(new Sektion73ZoomSliderControl(), "bottom-left");
+
+      // Synka start-view zoom med default (om ingen user zoom än)
+      if (typeof sektion73StartView === "object" && sektion73StartView && sektion73UserZoom == null) {
+        sektion73StartView.zoom = sektion73StartZoom;
+      }
+    }
+
+    sektion73InstallZoomControl();
+
+    /* =========================
+       STANDARD CONFIG (SAFETY)
+       ========================= */
+
+    function sektion73HasImportsStyle() {
+      const s = sektion73Map.getStyle && sektion73Map.getStyle();
+      return !!(s && Array.isArray(s.imports) && s.imports.length);
+    }
+
 
     function sektion73ForceStandardConfig() {
       if (typeof sektion73Map.setConfigProperty !== "function") return;
