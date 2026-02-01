@@ -801,7 +801,7 @@ const sektion73Pins = [
         "https://res.cloudinary.com/dmgmoisae/image/upload/v1769971668/original_hz62hj.jpg"
       ],
       imgSrc: "Bildkälla: —",
-      h: "Härligt okomplicerat",
+      h: "Härligt ",
       p: "Kort sagt, en okomplicerad restaurang vid poolkanten. För alla, lika mycket för campinggäster och för dig som bor i Varberg, som kvällsflanörer utmed strandpromenaden. För dig som söker svalka i en välhumlad pilsner eller härlig sangria och när du tröttnat på poolplask långt före barnen. Och för frukost, hemlagad, rejäl streetfood. Du slinker in lite som du är; badtofflor, shorts och håret fortfarande vått efter badet eller kostym om du föredrar det. En samlingsplats i hjärtat av campingplatsen där du tar en kaffe, läser tidningen eller bara kollar folk en stund.",
       cta1Text: "Visa meny",
       cta1Href: "https://www.apelviken.se/nisses-bodega",
@@ -884,7 +884,7 @@ const sektion73Pins = [
   {
     id: "sektion73Pin_ny_plats_0006",
     label: "Ny Plats",
-    iconKey: "DA", 
+    iconKey: "da", 
     ui: { 
       bubbleBg: "#fff", 
       pointerTop: "#fff" 
