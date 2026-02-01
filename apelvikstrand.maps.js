@@ -599,67 +599,31 @@ const sektion73Tangkorar_4 = {
       bearing: sektion73Bearing
     };
 
- function sektion73OpenModal(payload) {
+function sektion73OpenModal(payload) {
   const { overlay, modal } = sektion73EnsureModalDOM();
-  
-  // Reset text content
   document.getElementById("sektion73ModalImgSrc").textContent = payload.imgSrc || "Bildkälla: —";
   document.getElementById("sektion73ModalBodyH").textContent = payload.h || "";
   document.getElementById("sektion73ModalBodyP").textContent = payload.p || "";
-
-  // Get image elements
-  const imgEls = [
-    document.getElementById("sektion73ModalImg0"),
-    document.getElementById("sektion73ModalImg1"),
-    document.getElementById("sektion73ModalImg2"),
-    document.getElementById("sektion73ModalImg3")
-  ];
-
   const imgs = payload.images || [];
-
-  // Reset and show skeleton on all images first
-  imgEls.forEach(img => {
-    if (img) {
-      img.classList.add('skeleton-loader');
-      img.removeAttribute('src');
-    }
-  });
-
-  // Load images with a slight delay to ensure shimmer is visible
-  setTimeout(() => {
-    imgEls.forEach((img, index) => {
-      if (img) {
-        const defaultImage = `https://picsum.photos/seed/sektion73_${index}/1200/675`;
-        img.src = imgs[index] || defaultImage;
-        
-        img.onload = () => {
-          img.classList.remove('skeleton-loader');
-        };
-        
-        img.onerror = () => {
-          // Fallback to default image if loading fails
-          img.src = defaultImage;
-          img.classList.remove('skeleton-loader');
-        };
-      }
-    });
-  }, 300);
-
-  // CTA button setup (unchanged)
+  const img0 = document.getElementById("sektion73ModalImg0");
+  const img1 = document.getElementById("sektion73ModalImg1");
+  const img2 = document.getElementById("sektion73ModalImg2");
+  const img3 = document.getElementById("sektion73ModalImg3");
+  if (img0) img0.src = imgs[0] || "https://picsum.photos/seed/sektion73_0/1200/675";
+  if (img1) img1.src = imgs[1] || "https://picsum.photos/seed/sektion73_1/600/450";
+  if (img2) img2.src = imgs[2] || "https://picsum.photos/seed/sektion73_2/600/450";
+  if (img3) img3.src = imgs[3] || "https://picsum.photos/seed/sektion73_3/600/450";
   const cta1 = document.getElementById("sektion73ModalCtaPrimary");
   const cta2 = document.getElementById("sektion73ModalCtaSecondary");
   const cta1t = document.getElementById("sektion73ModalCtaPrimaryTxt");
   const cta2t = document.getElementById("sektion73ModalCtaSecondaryTxt");
-
   if (cta1t) cta1t.textContent = payload.cta1Text || "Boka";
   if (cta2t) cta2t.textContent = payload.cta2Text || "Visa vägen";
-
   if (cta1) {
     cta1.onclick = function () {
       if (payload.cta1Href) window.open(payload.cta1Href, "_blank", "noopener,noreferrer");
     };
   }
-
   if (cta2) {
     cta2.onclick = function () {
       if (payload.cta2Href) window.open(payload.cta2Href, "_blank", "noopener,noreferrer");
