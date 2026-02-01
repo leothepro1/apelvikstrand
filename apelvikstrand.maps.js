@@ -49,7 +49,10 @@
       title: "Sanatorievägen 4",
       lngLat: [12.24786400, 57.08797000]
     };
-
+const sektion73Tangkorar_4 = {
+  title: "Tångkörarvägen 4",
+  lngLat: [12.25870200, 57.08208910]
+};
     // 3) Tångkörarvägen 2, 432 54 Varberg
     const sektion73Tangkorar_2 = {
       title: "Tångkörarvägen 2",
@@ -466,7 +469,7 @@
         modal.setAttribute("aria-modal", "true");
         modal.setAttribute("aria-label", "Information");
 
-    <!-- AFTER -->
+
         modal.innerHTML = `
           <div class="sektion73ModalTop">
             <div></div>
