@@ -2,8 +2,8 @@
    Apelvikstrand – Interaktiv karta (Mapbox)
    - Låst till Apelviken (maxBounds + zoom-intervall)
    - Utgår från en "home"-punkt
-   - Mindre "google mappig": mindre UI, låst interaktion, chips som pins
-   - Custom pins (modal kopplas på senare)
+   - Designad upplevelse (mindre UI, låst interaktion, chips som pins)
+   - 3D: pitch + bearing + 3D-byggnader (fill-extrusion) när möjligt
 */
 (function () {
   function sektion73Ready(fn) {
@@ -27,35 +27,32 @@
        CONFIG
        ========================= */
 
-    // Public token (frontend)
     mapboxgl.accessToken =
       "pk.eyJ1IjoicnV0Z2Vyc3NvbiIsImEiOiJjbWwzdjY5N2owcDdiM2RzZWlzaG14MWVjIn0.yMfhGXLf9xq_vzIFSJVcjA";
 
-    // ✅ NY: Publicerad style URL (Mapbox Studio)
     const sektion73StyleUrl =
       "mapbox://styles/rutgersson/cml3w74bd009g01r458nuhgjn";
 
-    // Startpunkt (home)
     const sektion73Home = {
       title: "Apelvikstrand",
       lngLat: [12.239, 57.11]
     };
 
-    // Begränsa till Apelviken (justera om du vill tajta till)
-    // format: [ [minLng,minLat], [maxLng,maxLat] ]
     const sektion73Bounds = [
       [12.215, 57.100], // SW
       [12.260, 57.125]  // NE
     ];
 
-    // Zoom-spann för "område-karta"
     const sektion73MinZoom = 13.2;
     const sektion73MaxZoom = 17.6;
     const sektion73StartZoom = 14.7;
 
-    // Mer “designad” känsla: begränsa/ta bort vissa interaktioner
+    // 3D look
+    const sektion73Pitch = 55;
+    const sektion73Bearing = -20;
+
+    // Begränsa interaktion (behåll pan + pinch-zoom)
     const sektion73DisableRotate = true;
-    const sektion73DisablePitch = false;
 
     /* =========================
        MAP INIT
@@ -67,16 +64,13 @@
       center: sektion73Home.lngLat,
       zoom: sektion73StartZoom,
 
-      // Hård låsning till område
       maxBounds: sektion73Bounds,
 
-      // Mindre UI (känns mindre “google mappig”)
       attributionControl: false,
       pitchWithRotate: false,
       dragRotate: false
     });
 
-    // Logga tydliga fel om något i stil/tiles blockas
     sektion73Map.on("error", (e) => {
       console.error("Mapbox error:", e && e.error ? e.error : e);
     });
@@ -85,54 +79,99 @@
     sektion73Map.setMinZoom(sektion73MinZoom);
     sektion73Map.setMaxZoom(sektion73MaxZoom);
 
-    // Interaktion – gör det mer “karta i UI” än “navigationskarta”
-    sektion73Map.scrollZoom.disable();         // av: scroll-zoom (bra för inbäddat)
-    sektion73Map.doubleClickZoom.disable();    // av: dubbelklick zoom
+    // Embedded UX
+    sektion73Map.scrollZoom.disable();
+    sektion73Map.doubleClickZoom.disable();
+
     if (sektion73DisableRotate) {
       sektion73Map.dragRotate.disable();
       sektion73Map.touchZoomRotate.disableRotation();
     }
-// 3D-look (lutning + lätt rotation)
-sektion73Map.setPitch(55);
-sektion73Map.setBearing(-20);
 
-    // Lägg tillbaka en kompakt attribution i hörn (REKOMMENDERAT för compliance)
-    // Om du verkligen vill dölja: kommentera bort.
+    // Attribution (rekommenderat)
     sektion73Map.addControl(new mapboxgl.AttributionControl({ compact: true }), "bottom-right");
 
-  sektion73Map.once("load", () => {
-  sektion73Map.easeTo({
-    center: sektion73Home.lngLat,
-    zoom: sektion73StartZoom,
-    pitch: 55,
-    bearing: -20,
-    duration: 900
-  });
+    /* =========================
+       3D BUILDINGS HELPERS
+       ========================= */
 
-  const s = sektion73Map.getStyle();
-  console.log("STYLE NAME:", s && s.name);
-  console.log("STYLE ID:", s && s.id);
-  console.log("LAYER COUNT:", s && s.layers ? s.layers.length : 0);
-});
-try {
-  sektion73Map.addLayer({
-    id: "sektion73-3d-buildings",
-    source: "composite",
-    "source-layer": "building",
-    filter: ["==", "extrude", "true"],
-    type: "fill-extrusion",
-    minzoom: 14.2,
-    paint: {
-      "fill-extrusion-color": "#d9d4c8",
-      "fill-extrusion-height": ["coalesce", ["get", "height"], 6],
-      "fill-extrusion-base": ["coalesce", ["get", "min_height"], 0],
-      "fill-extrusion-opacity": 0.85
+    function sektion73FindCompositeSourceId() {
+      const style = sektion73Map.getStyle();
+      if (!style || !style.sources) return null;
+      if (style.sources.composite) return "composite";
+      // fallback: hitta en vektor-källa som ser ut som basemap/composite
+      const keys = Object.keys(style.sources);
+      for (let i = 0; i < keys.length; i++) {
+        const k = keys[i];
+        const src = style.sources[k];
+        if (src && src.type === "vector") return k;
+      }
+      return null;
     }
-  });
-} catch (err) {
-  console.warn("Kunde inte lägga 3D-byggnader:", err);
-}
 
+    function sektion73Has3DBuildingsLayer() {
+      const style = sektion73Map.getStyle();
+      if (!style || !style.layers) return false;
+      return style.layers.some((l) => l && l.type === "fill-extrusion");
+    }
+
+    function sektion73TryAdd3DBuildings() {
+      // Om stilen redan har 3D-byggnader, lägg inte dubbelt
+      if (sektion73Has3DBuildingsLayer()) return;
+
+      const sourceId = sektion73FindCompositeSourceId();
+      if (!sourceId) {
+        console.warn("Hittade ingen vector source för 3D-byggnader (composite).");
+        return;
+      }
+
+      // Lägg överst så de syns (men under pins/markers som ändå är DOM)
+      try {
+        sektion73Map.addLayer({
+          id: "sektion73-3d-buildings",
+          source: sourceId,
+          "source-layer": "building",
+          type: "fill-extrusion",
+          minzoom: 14.2,
+          filter: ["any",
+            ["==", ["get", "extrude"], "true"],
+            ["==", ["get", "extrude"], true]
+          ],
+          paint: {
+            "fill-extrusion-color": "#d9d4c8",
+            "fill-extrusion-height": ["coalesce", ["to-number", ["get", "height"]], 6],
+            "fill-extrusion-base": ["coalesce", ["to-number", ["get", "min_height"]], 0],
+            "fill-extrusion-opacity": 0.85
+          }
+        });
+      } catch (err) {
+        console.warn("Kunde inte lägga 3D-byggnader:", err);
+      }
+    }
+
+    /* =========================
+       LOAD
+       ========================= */
+
+    sektion73Map.once("load", () => {
+      // 3D vy (pitch + bearing) + mjuk intro
+      sektion73Map.easeTo({
+        center: sektion73Home.lngLat,
+        zoom: sektion73StartZoom,
+        pitch: sektion73Pitch,
+        bearing: sektion73Bearing,
+        duration: 900
+      });
+
+      // Försök lägga 3D-byggnader
+      sektion73TryAdd3DBuildings();
+
+      // Debug
+      const s = sektion73Map.getStyle();
+      console.log("STYLE NAME:", s && s.name);
+      console.log("STYLE ID:", s && s.id);
+      console.log("LAYER COUNT:", s && s.layers ? s.layers.length : 0);
+    });
 
     /* =========================
        PINS
@@ -165,7 +204,6 @@ try {
       el.id = pin.id;
       el.setAttribute("aria-label", pin.title);
 
-      // “brand”: chip-känsla
       el.style.display = "inline-flex";
       el.style.alignItems = "center";
       el.style.gap = "10px";
@@ -180,8 +218,8 @@ try {
       el.style.font = "600 13px/1 system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif";
       el.style.color = "#0e1318";
       el.style.paddingInline = "12px";
+      el.style.transform = "translateZ(0)";
 
-      // Accent-dot
       const dot = document.createElement("span");
       dot.setAttribute("aria-hidden", "true");
       dot.style.width = "10px";
@@ -191,13 +229,11 @@ try {
       dot.style.boxShadow = "0 0 0 3px rgba(242,178,0,.20)";
       el.appendChild(dot);
 
-      // Text
       const label = document.createElement("span");
       label.textContent = pin.title;
       label.style.opacity = "0.95";
       el.appendChild(label);
 
-      // Hover
       el.addEventListener("mouseenter", () => {
         el.style.transform = "translateY(-1px)";
         el.style.boxShadow = "0 16px 34px rgba(0,0,0,.20)";
@@ -210,11 +246,12 @@ try {
       el.addEventListener("click", function () {
         console.log("Pin klick:", pin.title, pin.payload);
 
-        // “return to home” för home-pin
         if (pin.payload && pin.payload.type === "home") {
           sektion73Map.easeTo({
             center: sektion73Home.lngLat,
             zoom: sektion73StartZoom,
+            pitch: sektion73Pitch,
+            bearing: sektion73Bearing,
             duration: 650
           });
         }
@@ -239,10 +276,9 @@ try {
       sektion73Pins.forEach(sektion73AddPin);
     });
 
-    // Exponera map för debug (valfritt)
+    // Debug helpers
     window.sektion73MapInstance = sektion73Map;
 
-    // Hjälp: logga bounds för exakt låsning när du ställt utsnitt perfekt
     window.sektion73PrintBounds = function () {
       const b = sektion73Map.getBounds();
       const sw = b.getSouthWest();
