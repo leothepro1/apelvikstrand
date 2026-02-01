@@ -184,9 +184,7 @@ const sektion73Tangkorar_4 = {
       }
     });
 
-    /* =========================
-       UI: MODAL + OVERLAY (injected)
-       ========================= */
+  
 
     function sektion73InjectModalCSS() {
       if (document.getElementById("sektion73MapModalStyle")) return;
@@ -398,6 +396,13 @@ const sektion73Tangkorar_4 = {
   flex:0 0 62px;
   line-height:0;
 }
+        body.sektion73-modal-open {
+          overflow: hidden;
+          position: fixed;
+          width: 100%;
+          height: 100%;
+          touch-action: none;
+        }
 .sektion73PinDot {
     width: 10px;
     height: 10px;
@@ -550,79 +555,79 @@ const sektion73Tangkorar_4 = {
       bearing: sektion73Bearing
     };
 
-    function sektion73OpenModal(payload) {
-      const { overlay, modal } = sektion73EnsureModalDOM();
+ function sektion73OpenModal(payload) {
+  const { overlay, modal } = sektion73EnsureModalDOM();
 
-          // Populate
-      document.getElementById("sektion73ModalImgSrc").textContent = payload.imgSrc || "Bildkälla: —";
-      document.getElementById("sektion73ModalBodyH").textContent = payload.h || "";
-      document.getElementById("sektion73ModalBodyP").textContent = payload.p || "";
+  document.getElementById("sektion73ModalImgSrc").textContent = payload.imgSrc || "Bildkälla: —";
+  document.getElementById("sektion73ModalBodyH").textContent = payload.h || "";
+  document.getElementById("sektion73ModalBodyP").textContent = payload.p || "";
 
-      const imgs = payload.images || [];
-      const img0 = document.getElementById("sektion73ModalImg0");
-      const img1 = document.getElementById("sektion73ModalImg1");
-      const img2 = document.getElementById("sektion73ModalImg2");
-      const img3 = document.getElementById("sektion73ModalImg3");
+  const imgs = payload.images || [];
+  const img0 = document.getElementById("sektion73ModalImg0");
+  const img1 = document.getElementById("sektion73ModalImg1");
+  const img2 = document.getElementById("sektion73ModalImg2");
+  const img3 = document.getElementById("sektion73ModalImg3");
 
-      if (img0) img0.src = imgs[0] || "https://picsum.photos/seed/sektion73_0/1200/675";
-      if (img1) img1.src = imgs[1] || "https://picsum.photos/seed/sektion73_1/600/450";
-      if (img2) img2.src = imgs[2] || "https://picsum.photos/seed/sektion73_2/600/450";
-      if (img3) img3.src = imgs[3] || "https://picsum.photos/seed/sektion73_3/600/450";
+  if (img0) img0.src = imgs[0] || "https://picsum.photos/seed/sektion73_0/1200/675";
+  if (img1) img1.src = imgs[1] || "https://picsum.photos/seed/sektion73_1/600/450";
+  if (img2) img2.src = imgs[2] || "https://picsum.photos/seed/sektion73_2/600/450";
+  if (img3) img3.src = imgs[3] || "https://picsum.photos/seed/sektion73_3/600/450";
 
-      const cta1 = document.getElementById("sektion73ModalCtaPrimary");
-      const cta2 = document.getElementById("sektion73ModalCtaSecondary");
-      const cta1t = document.getElementById("sektion73ModalCtaPrimaryTxt");
-      const cta2t = document.getElementById("sektion73ModalCtaSecondaryTxt");
+  const cta1 = document.getElementById("sektion73ModalCtaPrimary");
+  const cta2 = document.getElementById("sektion73ModalCtaSecondary");
+  const cta1t = document.getElementById("sektion73ModalCtaPrimaryTxt");
+  const cta2t = document.getElementById("sektion73ModalCtaSecondaryTxt");
 
-      if (cta1t) cta1t.textContent = payload.cta1Text || "Boka";
-      if (cta2t) cta2t.textContent = payload.cta2Text || "Visa vägen";
+  if (cta1t) cta1t.textContent = payload.cta1Text || "Boka";
+  if (cta2t) cta2t.textContent = payload.cta2Text || "Visa vägen";
 
-      if (cta1) {
-        cta1.onclick = function () {
-          if (payload.cta1Href) window.open(payload.cta1Href, "_blank", "noopener,noreferrer");
-        };
-      }
-      if (cta2) {
-        cta2.onclick = function () {
-          if (payload.cta2Href) window.open(payload.cta2Href, "_blank", "noopener,noreferrer");
-        };
-      }
+  if (cta1) {
+    cta1.onclick = function () {
+      if (payload.cta1Href) window.open(payload.cta1Href, "_blank", "noopener,noreferrer");
+    };
+  }
+  if (cta2) {
+    cta2.onclick = function () {
+      if (payload.cta2Href) window.open(payload.cta2Href, "_blank", "noopener,noreferrer");
+    };
+  }
 
-      // Open
-      overlay.classList.add("is-open");
-      modal.classList.add("is-open");
-      sektion73ModalOpen = true;
-    }
+  document.body.classList.add('sektion73-modal-open');
 
-    function sektion73CloseModal() {
-      const overlay = document.getElementById("sektion73MapOverlay");
-      const modal = document.getElementById("sektion73MapModal");
-      if (!overlay || !modal) return;
+  overlay.classList.add("is-open");
+  modal.classList.add("is-open");
+  sektion73ModalOpen = true;
+}
 
-      overlay.classList.remove("is-open");
-      modal.classList.remove("is-open");
-      sektion73ModalOpen = false;
+function sektion73CloseModal() {
+  const overlay = document.getElementById("sektion73MapOverlay");
+  const modal = document.getElementById("sektion73MapModal");
+  if (!overlay || !modal) return;
 
-      // Cancel ev. pending "zoom-then-open" så modal inte öppnas igen efter moveend
-      sektion73IsZoomingToPin = false;
-      sektion73PendingPinId = null;
-      if (sektion73ActiveMoveEndHandler) {
-        sektion73Map.off("moveend", sektion73ActiveMoveEndHandler);
-        sektion73ActiveMoveEndHandler = null;
-      }
+  document.body.classList.remove('sektion73-modal-open');
 
-      // Zooma ut till startläget (samma transition, fast tvärtom)
-      if (sektion73Map && typeof sektion73Map.easeTo === "function") {
-        sektion73Map.easeTo({
-          center: sektion73StartView.center,
-          zoom: Math.min(sektion73StartView.zoom, sektion73MaxZoom),
-          pitch: sektion73StartView.pitch,
-          bearing: sektion73StartView.bearing,
-          duration: sektion73PinZoomDur,
-          easing: (t) => 1 - Math.pow(1 - t, 3) // ease-out cubic
-        });
-      }
-    }
+  overlay.classList.remove("is-open");
+  modal.classList.remove("is-open");
+  sektion73ModalOpen = false;
+
+  sektion73IsZoomingToPin = false;
+  sektion73PendingPinId = null;
+  if (sektion73ActiveMoveEndHandler) {
+    sektion73Map.off("moveend", sektion73ActiveMoveEndHandler);
+    sektion73ActiveMoveEndHandler = null;
+  }
+
+  if (sektion73Map && typeof sektion73Map.easeTo === "function") {
+    sektion73Map.easeTo({
+      center: sektion73StartView.center,
+      zoom: Math.min(sektion73StartView.zoom, sektion73MaxZoom),
+      pitch: sektion73StartView.pitch,
+      bearing: sektion73StartView.bearing,
+      duration: sektion73PinZoomDur,
+      easing: (t) => 1 - Math.pow(1 - t, 3)
+    });
+  }
+}
 
     /* =========================
        PINS (2 st) – zoom först, modal efter "moveend"
