@@ -38,7 +38,11 @@
       title: "Surbrunnsvägen 2–8",
       lngLat: [12.262921, 57.081185]
     };
-
+    // Tångkörarvägen 1, 432 54 Varberg (koordinater från karta-länk)
+    const sektion73surfcenter = {
+      title: "Tångkörarvägen 1",
+      lngLat: [12.250144, 57.084689]
+    }
     // Tångkörarvägen 1, 432 54 Varberg (koordinater från karta-länk)
     const sektion73Tangkorar = {
       title: "Tångkörarvägen 1",
