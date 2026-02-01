@@ -807,31 +807,35 @@ function asApplyFilter_61724(familyName) {
     slide.setAttribute("data-as-global-idx", String(globalIdx));
     slide.setAttribute("data-as-family-pos", String(i));
 
-    // VIDEO SLIDE
-    if (data && data.type === "video") {
-      const vid = document.createElement("video");
-      vid.className = "as-hero-video";
-      vid.muted = true;
-      vid.playsInline = true;
-      vid.loop = true;
-      vid.autoplay = true;
-      vid.controls = false;
+ if (data && data.type === "video") {
+  const vid = document.createElement("video");
+  vid.className = "as-hero-video";
 
-      // Viktigt: ingen initial nätverkskostnad
-      vid.preload = "none";
+  // Autoplay-krav
+  vid.muted = true;
+  vid.setAttribute("muted", "");              // <-- VIKTIGT (Safari)
+  vid.playsInline = true;
+  vid.setAttribute("playsinline", "");        // <-- VIKTIGT (iOS)
+  vid.loop = true;
+  vid.autoplay = true;
 
-      // Poster byggs från video (lätt image), men sätts utan att ladda själva videon
-      vid.poster = asCldPosterFromVideoUploadUrl_55219(data.src, slideDims.w, slideDims.h);
+  // Inga kontroller/knappar
+  vid.controls = false;
+  vid.setAttribute("controls", "false");      // harmless, men ok
+  vid.setAttribute("controlslist", "nodownload noplaybackrate noremoteplayback");
+  vid.setAttribute("disablepictureinpicture", "true");
 
-      // Spara base-src så vi kan lazy-sätta src först när near/active
-      vid.setAttribute("data-as-video-src", String(data.src || ""));
+  // Ladda inte video förrän vi vill
+  vid.preload = "none";
 
-      // Inga synliga kontroller/knappar (browser overlay)
-      vid.setAttribute("controlslist", "nodownload noplaybackrate noremoteplayback");
-      vid.setAttribute("disablepictureinpicture", "true");
+  // Poster = lätt bild från videon
+  vid.poster = asCldPosterFromVideoUploadUrl_55219(data.src, slideDims.w, slideDims.h);
 
-      slide.appendChild(vid);
-    } else {
+  // Bas-src (Cloudinary video) – src sätts lazy i asUpdateSlideLoading_61724
+  vid.setAttribute("data-as-video-src", String(data.src || ""));
+
+  slide.appendChild(vid);
+} else {
       // IMAGE SLIDE
       const img = document.createElement("img");
       img.alt = (data && data.alt) || "";
@@ -920,17 +924,28 @@ function asApplyFilter_61724(familyName) {
         vid.src = asCldVideoFromUploadUrl_55219(baseSrc, dims.w, dims.h);
       }
 
-      // Active: försök spela (autoplay). Ingen ljud, inga knappar.
-      if (isActive) {
-        const p = vid.play();
-        if (p && typeof p.catch === "function") {
-          p.catch(() => {});
-        }
-      } else {
-        try {
-          vid.pause();
-        } catch (e) {}
-      }
+     if (isActive) {
+  // Säkra muted/playsinline även om browser tappat state
+  vid.muted = true;
+  vid.setAttribute("muted", "");
+  vid.setAttribute("playsinline", "");
+
+  const tryPlay = () => {
+    const p = vid.play();
+    if (p && typeof p.catch === "function") p.catch(() => {});
+  };
+
+  // Om src just satts kan Safari behöva en tick + metadata
+  if (vid.readyState >= 1) {
+    tryPlay();
+  } else {
+    vid.addEventListener("loadedmetadata", tryPlay, { once: true });
+    // ibland behövs även canplay
+    vid.addEventListener("canplay", tryPlay, { once: true });
+  }
+} else {
+  try { vid.pause(); } catch (e) {}
+}
     }
   }
 }
