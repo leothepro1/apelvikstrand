@@ -55,7 +55,7 @@
 
     // Mer “designad” känsla: begränsa/ta bort vissa interaktioner
     const sektion73DisableRotate = true;
-    const sektion73DisablePitch = true;
+    const sektion73DisablePitch = false;
 
     /* =========================
        MAP INIT
@@ -92,28 +92,47 @@
       sektion73Map.dragRotate.disable();
       sektion73Map.touchZoomRotate.disableRotation();
     }
-    if (sektion73DisablePitch) {
-      sektion73Map.setPitch(0);
-    }
+// 3D-look (lutning + lätt rotation)
+sektion73Map.setPitch(55);
+sektion73Map.setBearing(-20);
 
     // Lägg tillbaka en kompakt attribution i hörn (REKOMMENDERAT för compliance)
     // Om du verkligen vill dölja: kommentera bort.
     sektion73Map.addControl(new mapboxgl.AttributionControl({ compact: true }), "bottom-right");
 
-    // Mjuk “fly-in” vid load
-    sektion73Map.once("load", () => {
-      sektion73Map.easeTo({
-        center: sektion73Home.lngLat,
-        zoom: sektion73StartZoom,
-        duration: 900
-      });
+  sektion73Map.once("load", () => {
+  sektion73Map.easeTo({
+    center: sektion73Home.lngLat,
+    zoom: sektion73StartZoom,
+    pitch: 55,
+    bearing: -20,
+    duration: 900
+  });
 
-      // Debug: verifiera att rätt style laddas
-      const s = sektion73Map.getStyle();
-      console.log("STYLE NAME:", s && s.name);
-      console.log("STYLE ID:", s && s.id);
-      console.log("LAYER COUNT:", s && s.layers ? s.layers.length : 0);
-    });
+  const s = sektion73Map.getStyle();
+  console.log("STYLE NAME:", s && s.name);
+  console.log("STYLE ID:", s && s.id);
+  console.log("LAYER COUNT:", s && s.layers ? s.layers.length : 0);
+});
+try {
+  sektion73Map.addLayer({
+    id: "sektion73-3d-buildings",
+    source: "composite",
+    "source-layer": "building",
+    filter: ["==", "extrude", "true"],
+    type: "fill-extrusion",
+    minzoom: 14.2,
+    paint: {
+      "fill-extrusion-color": "#d9d4c8",
+      "fill-extrusion-height": ["coalesce", ["get", "height"], 6],
+      "fill-extrusion-base": ["coalesce", ["get", "min_height"], 0],
+      "fill-extrusion-opacity": 0.85
+    }
+  });
+} catch (err) {
+  console.warn("Kunde inte lägga 3D-byggnader:", err);
+}
+
 
     /* =========================
        PINS
