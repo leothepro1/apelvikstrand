@@ -252,7 +252,7 @@ const asVideosLazy_61724 = [
     alt: "Video 1",
     src: "https://res.cloudinary.com/dmgmoisae/video/upload/v1769952078/2025_07_11_03_13_52_6_eeqfia.mp4",
     // PNG-thumbnail (ersätt med din faktiska stillbild)
-    thumb: "https://res.cloudinary.com/dmgmoisae/image/upload/v1769952078/as_thumb_0301.png",
+    thumb: "https://res.cloudinary.com/dmgmoisae/image/upload/v1769957230/jpeg-optimizer_2025_07_11_03_13_52.00_00_43_23.Still002_g7qaii.png",
   },
   {
     id: "asprVidData_0302",
@@ -261,7 +261,7 @@ const asVideosLazy_61724 = [
     alt: "Video 2",
     src: "https://res.cloudinary.com/dmgmoisae/video/upload/v1769955838/2025_07_11_03_13_52_11_t9ig9o.mp4",
     // PNG-thumbnail (ersätt med din faktiska stillbild)
-    thumb: "https://res.cloudinary.com/dmgmoisae/image/upload/v1769955838/as_thumb_0302.png",
+    thumb: "https://res.cloudinary.com/dmgmoisae/image/upload/v1769957231/jpeg-optimizer_2025_07_11_03_13_52.00_00_06_04.Still001_b5rxiw.png",
   },
   {
     id: "asprVidData_0303",
@@ -270,7 +270,7 @@ const asVideosLazy_61724 = [
     alt: "Video 3",
     src: "https://res.cloudinary.com/dmgmoisae/video/upload/v1769954452/2025_07_11_03_13_52_10_iq8glf.mp4",
     // PNG-thumbnail (ersätt med din faktiska stillbild)
-    thumb: "https://res.cloudinary.com/dmgmoisae/image/upload/v1769954452/as_thumb_0303.png",
+    thumb: "https://res.cloudinary.com/dmgmoisae/image/upload/v1769957231/jpeg-optimizer_2025_07_11_03_13_52.00_08_34_11.Still004_tqawvc.png",
   },
   {
     id: "asprVidData_0304",
@@ -279,7 +279,7 @@ const asVideosLazy_61724 = [
     alt: "Video 4",
     src: "https://res.cloudinary.com/dmgmoisae/video/upload/v1769953481/2025_07_11_03_13_52_9_udmjnw.mp4",
     // PNG-thumbnail (ersätt med din faktiska stillbild)
-    thumb: "https://res.cloudinary.com/dmgmoisae/image/upload/v1769953481/as_thumb_0304.png",
+    thumb: "https://res.cloudinary.com/dmgmoisae/image/upload/v1769957231/jpeg-optimizer_2025_07_11_03_13_52.00_07_25_11.Still003_hh5vmp.png",
   },
 ];
 
