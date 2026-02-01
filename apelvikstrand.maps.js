@@ -187,6 +187,7 @@ const sektion73Tangkorar_4 = {
        LOAD
        ========================= */
 
+
 sektion73Map.on("style.load", () => {
   sektion73Map.setPitch(sektion73Pitch);
   sektion73Map.setBearing(sektion73Bearing);
@@ -224,40 +225,231 @@ sektion73Map.on("style.load", () => {
   }
 });
 
+/* =========================
+   BOTTOM-LEFT NUDGE (NO CSS TOUCH)
+   - Visas 2s efter att kartan har laddat (map.load)
+   - Slide-up från under viewport till bottom:12px, left:12px
+   - Close (X) uppe till höger (position absolute)
+   - Steg 1: ikon + text + knapp
+   - Klick knapp: byt ikon + text, ta bort knappen
+   - Close: stäng
+   - localStorage: visas inte igen efter interaktion
+   ========================= */
 
-  
+const sektion73NudgeLSKey = "sektion73_map_nudge_dismissed_v1";
 
-    function sektion73InjectModalCSS() {
-      if (document.getElementById("sektion73MapModalStyle")) return;
+function sektion73NudgeIsDismissed() {
+  try {
+    return window.localStorage && localStorage.getItem(sektion73NudgeLSKey) === "1";
+  } catch (_) {
+    return false;
+  }
+}
 
-      const style = document.createElement("style");
-      style.id = "sektion73MapModalStyle";
-      style.textContent = `
-        :root{
-          --sektion73-modal-dur:${sektion73ModalDurMs}ms;
-          --sektion73-modal-ease:cubic-bezier(.2,.8,.2,1);
-          --sektion73-modal-bg:#ffffff;
-          --sektion73-modal-text:#0e1318;
-          --sektion73-modal-muted:rgba(14,19,24,.68);
-          --sektion73-modal-line:rgba(14,19,24,.14);
-          --sektion73-modal-shadow:0 30px 80px rgba(0,0,0,.22);
-          --sektion73-accent:#f2b200;
-          --sektion73-radius:18px;
-        }
+function sektion73NudgeDismiss() {
+  try {
+    if (window.localStorage) localStorage.setItem(setion73NudgeLSKey, "1");
+  } catch (_) {}
+}
 
-        #sektion73MapOverlay{
-          position:fixed;
-          inset:0;
-          background:rgba(0,0,0,.42);
-          opacity:0;
-          pointer-events:none;
-          transition:opacity var(--sektion73-modal-dur) var(--sektion73-modal-ease);
-          z-index:2147483000;
-        }
-        #sektion73MapOverlay.is-open{
-          opacity:1;
-          pointer-events:auto;
-        }
+function sektion73CreateNudgeEl() {
+  const wrap = document.createElement("div");
+  wrap.id = "sektion73MapNudge";
+
+  // Inline-styles (ingen extern CSS / påverkar inget annat)
+  wrap.style.position = "fixed";
+  wrap.style.left = "12px";
+  wrap.style.bottom = "12px";
+  wrap.style.zIndex = "2147483002";
+  wrap.style.width = "min(360px, calc(100vw - 24px))";
+  wrap.style.background = "#ffffff";
+  wrap.style.color = "#0e1318";
+  wrap.style.border = "1px solid rgba(14,19,24,.14)";
+  wrap.style.borderRadius = "16px";
+  wrap.style.boxShadow = "0 18px 60px rgba(0,0,0,.22)";
+  wrap.style.padding = "14px 14px 14px 14px";
+  wrap.style.overflow = "hidden";
+  wrap.style.transform = "translateY(140%)";
+  wrap.style.transition = "transform 420ms cubic-bezier(.2,.8,.2,1)";
+  wrap.style.pointerEvents = "auto";
+
+  // Close (absolute top-right)
+  const closeBtn = document.createElement("button");
+  closeBtn.type = "button";
+  closeBtn.setAttribute("aria-label", "Stäng");
+  closeBtn.id = "sektion73MapNudgeClose";
+  closeBtn.style.all = "unset";
+  closeBtn.style.cursor = "pointer";
+  closeBtn.style.position = "absolute";
+  closeBtn.style.top = "10px";
+  closeBtn.style.right = "10px";
+  closeBtn.style.width = "34px";
+  closeBtn.style.height = "34px";
+  closeBtn.style.borderRadius = "999px";
+  closeBtn.style.display = "grid";
+  closeBtn.style.placeItems = "center";
+  closeBtn.style.background = "rgba(14,19,24,.06)";
+
+  closeBtn.innerHTML = `
+    <svg viewBox="0 0 24 24" fill="none" aria-hidden="true" style="width:18px;height:18px;display:block;">
+      <path d="M7 7l10 10M17 7L7 17" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"/>
+    </svg>
+  `;
+
+  // Content row
+  const row = document.createElement("div");
+  row.id = "sektion73MapNudgeRow";
+  row.style.display = "flex";
+  row.style.alignItems = "flex-start";
+  row.style.gap = "12px";
+  row.style.paddingRight = "38px";
+
+  const ico = document.createElement("div");
+  ico.id = "sektion73MapNudgeIco";
+  ico.style.flex = "0 0 auto";
+  ico.style.width = "44px";
+  ico.style.height = "44px";
+  ico.style.borderRadius = "12px";
+  ico.style.background = "#FFE6A3";
+  ico.style.display = "grid";
+  ico.style.placeItems = "center";
+  ico.style.color = "#5A3C00";
+
+  ico.innerHTML = `
+    <svg viewBox="0 0 24 24" fill="none" aria-hidden="true" style="width:22px;height:22px;display:block;">
+      <path d="M12 21s7-4.6 7-11a7 7 0 0 0-14 0c0 6.4 7 11 7 11Z" stroke="currentColor" stroke-width="2.2" stroke-linejoin="round"/>
+      <path d="M12 12.2a2.2 2.2 0 1 0 0-4.4 2.2 2.2 0 0 0 0 4.4Z" stroke="currentColor" stroke-width="2.2"/>
+    </svg>
+  `;
+
+  const body = document.createElement("div");
+  body.id = "sektion73MapNudgeBody";
+  body.style.display = "flex";
+  body.style.flexDirection = "column";
+  body.style.gap = "8px";
+  body.style.minWidth = "0";
+
+  const text = document.createElement("div");
+  text.id = "sektion73MapNudgeText";
+  text.style.fontFamily = 'system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif';
+  text.style.fontSize = "14px";
+  text.style.lineHeight = "1.35";
+  text.style.fontWeight = "800";
+  text.textContent = "Behöver du vägbeskrivning hit?";
+
+  const btn = document.createElement("button");
+  btn.type = "button";
+  btn.id = "sektion73MapNudgeBtn";
+  btn.style.all = "unset";
+  btn.style.cursor = "pointer";
+  btn.style.display = "inline-flex";
+  btn.style.alignItems = "center";
+  btn.style.justifyContent = "center";
+  btn.style.gap = "10px";
+  btn.style.padding = "10px 12px";
+  btn.style.borderRadius = "10px";
+  btn.style.background = "#f2b200";
+  btn.style.color = "#121110";
+  btn.style.fontFamily = 'system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif';
+  btn.style.fontSize = "14px";
+  btn.style.fontWeight = "900";
+  btn.style.width = "max-content";
+  btn.textContent = "Visa vägen";
+
+  body.appendChild(text);
+  body.appendChild(btn);
+
+  row.appendChild(ico);
+  row.appendChild(body);
+
+  wrap.appendChild(closeBtn);
+  wrap.appendChild(row);
+
+  // Close handler
+  closeBtn.addEventListener("click", () => {
+    sektion73NudgeDismiss();
+    wrap.style.transform = "translateY(140%)";
+    window.setTimeout(() => {
+      if (wrap && wrap.parentNode) wrap.parentNode.removeChild(wrap);
+    }, 460);
+  });
+
+  // Step 1 -> Step 2 handler
+  btn.addEventListener("click", () => {
+    sektion73NudgeDismiss();
+
+    // Byt ikon + text, ta bort knappen
+    ico.innerHTML = `
+      <svg viewBox="0 0 24 24" fill="none" aria-hidden="true" style="width:22px;height:22px;display:block;">
+        <path d="M20 6 9 17l-5-5" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+    `;
+    ico.style.background = "rgba(14,19,24,.06)";
+    ico.style.color = "#0e1318";
+
+    text.style.fontWeight = "800";
+    text.textContent = "Toppen. Du hittar vägbeskrivning via knappen i modalen.";
+
+    if (btn && btn.parentNode) btn.parentNode.removeChild(btn);
+  });
+
+  return wrap;
+}
+
+function sektion73ShowNudgeAfterLoad() {
+  if (sektion73NudgeIsDismissed()) return;
+  if (document.getElementById("sektion73MapNudge")) return;
+
+  const el = sektion73CreateNudgeEl();
+  document.body.appendChild(el);
+
+  // Trigger transition
+  requestAnimationFrame(() => {
+    el.style.transform = "translateY(0)";
+  });
+}
+
+// 2 sek efter att kartan faktiskt är "load" (inte bara style.load)
+sektion73Map.once("load", () => {
+  if (sektion73NudgeIsDismissed()) return;
+  window.setTimeout(() => {
+    sektion73ShowNudgeAfterLoad();
+  }, 2000);
+});
+
+
+
+function sektion73InjectModalCSS() {
+  if (document.getElementById("sektion73MapModalStyle")) return;
+
+  const style = document.createElement("style");
+  style.id = "sektion73MapModalStyle";
+  style.textContent = `
+    :root{
+      --sektion73-modal-dur:${sektion73ModalDurMs}ms;
+      --sektion73-modal-ease:cubic-bezier(.2,.8,.2,1);
+      --sektion73-modal-bg:#ffffff;
+      --sektion73-modal-text:#0e1318;
+      --sektion73-modal-muted:rgba(14,19,24,.68);
+      --sektion73-modal-line:rgba(14,19,24,.14);
+      --sektion73-modal-shadow:0 30px 80px rgba(0,0,0,.22);
+      --sektion73-accent:#f2b200;
+      --sektion73-radius:18px;
+    }
+
+    #sektion73MapOverlay{
+      position:fixed;
+      inset:0;
+      background:rgba(0,0,0,.42);
+      opacity:0;
+      pointer-events:none;
+      transition:opacity var(--sektion73-modal-dur) var(--sektion73-modal-ease);
+      z-index:2147483000;
+    }
+    #sektion73MapOverlay.is-open{
+      opacity:1;
+      pointer-events:auto;
+    }
 
 #sektion73MapModal {
     position: fixed;
@@ -279,46 +471,46 @@ sektion73Map.on("style.load", () => {
     border-radius: 20px 0px 0px 20px;
     overflow: auto;
 }
-        #sektion73MapModal.is-open{
-          transform:translateX(0);
-        }
+    #sektion73MapModal.is-open{
+      transform:translateX(0);
+    }
 
-        @media (max-width: 768px){
-          #sektion73MapModal{
-            left:0;
-            right:0;
-            top:auto;
-            bottom:0;
-            width:100%;
-            height:min(84dvh, 720px);
-            border-left:none;
-            border-top:1px solid var(--sektion73-modal-line);
-            border-top-left-radius:var(--sektion73-radius);
-            border-top-right-radius:var(--sektion73-radius);
-            transform:translateY(104%);
-          }
-          #sektion73MapModal.is-open{
-            transform:translateY(0);
-          }
-        }
+    @media (max-width: 768px){
+      #sektion73MapModal{
+        left:0;
+        right:0;
+        top:auto;
+        bottom:0;
+        width:100%;
+        height:min(84dvh, 720px);
+        border-left:none;
+        border-top:1px solid var(--sektion73-modal-line);
+        border-top-left-radius:var(--sektion73-radius);
+        border-top-right-radius:var(--sektion73-radius);
+        transform:translateY(104%);
+      }
+      #sektion73MapModal.is-open{
+        transform:translateY(0);
+      }
+    }
 
-        .sektion73ModalTop{
-          display:flex;
-          align-items:flex-start;
-          justify-content:space-between;
-          gap:12px;
-        }
-        .sektion73ModalKicker{
-          font:700 12px/1.2 system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;
-          color:rgba(14,19,24,.55);
-          text-transform:uppercase;
-          letter-spacing:.08em;
-          margin:0 0 6px 0;
-        }
-        .sektion73ModalTitle{
-          font:800 20px/1.15 system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;
-          margin:0;
-        }
+    .sektion73ModalTop{
+      display:flex;
+      align-items:flex-start;
+      justify-content:space-between;
+      gap:12px;
+    }
+    .sektion73ModalKicker{
+      font:700 12px/1.2 system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;
+      color:rgba(14,19,24,.55);
+      text-transform:uppercase;
+      letter-spacing:.08em;
+      margin:0 0 6px 0;
+    }
+    .sektion73ModalTitle{
+      font:800 20px/1.15 system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;
+      margin:0;
+    }
 .sektion73ModalClose {
     width: 40px;
     height: 40px;
@@ -333,12 +525,12 @@ sektion73Map.on("style.load", () => {
     top: 20px;
     right: 20px;
 }
-        .sektion73ModalClose svg{ width:18px; height:18px; }
+    .sektion73ModalClose svg{ width:18px; height:18px; }
 
-        .sektion73ModalGallery{
-          display:grid;
-          gap:2px;
-        }
+    .sektion73ModalGallery{
+      display:grid;
+      gap:2px;
+    }
 .sektion73ModalGalleryTop {
     width: 100%;
     aspect-ratio: 1.67778 / 1;
@@ -371,12 +563,12 @@ sektion73Map.on("style.load", () => {
     min-height: 100%;
     min-width: 100%;
 }
-        .sektion73ModalGalleryTop img{
-          width:100%;
-          height:100%;
-          object-fit:cover;
-          display:block;
-        }
+    .sektion73ModalGalleryTop img{
+      width:100%;
+      height:100%;
+      object-fit:cover;
+      display:block;
+    }
 .sektion73ModalGalleryRow {
     display: grid;
     grid-template-columns: repeat(3, 1fr);
@@ -389,12 +581,12 @@ sektion73Map.on("style.load", () => {
     border: none;
     object-fit: cover;
 }
-        .sektion73ModalThumb img{
-          width:100%;
-          height:100%;
-          object-fit:cover;
-          display:block;
-        }
+    .sektion73ModalThumb img{
+      width:100%;
+      height:100%;
+      object-fit:cover;
+      display:block;
+    }
 
 .sektion73ModalMeta {
     display: flex;
@@ -402,11 +594,11 @@ sektion73Map.on("style.load", () => {
     gap: 0px;
     padding: 32px 32px 0px;
 }
-        .sektion73ModalImgSrc{
-          font:600 12px/1.2 system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;
-          color:rgba(14,19,24,.55);
-          margin:0;
-        }
+    .sektion73ModalImgSrc{
+      font:600 12px/1.2 system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;
+      color:rgba(14,19,24,.55);
+      margin:0;
+    }
 .sektion73ModalBodyH {
     font-family: "Manrope", Inter, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, sans-serif;
     margin: 0;
@@ -446,124 +638,125 @@ sektion73Map.on("style.load", () => {
     font-size: 15px;
     font-weight: 700;
 }
-        .sektion73ModalBtnPrimary{
-          background:var(--sektion73-accent);
-        }
-             .sektion73ModalBtnPrimary:hover{
-          background:#d89f00;
-        }
-                     .sektion73ModalBtnPrimary:active{
-          background:#a67b02;
-        }
-                [id="sektion73ModalCtaSecondary"] {
-    background: #FFE6A3;
-    color: #5A3C00;
-    border: none;
+    .sektion73ModalBtnPrimary{
+      background:var(--sektion73-accent);
+    }
+         .sektion73ModalBtnPrimary:hover{
+      background:#d89f00;
+    }
+                 .sektion73ModalBtnPrimary:active{
+      background:#a67b02;
+    }
+            [id="sektion73ModalCtaSecondary"] {
+background: #FFE6A3;
+color: #5A3C00;
+border: none;
 }
 
 [id="sektion73ModalCtaSecondary"]:hover {
-    background: #FFD870;
+background: #FFD870;
 }
 
 [id="sektion73ModalCtaSecondary"]:active {
-    background: #FFD157;
+background: #FFD157;
 }
 .sektion73ModalBtn svg {
-    display: none;
+display: none;
 }
 
 #sektion73MapCanvas .sektion73PinBubble .sektion73PinIco{
-  display:inline-flex;
-  align-items:center;
-  justify-content:center;
-  width:52px;
-  height:auto;
-  flex:0 0 52px;
-  line-height:0;
+display:inline-flex;
+align-items:center;
+justify-content:center;
+width:52px;
+height:auto;
+flex:0 0 52px;
+line-height:0;
 }
-        body.sektion73-modal-open {
-          overflow: hidden;
-          position: fixed;
-          width: 100%;
-          height: 100%;
-          touch-action: none;
-        }
+    body.sektion73-modal-open {
+      overflow: hidden;
+      position: fixed;
+      width: 100%;
+      height: 100%;
+      touch-action: none;
+    }
 .sektion73PinDot {
-    width: 10px;
-    height: 10px;
-    border-radius: 999px;
-    background: var(--sektion73-accent);
-    display: none;
+width: 10px;
+height: 10px;
+border-radius: 999px;
+background: var(--sektion73-accent);
+display: none;
 }
 #sektion73MapCanvas .sektion73PinBubble .sektion73PinIco svg{
-  width:52px;
-  height:auto;
-  display:block;
-  color:currentColor;
+width:52px;
+height:auto;
+display:block;
+color:currentColor;
 }
 
 /* Mono-loggor: gör så att paths ärver färg från currentColor */
 #sektion73MapCanvas .sektion73PinWrap[data-icon-key="solviken"] .sektion73PinIco svg,
 #sektion73MapCanvas .sektion73PinWrap[data-icon-key="brittas"] .sektion73PinIco svg,
 #sektion73MapCanvas .sektion73PinWrap[data-icon-key="strandkollektivet"] .sektion73PinIco svg{
-  fill: currentColor;
+fill: currentColor;
 }
 #sektion73MapCanvas .sektion73PinWrap[data-icon-key="solviken"] .sektion73PinIco svg *,
 #sektion73MapCanvas .sektion73PinWrap[data-icon-key="brittas"] .sektion73PinIco svg *,
 #sektion73MapCanvas .sektion73PinWrap[data-icon-key="strandkollektivet"] .sektion73PinIco svg *{
-  fill: currentColor !important;
+fill: currentColor !important;
 }
 
 #sektion73MapCanvas .sektion73PinBubble{
-  gap:10px;
+gap:10px;
 }
 .sektion73PinWrap {
-    display: inline-flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 0px;
-    transform: translateZ(0);
+display: inline-flex;
+flex-direction: column;
+align-items: center;
+gap: 0px;
+transform: translateZ(0);
 }
-       /* PER-PIN: färger styrs via CSS-variabler på .sektion73PinWrap */
-        .sektion73PinBubble{
-          padding:10px 12px;
-          border-radius:999px;
-          background:var(--sektion73-pin-bubble-bg, rgba(255,255,255,.92));
-          backdrop-filter: blur(10px);
-          border:1px solid rgba(0,0,0,.14);
-          box-shadow:0 16px 36px rgba(0,0,0,.20);
-          font:900 13px/1 system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;
-          color:#0e1318;
-          white-space:nowrap;
-          cursor:pointer;
-          user-select:none;
-          display:inline-flex;
-          align-items:center;
-          gap:10px;
-        }
-
-        .sektion73PinPointer{
-          width:0;
-          height:0;
-          border-left:5px solid transparent;
-          border-right:5px solid transparent;
-          border-top:5px solid var(--sektion73-pin-pointer-top, rgba(255,255,255,.92));
-          filter: drop-shadow(0 6px 8px rgba(0,0,0,.18));
-        }
-.sektion73PinBtn {
-    all: unset;
-    cursor: pointer;
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    background: var(--sektion73-pin-bubble-bg, rgba(255, 255, 255, .92));
-    height: max-content;
-    padding: 11px 14px;
-    border-radius: 8px;
-}
-      `;
-      document.head.appendChild(style);
+   /* PER-PIN: färger styrs via CSS-variabler på .sektion73PinWrap */
+    .sektion73PinBubble{
+      padding:10px 12px;
+      border-radius:999px;
+      background:var(--sektion73-pin-bubble-bg, rgba(255,255,255,.92));
+      backdrop-filter: blur(10px);
+      border:1px solid rgba(0,0,0,.14);
+      box-shadow:0 16px 36px rgba(0,0,0,.20);
+      font:900 13px/1 system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;
+      color:#0e1318;
+      white-space:nowrap;
+      cursor:pointer;
+      user-select:none;
+      display:inline-flex;
+      align-items:center;
+      gap:10px;
     }
+
+    .sektion73PinPointer{
+      width:0;
+      height:0;
+      border-left:5px solid transparent;
+      border-right:5px solid transparent;
+      border-top:5px solid var(--sektion73-pin-pointer-top, rgba(255,255,255,.92));
+      filter: drop-shadow(0 6px 8px rgba(0,0,0,.18));
+    }
+.sektion73PinBtn {
+all: unset;
+cursor: pointer;
+display: inline-flex;
+align-items: center;
+justify-content: center;
+background: var(--sektion73-pin-bubble-bg, rgba(255, 255, 255, .92));
+height: max-content;
+padding: 11px 14px;
+border-radius: 8px;
+}
+  `;
+  document.head.appendChild(style);
+}
+
 
     function sektion73EnsureModalDOM() {
       sektion73InjectModalCSS();
