@@ -257,14 +257,21 @@ const asVideosLazy_61724 = [
     family: "Video",
     type: "video",
     alt: "Video 2",
-    src: "https://res.cloudinary.com/dmgmoisae/video/upload/v1769952651/2025_07_11_03_13_52_7_n6b5jh.mp4",
+    src: "https://res.cloudinary.com/dmgmoisae/video/upload/v1769955838/2025_07_11_03_13_52_11_t9ig9o.mp4",
   },
   {
     id: "asprVidData_0303",
     family: "Video",
     type: "video",
     alt: "Video 3",
-    src: "https://res.cloudinary.com/dmgmoisae/video/upload/v1769999999/apelvik_video_03.mp4",
+    src: "https://res.cloudinary.com/dmgmoisae/video/upload/v1769954452/2025_07_11_03_13_52_10_iq8glf.mp4",
+       },
+  {
+    id: "asprVidData_0303",
+    family: "Video",
+    type: "video",
+    alt: "Video 3",
+    src: "https://res.cloudinary.com/dmgmoisae/video/upload/v1769953481/2025_07_11_03_13_52_9_udmjnw.mp4",
   },
 ];
 
