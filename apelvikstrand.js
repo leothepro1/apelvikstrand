@@ -251,6 +251,8 @@ const asVideosLazy_61724 = [
     type: "video",
     alt: "Video 1",
     src: "https://res.cloudinary.com/dmgmoisae/video/upload/v1769952078/2025_07_11_03_13_52_6_eeqfia.mp4",
+    // PNG-thumbnail (ersätt med din faktiska stillbild)
+    thumb: "https://res.cloudinary.com/dmgmoisae/image/upload/v1769952078/as_thumb_0301.png",
   },
   {
     id: "asprVidData_0302",
@@ -258,6 +260,8 @@ const asVideosLazy_61724 = [
     type: "video",
     alt: "Video 2",
     src: "https://res.cloudinary.com/dmgmoisae/video/upload/v1769955838/2025_07_11_03_13_52_11_t9ig9o.mp4",
+    // PNG-thumbnail (ersätt med din faktiska stillbild)
+    thumb: "https://res.cloudinary.com/dmgmoisae/image/upload/v1769955838/as_thumb_0302.png",
   },
   {
     id: "asprVidData_0303",
@@ -265,15 +269,20 @@ const asVideosLazy_61724 = [
     type: "video",
     alt: "Video 3",
     src: "https://res.cloudinary.com/dmgmoisae/video/upload/v1769954452/2025_07_11_03_13_52_10_iq8glf.mp4",
-       },
+    // PNG-thumbnail (ersätt med din faktiska stillbild)
+    thumb: "https://res.cloudinary.com/dmgmoisae/image/upload/v1769954452/as_thumb_0303.png",
+  },
   {
-    id: "asprVidData_0303",
+    id: "asprVidData_0304",
     family: "Video",
     type: "video",
-    alt: "Video 3",
+    alt: "Video 4",
     src: "https://res.cloudinary.com/dmgmoisae/video/upload/v1769953481/2025_07_11_03_13_52_9_udmjnw.mp4",
+    // PNG-thumbnail (ersätt med din faktiska stillbild)
+    thumb: "https://res.cloudinary.com/dmgmoisae/image/upload/v1769953481/as_thumb_0304.png",
   },
 ];
+
 
 const asInitialVisibleCount_61724 = 5;
 
@@ -795,59 +804,78 @@ function asApplyFilter_61724(familyName) {
     slide.setAttribute("data-as-global-idx", String(globalIdx));
     slide.setAttribute("data-as-family-pos", String(i));
 
- if (data && data.type === "video") {
+if (data && data.type === "video") {
   const vid = document.createElement("video");
   vid.className = "as-hero-video";
 
+  // Förhindra att video “spiller ut” på mobile (matcha slide-boxen)
+  slide.style.overflow = "hidden";
+  vid.style.display = "block";
+  vid.style.width = "100%";
+  vid.style.height = "100%";
+  vid.style.objectFit = "cover";
+  vid.style.objectPosition = "center";
+
   // Autoplay-krav
   vid.muted = true;
-  vid.setAttribute("muted", "");              // <-- VIKTIGT (Safari)
+  vid.setAttribute("muted", ""); // <-- VIKTIGT (Safari)
   vid.playsInline = true;
-  vid.setAttribute("playsinline", "");        // <-- VIKTIGT (iOS)
+  vid.setAttribute("playsinline", ""); // <-- VIKTIGT (iOS)
   vid.loop = true;
   vid.autoplay = true;
 
   // Inga kontroller/knappar
   vid.controls = false;
-  vid.setAttribute("controls", "false");      // harmless, men ok
+  vid.removeAttribute("controls"); // säkerställ att inga native controls dyker upp
   vid.setAttribute("controlslist", "nodownload noplaybackrate noremoteplayback");
   vid.setAttribute("disablepictureinpicture", "true");
 
   // Ladda inte video förrän vi vill
   vid.preload = "none";
 
-  // Poster = lätt bild från videon
-  vid.poster = asCldPosterFromVideoUploadUrl_55219(data.src, slideDims.w, slideDims.h);
+  // Poster = PNG-thumbnail om den finns, annars fallback till genererad stillframe
+  vid.poster =
+    (data && data.thumb ? String(data.thumb).trim() : "") ||
+    asCldPosterFromVideoUploadUrl_55219(data.src, slideDims.w, slideDims.h);
 
-  // Bas-src (Cloudinary video) – src sätts lazy i asUpdateSlideLoading_61724
+  // Bas-src (rå Cloudinary video) – src sätts lazy i asUpdateSlideLoading_61724
   vid.setAttribute("data-as-video-src", String(data.src || ""));
 
-slide.appendChild(vid);
+  slide.appendChild(vid);
 
-/* FIX: skeleton-runtime lyssnar bara på <img>
-   Video-slides måste manuellt markeras som "loaded" */
-const host = slide.closest(".as-skeleton") || slide;
-host.classList.add("as-loaded");
+  /* FIX: skeleton-runtime lyssnar bara på <img>
+     Video-slides måste manuellt markeras som "loaded" */
+  const host = slide.closest(".as-skeleton") || slide;
+  host.classList.add("as-loaded");
 } else {
-      // IMAGE SLIDE
-      const img = document.createElement("img");
-      img.alt = (data && data.alt) || "";
-      img.decoding = "async";
+  // IMAGE SLIDE
+  const img = document.createElement("img");
+  img.alt = (data && data.alt) || "";
+  img.decoding = "async";
 
-      /* PERF: stoppa mass-laddning vid dialog-open.
-         Alla slides skapas, men browsern får "lazy" som default.
-         asUpdateSlideLoading_61724() uppgraderar bara active/near till eager + high priority. */
-      img.loading = "lazy";
-      img.fetchPriority = "auto";
+  // Förhindra att bild “spiller ut” på mobile (matcha slide-boxen)
+  slide.style.overflow = "hidden";
+  img.style.display = "block";
+  img.style.width = "100%";
+  img.style.height = "100%";
+  img.style.objectFit = "cover";
+  img.style.objectPosition = "center";
 
-      img.src = asCldFromUploadUrl_55219(data.src, slideDims.w, slideDims.h);
+  /* PERF: stoppa mass-laddning vid dialog-open.
+     Alla slides skapas, men browsern får "lazy" som default.
+     asUpdateSlideLoading_61724() uppgraderar bara active/near till eager + high priority. */
+  img.loading = "lazy";
+  img.fetchPriority = "auto";
 
-      const widths = isDesktop ? [900, 1100, 1300, 1500] : [720, 900, 1100, 1300];
-      img.srcset = asBuildSrcsetUpload_55219(data.src, widths, slideDims.w, slideDims.h);
-      img.sizes = isDesktop ? "(min-width: 900px) 70vw, 92vw" : "92vw";
+  img.src = asCldFromUploadUrl_55219(data.src, slideDims.w, slideDims.h);
 
-      slide.appendChild(img);
-    }
+  const widths = isDesktop ? [900, 1100, 1300, 1500] : [720, 900, 1100, 1300];
+  img.srcset = asBuildSrcsetUpload_55219(data.src, widths, slideDims.w, slideDims.h);
+  img.sizes = isDesktop ? "(min-width: 900px) 70vw, 92vw" : "92vw";
+
+  slide.appendChild(img);
+}
+
 
     slide.addEventListener("click", () => {
       asSetActiveGlobalIndex_61724(globalIdx, { focusThumb: false, instantSwap: true });
@@ -1443,17 +1471,30 @@ function asEnsureThumbWindowBuilt_61724() {
     img.decoding = "async";
 
     // VIDEO thumbs: använd poster-frame från videon (lätt JPG). Bilder: behåll befintlig logik.
-    if (data && data.type === "video") {
-      img.src = asCldPosterFromVideoUploadUrl_55219(data.src, thumbDims.w, thumbDims.h);
-      img.srcset = [
-        asCldPosterFromVideoUploadUrl_55219(data.src, 120, 120) + " 120w",
-        asCldPosterFromVideoUploadUrl_55219(data.src, 156, 156) + " 156w",
-        asCldPosterFromVideoUploadUrl_55219(data.src, 220, 220) + " 220w",
-      ].join(", ");
-    } else {
-      img.src = asCldFromUploadUrl_55219(data.src, thumbDims.w, thumbDims.h);
-      img.srcset = asBuildSrcsetUpload_55219(data.src, [120, 156, 220], thumbDims.w, thumbDims.h);
-    }
+// VIDEO thumbs: använd PNG-thumbnail om den finns. Annars fallback till genererad stillframe (JPG).
+if (data && data.type === "video") {
+  const thumbPng = data && data.thumb ? String(data.thumb).trim() : "";
+
+  if (thumbPng) {
+    img.src = thumbPng;
+    img.srcset = [
+      thumbPng + " 120w",
+      thumbPng + " 156w",
+      thumbPng + " 220w",
+    ].join(", ");
+  } else {
+    img.src = asCldPosterFromVideoUploadUrl_55219(data.src, thumbDims.w, thumbDims.h);
+    img.srcset = [
+      asCldPosterFromVideoUploadUrl_55219(data.src, 120, 120) + " 120w",
+      asCldPosterFromVideoUploadUrl_55219(data.src, 156, 156) + " 156w",
+      asCldPosterFromVideoUploadUrl_55219(data.src, 220, 220) + " 220w",
+    ].join(", ");
+  }
+} else {
+  img.src = asCldFromUploadUrl_55219(data.src, thumbDims.w, thumbDims.h);
+  img.srcset = asBuildSrcsetUpload_55219(data.src, [120, 156, 220], thumbDims.w, thumbDims.h);
+}
+
 
     img.sizes = asIsMobile_61724() ? "70px" : "78px";
 
