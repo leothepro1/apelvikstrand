@@ -81,8 +81,8 @@ const sektion73Tangkorar_4 = {
     ];
 
     const sektion73MinZoom = 13.2;
-    const sektion73MaxZoom = 22.6;
-    const sektion73StartZoom = 14.7;
+    const sektion73MaxZoom = 18.6;
+    const sektion73StartZoom = 16.7;
 
     // Kamera
     const sektion73Pitch = 65;
@@ -94,8 +94,8 @@ const sektion73Tangkorar_4 = {
     const sektion73DisableRotate = true;
 
     // Zoom vid pin-klick
-    const sektion73PinZoom = 28.35;
-    const sektion73PinZoomDur = 950;
+    const sektion73PinZoom = 23.35;
+    const sektion73PinZoomDur = 1150;
 
     // Mol animation
     const sektion73ModalDurMs = 420;
