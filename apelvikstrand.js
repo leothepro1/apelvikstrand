@@ -20,7 +20,7 @@
        CLOUDINARY (UPLOAD URLS)
        ========================= */
 
-  function asCldFromUploadUrl_55219(uploadUrl, w, h) {
+ function asCldFromUploadUrl_55219(uploadUrl, w, h) {
   const url = String(uploadUrl || "").trim();
 
   const marker = "/image/upload/";
@@ -41,6 +41,78 @@
   ].join(",");
 
   return base + t + "/" + rest;
+}
+
+/* Ny: video-url (Cloudinary) – byggs först när Video används / när slide är near/active */
+function asCldVideoFromUploadUrl_55219(uploadUrl, w, h) {
+  const url = String(uploadUrl || "").trim();
+
+  const marker = "/video/upload/";
+  const idx = url.indexOf(marker);
+  if (idx === -1) return url;
+
+  const base = url.slice(0, idx + marker.length);
+  const rest = url.slice(idx + marker.length);
+
+  // vc_auto ger optimal codec/container, f_auto väljer format (t.ex. mp4/webm)
+  // ac_none säkerställer inget ljud
+  const t = [
+    "f_auto",
+    "q_auto",
+    "dpr_auto",
+    "vc_auto",
+    "ac_none",
+    "c_fill",
+    "g_auto",
+    "w_" + Math.round(w),
+    "h_" + Math.round(h),
+  ].join(",");
+
+  return base + t + "/" + rest;
+}
+
+/* Ny: poster/thumbnail från video (still frame) */
+function asCldPosterFromVideoUploadUrl_55219(uploadUrl, w, h) {
+  const url = String(uploadUrl || "").trim();
+
+  const marker = "/video/upload/";
+  const idx = url.indexOf(marker);
+  if (idx === -1) return url;
+
+  const base = url.slice(0, idx + marker.length);
+  const rest = url.slice(idx + marker.length);
+
+  const t = [
+    "so_0",
+    "f_jpg",
+    "q_auto",
+    "dpr_auto",
+    "c_fill",
+    "g_auto",
+    "w_" + Math.round(w),
+    "h_" + Math.round(h),
+  ].join(",");
+
+  return base + t + "/" + rest;
+}
+
+/* Ny: injicera video-items i asImages_61724 först vid behov (0 initial påverkan) */
+function asEnsureVideosInjected_61724() {
+  if (asVideosInjected_61724) return;
+  asVideosInjected_61724 = true;
+
+  if (!Array.isArray(asVideosLazy_61724) || !asVideosLazy_61724.length) return;
+
+  for (let i = 0; i < asVideosLazy_61724.length; i++) {
+    const v = asVideosLazy_61724[i];
+    if (!v || v.family !== "Video" || v.type !== "video" || !v.src) continue;
+    asImages_61724.push(v);
+  }
+
+  // Efter injection måste filter/DOM kunna rebuildas korrekt
+  asThumbsKey_61724 = null;
+  asThumbWindowMetaKey_61724 = null;
+  asSlidesKey_61724 = null;
 }
 
 /* Ny: ingen crop (behåller hela bilden). Används för FRONT-HERO */
@@ -85,7 +157,11 @@ function asBuildSrcsetUpload_55219(uploadUrl, widths, aspectW, aspectH) {
        DATA (REPLACE WITH YOUR URLs)
        ========================= */
 
- const asImages_61724 = [
+const asFamilyCountOverrides_61724 = {
+  Video: 3,
+};
+
+const asImages_61724 = [
   // Interiör
   {
     id: "asprImgData_0056",
@@ -96,14 +172,14 @@ function asBuildSrcsetUpload_55219(uploadUrl, widths, aspectW, aspectH) {
   {
     id: "asprImgData_0002",
     family: "Interiör",
-         front: "number2",
+    front: "number2",
     alt: "Interiör 2",
     src: "https://res.cloudinary.com/dmgmoisae/image/upload/v1769872058/jpeg-optimizer_ApelvikStrand_1153_1_mi0wzz.jpg",
   },
   {
     id: "asprImgData_0042",
     family: "Interiör",
-         front: "number5",
+    front: "number5",
     alt: "Interiör 3",
     src: "https://res.cloudinary.com/dmgmoisae/image/upload/v1769872058/jpeg-optimizer_ApelvikStrand_1019_3_cmtydp.jpg",
   },
@@ -116,14 +192,14 @@ function asBuildSrcsetUpload_55219(uploadUrl, widths, aspectW, aspectH) {
   {
     id: "asprImgData_0000",
     family: "Interiör",
-         front: "number4",
+    front: "number4",
     alt: "Interiör 5",
     src: "https://res.cloudinary.com/dmgmoisae/image/upload/v1769872059/jpeg-optimizer_ApelvikStrand_0010_3_rzzlat.jpg",
   },
   {
     id: "asprImgData_0001",
     family: "Interiör",
-         front: "number3",
+    front: "number3",
     alt: "Interiör 6",
     src: "https://res.cloudinary.com/dmgmoisae/image/upload/v1769875259/jpeg-optimizer_bed_s97rag.png",
   },
@@ -161,7 +237,7 @@ function asBuildSrcsetUpload_55219(uploadUrl, widths, aspectW, aspectH) {
   {
     id: "asprImgData_0007",
     family: "Exteriör",
-         front: "number1",
+    front: "number1",
     alt: "Exteriör 7",
     src: "https://res.cloudinary.com/dmgmoisae/image/upload/v1769875471/strandhuse21q_hh50lb.png",
   },
@@ -187,7 +263,32 @@ function asBuildSrcsetUpload_55219(uploadUrl, widths, aspectW, aspectH) {
   },
 ];
 
-    const asInitialVisibleCount_61724 = 5;
+/* Video-manifest (LAZY): injiceras i asImages_61724 först när Video-filtret används */
+const asVideosLazy_61724 = [
+  {
+    id: "asprVidData_0301",
+    family: "Video",
+    type: "video",
+    alt: "Video 1",
+    src: "https://res.cloudinary.com/dmgmoisae/video/upload/v1769999999/apelvik_video_01.mp4",
+  },
+  {
+    id: "asprVidData_0302",
+    family: "Video",
+    type: "video",
+    alt: "Video 2",
+    src: "https://res.cloudinary.com/dmgmoisae/video/upload/v1769999999/apelvik_video_02.mp4",
+  },
+  {
+    id: "asprVidData_0303",
+    family: "Video",
+    type: "video",
+    alt: "Video 3",
+    src: "https://res.cloudinary.com/dmgmoisae/video/upload/v1769999999/apelvik_video_03.mp4",
+  },
+];
+
+const asInitialVisibleCount_61724 = 5;
 
     /* =========================
        ELEMENTS
@@ -247,33 +348,43 @@ function asBuildSrcsetUpload_55219(uploadUrl, widths, aspectW, aspectH) {
    /* =========================
        STATE
        ========================= */
-    let asActiveFamily_61724 = null;
-    let asActiveGlobalIndex_61724 = 0;
-    let asActiveFamilyIndexes_61724 = [];
+/* =========================
+   STATE
+   ========================= */
+let asActiveFamily_61724 = null;
+let asActiveGlobalIndex_61724 = 0;
+let asActiveFamilyIndexes_61724 = [];
 
-    let asResizeT_61724 = null;
+let asResizeT_61724 = null;
 
-    // Swipe state
-    let asMobileSwipeBound_61724 = false;
-    let asDragStartX_61724 = null;
-    let asDragCurrentX_61724 = 0;
-    let asDragging_61724 = false;
-    let asSwipeRaf_61724 = null;
+// Swipe state
+let asMobileSwipeBound_61724 = false;
+let asDragStartX_61724 = null;
+let asDragCurrentX_61724 = 0;
+let asDragging_61724 = false;
+let asSwipeRaf_61724 = null;
 
-    // Programmatic multi-step navigation (thumb jump)
-    let asProgrammaticNav_61724 = false;
-    let asProgrammaticNavAbort_61724 = false;
+// Programmatic multi-step navigation (thumb jump)
+let asProgrammaticNav_61724 = false;
+let asProgrammaticNavAbort_61724 = false;
 
-    // Build slides once per filter
-    let asSlidesKey_61724 = null; // "Family|0,1,2"
-    let asLastStagedIndex_61724 = null;
+// Build slides once per filter
+let asSlidesKey_61724 = null; // "Family|0,1,2"
+let asLastStagedIndex_61724 = null;
 
+// Thumb window
 let asThumbsKey_61724 = null; // key för byggd DOM
-let asThumbWindowStart_61724 = 0; // <-- NY: första "pos" i familjelistan som är synlig (0..n-1)
-let asThumbWindowMetaKey_61724 = null; // <-- NY: låser start till aktuell family+list+visible
+let asThumbWindowStart_61724 = 0; // första "pos" i familjelistan som är synlig (0..n-1)
+let asThumbWindowMetaKey_61724 = null; // låser start till aktuell family+list+visible
 
-    // Slide gap (px) for track swipe layout
-    const asSlideGap_61724 = 22;
+// Video lazy-injection
+let asVideosInjected_61724 = false;
+
+// Persist last slide dims (för video src/poster transform + lazy load)
+let asLastSlideDims_61724 = null;
+
+// Slide gap (px) for track swipe layout
+const asSlideGap_61724 = 22;
 
     /* =========================
        HELPERS
@@ -319,12 +430,6 @@ function asGetFrontIndexes_61724() {
   return picked.slice(0, 5);
 }
 
-/* Ny: URL-trigger för att öppna dialogen med förvalt filter.
-   Stöder:
-   - /dialogopen?exterior                (querystring utan key)
-   - ?dialogopen=exterior                (key/value)
-   - ?family=exterior                    (key/value)
-*/
 function asGetDialogOpenFamilyFromUrl_61724() {
   try {
     const raw = String(window.location.search || "").replace(/^\?/, "").trim();
@@ -348,6 +453,8 @@ function asGetDialogOpenFamilyFromUrl_61724() {
     if (val === "interior" || val === "interiör") return "Interiör";
     if (val === "naromradet" || val === "närområdet" || val === "naromrade" || val === "när" || val === "nearby")
       return "Närområdet";
+    if (val === "video" || val === "videos" || val === "film" || val === "filmkliPp" || val === "clip" || val === "clips")
+      return "Video";
     if (val === "alla" || val === "all") return "Alla";
 
     return null;
@@ -356,8 +463,10 @@ function asGetDialogOpenFamilyFromUrl_61724() {
   }
 }
 
-/* Ny: öppna dialogen med vald family som förvald (utan att behöva klicka på en bild) */
 function asOpenDialogWithFamily_61724(familyName) {
+  // LAZY: injicera video först när "Video" ska användas
+  if (familyName === "Video") asEnsureVideosInjected_61724();
+
   const nextIndexes = asFamilyIndexes_61724(familyName);
   if (!nextIndexes.length) return;
 
@@ -414,13 +523,25 @@ function asOpenDialogWithFamily_61724(familyName) {
         .replaceAll("'", "&#039;");
     }
 
-    function asUniqueFamilies_61724() {
-      const map = new Map();
-      for (const img of asImages_61724) {
-        map.set(img.family, (map.get(img.family) || 0) + 1);
-      }
-      return Array.from(map.entries()).map(([name, count]) => ({ name, count }));
+ function asUniqueFamilies_61724() {
+  const map = new Map();
+  for (const img of asImages_61724) {
+    map.set(img.family, (map.get(img.family) || 0) + 1);
+  }
+
+  // Lägg till overrides (t.ex. Video) även om familjen inte är injicerad ännu
+  if (asFamilyCountOverrides_61724 && typeof asFamilyCountOverrides_61724 === "object") {
+    for (const k in asFamilyCountOverrides_61724) {
+      if (!Object.prototype.hasOwnProperty.call(asFamilyCountOverrides_61724, k)) continue;
+      const forced = Number(asFamilyCountOverrides_61724[k]);
+      if (!Number.isFinite(forced) || forced < 0) continue;
+      if (!map.has(k)) map.set(k, forced);
+      else map.set(k, Math.max(map.get(k) || 0, forced));
     }
+  }
+
+  return Array.from(map.entries()).map(([name, count]) => ({ name, count }));
+}
 
     function asFamilyIndexes_61724(familyName) {
       if (familyName === "Alla") return asImages_61724.map((_, idx) => idx);
@@ -630,7 +751,10 @@ function asInitFrontGrid_61724() {
       });
     }
 
-  function asApplyFilter_61724(familyName) {
+function asApplyFilter_61724(familyName) {
+  // LAZY: injicera video först när "Video" väljs
+  if (familyName === "Video") asEnsureVideosInjected_61724();
+
   const nextIndexes = asFamilyIndexes_61724(familyName);
   if (!nextIndexes.length) return;
 
@@ -650,7 +774,7 @@ function asInitFrontGrid_61724() {
     /* =========================
        HERO SLIDES (BUILD ONCE PER FILTER)
        ========================= */
-   function asEnsureHeroSlidesBuilt_61724() {
+  function asEnsureHeroSlidesBuilt_61724() {
   const key = String(asActiveFamily_61724 || "") + "|" + asActiveFamilyIndexes_61724.join(",");
   const existing = asHeroTrack_91827.querySelectorAll(".as-hero-slide").length;
 
@@ -672,6 +796,9 @@ function asInitFrontGrid_61724() {
         h: Math.max(460, Math.min(window.innerHeight * 0.66, 780)),
       };
 
+  // Spara dims så asUpdateSlideLoading_61724 kan bygga video-url/poster korrekt
+  asLastSlideDims_61724 = { w: slideDims.w, h: slideDims.h, isDesktop: !!isDesktop };
+
   for (let i = 0; i < asActiveFamilyIndexes_61724.length; i++) {
     const globalIdx = asActiveFamilyIndexes_61724[i];
     const data = asImages_61724[globalIdx];
@@ -681,23 +808,51 @@ function asInitFrontGrid_61724() {
     slide.setAttribute("data-as-global-idx", String(globalIdx));
     slide.setAttribute("data-as-family-pos", String(i));
 
-    const img = document.createElement("img");
-    img.alt = data.alt || "";
-    img.decoding = "async";
+    // VIDEO SLIDE
+    if (data && data.type === "video") {
+      const vid = document.createElement("video");
+      vid.className = "as-hero-video";
+      vid.muted = true;
+      vid.playsInline = true;
+      vid.loop = true;
+      vid.autoplay = true;
+      vid.controls = false;
 
-    /* PERF: stoppa mass-laddning vid dialog-open.
-       Alla slides skapas, men browsern får "lazy" som default.
-       asUpdateSlideLoading_61724() uppgraderar bara active/near till eager + high priority. */
-    img.loading = "lazy";
-    img.fetchPriority = "auto";
+      // Viktigt: ingen initial nätverkskostnad
+      vid.preload = "none";
 
-    img.src = asCldFromUploadUrl_55219(data.src, slideDims.w, slideDims.h);
+      // Poster byggs från video (lätt image), men sätts utan att ladda själva videon
+      vid.poster = asCldPosterFromVideoUploadUrl_55219(data.src, slideDims.w, slideDims.h);
 
-    const widths = isDesktop ? [900, 1100, 1300, 1500] : [720, 900, 1100, 1300];
-    img.srcset = asBuildSrcsetUpload_55219(data.src, widths, slideDims.w, slideDims.h);
-    img.sizes = isDesktop ? "(min-width: 900px) 70vw, 92vw" : "92vw";
+      // Spara base-src så vi kan lazy-sätta src först när near/active
+      vid.setAttribute("data-as-video-src", String(data.src || ""));
 
-    slide.appendChild(img);
+      // Inga synliga kontroller/knappar (browser overlay)
+      vid.setAttribute("controlslist", "nodownload noplaybackrate noremoteplayback");
+      vid.setAttribute("disablepictureinpicture", "true");
+
+      slide.appendChild(vid);
+    } else {
+      // IMAGE SLIDE
+      const img = document.createElement("img");
+      img.alt = (data && data.alt) || "";
+      img.decoding = "async";
+
+      /* PERF: stoppa mass-laddning vid dialog-open.
+         Alla slides skapas, men browsern får "lazy" som default.
+         asUpdateSlideLoading_61724() uppgraderar bara active/near till eager + high priority. */
+      img.loading = "lazy";
+      img.fetchPriority = "auto";
+
+      img.src = asCldFromUploadUrl_55219(data.src, slideDims.w, slideDims.h);
+
+      const widths = isDesktop ? [900, 1100, 1300, 1500] : [720, 900, 1100, 1300];
+      img.srcset = asBuildSrcsetUpload_55219(data.src, widths, slideDims.w, slideDims.h);
+      img.sizes = isDesktop ? "(min-width: 900px) 70vw, 92vw" : "92vw";
+
+      slide.appendChild(img);
+    }
+
     slide.addEventListener("click", () => {
       asSetActiveGlobalIndex_61724(globalIdx, { focusThumb: false, instantSwap: true });
     });
@@ -711,22 +866,75 @@ function asInitFrontGrid_61724() {
   asUpdateSlideLoading_61724();
 }
 
-    function asUpdateSlideLoading_61724() {
-      const slides = asGetMobileSlides_61724();
-      if (!slides.length) return;
+  function asUpdateSlideLoading_61724() {
+  const slides = asGetMobileSlides_61724();
+  if (!slides.length) return;
 
-      const pos = asActiveFamilyIndexes_61724.indexOf(asActiveGlobalIndex_61724);
-      if (pos < 0) return;
+  const pos = asActiveFamilyIndexes_61724.indexOf(asActiveGlobalIndex_61724);
+  if (pos < 0) return;
 
-      for (let i = 0; i < slides.length; i++) {
-        const img = slides[i].querySelector("img");
-        if (!img) continue;
+  const dims = asLastSlideDims_61724 || {
+    w: Math.max(720, Math.min(window.innerWidth * 0.92, 1200)),
+    h: Math.max(460, Math.min(window.innerHeight * 0.66, 780)),
+    isDesktop: asIsDesktop_61724(),
+  };
 
-        const near = i === pos || i === pos - 1 || i === pos + 1;
-        img.loading = near ? "eager" : "lazy";
-        img.fetchPriority = i === pos ? "high" : "auto";
+  for (let i = 0; i < slides.length; i++) {
+    const slideEl = slides[i];
+
+    const img = slideEl.querySelector("img");
+    const vid = slideEl.querySelector("video");
+
+    const near = i === pos || i === pos - 1 || i === pos + 1;
+
+    // IMAGE
+    if (img) {
+      img.loading = near ? "eager" : "lazy";
+      img.fetchPriority = i === pos ? "high" : "auto";
+      continue;
+    }
+
+    // VIDEO (LAZY): inga bytes förrän near/active
+    if (vid) {
+      const baseSrc = String(vid.getAttribute("data-as-video-src") || "").trim();
+      const isActive = i === pos;
+
+      // När långt bort: frikoppla src helt för att undvika nätverk/cache-tryck
+      if (!near) {
+        try {
+          vid.pause();
+        } catch (e) {}
+        if (vid.getAttribute("src")) {
+          vid.removeAttribute("src");
+          vid.load();
+        }
+        vid.preload = "none";
+        continue;
+      }
+
+      // Near: metadata; Active: auto + autoplay (muted)
+      const desiredPreload = isActive ? "auto" : "metadata";
+      vid.preload = desiredPreload;
+
+      // Sätt src först när vi faktiskt är near/active
+      if (baseSrc && !vid.getAttribute("src")) {
+        vid.src = asCldVideoFromUploadUrl_55219(baseSrc, dims.w, dims.h);
+      }
+
+      // Active: försök spela (autoplay). Ingen ljud, inga knappar.
+      if (isActive) {
+        const p = vid.play();
+        if (p && typeof p.catch === "function") {
+          p.catch(() => {});
+        }
+      } else {
+        try {
+          vid.pause();
+        } catch (e) {}
       }
     }
+  }
+}
 /* AFTER: hela asStageMobileSlides_61724
    Fixar att du “ser swipe” vid klick genom att:
    1) tvinga transition:none (important) under själva bytet (CSS-transition kan annars trigga)
@@ -1218,15 +1426,27 @@ function asEnsureThumbWindowBuilt_61724() {
     btn.type = "button";
     btn.className = "as-thumb-btn";
     btn.id = "asprThumbBtn_91827_" + String(globalIdx).padStart(4, "0");
-    btn.setAttribute("aria-label", "Välj bild: " + (data.alt || "Bild " + (i + 1)));
+    btn.setAttribute("aria-label", "Välj bild: " + ((data && data.alt) || "Bild " + (i + 1)));
 
     const img = document.createElement("img");
     img.className = "as-thumb-img";
-    img.alt = data.alt || "";
+    img.alt = (data && data.alt) || "";
     img.loading = "lazy";
     img.decoding = "async";
-    img.src = asCldFromUploadUrl_55219(data.src, thumbDims.w, thumbDims.h);
-    img.srcset = asBuildSrcsetUpload_55219(data.src, [120, 156, 220], thumbDims.w, thumbDims.h);
+
+    // VIDEO thumbs: använd poster-frame från videon (lätt JPG). Bilder: behåll befintlig logik.
+    if (data && data.type === "video") {
+      img.src = asCldPosterFromVideoUploadUrl_55219(data.src, thumbDims.w, thumbDims.h);
+      img.srcset = [
+        asCldPosterFromVideoUploadUrl_55219(data.src, 120, 120) + " 120w",
+        asCldPosterFromVideoUploadUrl_55219(data.src, 156, 156) + " 156w",
+        asCldPosterFromVideoUploadUrl_55219(data.src, 220, 220) + " 220w",
+      ].join(", ");
+    } else {
+      img.src = asCldFromUploadUrl_55219(data.src, thumbDims.w, thumbDims.h);
+      img.srcset = asBuildSrcsetUpload_55219(data.src, [120, 156, 220], thumbDims.w, thumbDims.h);
+    }
+
     img.sizes = asIsMobile_61724() ? "70px" : "78px";
 
     btn.appendChild(img);
