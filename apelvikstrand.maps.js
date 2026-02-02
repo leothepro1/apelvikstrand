@@ -112,7 +112,7 @@ const sektion73Tangkorar_4 = {
        MAP INIT
        ========================= */
 
-    const sektion73Map = new mapboxgl.Map({
+ const sektion73Map = new mapboxgl.Map({
       container: sektion73Canvas,
       style: sektion73StyleUrl,
       center: sektion73Home.lngLat,
@@ -135,12 +135,15 @@ const sektion73Tangkorar_4 = {
         }
       }
     });
-window.sektion73Map = sektion73Map;
+
+    // Exponera map-instansen för devtools/snabbtest (som du gjort i console)
+    window.sektion73Map = sektion73Map;
+
     sektion73Map.on("error", (e) => {
       console.error("Mapbox error:", e && e.error ? e.error : e);
     });
 
-     sektion73Map.setMinZoom(sektion73MinZoom);
+    sektion73Map.setMinZoom(sektion73MinZoom);
     sektion73Map.setMaxZoom(sektion73MaxZoom);
 
     // Tillåt scroll-zoom (in/ut med mus-hjul / trackpad)
@@ -153,8 +156,6 @@ window.sektion73Map = sektion73Map;
       sektion73Map.dragRotate.disable();
       sektion73Map.touchZoomRotate.disableRotation();
     }
-
-
 
     sektion73Map.addControl(new mapboxgl.AttributionControl({ compact: true }), "bottom-right");
     /* =========================
@@ -186,8 +187,6 @@ window.sektion73Map = sektion73Map;
     /* =========================
        LOAD
        ========================= */
-
-
 sektion73Map.on("style.load", () => {
   sektion73Map.setPitch(sektion73Pitch);
   sektion73Map.setBearing(sektion73Bearing);
@@ -196,32 +195,34 @@ sektion73Map.on("style.load", () => {
     sektion73ForceStandardConfig();
   }
 
+  // Basemap-tema (Mapbox Standard v3 / imports): använd config-nycklarna som du verifierade finns:
+  // basemap: water, land, vegetation, roads, buildings, landcover
   if (typeof sektion73Map.setConfigProperty === "function") {
-    try {
-      // LAND USE / NATUR
-      sektion73Map.setConfigProperty(
-        "basemap",
-        "colorCommercialLanduse",
-        "hsl(32, 20%, 84%)"
-      );
-      sektion73Map.setConfigProperty(
-        "basemap",
-        "colorGreenspace",
-        "hsl(86, 27%, 48%)"
-      );
-      sektion73Map.setConfigProperty(
-        "basemap",
-        "colorWater",
-        "hsl(199, 33%, 57%)"
-      );
-      sektion73Map.setConfigProperty(
-        "basemap",
-        "colorLand",
-        "hsl(40, 33%, 98%)"
-      );
-    } catch (e) {
-      console.warn("Mapbox Standard config properties stöds inte:", e);
-    }
+    const scope = "basemap";
+
+    const setSafe = (key, value) => {
+      try {
+        sektion73Map.setConfigProperty(scope, key, value);
+      } catch (_) {}
+    };
+
+    // Hav / vatten
+    setSafe("water", "#7CB6D8");
+
+    // Landmassa
+    setSafe("land", "#F6F3F1");
+
+    // Grönområden
+    setSafe("vegetation", "#A6C9A6");
+
+    // Mark/ytor (hjälper ofta för “sand/strand”-känsla ihop med egna polygons senare)
+    setSafe("landcover", "#E9D7A8");
+
+    // Vägar
+    setSafe("roads", "#FFFFFF");
+
+    // Hus / byggnader
+    setSafe("buildings", "#D7D2CC");
   }
 });
 
