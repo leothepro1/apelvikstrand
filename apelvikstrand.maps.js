@@ -1546,12 +1546,8 @@ let sektion73ActiveMoveEndHandler = null;
    ========================= */
 
 const sektion73FilterState = {
-  active: "Alla"
+  active: "" // "" = visa allt
 };
-
-function sektion73NormFilter(v) {
-  return String(v || "").trim().toLowerCase();
-}
 
 function sektion73GetAvailableFilters() {
   const set = new Set();
@@ -1562,7 +1558,7 @@ function sektion73GetAvailableFilters() {
 
   const arr = Array.from(set);
   arr.sort((a, b) => a.localeCompare(b, "sv"));
-  return ["Alla", ...arr];
+  return arr;
 }
 
 function sektion73InjectFilterCSS() {
@@ -1583,13 +1579,13 @@ function sektion73InjectFilterCSS() {
 
 #sektion73MapFilterRail {
     display: flex;
-    gap: 10px;
+    gap: 0.5rem;
     align-items: center;
     justify-content: flex-start;
     padding: 8px 12px;
     border-radius: 999px;
     background: rgba(255, 255, 255, .92);
-    border: 1px solid rgba(14, 19, 24, .14);
+    border: none;
     box-shadow: 0 18px 60px rgba(0, 0, 0, .18);
     backdrop-filter: blur(10px);
     overflow-x: auto;
@@ -1599,7 +1595,44 @@ function sektion73InjectFilterCSS() {
     place-self: center;
 }
     #sektion73MapFilterRail::-webkit-scrollbar{ display:none; }
+/* Label före chips */
+.sektion73FilterLabel{
+  font-family: 'Inter Variablefont Opsz Wght';
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: rgba(14,19,24,.65);
+  white-space: nowrap;
+  user-select: none;
+  margin-right: 6px;
+}
 
+/* Close-ikon i aktiv chip */
+.sektion73FilterClose{
+  width: 18px;
+  height: 18px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 999px;
+  margin-left: 2px;
+  border: 1px solid rgba(14,19,24,.14);
+  background: rgba(255,255,255,.65);
+}
+
+.sektion73FilterClose:hover{
+  background: rgba(255,255,255,.9);
+}
+
+.sektion73FilterClose svg{
+  width: 12px;
+  height: 12px;
+  display: block;
+  stroke: currentColor;
+  stroke-width: 2.4;
+  fill: none;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
 .sektion73FilterBtn {
     all: unset;
     cursor: pointer;
@@ -1708,14 +1741,13 @@ function sektion73ApplyFilter(filterLabel) {
     }
   }
 }
-
 function sektion73EnsureFilterBar() {
   if (document.getElementById("sektion73MapFilterBar")) return;
 
   sektion73InjectFilterCSS();
 
   const filters = sektion73GetAvailableFilters();
-  if (!filters || filters.length <= 1) return;
+  if (!filters || filters.length < 1) return;
 
   const { bank, named } = sektion73BuildFilterIconBank();
 
@@ -1725,12 +1757,57 @@ function sektion73EnsureFilterBar() {
   const rail = document.createElement("div");
   rail.id = "sektion73MapFilterRail";
 
+  // NYTT: label istället för "Alla"-knapp
+  const labelEl = document.createElement("span");
+  labelEl.className = "sektion73FilterLabel";
+  labelEl.textContent = "Filtrera efter:";
+  rail.appendChild(labelEl);
+
+  const closeSvg = `<svg viewBox="0 0 24 24" aria-hidden="true">
+    <path d="M6 6l12 12M18 6L6 18"></path>
+  </svg>`;
+
+  const setActive = (nextLabel) => {
+    sektion73FilterState.active = String(nextLabel || "").trim();
+
+    const allBtns = rail.querySelectorAll(".sektion73FilterBtn");
+    allBtns.forEach((b) => {
+      const bLabel = String(b.getAttribute("data-filter") || "");
+      const isOn = (bLabel === sektion73FilterState.active);
+
+      b.setAttribute("aria-pressed", isOn ? "true" : "false");
+
+      // rensa ev. tidigare close
+      const prevClose = b.querySelector(".sektion73FilterClose");
+      if (prevClose) prevClose.remove();
+
+      // NYTT: close-ikon bara på aktiv knapp
+      if (isOn) {
+        const close = document.createElement("span");
+        close.className = "sektion73FilterClose";
+        close.innerHTML = closeSvg;
+        close.setAttribute("aria-hidden", "true");
+
+        close.addEventListener("click", (e) => {
+          e.preventDefault();
+          e.stopPropagation();
+          setActive("");          // avmarkera = visa allt
+          sektion73ApplyFilter(""); // matchar din showAll-logik
+        });
+
+        b.appendChild(close);
+      }
+    });
+
+    sektion73ApplyFilter(sektion73FilterState.active || "");
+  };
+
   filters.forEach((label, idx) => {
     const btn = document.createElement("button");
     btn.type = "button";
     btn.className = "sektion73FilterBtn";
     btn.setAttribute("data-filter", String(label));
-    btn.setAttribute("aria-pressed", label === sektion73FilterState.active ? "true" : "false");
+    btn.setAttribute("aria-pressed", "false");
     btn.setAttribute("aria-label", `Filter: ${label}`);
 
     const ico = document.createElement("span");
@@ -1747,16 +1824,8 @@ function sektion73EnsureFilterBar() {
     btn.appendChild(txt);
 
     btn.addEventListener("click", () => {
-      const next = String(btn.getAttribute("data-filter") || "Alla");
-      sektion73FilterState.active = next;
-
-      const allBtns = rail.querySelectorAll(".sektion73FilterBtn");
-      allBtns.forEach((b) => {
-        const isOn = String(b.getAttribute("data-filter") || "") === next;
-        b.setAttribute("aria-pressed", isOn ? "true" : "false");
-      });
-
-      sektion73ApplyFilter(next);
+      const next = String(btn.getAttribute("data-filter") || "");
+      setActive(next);
     });
 
     rail.appendChild(btn);
@@ -1765,9 +1834,10 @@ function sektion73EnsureFilterBar() {
   bar.appendChild(rail);
   document.body.appendChild(bar);
 
-  // initial apply (om default inte är Alla i framtiden)
-  sektion73ApplyFilter(sektion73FilterState.active);
+  // initial apply: visa allt, ingen close-ikon
+  setActive(sektion73FilterState.active);
 }
+
 
 function sektion73ZoomToPinThenOpenModal(pin) {
   // Stäng ev. befintlig modal direkt (så fokus blir zoom först)
