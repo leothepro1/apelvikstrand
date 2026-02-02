@@ -1041,7 +1041,7 @@ const sektion73Pins = [
   {
     id: "sektion73Pin_home_0000bvc",
     label: "Boendet",
-    filter: "Boenden",
+    filter: "boenden",
     iconKey: "as",
     ui: {
       bubbleBg: "#FFC33E",
@@ -1101,7 +1101,7 @@ const sektion73Pins = [
    {
     id: "sektion73Pin_home_fdbvc",
     label: "Golf",
-    filter: "Butiker",
+    filter: "service",
       priority: "secondary",
     iconKey: "surfers",
     ui: {
@@ -1131,7 +1131,7 @@ const sektion73Pins = [
     {
     id: "sektion73Pin_home_tyyfdg",
     label: "Golf",
-    filter: "Restauranger",
+    filter: "restauranger",
        priority: "secondary",
     iconKey: "majas",
     ui: {
@@ -1161,7 +1161,7 @@ const sektion73Pins = [
   {
     id: "sektion73Pin_tangkorar1_90999",
     label: "Tångkörarvägen 1",
-    filter: "Restauranger",
+    filter: "restauranger",
     iconKey: "solviken",
     ui: {
       bubbleBg: "#1d1d1b",
@@ -1191,7 +1191,7 @@ const sektion73Pins = [
   {
     id: "sektion73Pin_tangkorar1_hgfwea1",
     label: "Tångkörarvägen 1",
-         filter: "Restauranger",
+         filter: "restauranger",
     iconKey: "kusthotellet",
     ui: {
       bubbleBg: "#fff",
@@ -1220,7 +1220,7 @@ const sektion73Pins = [
  {
     id: "sektion73Pin_321gfdfgdfghgkgjyytr",
     label: "Apelviken Livs",
-        filter: "Butiker",
+        filter: "service",
     iconKey: "livs", // använd en befintlig iconKey som finns i sektion73PinIcons
     ui: {
       bubbleBg: "#fff",
@@ -1247,7 +1247,7 @@ const sektion73Pins = [
    {
     id: "sektion73Pin_321ggdfgvbnf",
     label: "Apelviken Livs",
-        filter: "Boenden",
+        filter: "boenden",
     iconKey: "apelviken", // använd en befintlig iconKey som finns i sektion73PinIcons
     ui: {
       bubbleBg: "#366591",
@@ -1306,7 +1306,7 @@ const sektion73Pins = [
   {
     id: "sektion73Pin_tangkorar_231fds1",
     label: "Punkt 1",
-         filter: "Restauranger",
+         filter: "restauranger",
     iconKey: "johns",
     ui: { bubbleBg: "#20212B", pointerTop: "#20212B" },
     lngLat: sektion73Tangkorar_4.lngLat,
@@ -1356,7 +1356,7 @@ const sektion73Pins = [
   {
     id: "sektion73Pin_tangkorar_0003",
     label: "Punkt 3",
-              filter: "Restauranger",     
+              filter: "restauranger",     
     iconKey: "brittas",
     ui: { bubbleBg: "#1D252C", pointerTop: "#1D252C" },
     lngLat: sektion73Tangkorar_2.lngLat,
@@ -1381,7 +1381,7 @@ const sektion73Pins = [
   {
     id: "sektion73Pin_tangkorar_0004",
     label: "Punkt 4",
-              filter: "Restauranger",     
+              filter: "restauranger",     
     iconKey: "olles",
     ui: { bubbleBg: "#fff", pointerTop: "#fff" },
     lngLat: sektion73Tangkorar_10.lngLat,
@@ -1406,7 +1406,7 @@ const sektion73Pins = [
   {
     id: "sektion73Pin_tangkorar_0005",
     label: "Punkt 5",
-                   filter: "Restauranger",
+                   filter: "restauranger",
     iconKey: "strandkollektivet",
     ui: { bubbleBg: "#A5B99A", pointerTop: "#A5B99A" },
     lngLat: sektion73Tangkorar_17.lngLat,
@@ -1431,7 +1431,7 @@ const sektion73Pins = [
   {
     id: "sektion73Pin_ny_plats_0006",
     label: "Ny Plats",
-     filter: "Restauranger",
+     filter: "restauranger",
     iconKey: "da", 
     ui: { 
       bubbleBg: "#fff", 
