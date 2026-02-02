@@ -1681,8 +1681,8 @@ background: #e2e4e5;
 display:inline-flex;
     }
     .sektion73FilterIco svg{
-      width: 18px;
-      height: 18px;
+      width: 21px;
+      height: 21px;
       display: block;
       fill: none;
       stroke: currentColor;
