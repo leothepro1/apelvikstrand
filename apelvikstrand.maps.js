@@ -1549,6 +1549,10 @@ const sektion73FilterState = {
   active: "" // "" = visa allt
 };
 
+function sektion73NormFilter(v) {
+  return String(v || "").trim().toLowerCase();
+}
+
 function sektion73GetAvailableFilters() {
   const set = new Set();
   (sektion73Pins || []).forEach((p) => {
@@ -1558,8 +1562,9 @@ function sektion73GetAvailableFilters() {
 
   const arr = Array.from(set);
   arr.sort((a, b) => a.localeCompare(b, "sv"));
-  return arr;
+  return arr; // <-- FIX: ingen "Alla" här, och ingen syntaxmiss
 }
+
 
 function sektion73InjectFilterCSS() {
   if (document.getElementById("sektion73MapFilterStyle")) return;
