@@ -1562,7 +1562,8 @@ let sektion73ActiveMoveEndHandler = null;
    ========================= */
 
 const sektion73FilterState = {
-  active: "" // "" = visa allt
+  active: "",      // "" = visa allt
+  preView: null    // sparar vy innan första filter aktiveras
 };
 
 function sektion73NormFilter(v) {
@@ -1771,6 +1772,30 @@ function sektion73ApplyFilter(filterLabel) {
     }
   }
 }
+     function sektion73RestorePreFilterView() {
+  if (!sektion73Map || typeof sektion73Map.easeTo !== "function") return;
+
+  const v = sektion73FilterState.preView;
+  if (!v) return;
+
+  // Tilt/bearing ska vara standard (som du vill)
+  const targetPitch = (typeof sektion73Pitch === "number") ? sektion73Pitch : sektion73Map.getPitch();
+  const targetBearing = (typeof sektion73Bearing === "number") ? sektion73Bearing : sektion73Map.getBearing();
+
+  const easeInOutCubic = (t) => (t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2);
+
+  sektion73Map.easeTo({
+    center: v.center,
+    zoom: Math.max(sektion73MinZoom, Math.min(sektion73MaxZoom, v.zoom)),
+    pitch: targetPitch,
+    bearing: targetBearing,
+    duration: 780,
+    easing: easeInOutCubic
+  });
+
+  // Clear: så nästa “första filter” sparar nytt läge
+  sektion73FilterState.preView = null;
+}
    function sektion73EaseToFilterOverview() {
   if (!sektion73Map || typeof sektion73Map.easeTo !== "function") return;
 
@@ -1887,10 +1912,21 @@ function sektion73EnsureFilterBar() {
     <path d="M6 6l12 12M18 6L6 18"></path>
   </svg>`;
 
-  const setActive = (nextLabel) => {
-    sektion73FilterState.active = String(nextLabel || "").trim();
+const setActive = (nextLabel) => {
+  const prev = String(sektion73FilterState.active || "").trim();
+  const next = String(nextLabel || "").trim();
 
-    const allBtns = rail.querySelectorAll(".sektion73FilterBtn");
+  // Spara vyn precis när användaren går från "inga filter" -> "ett filter"
+  if (!prev && next && !sektion73FilterState.preView && sektion73Map) {
+    sektion73FilterState.preView = {
+      center: sektion73Map.getCenter().toArray(),
+      zoom: sektion73Map.getZoom()
+    };
+  }
+
+  sektion73FilterState.active = next;
+
+  const allBtns = rail.querySelectorAll(".sektion73FilterBtn");
     allBtns.forEach((b) => {
       const bLabel = String(b.getAttribute("data-filter") || "");
       const isOn = (bLabel === sektion73FilterState.active);
@@ -1908,17 +1944,18 @@ function sektion73EnsureFilterBar() {
         close.innerHTML = closeSvg;
         close.setAttribute("aria-hidden", "true");
 
- close.addEventListener("click", (e) => {
+close.addEventListener("click", (e) => {
   e.preventDefault();
   if (typeof e.stopImmediatePropagation === "function") e.stopImmediatePropagation();
   e.stopPropagation();
 
-  setActive(""); // “alla”
+  setActive(""); // “alla” (visar alla pins)
 
   requestAnimationFrame(() => {
-    sektion73FitViewportToFilter("");
+    sektion73RestorePreFilterView();
   });
 });
+
 
 
         b.appendChild(close);
