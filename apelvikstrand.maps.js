@@ -414,8 +414,8 @@ const sektion73Tangkorar_4 = {
       type: "fill",
       source: sektion73ApelvikenSourceId,
       paint: {
-        "fill-color": "#FFE6A3",
-        "fill-opacity": 0.35
+        "fill-color": "#F6D7B0",
+        "fill-opacity": 1
       }
     });
   }
@@ -427,7 +427,7 @@ const sektion73Tangkorar_4 = {
       source: sektion73ApelvikenSourceId,
       paint: {
         "line-color": "#D9B96E",
-        "line-width": 2
+        "line-width": 0
       }
     });
   }
