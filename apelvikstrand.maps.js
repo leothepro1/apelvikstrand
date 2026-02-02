@@ -1118,18 +1118,34 @@ function sektion73CloseModal() {
     sektion73ActiveMoveEndHandler = null;
   }
 
-  const view = sektion73ReturnView || sektion73StartView;
+ const view = sektion73ReturnView || sektion73StartView;
 
-  if (sektion73Map && view && typeof sektion73Map.easeTo === "function") {
-    sektion73Map.easeTo({
-      center: view.center,
-      zoom: Math.min(view.zoom, sektion73MaxZoom),
-      pitch: view.pitch,
-      bearing: view.bearing,
-      duration: sektion73PinZoomDur,
-      easing: (t) => 1 - Math.pow(1 - t, 3)
-    });
-  }
+/* NYTT: håll filterbaren nere medan vi återgår */
+sektion73SetFilterBarHidden(true);
+
+if (sektion73Map && view && typeof sektion73Map.easeTo === "function") {
+  const onReturnEnd = () => {
+    sektion73Map.off("moveend", onReturnEnd);
+
+    /* NYTT: först NU (när vi nått previous zoom/view) åker filterbaren upp */
+    sektion73SetFilterBarHidden(false);
+  };
+
+  sektion73Map.on("moveend", onReturnEnd);
+
+  sektion73Map.easeTo({
+    center: view.center,
+    zoom: Math.min(view.zoom, sektion73MaxZoom),
+    pitch: view.pitch,
+    bearing: view.bearing,
+    duration: sektion73PinZoomDur,
+    easing: (t) => 1 - Math.pow(1 - t, 3)
+  });
+} else {
+  /* Fallback: om ingen return-animering sker, visa igen direkt */
+  sektion73SetFilterBarHidden(false);
+}
+
 }
 
 
@@ -1572,15 +1588,34 @@ function sektion73InjectFilterCSS() {
   const style = document.createElement("style");
   style.id = "sektion73MapFilterStyle";
   style.textContent = `
-    #sektion73MapFilterBar{
-      position: fixed;
-      left: 50%;
-      bottom: 14px;
-      transform: translateX(-50%);
-      z-index: 2147483003;
-      width: min(920px, calc(100vw - 24px));
-      pointer-events: auto;
-    }
+#sektion73MapFilterBar{
+  position: fixed;
+  left: 50%;
+  bottom: 14px;
+
+  /* Basläge: synlig */
+  transform: translateX(-50%) translateY(0);
+  opacity: 1;
+
+  /* Matcha modalens timing */
+  transition:
+    transform var(--sektion73-modal-dur) var(--sektion73-modal-ease),
+    opacity 180ms ease;
+
+  will-change: transform, opacity;
+
+  z-index: 2147483003;
+  width: min(920px, calc(100vw - 24px));
+  pointer-events: auto;
+}
+
+/* Hidden-läge: ner + fade + klick-skydd */
+#sektion73MapFilterBar.sektion73FilterBarHidden{
+  transform: translateX(-50%) translateY(86px);
+  opacity: 0;
+  pointer-events: none;
+}
+
 
 #sektion73MapFilterRail {
     display: flex;
@@ -1831,7 +1866,12 @@ function sektion73EnsureFilterBar() {
   // initial apply: visa allt, ingen close-ikon
   setActive(sektion73FilterState.active);
 }
-
+function sektion73SetFilterBarHidden(hidden) {
+  const bar = document.getElementById("sektion73MapFilterBar");
+  if (!bar) return;
+  if (hidden) bar.classList.add("sektion73FilterBarHidden");
+  else bar.classList.remove("sektion73FilterBarHidden");
+}
 
 function sektion73ZoomToPinThenOpenModal(pin) {
   // Stäng ev. befintlig modal direkt (så fokus blir zoom först)
@@ -1862,10 +1902,18 @@ function sektion73ZoomToPinThenOpenModal(pin) {
     sektion73Map.off("moveend", onMoveEnd);
     sektion73ActiveMoveEndHandler = null;
 
-    sektion73IsZoomingToPin = false;
-    sektion73PendingPinId = null;
+  sektion73IsZoomingToPin = false;
+sektion73PendingPinId = null;
 
+/* NYTT: filterbaren ner precis innan modalen åker in */
+sektion73SetFilterBarHidden(true);
+
+/* Låt browsern “commit:a” klass + starta transition innan modal-class togglas */
+requestAnimationFrame(() => {
+  requestAnimationFrame(() => {
     sektion73OpenModal(pin.modal);
+  });
+});
   };
 
   sektion73ActiveMoveEndHandler = onMoveEnd;
