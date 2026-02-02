@@ -136,7 +136,7 @@ const sektion73Map = new mapboxgl.Map({
   container: sektion73Canvas,
   style: sektion73StyleUrl,
 
-  center: sektion73InitialCenter, // <-- startar här istället
+center: sektion73InitialCenter.lngLat,
 
   zoom: sektion73StartZoom,
   maxBounds: sektion73Bounds,
