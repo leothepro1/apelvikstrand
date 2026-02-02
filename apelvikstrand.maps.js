@@ -1587,7 +1587,7 @@ function sektion73InjectFilterCSS() {
     gap: 0.5rem;
     align-items: center;
     justify-content: flex-start;
-    padding: 8px 12px;
+    padding: 0.4rem 0.85rem;
     border-radius: 999px;
     background: rgba(255, 255, 255, .92);
     border: none;
@@ -1600,50 +1600,46 @@ function sektion73InjectFilterCSS() {
     place-self: center;
 }
     #sektion73MapFilterRail::-webkit-scrollbar{ display:none; }
-/* Label före chips */
-.sektion73FilterLabel{
-  font-family: 'Inter Variablefont Opsz Wght';
-  font-size: 0.875rem;
-  font-weight: 600;
-  color: rgba(14,19,24,.65);
-  white-space: nowrap;
-  user-select: none;
-  margin-right: 6px;
+.sektion73FilterLabel {
+    font-family: "Manrope", Inter, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, sans-serif;
+    font-size: 0.875rem;
+    font-weight: 600;
+    color: rgb(64, 61, 59);
+    white-space: nowrap;
+    user-select: none;
+    margin-right: 0px;
 }
-
-/* Close-ikon i aktiv chip */
-.sektion73FilterClose{
-  width: 18px;
-  height: 18px;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  border-radius: 999px;
-  margin-left: 2px;
-  border: 1px solid rgba(14,19,24,.14);
-  background: rgba(255,255,255,.65);
+.sektion73FilterClose {
+    width: 15px;
+    height: 15px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 999px;
+    margin-left: 0px;
+    border: none;
+    background: transparent;
 }
 
 .sektion73FilterClose:hover{
   background: rgba(255,255,255,.9);
 }
-
-.sektion73FilterClose svg{
-  width: 12px;
-  height: 12px;
-  display: block;
-  stroke: currentColor;
-  stroke-width: 2.4;
-  fill: none;
-  stroke-linecap: round;
-  stroke-linejoin: round;
+.sektion73FilterClose svg {
+    width: 15px;
+    height: 15px;
+    display: block;
+    stroke: currentColor;
+    stroke-width: 1.8;
+    fill: none;
+    stroke-linecap: round;
+    stroke-linejoin: round;
 }
 .sektion73FilterBtn {
     all: unset;
     cursor: pointer;
     display: inline-flex;
     align-items: center;
-    gap: 10px;
+    gap: 5px;
     padding: 5px 11px;
     border-radius: 999px;
     border: 1px solid rgba(14, 19, 24, .12);
@@ -1670,14 +1666,7 @@ background: #e2e4e5;
     }
 
     .sektion73FilterIco{
-      width: 18px;
-      height: 18px;
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      flex: 0 0 18px;
-      line-height: 0;
-      color: currentColor;
+display:none;
     }
     .sektion73FilterIco svg{
       width: 18px;
@@ -1765,7 +1754,7 @@ function sektion73EnsureFilterBar() {
   // NYTT: label istället för "Alla"-knapp
   const labelEl = document.createElement("span");
   labelEl.className = "sektion73FilterLabel";
-  labelEl.textContent = "Filtrera efter:";
+  labelEl.textContent = "Filtrera:";
   rail.appendChild(labelEl);
 
   const closeSvg = `<svg viewBox="0 0 24 24" aria-hidden="true">
