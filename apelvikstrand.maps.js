@@ -520,12 +520,15 @@ function sektion73InjectModalCSS() {
         transform: translateY(104%);
         border-bottom-left-radius: 0px;
     }
+    .sektion73ModalBodyH {
+    font-size: 32px !important;
+}
     .sektion73ModalMeta {
-    padding: 26px 17px 0px;
+    padding: 24px 24px 0px !important;
 }
 .sektion73ModalActions {
     margin-top: 25px;
-    padding: 0px 17px;
+    padding: 0px 24px !important;
 }
       #sektion73MapModal.is-open{
         transform:translateY(0);
@@ -638,17 +641,18 @@ function sektion73InjectModalCSS() {
 .sektion73ModalBodyH {
     font-family: "Manrope", Inter, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, sans-serif;
     margin: 0;
+    line-height: 1.25em;
     font-weight: 700;
-    font-size: 32px;
+    font-size: 35px;
 }
 .sektion73ModalBodyP {
     color: rgb(64, 61, 59);
     margin: 0;
     font-family: 'Inter Variablefont Opsz Wght';
     font-weight: 400;
-    font-size: 15px;
+    font-size: 16px;
     line-height: 1.55em;
-    margin-top: 17px;
+    margin-top: 15px;
 }
 #sektion73MapFilterRail{
 backdrop-filter: blur(16px);
