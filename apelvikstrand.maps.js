@@ -1190,7 +1190,7 @@ const sektion73Pins = [
   {
     id: "sektion73Pin_tangkorar1_hgfwea1",
     label: "Tångkörarvägen 1",
-         filter: "Boenden",
+         filter: "Restauranger",
     iconKey: "kusthotellet",
     ui: {
       bubbleBg: "#fff",
@@ -1246,7 +1246,7 @@ const sektion73Pins = [
    {
     id: "sektion73Pin_321gf",
     label: "Apelviken Livs",
-        filter: "Butiker",
+        filter: "Boenden",
     iconKey: "apelviken", // använd en befintlig iconKey som finns i sektion73PinIcons
     ui: {
       bubbleBg: "#366591",
