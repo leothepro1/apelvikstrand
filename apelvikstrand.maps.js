@@ -1624,10 +1624,10 @@ function sektion73InjectFilterCSS() {
     justify-content: flex-start;
     padding: 0.4rem 0.85rem;
     border-radius: 999px;
-    background: rgba(255, 255, 255, .92);
+    background: rgba(255, 255, 255, .42);
     border: none;
-    box-shadow: 0 18px 60px rgba(0, 0, 0, .18);
-    backdrop-filter: blur(10px);
+    box-shadow: 0 5px 60px rgba(0, 0, 0, .12);
+    backdrop-filter: blur(3px);
     overflow-x: auto;
     -webkit-overflow-scrolling: touch;
     scrollbar-width: none;
@@ -1643,6 +1643,7 @@ function sektion73InjectFilterCSS() {
     white-space: nowrap;
     user-select: none;
     margin-right: 0px;
+    display: none;
 }
 .sektion73FilterClose {
     width: 15px;
@@ -1770,6 +1771,31 @@ function sektion73ApplyFilter(filterLabel) {
     }
   }
 }
+     function sektion73EaseToFilterOverview() {
+  if (!sektion73Map || typeof sektion73Map.easeTo !== "function") return;
+
+  // "Max-läge" = mest utzoomat du tillåter (minZoom)
+  const targetZoom = sektion73MinZoom;
+
+  // Lite mer top-down (mindre pitch), men subtilt
+  const targetPitch = Math.max(0, (sektion73Pitch || 0) - 8);
+
+  // Behåll bearing (så det känns som samma karta, bara mer överblick)
+  const targetBearing = (typeof sektion73Bearing === "number") ? sektion73Bearing : sektion73Map.getBearing();
+
+  // Behåll center (så det inte känns som att kartan "hoppar hem")
+  const targetCenter = sektion73Map.getCenter().toArray();
+
+  sektion73Map.easeTo({
+    center: targetCenter,
+    zoom: targetZoom,
+    pitch: targetPitch,
+    bearing: targetBearing,
+    duration: 520,
+    easing: (t) => 1 - Math.pow(1 - t, 3) // samma "ease-out cubic" känsla
+  });
+}
+
 function sektion73EnsureFilterBar() {
   if (document.getElementById("sektion73MapFilterBar")) return;
 
@@ -1817,12 +1843,15 @@ function sektion73EnsureFilterBar() {
         close.innerHTML = closeSvg;
         close.setAttribute("aria-hidden", "true");
 
-        close.addEventListener("click", (e) => {
-          e.preventDefault();
-          e.stopPropagation();
-          setActive("");          // avmarkera = visa allt
-          sektion73ApplyFilter(""); // matchar din showAll-logik
-        });
+    close.addEventListener("click", (e) => {
+  e.preventDefault();
+  e.stopPropagation();
+  setActive("");            // avmarkera = visa allt
+  sektion73ApplyFilter(""); // matchar din showAll-logik
+
+  // NYTT: tillbaka till överblick
+  sektion73EaseToFilterOverview();
+});
 
         b.appendChild(close);
       }
@@ -1852,10 +1881,13 @@ function sektion73EnsureFilterBar() {
     btn.appendChild(ico);
     btn.appendChild(txt);
 
-    btn.addEventListener("click", () => {
-      const next = String(btn.getAttribute("data-filter") || "");
-      setActive(next);
-    });
+ btn.addEventListener("click", () => {
+  const next = String(btn.getAttribute("data-filter") || "");
+  setActive(next);
+
+  // NYTT: ge användaren en tydlig "overview"-känsla vid filterbyte
+  sektion73EaseToFilterOverview();
+});
 
     rail.appendChild(btn);
   });
