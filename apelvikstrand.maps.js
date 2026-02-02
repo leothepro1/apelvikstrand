@@ -1053,14 +1053,14 @@ const sektion73Pins = [
       kicker: "HOME",
       title: "Surbrunnsvägen 2–8",
       images: [
-        "https://res.cloudinary.com/dmgmoisae/image/upload/v1769872360/jpeg-optimizer_ApelvikStrand_0356_2_jvgrhe.jpg",
-        "https://res.cloudinary.com/dmgmoisae/image/upload/v1769872059/jpeg-optimizer_ApelvikStrand_0010_3_rzzlat.jpg",
-        "https://res.cloudinary.com/dmgmoisae/image/upload/v1769872058/jpeg-optimizer_ApelvikStrand_1153_1_mi0wzz.jpg",
-        "https://res.cloudinary.com/dmgmoisae/image/upload/v1769875471/strandhuse21q_hh50lb.png"
+        "https://res.cloudinary.com/dmgmoisae/image/upload/v1770065021/minigolf_pcvo14.webp",
+        "https://res.cloudinary.com/dmgmoisae/image/upload/v1770064998/Boomers-Livermore-CA-34-1024x683_xbq4xu.jpg",
+        "https://res.cloudinary.com/dmgmoisae/image/upload/v1770064993/Campark-Mini-Golf-for-Beginners_-Tips-and-Tricks-to-Improve-Your-Game-_i8tp9c.jpg",
+        "https://res.cloudinary.com/dmgmoisae/image/upload/v1770064953/8332c8_a351401d52c94b51a645eab0008c74cf_mv2_jz7zhb.jpg"
       ],
       imgSrc: "Bildkälla: —",
       h: "Apelvikens minigolf",
-      p: "Apelvikstrand är platsen att bo på när man vill vara nära havet och nära vardagen i viken. Här bor man i strandhus och lägenheter med egen dörr, eget tempo och kort väg ner till stranden, maten och livet runtomkring. Det är enkelt att komma och gå, lätt att stanna inne eller vara ute hela dagen. Ett boende som följer platsen, snarare än tvärtom.",
+      p: "En klassiker på alla campingar. En bana med 18 hål som är lagom klurig för både barn och vuxna, där spelet får ta den tid det tar. Passar lika bra för familjer som för kompisgäng som vill göra något enkelt tillsammans mellan strand och middag.",
       cta1Text: "Läs mer",
       cta1Href: "https://www.apelviken.se/aktivitet-2",
       cta2Text: "Vägbeskrivning",
