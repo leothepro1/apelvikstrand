@@ -216,7 +216,7 @@ sektion73Map.on("style.load", () => {
 
     // Ljussättning (brukar ge tydlig skillnad direkt)
     // Testa: "day", "dusk", "dawn", "night"
-    setSafe("lightPreset", "night");
+    setSafe("lightPreset", "dawn");
 
     // Labels (du hade detta i sektion73ForceStandardConfig, men vi säkrar även här)
     setSafe("showPointOfInterestLabels", false);
