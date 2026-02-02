@@ -195,44 +195,40 @@ sektion73Map.on("style.load", () => {
     sektion73ForceStandardConfig();
   }
 
-  // Basemap-tema (Mapbox Standard / imports):
-  // Använd Standard-config keys (color*) och LOGGA om Mapbox avvisar dem.
+  /*
+    ✅ RÄTT SÄTT FÖR MAPBOX STANDARD (imports):
+    - Din test visade att "basemap.theme" slår igenom (night-mode).
+    - Färg-keys (colorWater / water / land etc) tas emot men påverkar inte rendering i din Standard-variant.
+    - Därför styr vi “basic styling” via theme + lightPreset + toggles som faktiskt renderas.
+  */
   if (typeof sektion73Map.setConfigProperty === "function") {
     const scope = "basemap";
 
     const setSafe = (key, value) => {
       try {
         sektion73Map.setConfigProperty(scope, key, value);
-        return true;
-      } catch (e) {
-        console.warn(`[sektion73 basemap theme] setConfigProperty failed: ${scope}.${key}`, e);
-        return false;
-      }
+      } catch (_) {}
     };
 
-    // Vatten / hav
-    setSafe("colorWater", "#7CB6D8");
+    // Grundlook (välj ett av dessa: "default", "faded", "monochrome", "night")
+    // Du kör redan en style som heter "Faded", men detta säkrar att Standard-basen får rätt tema.
+    setSafe("theme", "faded");
 
-    // Landmassa
-    setSafe("colorLand", "#F6F3F1");
+    // Ljussättning (brukar ge tydlig skillnad direkt)
+    // Testa: "day", "dusk", "dawn", "night"
+    setSafe("lightPreset", "day");
 
-    // Grönområden / parkskog
-    setSafe("colorGreenspace", "#A6C9A6");
+    // Labels (du hade detta i sektion73ForceStandardConfig, men vi säkrar även här)
+    setSafe("showPointOfInterestLabels", false);
+    setSafe("showPlaceLabels", false);
+    setSafe("showRoadLabels", true);
 
-    // Vägar (grundton)
-    setSafe("colorRoads", "#FFFFFF");
+    // 3D
+    setSafe("show3dBuildings", true);
+    setSafe("show3dObjects", true);
 
-    // Byggnader
-    setSafe("colorBuildings", "#D7D2CC");
-
-    // “Sand/strand”-känsla (landuse-ytor)
-    // (om den här inte stöds får du en varning i console)
-    setSafe("colorCommercialLanduse", "#E9D7A8");
-
-    // Tvinga en repaint så du ser ändringen direkt när den väl stöds
-    if (typeof sektion73Map.triggerRepaint === "function") {
-      sektion73Map.triggerRepaint();
-    }
+    // Säker repaint efter config
+    sektion73Map.triggerRepaint();
   }
 });
 
