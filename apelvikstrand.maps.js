@@ -195,34 +195,44 @@ sektion73Map.on("style.load", () => {
     sektion73ForceStandardConfig();
   }
 
-  // Basemap-tema (Mapbox Standard v3 / imports): använd config-nycklarna som du verifierade finns:
-  // basemap: water, land, vegetation, roads, buildings, landcover
+  // Basemap-tema (Mapbox Standard / imports):
+  // Använd Standard-config keys (color*) och LOGGA om Mapbox avvisar dem.
   if (typeof sektion73Map.setConfigProperty === "function") {
     const scope = "basemap";
 
     const setSafe = (key, value) => {
       try {
         sektion73Map.setConfigProperty(scope, key, value);
-      } catch (_) {}
+        return true;
+      } catch (e) {
+        console.warn(`[sektion73 basemap theme] setConfigProperty failed: ${scope}.${key}`, e);
+        return false;
+      }
     };
 
-    // Hav / vatten
-    setSafe("water", "#7CB6D8");
+    // Vatten / hav
+    setSafe("colorWater", "#7CB6D8");
 
     // Landmassa
-    setSafe("land", "#F6F3F1");
+    setSafe("colorLand", "#F6F3F1");
 
-    // Grönområden
-    setSafe("vegetation", "#A6C9A6");
+    // Grönområden / parkskog
+    setSafe("colorGreenspace", "#A6C9A6");
 
-    // Mark/ytor (hjälper ofta för “sand/strand”-känsla ihop med egna polygons senare)
-    setSafe("landcover", "#E9D7A8");
+    // Vägar (grundton)
+    setSafe("colorRoads", "#FFFFFF");
 
-    // Vägar
-    setSafe("roads", "#FFFFFF");
+    // Byggnader
+    setSafe("colorBuildings", "#D7D2CC");
 
-    // Hus / byggnader
-    setSafe("buildings", "#D7D2CC");
+    // “Sand/strand”-känsla (landuse-ytor)
+    // (om den här inte stöds får du en varning i console)
+    setSafe("colorCommercialLanduse", "#E9D7A8");
+
+    // Tvinga en repaint så du ser ändringen direkt när den väl stöds
+    if (typeof sektion73Map.triggerRepaint === "function") {
+      sektion73Map.triggerRepaint();
+    }
   }
 });
 
