@@ -395,7 +395,7 @@ const sektion73Tangkorar_4 = {
       type: "fill",
       source: sektion73ApelvikenSourceId,
       paint: {
-        "fill-color": "#F6D7B0",
+        "fill-color": "#FCEDC8",
         "fill-opacity": 1
       }
     });
