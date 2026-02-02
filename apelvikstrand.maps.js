@@ -433,6 +433,22 @@ function sektion73InjectModalCSS() {
       --sektion73-radius:18px;
     }
 
+#sektion73MapCanvas .sektion73PinWrap .sektion73PinBubble,
+#sektion73MapCanvas .sektion73PinWrap .sektion73PinBtn{
+  transition: transform 140ms ease, box-shadow 140ms ease;
+  will-change: transform;
+}
+
+/* Hover på hela pinnen (wrap) */
+#sektion73MapCanvas .sektion73PinWrap:hover .sektion73PinBubble,
+#sektion73MapCanvas .sektion73PinWrap:hover .sektion73PinBtn{
+  transform: scale(1.15) !important;
+}
+#sektion73MapCanvas .sektion73PinWrap:active .sektion73PinBubble,
+#sektion73MapCanvas .sektion73PinWrap:active .sektion73PinBtn{
+  transform: scale(1) !important;
+}
+
     #sektion73MapOverlay{
       position:fixed;
       inset:0;
