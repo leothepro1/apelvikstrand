@@ -1303,7 +1303,7 @@ const sektion73Pins = [
   {
     id: "sektion73Pin_surfcenter_0000",
     label: "Tångkörarvägen 1",
-         filter: "Aktiviteter",
+         filter: "Att göra",
     iconKey: "surfcenter",
     ui: {
       bubbleBg: "#519AC7",
@@ -1373,7 +1373,7 @@ const sektion73Pins = [
       ],
       imgSrc: "Bildkälla: —",
       h: "Destination Apelviken",
-      p: "Beläget strax söder om Varbergs stadskärna, med gång- och cykelavstånd till både strand och centrum. Platsen har vuxit fram över tid, från enkel tältplats till ett sammanhållet område med camping, hotell, aktiviteter och restauranger. Ett vardagsliv som pågår året runt, med mycket nära och utan behov av att ta bilen.",
+      p: "Beläget strax söder om Varbergs stadskärna, med gång- och cykelavstånd till både strand och centrum. Platsen har vuxit fram över tid, från enkel tältplats till ett sammanhållet område med camping, hotell, Att göra och restauranger. Ett vardagsliv som pågår året runt, med mycket nära och utan behov av att ta bilen.",
       cta1Text: "Läs meny",
       cta1Href: "https://www.apelviken.se/",
       cta2Text: "Visa vägen",
@@ -1605,7 +1605,7 @@ function sektion73InjectFilterCSS() {
 
   will-change: transform, opacity;
 
-  z-index: 2147483003;
+  z-index: 999;
   width: min(920px, calc(100vw - 24px));
   pointer-events: auto;
 }
@@ -1737,7 +1737,7 @@ function sektion73BuildFilterIconBank() {
     "alla": `<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 7h16M6 12h12M9 17h6"/></svg>`,
     "boenden": `<svg width="800" height="800" viewBox="0 0 512 512" xmlns="http://www.w3.org/2000/svg"><path fill="currentcolor" d="M416 224H208v120.619h-22.154v-41A87.716 87.716 0 0 0 98.229 216H48v-64H16v344h32v-47.743l416 3.328V496h32V304a80.09 80.09 0 0 0-80-80M48 248h50.229a55.68 55.68 0 0 1 55.617 55.617v41H48Zm416 171.584-416-3.328v-39.637h416Zm0-74.965H240V256h176a48.055 48.055 0 0 1 48 48Z" class="ci-primary"/></svg>`,
     "restauranger": `<svg width="800" height="800" viewBox="0 0 512 512" xmlns="http://www.w3.org/2000/svg"><path fill="currentcolor)" d="M224 160h-48V48h-32v112H96V48H64v124c0 45.505 34.655 83.393 80 90.715V472h32V262.715c45.345-7.322 80-45.21 80-90.715V48h-32Zm-64 72c-27.811 0-51.524-16.722-60.33-40h120.66c-8.806 23.278-32.519 40-60.33 40M413.567 40.187A138.65 138.65 0 0 0 296 177.224V344h104v128h32V37.351ZM400 312h-72V177.224a105.99 105.99 0 0 1 72-100.911Z" class="ci-primary"/></svg>`,
-    "aktiviteter": `<svg width="800" height="800" viewBox="0 0 512 512" xmlns="http://www.w3.org/2000/svg"><path fill="currentcolor" d="M108 200a92 92 0 1 0-92-92 92.1 92.1 0 0 0 92 92m0-152a60 60 0 1 1-60 60 60.07 60.07 0 0 1 60-60m368.937-9.74a76 76 0 0 0-107.48 0l-5.475 5.475a1173 1173 0 0 0-60.93 65.8l-.318.37-138.829 183.562-85.357 85.358a38.263 38.263 0 0 0-46.122 60.229l40.52 40.519a38.272 38.272 0 0 0 60.238-46.13l85.24-85.24 179.9-130.76.841-.654a1171 1171 0 0 0 77.771-71.049 76.09 76.09 0 0 0 .001-107.48m-22.629 84.853a1140 1140 0 0 1-75.23 68.761L197.576 323.8 88.854 432.519l15.572 15.574a6.26 6.26 0 1 1-8.852 8.853l-40.52-40.519a6.26 6.26 0 0 1 8.853-8.854l15.573 15.574L188.1 314.533l139.57-184.541a1140 1140 0 0 1 58.943-63.63l5.475-5.474a44 44 0 1 1 62.225 62.225Z" class="ci-primary"/></svg>`,
+    "Att göra": `<svg width="800" height="800" viewBox="0 0 512 512" xmlns="http://www.w3.org/2000/svg"><path fill="currentcolor" d="M108 200a92 92 0 1 0-92-92 92.1 92.1 0 0 0 92 92m0-152a60 60 0 1 1-60 60 60.07 60.07 0 0 1 60-60m368.937-9.74a76 76 0 0 0-107.48 0l-5.475 5.475a1173 1173 0 0 0-60.93 65.8l-.318.37-138.829 183.562-85.357 85.358a38.263 38.263 0 0 0-46.122 60.229l40.52 40.519a38.272 38.272 0 0 0 60.238-46.13l85.24-85.24 179.9-130.76.841-.654a1171 1171 0 0 0 77.771-71.049 76.09 76.09 0 0 0 .001-107.48m-22.629 84.853a1140 1140 0 0 1-75.23 68.761L197.576 323.8 88.854 432.519l15.572 15.574a6.26 6.26 0 1 1-8.852 8.853l-40.52-40.519a6.26 6.26 0 0 1 8.853-8.854l15.573 15.574L188.1 314.533l139.57-184.541a1140 1140 0 0 1 58.943-63.63l5.475-5.474a44 44 0 1 1 62.225 62.225Z" class="ci-primary"/></svg>`,
     "service": `<svg width="800" height="800" viewBox="0 0 512 512" xmlns="http://www.w3.org/2000/svg"><path fill="currentcolor" class="ci-primary" d="M120 304h32v128h-32zm80 0h32v128h-32zm80 0h32v128h-32zm80 0h32v128h-32z"/><path fill="currentcolor" d="M473.681 168 394.062 16h-36.124l79.619 152H74.443l79.619-152h-36.124L38.319 168H16v111.468L58.856 496h394.261L496 281.584V168ZM464 278.416 426.883 464H85.144L48 276.332V272h416ZM464 240H48v-40h416Z" class="ci-primary"/></svg>`
   };
 
