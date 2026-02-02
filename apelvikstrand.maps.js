@@ -135,7 +135,7 @@ const sektion73Tangkorar_4 = {
         }
       }
     });
-
+window.sektion73Map = sektion73Map;
     sektion73Map.on("error", (e) => {
       console.error("Mapbox error:", e && e.error ? e.error : e);
     });
