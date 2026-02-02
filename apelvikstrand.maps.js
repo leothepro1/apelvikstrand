@@ -107,7 +107,7 @@ const sektion73Tangkorar_4 = {
     const sektion73MinZoom = 13.2;
     const sektion73MaxZoom = 17.9;
     const sektion73StartZoom = 15.7;
-const sektion73SecondaryPinsMinZoom = 17.0;
+const sektion73SecondaryPinsMinZoom = 16.0;
     // Kamera
     const sektion73Pitch = 65;
 
@@ -1010,7 +1010,7 @@ livs: `<svg baseProfile="tiny" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 2
 const sektion73Pins = [
   // HOME (Surbrunnsvägen 2–8)
   {
-    id: "sektion73Pin_home_0000",
+    id: "sektion73Pin_home_0000bvc",
     label: "Boendet",
     filter: "Boenden",
     iconKey: "as",
@@ -1039,7 +1039,7 @@ const sektion73Pins = [
     }
   },
 {
-    id: "sektion73Pin_home_0000",
+    id: "sektion73Pin_home_0000321f",
     label: "Golf",
     filter: "Att göra",
    priority: "secondary",
@@ -1070,7 +1070,7 @@ const sektion73Pins = [
   },
   // Tångkörarvägen 1
    {
-    id: "sektion73Pin_home_0000",
+    id: "sektion73Pin_home_fdbvc",
     label: "Golf",
     filter: "Butiker",
       priority: "secondary",
@@ -1100,7 +1100,7 @@ const sektion73Pins = [
     }
   },
     {
-    id: "sektion73Pin_home_0000",
+    id: "sektion73Pin_home_tyyfdg",
     label: "Golf",
     filter: "Restauranger",
        priority: "secondary",
@@ -1130,7 +1130,7 @@ const sektion73Pins = [
     }
   },
   {
-    id: "sektion73Pin_tangkorar1_0000",
+    id: "sektion73Pin_tangkorar1_90999",
     label: "Tångkörarvägen 1",
     filter: "Restauranger",
     iconKey: "solviken",
@@ -1160,7 +1160,7 @@ const sektion73Pins = [
   },
     // Tångkörarvägen 1
   {
-    id: "sektion73Pin_tangkorar1_0000",
+    id: "sektion73Pin_tangkorar1_hgfwea1",
     label: "Tångkörarvägen 1",
          filter: "Boenden",
     iconKey: "kusthotellet",
@@ -1189,7 +1189,7 @@ const sektion73Pins = [
     }
   },
  {
-    id: "sektion73Pin_livs_0000",
+    id: "sektion73Pin_321gf",
     label: "Apelviken Livs",
         filter: "Butiker",
     iconKey: "livs", // använd en befintlig iconKey som finns i sektion73PinIcons
@@ -1248,7 +1248,7 @@ const sektion73Pins = [
 
   // Dina befintliga pins (oförändrade)
   {
-    id: "sektion73Pin_tangkorar_0001",
+    id: "sektion73Pin_tangkorar_231fds1",
     label: "Punkt 1",
          filter: "Restauranger",
     iconKey: "johns",
