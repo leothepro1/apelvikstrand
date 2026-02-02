@@ -114,7 +114,7 @@ const sektion73Tangkorar_4 = {
 
     const sektion73MinZoom = 13.2;
     const sektion73MaxZoom = 17.9;
-    const sektion73StartZoom = 14.9;
+    const sektion73StartZoom = 15.3;
 const sektion73SecondaryPinsMinZoom = 15.8;
     // Kamera
     const sektion73Pitch = 65;
@@ -1217,7 +1217,7 @@ const sektion73Pins = [
     }
   },
  {
-    id: "sektion73Pin_321gf",
+    id: "sektion73Pin_321gfdfgdfghgkgjyytr",
     label: "Apelviken Livs",
         filter: "Butiker",
     iconKey: "livs", // använd en befintlig iconKey som finns i sektion73PinIcons
@@ -1244,7 +1244,7 @@ const sektion73Pins = [
     }
   },
    {
-    id: "sektion73Pin_321gf",
+    id: "sektion73Pin_321ggdfgvbnf",
     label: "Apelviken Livs",
         filter: "Boenden",
     iconKey: "apelviken", // använd en befintlig iconKey som finns i sektion73PinIcons
