@@ -1544,9 +1544,14 @@ let sektion73ActiveMoveEndHandler = null;
    - Klick på filter: döljer pins som inte matchar
    - Påverkar inte befintlig CSS/logik (ny, scoped DOM + egen style-tag)
    ========================= */
+
 const sektion73FilterState = {
-  active: "Alla"
+  active: "" // "" = visa allt
 };
+
+function sektion73NormFilter(v) {
+  return String(v || "").trim().toLowerCase();
+}
 
 function sektion73GetAvailableFilters() {
   const set = new Set();
@@ -1557,9 +1562,8 @@ function sektion73GetAvailableFilters() {
 
   const arr = Array.from(set);
   arr.sort((a, b) => a.localeCompare(b, "sv"));
-  return ["Alla", .arr];
+  return arr; // <-- FIX: ingen "Alla" här, och ingen syntaxmiss
 }
-
 
 
 function sektion73InjectFilterCSS() {
@@ -1748,7 +1752,7 @@ function sektion73EnsureFilterBar() {
   sektion73InjectFilterCSS();
 
   const filters = sektion73GetAvailableFilters();
-  if (!filters || filters.length <= 1) return;
+  if (!filters || filters.length < 1) return;
 
   const { bank, named } = sektion73BuildFilterIconBank();
 
@@ -1758,49 +1762,50 @@ function sektion73EnsureFilterBar() {
   const rail = document.createElement("div");
   rail.id = "sektion73MapFilterRail";
 
-  filters.forEach((label, idx) => {
-    const btn = document.createElement("button");
-    btn.type = "button";
-    btn.className = "sektion73FilterBtn";
-    btn.setAttribute("data-filter", String(label));
-    btn.setAttribute("aria-pressed", label === sektion73FilterState.active ? "true" : "false");
-    btn.setAttribute("aria-label", `Filter: ${label}`);
+  // NYTT: label istället för "Alla"-knapp
+  const labelEl = document.createElement("span");
+  labelEl.className = "sektion73FilterLabel";
+  labelEl.textContent = "Filtrera efter:";
+  rail.appendChild(labelEl);
 
-    const ico = document.createElement("span");
-    ico.className = "sektion73FilterIco";
+  const closeSvg = `<svg viewBox="0 0 24 24" aria-hidden="true">
+    <path d="M6 6l12 12M18 6L6 18"></path>
+  </svg>`;
 
-    const key = sektion73NormFilter(label);
-    const svg = named[key] || bank[(idx % bank.length)];
-    ico.innerHTML = svg;
+  const setActive = (nextLabel) => {
+    sektion73FilterState.active = String(nextLabel || "").trim();
 
-    const txt = document.createElement("span");
-    txt.textContent = String(label);
+    const allBtns = rail.querySelectorAll(".sektion73FilterBtn");
+    allBtns.forEach((b) => {
+      const bLabel = String(b.getAttribute("data-filter") || "");
+      const isOn = (bLabel === sektion73FilterState.active);
 
-    btn.appendChild(ico);
-    btn.appendChild(txt);
+      b.setAttribute("aria-pressed", isOn ? "true" : "false");
 
-    btn.addEventListener("click", () => {
-      const next = String(btn.getAttribute("data-filter") || "Alla");
-      sektion73FilterState.active = next;
+      // rensa ev. tidigare close
+      const prevClose = b.querySelector(".sektion73FilterClose");
+      if (prevClose) prevClose.remove();
 
-      const allBtns = rail.querySelectorAll(".sektion73FilterBtn");
-      allBtns.forEach((b) => {
-        const isOn = String(b.getAttribute("data-filter") || "") === next;
-        b.setAttribute("aria-pressed", isOn ? "true" : "false");
-      });
+      // NYTT: close-ikon bara på aktiv knapp
+      if (isOn) {
+        const close = document.createElement("span");
+        close.className = "sektion73FilterClose";
+        close.innerHTML = closeSvg;
+        close.setAttribute("aria-hidden", "true");
 
-      sektion73ApplyFilter(next);
+        close.addEventListener("click", (e) => {
+          e.preventDefault();
+          e.stopPropagation();
+          setActive("");          // avmarkera = visa allt
+          sektion73ApplyFilter(""); // matchar din showAll-logik
+        });
+
+        b.appendChild(close);
+      }
     });
 
-    rail.appendChild(btn);
-  });
-
-  bar.appendChild(rail);
-  document.body.appendChild(bar);
-
-  sektion73ApplyFilter(sektion73FilterState.active);
-}
-
+    sektion73ApplyFilter(sektion73FilterState.active || "");
+  };
 
   filters.forEach((label, idx) => {
     const btn = document.createElement("button");
