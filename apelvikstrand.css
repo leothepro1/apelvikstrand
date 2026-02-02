@@ -145,7 +145,6 @@ transition: 0.15s ease-in-out;
     }
   }
 
-  /* ---------- COUNTER (PAGE) ---------- */
 .as-counter {
     position: absolute;
     right: 0.5rem;
@@ -158,7 +157,7 @@ transition: 0.15s ease-in-out;
     border-radius: 999px;
     background: rgb(247, 245, 243);
     color: rgb(18, 17, 16);
-    font-size: 0.75rem;
+    font-size: 0.85rem;
     line-height: 1;
     border: 1px solid rgba(255, 255, 255, .14);
     user-select: none;
@@ -225,6 +224,10 @@ transition: 0.15s ease-in-out;
       flex-direction: column;
       display: flex;
     }
+      .as-counter {
+    right: 0.9rem;
+    bottom: 0.9rem;
+}
       .as-hero-track {
     border-radius: 15px !important;
 }
