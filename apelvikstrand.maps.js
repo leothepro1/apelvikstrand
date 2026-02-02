@@ -1696,7 +1696,7 @@ display:inline-flex;
 
 function sektion73BuildFilterIconBank() {
   const bank = [
-<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 7h16M6 12h12M9 17h6"/></svg>`,
+`<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 7h16M6 12h12M9 17h6"/></svg>`,
     `<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 10h10M8 14h8"/><path d="M6 20h12a2 2 0 0 0 2-2V8a3 3 0 0 0-3-3H7a3 3 0 0 0-3 3v10a2 2 0 0 0 2 2Z"/></svg>`,
    `<svg width="800" height="800" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><g/><path fill="currentcolor" d="M21 8c0-2.2-1.8-4-4-4H7C4.8 4 3 5.8 3 8v3.8c-.6.5-1 1.3-1 2.2v5c0 .6.4 1 1 1s1-.4 1-1v-1h16v1c0 .6.4 1 1 1s1-.4 1-1v-5c0-.9-.4-1.7-1-2.2zM5 8c0-1.1.9-2 2-2h10c1.1 0 1 .9 2 2v3h-1v-1c0-1.7-1.3-3-3-3h-1c-.8 0-1.5.3-2 .8-.5-.5-1.2-.8-2-.8H9c-1.7 0-3 1.3-3 3v1H5zm11 2v1h-3v-1c0-.6.4-1 1-1h1c.6 0 1 .4 1 1m-5 0v1H8v-1c0-.6.4-1 1-1h1c.6 0 1 .4 1 1m9 6H4v-2c0-.6.4-1 1-1h14c.6 0 1 .4 1 1z"/></svg>`,
  `<svg width="800" height="800" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" fill="currentColor"><g/><path d="M5 16c-1.1 0-2 .9-2 2 0 1.7 1.3 3 3 3h12c1.7 0 3-1.3 3-3 0-1.1-.9-2-2-2h-6v-1h7c.6 0 1-.4 1-1 0-4.6-3.5-8.4-8-8.9V5h1c.6 0 1-.4 1-1s-.4-1-1-1h-4c-.6 0-1 .4-1 1s.4 1 1 1h1v.1c-4.5.5-8 4.3-8 8.9 0 .6.4 1 1 1h7v1zm.1-3c.5-3.4 3.4-6 6.9-6s6.4 2.6 6.9 6zM19 18c0 .6-.4 1-1 1H6c-.6 0-1-.4-1-1z"/></svg>`,
