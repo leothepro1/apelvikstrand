@@ -557,8 +557,8 @@ function sektion73InjectModalCSS() {
       margin:0;
     }
 .sektion73ModalClose {
-    width: 40px;
-    height: 40px;
+    width: 34px;
+    height: 34px;
     border-radius: 80px;
     border: none;
     background: #fff;
@@ -567,8 +567,9 @@ function sektion73InjectModalCSS() {
     place-items: center;
     flex: 0 0 auto;
     position: absolute;
-    top: 20px;
-    right: 20px;
+    top: 18px;
+    right: 18px;
+    box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
 }
     .sektion73ModalClose svg{ width:18px; height:18px; }
 
