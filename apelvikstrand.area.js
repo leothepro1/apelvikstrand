@@ -57,16 +57,21 @@
     ];
 
     // 5) Zoom-lås (tajt)
+    // 5) Zoom-lås (tajt)
     const sektion73MinZoom = 14.6;
     const sektion73MaxZoom = 18.2;
 
     // 6) Default vy + pin-klick zoom
-    const sektion73StartZoom = 15.4;
-    const sektion73PinZoom = 17.2;
+    const sektion73StartZoom = 15.8;
+    const sektion73PinZoom = 17.6;
 
     // 7) Pitch/bearing (kan sättas till 0 om du vill ha mer 2D)
-    const sektion73StartPitch = 58;
+    const sektion73StartPitch = 62;
     const sektion73StartBearing = 90; // "rak åt öster"
+
+    // 7b) Pitch som ökar när man zoomar in (utan att påverka zoomen)
+    const sektion73PitchAtStartZoom = 62; // vid sektion73StartZoom
+    const sektion73PitchAtMaxZoom = 74;   // vid sektion73MaxZoom
 
     // 8) Pins (exempel – byt till dina riktiga)
     const sektion73Pins = [
@@ -215,7 +220,7 @@
       });
     }
 
-    /* =========================
+   /* =========================
        MAP INIT
        ========================= */
 
@@ -236,21 +241,22 @@
     // Exponera för debug i konsol
     window.sektion73MapInstance = sektion73Map;
 
-    // Lås extra hårt: om någon “knuffar” utanför bounds, flytta tillbaka
-    function sektion73EnforceBounds() {
-      const b = sektion73Map.getBounds();
-      const max = new mapboxgl.LngLatBounds(sektion73MaxBounds[0], sektion73MaxBounds[1]);
-      if (!max.contains(b.getNorthEast()) || !max.contains(b.getSouthWest())) {
-        sektion73Map.fitBounds(sektion73MaxBounds, { duration: 0, padding: 12 });
-      }
-      const z = sektion73Map.getZoom();
-      if (z < sektion73MinZoom || z > sektion73MaxZoom) {
-        sektion73Map.setZoom(sektion73Clamp(z, sektion73MinZoom, sektion73MaxZoom));
-      }
+    // Pitch-automation: öka lutningen mjukt när zoom ökar (utan att ändra zoom/center)
+    function sektion73ApplyPitchForZoom(z) {
+      const t = sektion73Clamp(
+        (z - sektion73StartZoom) / (sektion73MaxZoom - sektion73StartZoom),
+        0,
+        1
+      );
+      const pitch = sektion73PitchAtStartZoom + (sektion73PitchAtMaxZoom - sektion73PitchAtStartZoom) * t;
+      sektion73Map.setPitch(pitch);
     }
 
-    sektion73Map.on("moveend", sektion73EnforceBounds);
-    sektion73Map.on("zoomend", sektion73EnforceBounds);
+    // Kör direkt + under zoom (låg påverkan, ändrar bara pitch)
+    sektion73ApplyPitchForZoom(sektion73Map.getZoom());
+    sektion73Map.on("zoom", function () {
+      sektion73ApplyPitchForZoom(sektion73Map.getZoom());
+    });
 
     /* =========================
        PINS (custom markers)
