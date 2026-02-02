@@ -1566,7 +1566,7 @@ function sektion73InjectFilterCSS() {
 #sektion73MapFilterBar{
   position: fixed;
   left: 50%;
-  bottom: 14px;
+  bottom: 18px;
 
   /* Basläge: synlig */
   transform: translateX(-50%) translateY(0);
