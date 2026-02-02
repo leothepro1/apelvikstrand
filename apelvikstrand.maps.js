@@ -506,7 +506,7 @@ function sektion73InjectModalCSS() {
     }
 
     @media (max-width: 768px){
-#sektion73MapModal {
+    #sektion73MapModal {
         left: 0;
         right: 0;
         top: auto;
@@ -514,12 +514,19 @@ function sektion73InjectModalCSS() {
         width: 100%;
         height: min(94dvh, 720px);
         border-left: none;
-        border-top: 1px solid var(--sektion73-modal-line);
+        border-top: none;
         border-top-left-radius: 20px;
         border-top-right-radius: 20px;
         transform: translateY(104%);
         border-bottom-left-radius: 0px;
     }
+    .sektion73ModalMeta {
+    padding: 26px 17px 0px;
+}
+.sektion73ModalActions {
+    margin-top: 25px;
+    padding: 0px 17px;
+}
       #sektion73MapModal.is-open{
         transform:translateY(0);
       }
@@ -641,9 +648,12 @@ function sektion73InjectModalCSS() {
     font-weight: 400;
     font-size: 15px;
     line-height: 1.55em;
-    margin-top: 15px;
+    margin-top: 17px;
 }
-
+#sektion73MapFilterRail{
+backdrop-filter: blur(16px);
+-webkit-backdrop-filter: blur(16px);
+}
 .sektion73ModalActions {
     margin-top: 27px;
     display: flex;
@@ -1216,7 +1226,7 @@ const sektion73Pins = [
       ],
       h: "Apelviken Livs & Strandcafé ",
       p: "Vikens lokala butik som de flesta bara kallar affär’n. Här finns det man behöver för dagen vid stranden eller på campingen. Nybakade frallor tidigt på morgonen, kaffe som går att ta med, enklare mat, glass och ett brett sortiment för vardag och semester. Öppet under säsong och i ständig rörelse från morgon till kväll.",
-      cta1Text: "Öppna i Google",
+      cta1Text: "Läs mer",
       cta1Href: "https://www.apelviken.se/apelvikenlivs",
       cta2Text: "Vägbeskrivning",
       cta2Href: "https://www.google.com/maps/dir/57.502272,12.087438/Apelviken+Livs,+T%C3%A5ngk%C3%B6rarv%C3%A4gen+3,+432+54+Varberg/@57.2983075,11.831503,75983m/data=!3m2!1e3!4b1!4m9!4m8!1m1!4e1!1m5!1m1!1s0x46502af983cea49f:0xa786b4e1dbc71398!2m2!1d12.250155!2d57.0848547?entry=ttu&g_ep=EgoyMDI2MDEyOC4wIKXMDSoASAFQAw%3D%3D"
@@ -1573,8 +1583,8 @@ function sektion73InjectFilterCSS() {
     display: none;
 }
 .sektion73FilterClose {
-    width: 15px;
-    height: 15px;
+    width: 16px;
+    height: 16px;
     display: inline-flex;
     align-items: center;
     justify-content: center;
@@ -1588,11 +1598,11 @@ function sektion73InjectFilterCSS() {
   background: rgba(255,255,255,.9);
 }
 .sektion73FilterClose svg {
-    width: 15px;
-    height: 15px;
+    width: 16px;
+    height: 16px;
     display: block;
     stroke: currentColor;
-    stroke-width: 1.8;
+    stroke-width: 1.9;
     fill: none;
     stroke-linecap: round;
     stroke-linejoin: round;
@@ -1605,7 +1615,7 @@ function sektion73InjectFilterCSS() {
     gap: 5px;
     padding: 5px 11px;
     border-radius: 999px;
-    border: 1px solid rgba(14, 19, 24, .12);
+    border: 1px solid #e6e6e6;
     background: #ffffff;
     color: #0e1318;
     font-family: 'Inter Variablefont Opsz Wght';
