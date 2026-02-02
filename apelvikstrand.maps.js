@@ -1591,13 +1591,12 @@ function sektion73InjectFilterCSS() {
   pointer-events: none;
 }
 
-
 #sektion73MapFilterRail {
     display: flex;
     gap: 0.5rem;
     align-items: center;
-    justify-content: flex-start;
-    padding: 0.4rem 0.85rem;
+    justify-content: center;
+    padding: 0.5rem 0.7rem;
     border-radius: 999px;
     background: rgba(255, 255, 255, .42);
     border: none;
