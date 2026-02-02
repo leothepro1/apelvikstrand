@@ -68,6 +68,10 @@
       title: "Apelviken livs",
       lngLat: [12.250247, 57.084998]
     };
+              const sektion73InitialCenter = {
+      title: "Apelviken livs",
+      lngLat: [12.258774, 57.082854]
+    };
               const sektion73minigolf = {
       title: "Tångkörarvägen 1",
       lngLat: [12.250167, 57.084695]
@@ -128,29 +132,32 @@ const sektion73SecondaryPinsMinZoom = 15.8;
        MAP INIT
        ========================= */
 
- const sektion73Map = new mapboxgl.Map({
-      container: sektion73Canvas,
-      style: sektion73StyleUrl,
-      center: sektion73Home.lngLat,
-      zoom: sektion73StartZoom,
-      maxBounds: sektion73Bounds,
+const sektion73Map = new mapboxgl.Map({
+  container: sektion73Canvas,
+  style: sektion73StyleUrl,
 
-      attributionControl: false,
-      antialias: true,
+  center: sektion73InitialCenter, // <-- startar här istället
 
-      pitchWithRotate: false,
-      dragRotate: false,
+  zoom: sektion73StartZoom,
+  maxBounds: sektion73Bounds,
 
-      config: {
-        basemap: {
-          show3dBuildings: true,
-          show3dObjects: true,
-          showPointOfInterestLabels: false,
-          showPlaceLabels: false,
-          showRoadLabels: true
-        }
-      }
-    });
+  attributionControl: false,
+  antialias: true,
+
+  pitchWithRotate: false,
+  dragRotate: false,
+
+  config: {
+    basemap: {
+      show3dBuildings: true,
+      show3dObjects: true,
+      showPointOfInterestLabels: false,
+      showPlaceLabels: false,
+      showRoadLabels: true
+    }
+  }
+});
+
 
     // Exponera map-instansen för devtools/snabbtest (som du gjort i console)
     window.sektion73Map = sektion73Map;
