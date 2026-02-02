@@ -31,7 +31,7 @@
     mapboxgl.accessToken =
       "pk.eyJ1IjoicnV0Z2Vyc3NvbiIsImEiOiJjbWwzdjY5N2owcDdiM2RzZWlzaG14MWVjIn0.yMfhGXLf9xq_vzIFSJVcjA";
 
-    const sektion73StyleUrl = "mapbox://styles/rutgersson/cml3w74bd009g01r458nuhgjn";
+    const sektion73StyleUrl = "mapbox://styles/rutgersson/cml5ejbz8000r01qx4ba1dwmn";
 
     // Home: Surbrunnsvägen 2–8, 432 53 Varberg
     const sektion73Home = {
