@@ -107,7 +107,7 @@ const sektion73Tangkorar_4 = {
     const sektion73MinZoom = 13.2;
     const sektion73MaxZoom = 17.9;
     const sektion73StartZoom = 15.7;
-
+const sektion73SecondaryPinsMinZoom = 17.0;
     // Kamera
     const sektion73Pitch = 65;
 
@@ -1042,6 +1042,7 @@ const sektion73Pins = [
     id: "sektion73Pin_home_0000",
     label: "Golf",
     filter: "Att göra",
+   priority: "secondary",
     iconKey: "golf",
     ui: {
       bubbleBg: "#fff",
@@ -1072,6 +1073,7 @@ const sektion73Pins = [
     id: "sektion73Pin_home_0000",
     label: "Golf",
     filter: "Butiker",
+      priority: "secondary",
     iconKey: "surfcenter",
     ui: {
       bubbleBg: "#fff",
@@ -1100,7 +1102,8 @@ const sektion73Pins = [
     {
     id: "sektion73Pin_home_0000",
     label: "Golf",
-    filter: "Restaurang",
+    filter: "Restauranger",
+       priority: "secondary",
     iconKey: "majas",
     ui: {
       bubbleBg: "#fff",
@@ -1159,7 +1162,7 @@ const sektion73Pins = [
   {
     id: "sektion73Pin_tangkorar1_0000",
     label: "Tångkörarvägen 1",
-         filter: "Restauranger",
+         filter: "Boenden",
     iconKey: "kusthotellet",
     ui: {
       bubbleBg: "#fff",
@@ -1217,6 +1220,7 @@ const sektion73Pins = [
     id: "sektion73Pin_surfcenter_0000",
     label: "Tångkörarvägen 1",
          filter: "Att göra",
+     priority: "secondary",
     iconKey: "surfcenter",
     ui: {
       bubbleBg: "#519AC7",
@@ -1371,7 +1375,7 @@ const sektion73Pins = [
   {
     id: "sektion73Pin_ny_plats_0006",
     label: "Ny Plats",
-                   filter: "Boenden",
+     filter: "Boenden",
     iconKey: "da", 
     ui: { 
       bubbleBg: "#fff", 
@@ -1407,8 +1411,10 @@ function sektion73CreatePinEl(pin) {
   /* NYTT: gör iconKey tillgängligt för CSS */
   wrap.dataset.iconKey = String(pin.iconKey || "home");
 
-  /* NYTT: gör filter tillgängligt för logik/DOM */
-  wrap.dataset.filter = String(pin.filter || "").trim();
+wrap.dataset.filter = String(pin.filter || "").trim();
+
+/* NYTT: gör priority tillgängligt för logik/DOM */
+wrap.dataset.priority = String(pin.priority || "priority").trim().toLowerCase();
 
   // PER-PIN CSS vars (endast färger)
   const bubbleBg = (pin.ui && pin.ui.bubbleBg) ? String(pin.ui.bubbleBg) : "rgba(255,255,255,.92)";
@@ -1656,17 +1662,38 @@ function sektion73BuildFilterIconBank() {
 
   return { bank, named };
 }
-
 function sektion73ApplyFilter(filterLabel) {
   const fNorm = sektion73NormFilter(filterLabel);
   const showAll = (fNorm === "alla" || fNorm === "");
+
+  // NYTT: zoom-gating för "secondary" när inga filter är aktiva
+  const z = (sektion73Map && typeof sektion73Map.getZoom === "function") ? sektion73Map.getZoom() : 0;
 
   Object.keys(sektion73MarkersById).forEach((id) => {
     const entry = sektion73MarkersById[id];
     if (!entry || !entry.marker || !entry.pin) return;
 
     const pinFilter = sektion73NormFilter(entry.pin.filter);
-    const shouldShow = showAll ? true : (pinFilter === fNorm);
+
+    // 1) Filter-match (om filter är aktivt)
+    const matchesFilter = showAll ? true : (pinFilter === fNorm);
+    if (!matchesFilter) {
+      const el = entry.marker.getElement && entry.marker.getElement();
+      if (el) {
+        el.style.display = "none";
+        el.setAttribute("aria-hidden", "true");
+      }
+      return;
+    }
+
+    // 2) Priority/secondary (endast när showAll = true)
+    const prio = String(entry.pin.priority || "priority").trim().toLowerCase();
+    const isSecondary = (prio === "secondary");
+
+    // När filter är aktivt: matchande pins ska ALLTID synas (secondary ignoreras)
+    const passesZoomGate = showAll ? (!isSecondary || z >= sektion73SecondaryPinsMinZoom) : true;
+
+    const shouldShow = passesZoomGate;
 
     const el = entry.marker.getElement && entry.marker.getElement();
     if (el) {
@@ -1676,7 +1703,6 @@ function sektion73ApplyFilter(filterLabel) {
   });
 
   // Om modal är öppen och användaren filtrerar bort pinnen som nyss klickats:
-  // stäng modalen för att undvika "orphaned" state.
   if (sektion73ModalOpen && window.__sektion73LastOpenedPinId) {
     const last = sektion73MarkersById[window.__sektion73LastOpenedPinId];
     const lastFilter = last && last.pin ? sektion73NormFilter(last.pin.filter) : "";
@@ -1685,6 +1711,7 @@ function sektion73ApplyFilter(filterLabel) {
     }
   }
 }
+
      function sektion73RestorePreFilterView() {
   if (!sektion73Map || typeof sektion73Map.easeTo !== "function") return;
 
@@ -2006,17 +2033,20 @@ requestAnimationFrame(() => {
 }
 
 sektion73Map.once("load", function () {
-  // pins (robust)
-
-  // pins
   sektion73Pins.forEach(sektion73AddPin);
 
-  // NYTT: skapa filter-slider efter att pins finns
   sektion73EnsureFilterBar();
-
-  // säkerställ modal-DOM tidigt (ingen synlig effekt)
   sektion73EnsureModalDOM();
+
+  // NYTT: initialt — applicera (döljer ev. secondary vid startzoom)
+  sektion73ApplyFilter(sektion73FilterState.active || "");
+
+  // NYTT: vid zoom — uppdatera så secondary blir synliga när man zoomar in
+  sektion73Map.on("zoomend", () => {
+    sektion73ApplyFilter(sektion73FilterState.active || "");
+  });
 });
+
 
 
     /* =========================
