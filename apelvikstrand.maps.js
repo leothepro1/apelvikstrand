@@ -1084,19 +1084,19 @@ const sektion73Pins = [
       kicker: "HOME",
       title: "Surbrunnsvägen 2–8",
       images: [
-        "https://res.cloudinary.com/dmgmoisae/image/upload/v1769872360/jpeg-optimizer_ApelvikStrand_0356_2_jvgrhe.jpg",
-        "https://res.cloudinary.com/dmgmoisae/image/upload/v1769872059/jpeg-optimizer_ApelvikStrand_0010_3_rzzlat.jpg",
-        "https://res.cloudinary.com/dmgmoisae/image/upload/v1769872058/jpeg-optimizer_ApelvikStrand_1153_1_mi0wzz.jpg",
-        "https://res.cloudinary.com/dmgmoisae/image/upload/v1769875471/strandhuse21q_hh50lb.png"
+                 "https://res.cloudinary.com/dmgmoisae/image/upload/v1770065244/putte_mac_m5ldez.jpg",
+        "https://res.cloudinary.com/dmgmoisae/image/upload/v1770065250/4ciljfr6wiku47ehvc9gb0uqzob7mfxq_sifrmd.jpg",
+        "https://res.cloudinary.com/dmgmoisae/image/upload/v1770065236/jason_naishkites_l1xlxu.avif",
+        "https://res.cloudinary.com/dmgmoisae/image/upload/v1770065254/center_20_12_ooxsx0.jpg"
       ],
       imgSrc: "Bildkälla: —",
-      h: "Apelvikens minigolf",
-      p: "Apelvikstrand är platsen att bo på när man vill vara nära havet och nära vardagen i viken. Här bor man i strandhus och lägenheter med egen dörr, eget tempo och kort väg ner till stranden, maten och livet runtomkring. Det är enkelt att komma och gå, lätt att stanna inne eller vara ute hela dagen. Ett boende som följer platsen, snarare än tvärtom.",
+      h: "Surfers Paradise",
+      p: "Här är surf en självklar del av dagen. När vinden tar i och vågorna rullar samlas både nybörjare och erfarna surfare för kurser och uthyrning i en avslappnad miljö hos Surfers Paradise Varberg. Med rätt utrustning och erfarna instruktörer formas varje pass efter dagens förhållanden och havets tempo.",
       cta1Text: "Läs mer",
-      cta1Href: "https://www.apelviken.se/aktivitet-2",
+      cta1Href: "https://surfers.se/",
       cta2Text: "Vägbeskrivning",
       cta2Href:
-        "https://www.google.com/maps/dir/57.502272,12.087438/apelvikens+minigolf/data=!4m2!4m1!3e0?sa=X&ved=1t:196274&ictx=111"
+        "https://www.google.com/maps/dir/57.502272,12.087438/Surfers+Paradise+Varberg,+S%C3%B6dergatan,+Varberg/@57.2960503,11.8313413,78628m/data=!3m1!1e3!4m9!4m8!1m1!4e1!1m5!1m1!1s0x46502a4510f9c69b:0x1ec01eb952e25b7b!2m2!1d12.251716!2d57.10345?entry=ttu&g_ep=EgoyMDI2MDEyOC4wIKXMDSoASAFQAw%3D%3D"
     }
   },
     {
@@ -1114,19 +1114,19 @@ const sektion73Pins = [
       kicker: "HOME",
       title: "Surbrunnsvägen 2–8",
       images: [
-        "https://res.cloudinary.com/dmgmoisae/image/upload/v1769872360/jpeg-optimizer_ApelvikStrand_0356_2_jvgrhe.jpg",
-        "https://res.cloudinary.com/dmgmoisae/image/upload/v1769872059/jpeg-optimizer_ApelvikStrand_0010_3_rzzlat.jpg",
-        "https://res.cloudinary.com/dmgmoisae/image/upload/v1769872058/jpeg-optimizer_ApelvikStrand_1153_1_mi0wzz.jpg",
-        "https://res.cloudinary.com/dmgmoisae/image/upload/v1769875471/strandhuse21q_hh50lb.png"
+        "https://res.cloudinary.com/dmgmoisae/image/upload/v1770064870/2gcsnMedobtKa21oZpB2t52MkU1Q-REGULAR_ek5ygq.jpg",
+        "https://res.cloudinary.com/dmgmoisae/image/upload/v1770064841/majas_20kvall_202_pdfc8k.jpg",
+        "https://res.cloudinary.com/dmgmoisae/image/upload/v1770064846/Ska_CC_88rmavbild_202024-03-23_20kl._2009.27.41_m6fu1v.png",
+        "https://res.cloudinary.com/dmgmoisae/image/upload/v1770064873/c05bb3a27b4bd93c4b8438c6e3fe8b74_edzrgk.jpg"
       ],
       imgSrc: "Bildkälla: —",
-      h: "Apelvikens minigolf",
-      p: "Apelvikstrand är platsen att bo på när man vill vara nära havet och nära vardagen i viken. Här bor man i strandhus och lägenheter med egen dörr, eget tempo och kort väg ner till stranden, maten och livet runtomkring. Det är enkelt att komma och gå, lätt att stanna inne eller vara ute hela dagen. Ett boende som följer platsen, snarare än tvärtom.",
+      h: "Majas vid havet",
+      p: "Majas vid havet är ett litet hak mitt i Apelviken, öppet från maj, där god mat, en full bar och en avslappnad atmosfär lockar både campinggäster och kvällsflanörer till rundpingis, boule och konserter. Här serveras både enkla luncher och festligare middagar, med strandkänsla och gemenskap som sätter stämningen.",
       cta1Text: "Läs mer",
-      cta1Href: "https://www.apelviken.se/aktivitet-2",
+      cta1Href: "https://majas.nu/",
       cta2Text: "Vägbeskrivning",
       cta2Href:
-        "https://www.google.com/maps/dir/57.502272,12.087438/apelvikens+minigolf/data=!4m2!4m1!3e0?sa=X&ved=1t:196274&ictx=111"
+        "https://www.google.com/maps/dir/57.502272,12.087438/Majas+vid+Havet,+T%C3%A5ngk%C3%B6rarv%C3%A4gen+15,+432+54+Varberg/@57.2960503,11.8313413,78628m/data=!3m2!1e3!4b1!4m9!4m8!1m1!4e1!1m5!1m1!1s0x465f741e8c9656d7:0x1d2f38bfc65d4d29!2m2!1d12.2632092!2d57.0800381?entry=ttu&g_ep=EgoyMDI2MDEyOC4wIKXMDSoASAFQAw%3D%3D"
     }
   },
   {
