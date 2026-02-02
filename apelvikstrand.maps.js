@@ -113,7 +113,7 @@ const sektion73Tangkorar_4 = {
     ];
 
     const sektion73MinZoom = 13.2;
-    const sektion73MaxZoom = 18.9;
+    const sektion73MaxZoom = 19.4;
     const sektion73StartZoom = 15.3;
 const sektion73SecondaryPinsMinZoom = 15.8;
     // Kamera
@@ -581,25 +581,17 @@ center: sektion73InitialCenter.lngLat,
     });
   }
 
-  /* =========================================================
-     sektion73 – TERRASS: GLASRÄCKE (ENKEL EDGE-LINE)
-     - Egen source => kan inte påverka andra polygoners kanter
-     - Glasblock: dashad cyan/glas-linje
-     - Stolpar: tät dashad svart linje ovanpå
-     - Skugga: mjuk line med translate
-     ========================================================= */
-
-  /* =========================================================
-     sektion73 – TERRASS: PLATTA + 3D SLAB + GLASVÄGG (3D)
+   /* =========================================================
+     sektion73 – TERRASS (3D SLAB) + GLASVÄGG (ÄKTA 3D MESH)
      - Terrassfärg: #7E7D77
-     - Terrass får en tunn 3D-"slab" (fill-extrusion) så den inte känns platt
-     - Glasräcke ersätts med 3D-vägg (fill-extrusion) byggd från edge-linjen
-     - Glasruta-look: transparenta “block” via 2D line-dash ovanpå väggens footprint
+     - Terrass: fill-extrusion slab (så den inte blir platt)
+     - Glasvägg: Threebox/Three.js custom layer (paneler + stolpar)
+     - Isolerat till sektion73Style === "terrace_glass_00009"
      ========================================================= */
 
   const sektion73TerraceFilter_00011 = ["==", ["get", "sektion73Style"], "terrace_glass_00009"];
 
-  // === 1) Terrass – solid färg (#7E7D77) ===
+  // === A) Terrass: bas-fill (färg) ===
   if (!sektion73Map.getLayer("sektion73Layer_terrace_fill_00012")) {
     sektion73Map.addLayer({
       id: "sektion73Layer_terrace_fill_00012",
@@ -608,12 +600,12 @@ center: sektion73InitialCenter.lngLat,
       filter: sektion73TerraceFilter_00011,
       paint: {
         "fill-color": "#7E7D77",
-        "fill-opacity": 0.92
+        "fill-opacity": 0.96
       }
     });
   }
 
-  // === 2) Terrass – tunn 3D slab (så den inte är helt platt) ===
+  // === B) Terrass: 3D slab (tunn extrusion) ===
   if (!sektion73Map.getLayer("sektion73Layer_terrace_slab_3d_00017")) {
     sektion73Map.addLayer({
       id: "sektion73Layer_terrace_slab_3d_00017",
@@ -622,22 +614,22 @@ center: sektion73InitialCenter.lngLat,
       filter: sektion73TerraceFilter_00011,
       paint: {
         "fill-extrusion-color": "#7E7D77",
-        "fill-extrusion-opacity": 0.98,
+        "fill-extrusion-opacity": 0.99,
+        "fill-extrusion-base": 0,
         "fill-extrusion-height": [
           "interpolate",
           ["linear"],
           ["zoom"],
           13, 0.18,
           16, 0.28,
-          18.5, 0.38
+          18.5, 0.40
         ],
-        "fill-extrusion-base": 0,
         "fill-extrusion-vertical-gradient": true
       }
     });
   }
 
-  // === 3) Terrass – outline (lite mörkare) ===
+  // === C) Terrass: outline ===
   if (!sektion73Map.getLayer("sektion73Layer_terrace_outline_00013")) {
     sektion73Map.addLayer({
       id: "sektion73Layer_terrace_outline_00013",
@@ -645,7 +637,7 @@ center: sektion73InitialCenter.lngLat,
       source: sektion73ApelvikenSourceId,
       filter: sektion73TerraceFilter_00011,
       paint: {
-        "line-color": "rgba(25,25,25,0.55)",
+        "line-color": "rgba(10,10,10,0.55)",
         "line-width": ["interpolate", ["linear"], ["zoom"], 13, 1.0, 17, 2.5],
         "line-blur": 0.2
       }
@@ -653,168 +645,206 @@ center: sektion73InitialCenter.lngLat,
   }
 
   /* =========================================================
-     sektion73 – GLASVÄGG: 3D wall byggd från edge-linjen
-     Vi skapar en tunn polygon (”strip”) från 2 punkter med en liten offset.
+     sektion73 – GLASVÄGG (3D)
+     Vi använder Threebox (Three.js) som custom layer.
+     Detta möjliggör:
+       - paneler (transparenta "glasfyrkanter")
+       - stolpar (svarta pelare mellan panelerna)
+       - höjd från marken (riktig 3D)
      ========================================================= */
 
-  const sektion73TerraceFenceEdgeSourceId_00010 = "sektion73Geojson_terrace_fence_00010";
-  const sektion73TerraceGlassWallSourceId_00018 = "sektion73Geojson_terrace_glasswall_00018";
+  // 1) Minimal script-loader (ingen påverkan på övrig kod)
+  function sektion73LoadScriptOnce_00018(src, testFn) {
+    return new Promise((resolve, reject) => {
+      try {
+        if (testFn && testFn()) return resolve(true);
+        const existing = document.querySelector(`script[data-sektion73="${src}"]`);
+        if (existing) return existing.addEventListener("load", () => resolve(true), { once: true });
 
-  // Edge-linje (samma som innan)
-  if (!sektion73Map.getSource(sektion73TerraceFenceEdgeSourceId_00010)) {
-    sektion73Map.addSource(sektion73TerraceFenceEdgeSourceId_00010, {
-      type: "geojson",
-      data: {
-        "type": "FeatureCollection",
-        "features": [
-          {
-            "type": "Feature",
-            "properties": { "sektion73Style": "terrace_glass_00009" },
-            "geometry": {
-              "type": "LineString",
-              "coordinates": [
-                [12.247720206361976, 57.085450446310944],
-                [12.247709540158297, 57.085478013960596]
-              ]
+        const s = document.createElement("script");
+        s.src = src;
+        s.async = true;
+        s.defer = true;
+        s.dataset.sektion73 = src;
+        s.onload = () => resolve(true);
+        s.onerror = () => reject(new Error("Script load failed: " + src));
+        document.head.appendChild(s);
+      } catch (e) {
+        reject(e);
+      }
+    });
+  }
+
+  // 2) Edge-segment för “yttersta raden mot vägen”
+  // OBS: detta måste vara rätt segment. Just nu använder vi dina två första punkter.
+  const sektion73FenceA_00019 = [12.247720206361976, 57.085450446310944];
+  const sektion73FenceB_00020 = [12.247709540158297, 57.085478013960596];
+
+  // 3) Bygg en custom layer som renderar 3D-glasväggen
+  const sektion73GlassWallLayerId_00021 = "sektion73Layer_glasswall_threebox_00021";
+
+  if (!sektion73Map.getLayer(sektion73GlassWallLayerId_00021)) {
+    // Three.js + Threebox (UMD). Du sa att bibliotek får importeras.
+    // Threebox kräver window.THREE och window.Threebox.
+    Promise.resolve()
+      .then(() => sektion73LoadScriptOnce_00018(
+        "https://unpkg.com/three@0.152.2/build/three.min.js",
+        () => !!window.THREE
+      ))
+      .then(() => sektion73LoadScriptOnce_00018(
+        "https://unpkg.com/threebox-plugin@2.2.7/dist/threebox.min.js",
+        () => !!window.Threebox
+      ))
+      .then(() => {
+        const customLayer = {
+          id: sektion73GlassWallLayerId_00021,
+          type: "custom",
+          renderingMode: "3d",
+
+          onAdd: function (map, gl) {
+            // Threebox init
+            this.tb = new window.Threebox(
+              map,
+              gl,
+              {
+                defaultLights: true
+              }
+            );
+
+            this.group = new window.THREE.Group();
+            this.tb.world.add(this.group);
+
+            // --- PARAMS (justera fritt) ---
+            const wallHeightM = 1.35;       // höjd på glasvägg
+            const wallBottomLiftM = 0.06;   // “går inte emot marken”
+            const wallThicknessM = 0.06;    // tjocklek
+            const panelWidthM = 0.42;       // panelbredd (glasblock)
+            const gapM = 0.06;              // mellan paneler (stolpe)
+            const postWidthM = 0.035;       // pelarbredd
+            const postDepthM = 0.045;
+
+            // Material: glas (transparent + “blurrig” känsla via opacity + roughness)
+            const glassMat = new window.THREE.MeshPhysicalMaterial({
+              color: new window.THREE.Color(0xbfeaf3),
+              transparent: true,
+              opacity: 0.35,
+              roughness: 0.35,
+              metalness: 0.0,
+              transmission: 0.55,
+              thickness: 0.4,
+              clearcoat: 0.15,
+              clearcoatRoughness: 0.65
+            });
+
+            // Material: stolpe (svart)
+            const postMat = new window.THREE.MeshStandardMaterial({
+              color: new window.THREE.Color(0x0a0a0a),
+              roughness: 0.75,
+              metalness: 0.15
+            });
+
+            // Hjälp: meters -> “world units” via Threebox
+            const aWorld = this.tb.projectToWorld(sektion73FenceA_00019);
+            const bWorld = this.tb.projectToWorld(sektion73FenceB_00020);
+
+            const dir = new window.THREE.Vector3().subVectors(bWorld, aWorld);
+            const length = dir.length() || 1;
+            dir.normalize();
+
+            // normal (för att ge tjocklek utåt)
+            const up = new window.THREE.Vector3(0, 0, 1);
+            const normal = new window.THREE.Vector3().crossVectors(dir, up).normalize();
+
+            // startpunkt
+            let traveled = 0;
+
+            // Bygg segment: [glaspanel][stolpe][glaspanel]...
+            while (traveled < length) {
+              const nextPanel = Math.min(panelWidthM, length - traveled);
+
+              // panel center
+              const panelCenter = new window.THREE.Vector3()
+                .copy(aWorld)
+                .addScaledVector(dir, traveled + nextPanel / 2)
+                .addScaledVector(normal, wallThicknessM / 2);
+
+              // panel geometry
+              const panelGeo = new window.THREE.BoxGeometry(
+                nextPanel,
+                wallThicknessM,
+                wallHeightM
+              );
+
+              const panelMesh = new window.THREE.Mesh(panelGeo, glassMat);
+              panelMesh.position.copy(panelCenter);
+              panelMesh.position.z += wallBottomLiftM + wallHeightM / 2;
+
+              // rotera så panelen följer linjen
+              panelMesh.rotation.z = Math.atan2(dir.y, dir.x);
+
+              // “border-left” känsla: en tunn svart list på vänstersidan av panel
+              const leftBorderGeo = new window.THREE.BoxGeometry(
+                0.008,
+                wallThicknessM + 0.006,
+                wallHeightM * 0.98
+              );
+              const leftBorder = new window.THREE.Mesh(leftBorderGeo, postMat);
+
+              // placera “left border” vid panelens vänsterkant
+              const leftOffset = new window.THREE.Vector3()
+                .copy(dir)
+                .multiplyScalar(-nextPanel / 2 + 0.004);
+
+              leftBorder.position.copy(panelCenter).add(leftOffset);
+              leftBorder.position.z += wallBottomLiftM + wallHeightM / 2;
+              leftBorder.rotation.z = panelMesh.rotation.z;
+
+              this.group.add(panelMesh);
+              this.group.add(leftBorder);
+
+              traveled += nextPanel;
+
+              // stolpe efter panel (om det finns kvar utrymme)
+              if (traveled < length) {
+                const nextGap = Math.min(gapM, length - traveled);
+
+                const postCenter = new window.THREE.Vector3()
+                  .copy(aWorld)
+                  .addScaledVector(dir, traveled + nextGap / 2)
+                  .addScaledVector(normal, postDepthM / 2);
+
+                const postGeo = new window.THREE.BoxGeometry(
+                  nextGap,
+                  postDepthM,
+                  wallHeightM
+                );
+
+                const postMesh = new window.THREE.Mesh(postGeo, postMat);
+                postMesh.position.copy(postCenter);
+                postMesh.position.z += wallBottomLiftM + wallHeightM / 2;
+                postMesh.rotation.z = Math.atan2(dir.y, dir.x);
+
+                this.group.add(postMesh);
+
+                traveled += nextGap;
+              }
             }
+          },
+
+          render: function () {
+            // Threebox render-loop
+            this.tb.update();
           }
-        ]
-      }
-    });
+        };
+
+        // Lägg layer sist bland dina custom-grejer så den hamnar “över”
+        sektion73Map.addLayer(customLayer);
+      })
+      .catch((e) => {
+        console.error("[sektion73] Threebox glass wall failed:", e);
+      });
   }
 
-  // Helper: gör en “vägg-strip” (tunn polygon) från 2 punkter.
-  // offsetMeters = “tjocklek” på väggen, i meter (håll låg: 0.5–0.8m).
-  function sektion73MakeWallStripPolygon_00019(aLngLat, bLngLat, offsetMeters) {
-    const ax = aLngLat[0], ay = aLngLat[1];
-    const bx = bLngLat[0], by = bLngLat[1];
-
-    // riktning
-    const dx = bx - ax;
-    const dy = by - ay;
-
-    // normal (perp)
-    const len = Math.sqrt(dx * dx + dy * dy) || 1;
-    const nx = -dy / len;
-    const ny = dx / len;
-
-    // meter -> grader (approx)
-    const metersToDegLat = 1 / 111320;
-    const metersToDegLng = 1 / (111320 * Math.cos((ay * Math.PI) / 180));
-
-    const offLng = nx * offsetMeters * metersToDegLng;
-    const offLat = ny * offsetMeters * metersToDegLat;
-
-    // polygon strip (A -> B -> B' -> A' -> A)
-    const a2 = [ax + offLng, ay + offLat];
-    const b2 = [bx + offLng, by + offLat];
-
-    return {
-      "type": "FeatureCollection",
-      "features": [
-        {
-          "type": "Feature",
-          "properties": { "sektion73Style": "terrace_glass_00009" },
-          "geometry": {
-            "type": "Polygon",
-            "coordinates": [[aLngLat, bLngLat, b2, a2, aLngLat]]
-          }
-        }
-      ]
-    };
-  }
-
-  // Bygg glasväggens polygon-source (en gång)
-  if (!sektion73Map.getSource(sektion73TerraceGlassWallSourceId_00018)) {
-    const sektion73A_00020 = [12.247720206361976, 57.085450446310944];
-    const sektion73B_00021 = [12.247709540158297, 57.085478013960596];
-
-    sektion73Map.addSource(sektion73TerraceGlassWallSourceId_00018, {
-      type: "geojson",
-      data: sektion73MakeWallStripPolygon_00019(sektion73A_00020, sektion73B_00021, 0.70)
-    });
-  }
-
-  // === 4) Glasvägg – mjuk skugga (3D) ===
-  if (!sektion73Map.getLayer("sektion73Layer_glasswall_shadow_3d_00022")) {
-    sektion73Map.addLayer({
-      id: "sektion73Layer_glasswall_shadow_3d_00022",
-      type: "fill-extrusion",
-      source: sektion73TerraceGlassWallSourceId_00018,
-      filter: sektion73TerraceFilter_00011,
-      paint: {
-        "fill-extrusion-color": "rgba(0,0,0,0.35)",
-        "fill-extrusion-opacity": 0.25,
-        "fill-extrusion-height": [
-          "interpolate",
-          ["linear"],
-          ["zoom"],
-          13, 0.9,
-          16, 1.15,
-          18.5, 1.35
-        ],
-        "fill-extrusion-base": 0,
-        "fill-extrusion-vertical-gradient": true
-      }
-    });
-  }
-
-  // === 5) Glasvägg – själva glaset (3D) ===
-  if (!sektion73Map.getLayer("sektion73Layer_glasswall_glass_3d_00023")) {
-    sektion73Map.addLayer({
-      id: "sektion73Layer_glasswall_glass_3d_00023",
-      type: "fill-extrusion",
-      source: sektion73TerraceGlassWallSourceId_00018,
-      filter: sektion73TerraceFilter_00011,
-      paint: {
-        "fill-extrusion-color": "rgba(160, 220, 235, 0.60)",
-        "fill-extrusion-opacity": 0.38,
-        "fill-extrusion-height": [
-          "interpolate",
-          ["linear"],
-          ["zoom"],
-          13, 0.9,
-          16, 1.15,
-          18.5, 1.35
-        ],
-        "fill-extrusion-base": 0,
-        "fill-extrusion-vertical-gradient": true
-      }
-    });
-  }
-
-  // === 6) Glas-block känsla: “blurriga transparenta fyrkanter” via dashad line på edge ===
-  // (detta är 2D overlay, men ihop med 3D-väggen ser det ut som glasblock)
-  if (!sektion73Map.getLayer("sektion73Layer_glassblocks_overlay_00024")) {
-    sektion73Map.addLayer({
-      id: "sektion73Layer_glassblocks_overlay_00024",
-      type: "line",
-      source: sektion73TerraceFenceEdgeSourceId_00010,
-      filter: sektion73TerraceFilter_00011,
-      paint: {
-        "line-color": "rgba(190, 235, 245, 0.55)",
-        "line-width": ["interpolate", ["linear"], ["zoom"], 13, 4.5, 17, 9.0, 18.5, 11.5],
-        "line-blur": 1.25,
-        "line-dasharray": [0.18, 0.14]
-      }
-    });
-  }
-
-  // === 7) “border-left” (svarta smala pelare) via en tät dashad linje ovanpå ===
-  if (!sektion73Map.getLayer("sektion73Layer_glassposts_overlay_00025")) {
-    sektion73Map.addLayer({
-      id: "sektion73Layer_glassposts_overlay_00025",
-      type: "line",
-      source: sektion73TerraceFenceEdgeSourceId_00010,
-      filter: sektion73TerraceFilter_00011,
-      paint: {
-        "line-color": "rgba(0,0,0,0.88)",
-        "line-width": ["interpolate", ["linear"], ["zoom"], 13, 1.4, 17, 2.4, 18.5, 3.0],
-        "line-blur": 0.0,
-        "line-dasharray": [0.04, 0.18]
-      }
-    });
-  }
 
 
 
