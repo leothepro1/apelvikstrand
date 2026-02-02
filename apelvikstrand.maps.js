@@ -1799,6 +1799,66 @@ function sektion73ApplyFilter(filterLabel) {
     easing: easeInOutCubic
   });
 }
+function sektion73FitViewportToFilter(filterLabel) {
+  if (!sektion73Map || typeof sektion73Map.fitBounds !== "function") return;
+
+  const fNorm = sektion73NormFilter(filterLabel);
+  const showAll = (fNorm === "alla" || fNorm === "");
+
+  // Samla lngLat för pins som ska vara synliga
+  const pts = [];
+  Object.keys(sektion73MarkersById).forEach((id) => {
+    const entry = sektion73MarkersById[id];
+    if (!entry || !entry.pin || !entry.pin.lngLat) return;
+
+    const pinFilter = sektion73NormFilter(entry.pin.filter);
+    const shouldShow = showAll ? true : (pinFilter === fNorm);
+    if (!shouldShow) return;
+
+    // lngLat är [lng, lat]
+    pts.push(entry.pin.lngLat);
+  });
+
+  // Inget att rama in
+  if (pts.length === 0) return;
+
+  // Om bara 1 pin: behåll din “filter view”-känsla (den du redan tuned och gillar)
+  if (pts.length === 1) {
+    sektion73EaseToFilterOverview();
+    return;
+  }
+
+  // Bygg bounds
+  const bounds = new mapboxgl.LngLatBounds(pts[0], pts[0]);
+  for (let i = 1; i < pts.length; i++) bounds.extend(pts[i]);
+
+  // Samma pitch/bearing som din filter-view (justera inte här om du redan är nöjd)
+  const targetBearing = (typeof sektion73Bearing === "number") ? sektion73Bearing : sektion73Map.getBearing();
+  const targetPitch = Math.max(
+    0,
+    (sektion73Pitch || sektion73Map.getPitch() || 0) - 14
+  );
+
+  // Padding: lämna luft för filterbar + lite safe space
+  // (top för ev. UI, bottom för filterbar)
+  const padding = { top: 80, right: 28, bottom: 130, left: 28 };
+
+  const easeInOutCubic = (t) => (t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2);
+
+  // Fit bounds så ALLA synliga pins hamnar i viewport
+  sektion73Map.fitBounds(bounds, {
+    padding,
+    duration: 820,
+    easing: easeInOutCubic,
+
+    // Viktigt: undvik att fitBounds zoomar in för aggressivt
+    // (du vill “overview”, inte “hitta 2 punkter nära varandra och zooma in max”)
+    maxZoom: Math.min(sektion73MaxZoom, (typeof sektion73StartZoom === "number" ? sektion73StartZoom : sektion73Map.getZoom())),
+
+    bearing: targetBearing,
+    pitch: targetPitch
+  });
+}
 
 
 function sektion73EnsureFilterBar() {
@@ -1848,19 +1908,15 @@ function sektion73EnsureFilterBar() {
         close.innerHTML = closeSvg;
         close.setAttribute("aria-hidden", "true");
 
-  close.addEventListener("click", (e) => {
+ close.addEventListener("click", (e) => {
   e.preventDefault();
-
-  // VIKTIGT: säkerställ att knappens egna click inte triggas alls
   if (typeof e.stopImmediatePropagation === "function") e.stopImmediatePropagation();
   e.stopPropagation();
 
-  // Avmarkera
-  setActive("");            // detta kör redan sektion73ApplyFilter(...) i slutet av setActive
+  setActive(""); // “alla”
 
-  // Kör "overview"-kameran på nästa frame så allt känns synkat och mjukt
   requestAnimationFrame(() => {
-    sektion73EaseToFilterOverview();
+    sektion73FitViewportToFilter("");
   });
 });
 
@@ -1897,8 +1953,9 @@ btn.addEventListener("click", () => {
   const next = String(btn.getAttribute("data-filter") || "");
   setActive(next);
 
+  // NYTT: rama in alla pins som är synliga för filtret
   requestAnimationFrame(() => {
-    sektion73EaseToFilterOverview();
+    sektion73FitViewportToFilter(next);
   });
 });
 
