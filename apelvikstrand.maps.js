@@ -589,20 +589,87 @@ center: sektion73InitialCenter.lngLat,
      - Skugga: mjuk line med translate
      ========================================================= */
 
-  const sektion73TerraceFilter_00011 = ["==", ["get", "sektion73Style"], "terrace_glass_00009"];
-  const sektion73TerraceFenceSourceId_00010 = "sektion73Geojson_terrace_fence_00010";
+  /* =========================================================
+     sektion73 – TERRASS: PLATTA + 3D SLAB + GLASVÄGG (3D)
+     - Terrassfärg: #7E7D77
+     - Terrass får en tunn 3D-"slab" (fill-extrusion) så den inte känns platt
+     - Glasräcke ersätts med 3D-vägg (fill-extrusion) byggd från edge-linjen
+     - Glasruta-look: transparenta “block” via 2D line-dash ovanpå väggens footprint
+     ========================================================= */
 
-  if (!sektion73Map.getSource(sektion73TerraceFenceSourceId_00010)) {
-    sektion73Map.addSource(sektion73TerraceFenceSourceId_00010, {
+  const sektion73TerraceFilter_00011 = ["==", ["get", "sektion73Style"], "terrace_glass_00009"];
+
+  // === 1) Terrass – solid färg (#7E7D77) ===
+  if (!sektion73Map.getLayer("sektion73Layer_terrace_fill_00012")) {
+    sektion73Map.addLayer({
+      id: "sektion73Layer_terrace_fill_00012",
+      type: "fill",
+      source: sektion73ApelvikenSourceId,
+      filter: sektion73TerraceFilter_00011,
+      paint: {
+        "fill-color": "#7E7D77",
+        "fill-opacity": 0.92
+      }
+    });
+  }
+
+  // === 2) Terrass – tunn 3D slab (så den inte är helt platt) ===
+  if (!sektion73Map.getLayer("sektion73Layer_terrace_slab_3d_00017")) {
+    sektion73Map.addLayer({
+      id: "sektion73Layer_terrace_slab_3d_00017",
+      type: "fill-extrusion",
+      source: sektion73ApelvikenSourceId,
+      filter: sektion73TerraceFilter_00011,
+      paint: {
+        "fill-extrusion-color": "#7E7D77",
+        "fill-extrusion-opacity": 0.98,
+        "fill-extrusion-height": [
+          "interpolate",
+          ["linear"],
+          ["zoom"],
+          13, 0.18,
+          16, 0.28,
+          18.5, 0.38
+        ],
+        "fill-extrusion-base": 0,
+        "fill-extrusion-vertical-gradient": true
+      }
+    });
+  }
+
+  // === 3) Terrass – outline (lite mörkare) ===
+  if (!sektion73Map.getLayer("sektion73Layer_terrace_outline_00013")) {
+    sektion73Map.addLayer({
+      id: "sektion73Layer_terrace_outline_00013",
+      type: "line",
+      source: sektion73ApelvikenSourceId,
+      filter: sektion73TerraceFilter_00011,
+      paint: {
+        "line-color": "rgba(25,25,25,0.55)",
+        "line-width": ["interpolate", ["linear"], ["zoom"], 13, 1.0, 17, 2.5],
+        "line-blur": 0.2
+      }
+    });
+  }
+
+  /* =========================================================
+     sektion73 – GLASVÄGG: 3D wall byggd från edge-linjen
+     Vi skapar en tunn polygon (”strip”) från 2 punkter med en liten offset.
+     ========================================================= */
+
+  const sektion73TerraceFenceEdgeSourceId_00010 = "sektion73Geojson_terrace_fence_00010";
+  const sektion73TerraceGlassWallSourceId_00018 = "sektion73Geojson_terrace_glasswall_00018";
+
+  // Edge-linje (samma som innan)
+  if (!sektion73Map.getSource(sektion73TerraceFenceEdgeSourceId_00010)) {
+    sektion73Map.addSource(sektion73TerraceFenceEdgeSourceId_00010, {
       type: "geojson",
       data: {
         "type": "FeatureCollection",
         "features": [
           {
             "type": "Feature",
-            "properties": {
-              "sektion73Style": "terrace_glass_00009"
-            },
+            "properties": { "sektion73Style": "terrace_glass_00009" },
             "geometry": {
               "type": "LineString",
               "coordinates": [
@@ -616,83 +683,139 @@ center: sektion73InitialCenter.lngLat,
     });
   }
 
-  // Terrass – varm “träkänsla”
-  if (!sektion73Map.getLayer("sektion73Layer_terrace_fill_00012")) {
+  // Helper: gör en “vägg-strip” (tunn polygon) från 2 punkter.
+  // offsetMeters = “tjocklek” på väggen, i meter (håll låg: 0.5–0.8m).
+  function sektion73MakeWallStripPolygon_00019(aLngLat, bLngLat, offsetMeters) {
+    const ax = aLngLat[0], ay = aLngLat[1];
+    const bx = bLngLat[0], by = bLngLat[1];
+
+    // riktning
+    const dx = bx - ax;
+    const dy = by - ay;
+
+    // normal (perp)
+    const len = Math.sqrt(dx * dx + dy * dy) || 1;
+    const nx = -dy / len;
+    const ny = dx / len;
+
+    // meter -> grader (approx)
+    const metersToDegLat = 1 / 111320;
+    const metersToDegLng = 1 / (111320 * Math.cos((ay * Math.PI) / 180));
+
+    const offLng = nx * offsetMeters * metersToDegLng;
+    const offLat = ny * offsetMeters * metersToDegLat;
+
+    // polygon strip (A -> B -> B' -> A' -> A)
+    const a2 = [ax + offLng, ay + offLat];
+    const b2 = [bx + offLng, by + offLat];
+
+    return {
+      "type": "FeatureCollection",
+      "features": [
+        {
+          "type": "Feature",
+          "properties": { "sektion73Style": "terrace_glass_00009" },
+          "geometry": {
+            "type": "Polygon",
+            "coordinates": [[aLngLat, bLngLat, b2, a2, aLngLat]]
+          }
+        }
+      ]
+    };
+  }
+
+  // Bygg glasväggens polygon-source (en gång)
+  if (!sektion73Map.getSource(sektion73TerraceGlassWallSourceId_00018)) {
+    const sektion73A_00020 = [12.247720206361976, 57.085450446310944];
+    const sektion73B_00021 = [12.247709540158297, 57.085478013960596];
+
+    sektion73Map.addSource(sektion73TerraceGlassWallSourceId_00018, {
+      type: "geojson",
+      data: sektion73MakeWallStripPolygon_00019(sektion73A_00020, sektion73B_00021, 0.70)
+    });
+  }
+
+  // === 4) Glasvägg – mjuk skugga (3D) ===
+  if (!sektion73Map.getLayer("sektion73Layer_glasswall_shadow_3d_00022")) {
     sektion73Map.addLayer({
-      id: "sektion73Layer_terrace_fill_00012",
-      type: "fill",
-      source: sektion73ApelvikenSourceId,
+      id: "sektion73Layer_glasswall_shadow_3d_00022",
+      type: "fill-extrusion",
+      source: sektion73TerraceGlassWallSourceId_00018,
       filter: sektion73TerraceFilter_00011,
       paint: {
-        "fill-color": "rgba(179, 124, 72, 0.55)",
-        "fill-opacity": 1
+        "fill-extrusion-color": "rgba(0,0,0,0.35)",
+        "fill-extrusion-opacity": 0.25,
+        "fill-extrusion-height": [
+          "interpolate",
+          ["linear"],
+          ["zoom"],
+          13, 0.9,
+          16, 1.15,
+          18.5, 1.35
+        ],
+        "fill-extrusion-base": 0,
+        "fill-extrusion-vertical-gradient": true
       }
     });
   }
 
-  // Terrass – outline
-  if (!sektion73Map.getLayer("sektion73Layer_terrace_outline_00013")) {
+  // === 5) Glasvägg – själva glaset (3D) ===
+  if (!sektion73Map.getLayer("sektion73Layer_glasswall_glass_3d_00023")) {
     sektion73Map.addLayer({
-      id: "sektion73Layer_terrace_outline_00013",
-      type: "line",
-      source: sektion73ApelvikenSourceId,
+      id: "sektion73Layer_glasswall_glass_3d_00023",
+      type: "fill-extrusion",
+      source: sektion73TerraceGlassWallSourceId_00018,
       filter: sektion73TerraceFilter_00011,
       paint: {
-        "line-color": "rgba(70, 45, 28, 0.85)",
-        "line-width": ["interpolate", ["linear"], ["zoom"], 13, 1.0, 17, 2.5],
-        "line-blur": 0.2
+        "fill-extrusion-color": "rgba(160, 220, 235, 0.60)",
+        "fill-extrusion-opacity": 0.38,
+        "fill-extrusion-height": [
+          "interpolate",
+          ["linear"],
+          ["zoom"],
+          13, 0.9,
+          16, 1.15,
+          18.5, 1.35
+        ],
+        "fill-extrusion-base": 0,
+        "fill-extrusion-vertical-gradient": true
       }
     });
   }
 
-  // Glasräcke – skugga (ger “svävar”-känsla)
-  if (!sektion73Map.getLayer("sektion73Layer_terrace_fence_shadow_00016")) {
+  // === 6) Glas-block känsla: “blurriga transparenta fyrkanter” via dashad line på edge ===
+  // (detta är 2D overlay, men ihop med 3D-väggen ser det ut som glasblock)
+  if (!sektion73Map.getLayer("sektion73Layer_glassblocks_overlay_00024")) {
     sektion73Map.addLayer({
-      id: "sektion73Layer_terrace_fence_shadow_00016",
+      id: "sektion73Layer_glassblocks_overlay_00024",
       type: "line",
-      source: sektion73TerraceFenceSourceId_00010,
+      source: sektion73TerraceFenceEdgeSourceId_00010,
       filter: sektion73TerraceFilter_00011,
       paint: {
-        "line-color": "rgba(0,0,0,0.30)",
-        "line-width": ["interpolate", ["linear"], ["zoom"], 13, 4.0, 17, 8.5, 18.5, 11.0],
-        "line-blur": 2.0,
-        "line-translate": [2, 4],
-        "line-translate-anchor": "viewport"
+        "line-color": "rgba(190, 235, 245, 0.55)",
+        "line-width": ["interpolate", ["linear"], ["zoom"], 13, 4.5, 17, 9.0, 18.5, 11.5],
+        "line-blur": 1.25,
+        "line-dasharray": [0.18, 0.14]
       }
     });
   }
 
-  // Glasräcke – glasblock (kvadratiska smala block via dash)
-  if (!sektion73Map.getLayer("sektion73Layer_terrace_glass_00014")) {
+  // === 7) “border-left” (svarta smala pelare) via en tät dashad linje ovanpå ===
+  if (!sektion73Map.getLayer("sektion73Layer_glassposts_overlay_00025")) {
     sektion73Map.addLayer({
-      id: "sektion73Layer_terrace_glass_00014",
+      id: "sektion73Layer_glassposts_overlay_00025",
       type: "line",
-      source: sektion73TerraceFenceSourceId_00010,
+      source: sektion73TerraceFenceEdgeSourceId_00010,
       filter: sektion73TerraceFilter_00011,
       paint: {
-        "line-color": "rgba(120, 210, 230, 0.55)",
-        "line-width": ["interpolate", ["linear"], ["zoom"], 13, 3.0, 17, 6.0, 18.5, 8.0],
-        "line-blur": 0.6,
-        "line-dasharray": [0.7, 0.25]
-      }
-    });
-  }
-
-  // Glasräcke – svarta stolpar mellan glasen
-  if (!sektion73Map.getLayer("sektion73Layer_terrace_posts_00015")) {
-    sektion73Map.addLayer({
-      id: "sektion73Layer_terrace_posts_00015",
-      type: "line",
-      source: sektion73TerraceFenceSourceId_00010,
-      filter: sektion73TerraceFilter_00011,
-      paint: {
-        "line-color": "rgba(0,0,0,0.85)",
-        "line-width": ["interpolate", ["linear"], ["zoom"], 13, 1.2, 17, 2.0, 18.5, 2.4],
+        "line-color": "rgba(0,0,0,0.88)",
+        "line-width": ["interpolate", ["linear"], ["zoom"], 13, 1.4, 17, 2.4, 18.5, 3.0],
         "line-blur": 0.0,
-        "line-dasharray": [0.06, 0.19]
+        "line-dasharray": [0.04, 0.18]
       }
     });
   }
+
 
 
       
