@@ -1581,41 +1581,43 @@ function sektion73InjectFilterCSS() {
       pointer-events: auto;
     }
 
-    #sektion73MapFilterRail{
-      display: flex;
-      gap: 10px;
-      align-items: center;
-      justify-content: flex-start;
-      padding: 10px 10px;
-      border-radius: 999px;
-      background: rgba(255,255,255,.92);
-      border: 1px solid rgba(14,19,24,.14);
-      box-shadow: 0 18px 60px rgba(0,0,0,.18);
-      backdrop-filter: blur(10px);
-      overflow-x: auto;
-      -webkit-overflow-scrolling: touch;
-      scrollbar-width: none;
-    }
+#sektion73MapFilterRail {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+    justify-content: flex-start;
+    padding: 8px 12px;
+    border-radius: 999px;
+    background: rgba(255, 255, 255, .92);
+    border: 1px solid rgba(14, 19, 24, .14);
+    box-shadow: 0 18px 60px rgba(0, 0, 0, .18);
+    backdrop-filter: blur(10px);
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+    width: max-content;
+    place-self: center;
+}
     #sektion73MapFilterRail::-webkit-scrollbar{ display:none; }
 
-    .sektion73FilterBtn{
-      all: unset;
-      cursor: pointer;
-      display: inline-flex;
-      align-items: center;
-      gap: 10px;
-      padding: 10px 14px;
-      border-radius: 999px;
-      border: 1px solid rgba(14,19,24,.12);
-      background: #ffffff;
-      color: #0e1318;
-      font-family: "Manrope", Inter, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, sans-serif;
-      font-size: 14px;
-      font-weight: 800;
-      white-space: nowrap;
-      user-select: none;
-      transition: transform 140ms ease, background 140ms ease, border-color 140ms ease;
-    }
+.sektion73FilterBtn {
+    all: unset;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    padding: 8px 11px;
+    border-radius: 999px;
+    border: 1px solid rgba(14, 19, 24, .12);
+    background: #ffffff;
+    color: #0e1318;
+    font-family: "Manrope", Inter, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, sans-serif;
+    font-size: 14px;
+    font-weight: 600;
+    white-space: nowrap;
+    user-select: none;
+    transition: transform 140ms ease, background 140ms ease, border-color 140ms ease;
+}
     .sektion73FilterBtn:hover{
       transform: translateY(-1px);
       border-color: rgba(14,19,24,.18);
