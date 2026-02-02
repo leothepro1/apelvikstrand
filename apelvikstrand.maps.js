@@ -1771,30 +1771,35 @@ function sektion73ApplyFilter(filterLabel) {
     }
   }
 }
-     function sektion73EaseToFilterOverview() {
+   function sektion73EaseToFilterOverview() {
   if (!sektion73Map || typeof sektion73Map.easeTo !== "function") return;
 
-  // "Max-läge" = mest utzoomat du tillåter (minZoom)
-  const targetZoom = sektion73MinZoom;
+  // TONA NER ZOOM: bara lite mer "overview" än start (subtilt)
+  // StartZoom = 15.7, så t.ex. 15.0 känns tydligt men inte dramatiskt.
+  const desiredZoom = (typeof sektion73StartZoom === "number" ? sektion73StartZoom : sektion73Map.getZoom()) - 0.7;
+  const targetZoom = Math.max(sektion73MinZoom, Math.min(sektion73MaxZoom, desiredZoom));
 
-  // Lite mer top-down (mindre pitch), men subtilt
-  const targetPitch = Math.max(0, (sektion73Pitch || 0) - 8);
+  // TILTA MER TOP-DOWN: sänk pitch lite mer än innan
+  // Pitch = 65 => ~51 känns "överblick" utan att bli platt.
+  const targetPitch = Math.max(0, (sektion73Pitch || sektion73Map.getPitch() || 0) - 14);
 
-  // Behåll bearing (så det känns som samma karta, bara mer överblick)
+  // Behåll bearing/center (ingen "hoppa hem"-känsla)
   const targetBearing = (typeof sektion73Bearing === "number") ? sektion73Bearing : sektion73Map.getBearing();
-
-  // Behåll center (så det inte känns som att kartan "hoppar hem")
   const targetCenter = sektion73Map.getCenter().toArray();
+
+  // LÅNGSAMMARE + MER EASE (mjuk in/out)
+  const easeInOutCubic = (t) => (t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2);
 
   sektion73Map.easeTo({
     center: targetCenter,
     zoom: targetZoom,
     pitch: targetPitch,
     bearing: targetBearing,
-    duration: 520,
-    easing: (t) => 1 - Math.pow(1 - t, 3) // samma "ease-out cubic" känsla
+    duration: 780,
+    easing: easeInOutCubic
   });
 }
+
 
 function sektion73EnsureFilterBar() {
   if (document.getElementById("sektion73MapFilterBar")) return;
@@ -1843,15 +1848,22 @@ function sektion73EnsureFilterBar() {
         close.innerHTML = closeSvg;
         close.setAttribute("aria-hidden", "true");
 
-    close.addEventListener("click", (e) => {
+  close.addEventListener("click", (e) => {
   e.preventDefault();
-  e.stopPropagation();
-  setActive("");            // avmarkera = visa allt
-  sektion73ApplyFilter(""); // matchar din showAll-logik
 
-  // NYTT: tillbaka till överblick
-  sektion73EaseToFilterOverview();
+  // VIKTIGT: säkerställ att knappens egna click inte triggas alls
+  if (typeof e.stopImmediatePropagation === "function") e.stopImmediatePropagation();
+  e.stopPropagation();
+
+  // Avmarkera
+  setActive("");            // detta kör redan sektion73ApplyFilter(...) i slutet av setActive
+
+  // Kör "overview"-kameran på nästa frame så allt känns synkat och mjukt
+  requestAnimationFrame(() => {
+    sektion73EaseToFilterOverview();
+  });
 });
+
 
         b.appendChild(close);
       }
@@ -1881,13 +1893,15 @@ function sektion73EnsureFilterBar() {
     btn.appendChild(ico);
     btn.appendChild(txt);
 
- btn.addEventListener("click", () => {
+btn.addEventListener("click", () => {
   const next = String(btn.getAttribute("data-filter") || "");
   setActive(next);
 
-  // NYTT: ge användaren en tydlig "overview"-känsla vid filterbyte
-  sektion73EaseToFilterOverview();
+  requestAnimationFrame(() => {
+    sektion73EaseToFilterOverview();
+  });
 });
+
 
     rail.appendChild(btn);
   });
