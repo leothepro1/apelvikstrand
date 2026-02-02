@@ -452,7 +452,7 @@ function sektion73InjectModalCSS() {
     #sektion73MapOverlay{
       position:fixed;
       inset:0;
-      background:rgba(0,0,0,.42);
+      background:rgba(0,0,0,.55);
       opacity:0;
       pointer-events:none;
       transition:opacity var(--sektion73-modal-dur) var(--sektion73-modal-ease);
@@ -679,9 +679,9 @@ display: none;
 display:inline-flex;
 align-items:center;
 justify-content:center;
-width:52px;
+width:62px;
 height:auto;
-flex:0 0 52px;
+flex:0 0 62px;
 line-height:0;
 }
     body.sektion73-modal-open {
@@ -699,7 +699,7 @@ background: var(--sektion73-accent);
 display: none;
 }
 #sektion73MapCanvas .sektion73PinBubble .sektion73PinIco svg{
-width:52px;
+width:62px;
 height:auto;
 display:block;
 color:currentColor;
@@ -721,11 +721,18 @@ fill: currentColor !important;
 gap:10px;
 }
 .sektion73PinWrap {
-display: inline-flex;
-flex-direction: column;
-align-items: center;
-gap: 0px;
-transform: translateZ(0);
+  display: inline-flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0px;
+  transform: translateZ(0);
+  position: relative;
+  z-index: 1;
+}
+
+#sektion73MapCanvas .sektion73PinWrap:hover,
+#sektion73MapCanvas .sektion73PinWrap:focus-within {
+  z-index: 9999;
 }
    /* PER-PIN: färger styrs via CSS-variabler på .sektion73PinWrap */
     .sektion73PinBubble{
@@ -761,7 +768,7 @@ align-items: center;
 justify-content: center;
 background: var(--sektion73-pin-bubble-bg, rgba(255, 255, 255, .92));
 height: max-content;
-padding: 11px 14px;
+padding: 8px;
 border-radius: 8px;
 }
   `;
