@@ -1621,8 +1621,8 @@ function sektion73InjectFilterCSS() {
     display: none;
 }
 .sektion73FilterClose {
-    width: 16px;
-    height: 16px;
+    width: 19px;
+    height: 19px;
     display: inline-flex;
     align-items: center;
     justify-content: center;
@@ -1635,33 +1635,34 @@ function sektion73InjectFilterCSS() {
 .sektion73FilterClose:hover{
   background: rgba(255,255,255,.9);
 }
-.sektion73FilterClose svg {
-    width: 16px;
-    height: 16px;
+.sektion73FilterIco svg {
+    width: 20px;
+    height: 20px;
     display: block;
-    stroke: currentColor;
-    stroke-width: 1.9;
-    fill: none;
+    fill: currentColor;
+    stroke: none;
+    stroke-width: 1.2;
     stroke-linecap: round;
     stroke-linejoin: round;
-}
-.sektion73FilterBtn {
+
+}.sektion73FilterBtn {
     all: unset;
     cursor: pointer;
     display: inline-flex;
     align-items: center;
     gap: 5px;
-    padding: 5px 11px;
+    padding: 6px 12px;
     border-radius: 999px;
     border: 1px solid #e6e6e6;
     background: #ffffff;
     color: #0e1318;
     font-family: 'Inter Variablefont Opsz Wght';
-    font-size: 0.975rem;
+    font-size: 15.5px;
     font-weight: 500;
     white-space: nowrap;
     user-select: none;
     transition: 0.15s ease-in-out;
+    text-transform: capitalize;
 }
     .sektion73FilterBtn:hover{
 background: #f2f4f5;
@@ -1680,16 +1681,16 @@ background: #e2e4e5;
     .sektion73FilterIco{
 display:inline-flex;
     }
-    .sektion73FilterIco svg{
-      width: 21px;
-      height: 21px;
-      display: block;
-      fill: none;
-      stroke: currentColor;
-      stroke-width: 2.2;
-      stroke-linecap: round;
-      stroke-linejoin: round;
-    }
+.sektion73FilterIco svg {
+    width: 21px;
+    height: 21px;
+    display: block;
+    fill: none;
+    stroke: none;
+    stroke-width: 2.2;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+}
   `;
   document.head.appendChild(style);
 }
