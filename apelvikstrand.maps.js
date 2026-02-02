@@ -411,17 +411,19 @@ center: sektion73InitialCenter.lngLat,
             }
           },
           {
-            "type": "Feature",
-            "properties": {},
-            "geometry": {
-              "type": "Polygon",
-              "coordinates": [
-                [
-                  [12.247493544756765, 57.08591042718817],
-                  [12.247601148376646, 57.085630578763215],
-                  [12.247901915736747, 57.08566479178353],
-                  [12.247789612501094, 57.085944973871904],
-                  [12.247493544756765, 57.08591042718817]
+  "type": "Feature",
+  "properties": {
+    "sektion73Style": "pool"
+  },
+  "geometry": {
+    "type": "Polygon",
+    "coordinates": [
+      [
+        [12.247493544756765, 57.08591042718817],
+        [12.247601148376646, 57.085630578763215],
+        [12.247901915736747, 57.08566479178353],
+        [12.247789612501094, 57.085944973871904],
+        [12.247493544756765, 57.08591042718817]
                 ]
               ]
             }
@@ -455,6 +457,108 @@ center: sektion73InitialCenter.lngLat,
       }
     });
   }
+
+  /* =========================================================
+     sektion73 – POOL (NATURLIGT BLÅTT VATTEN + VIT KANT + SKUGGA)
+     - Renderas endast för features med properties.sektion73Style === "pool"
+     - Skugga: separat fill (lite translate + blur)
+     - Vatten: fill med “naturlig” blå ton + lätt transparens
+     - Kant: vit line + mjuk highlight
+     ========================================================= */
+
+  const sektion73PoolFilter_00004 = ["==", ["get", "sektion73Style"], "pool"];
+
+  // 1) Skugga (läggs först, så den hamnar under vattnet)
+  if (!sektion73Map.getLayer("sektion73Layer_pool_shadow_00005")) {
+    sektion73Map.addLayer({
+      id: "sektion73Layer_pool_shadow_00005",
+      type: "fill",
+      source: sektion73ApelvikenSourceId,
+      filter: sektion73PoolFilter_00004,
+      paint: {
+        "fill-color": "rgba(0,0,0,0.35)",
+        "fill-opacity": [
+          "interpolate",
+          ["linear"],
+          ["zoom"],
+          13, 0.10,
+          16, 0.18,
+          18, 0.22
+        ],
+        "fill-translate": [3, 6],
+        "fill-translate-anchor": "viewport"
+      }
+    });
+  }
+
+  // 2) Pool-vatten (naturligt blått, lite djupkänsla via zoom-interpolation)
+  if (!sektion73Map.getLayer("sektion73Layer_pool_water_00006")) {
+    sektion73Map.addLayer({
+      id: "sektion73Layer_pool_water_00006",
+      type: "fill",
+      source: sektion73ApelvikenSourceId,
+      filter: sektion73PoolFilter_00004,
+      paint: {
+        "fill-color": [
+          "interpolate",
+          ["linear"],
+          ["zoom"],
+          13, "rgba(44, 168, 196, 0.60)",
+          15, "rgba(38, 155, 190, 0.68)",
+          17, "rgba(28, 132, 176, 0.76)",
+          18.5, "rgba(20, 112, 160, 0.82)"
+        ],
+        "fill-opacity": 1
+      }
+    });
+  }
+
+  // 3) Vit pool-kant (klassisk rim)
+  if (!sektion73Map.getLayer("sektion73Layer_pool_rim_00007")) {
+    sektion73Map.addLayer({
+      id: "sektion73Layer_pool_rim_00007",
+      type: "line",
+      source: sektion73ApelvikenSourceId,
+      filter: sektion73PoolFilter_00004,
+      paint: {
+        "line-color": "rgba(255,255,255,0.98)",
+        "line-width": [
+          "interpolate",
+          ["linear"],
+          ["zoom"],
+          13, 1.5,
+          15, 2.5,
+          17, 4.0,
+          18.5, 5.0
+        ],
+        "line-blur": 0.15
+      }
+    });
+  }
+
+  // 4) Mjuk highlight på kanten (ger “keramik”-känsla)
+  if (!sektion73Map.getLayer("sektion73Layer_pool_rim_highlight_00008")) {
+    sektion73Map.addLayer({
+      id: "sektion73Layer_pool_rim_highlight_00008",
+      type: "line",
+      source: sektion73ApelvikenSourceId,
+      filter: sektion73PoolFilter_00004,
+      paint: {
+        "line-color": "rgba(255,255,255,0.55)",
+        "line-width": [
+          "interpolate",
+          ["linear"],
+          ["zoom"],
+          13, 3.0,
+          15, 4.0,
+          17, 6.0,
+          18.5, 7.5
+        ],
+        "line-blur": 1.2
+      }
+    });
+  }
+
 
       
 });
@@ -1707,16 +1811,6 @@ background: #e2e4e5;
     .sektion73FilterIco{
 display:inline-flex;
     }
-.sektion73FilterIco svg {
-    width: 21px;
-    height: 21px;
-    display: block;
-    fill: none;
-    stroke: none;
-    stroke-width: 2.2;
-    stroke-linecap: round;
-    stroke-linejoin: round;
-}
   `;
   document.head.appendChild(style);
 }
