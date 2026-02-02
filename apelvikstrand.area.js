@@ -39,10 +39,10 @@
        ========================= */
 
     // 1) Din token
-    mapboxgl.accessToken = "PUT_YOUR_PUBLIC_MAPBOX_TOKEN_HERE";
+    mapboxgl.accessToken = "pk.eyJ1IjoicnV0Z2Vyc3NvbiIsImEiOiJjbWwzdjY5N2owcDdiM2RzZWlzaG14MWVjIn0.yMfhGXLf9xq_vzIFSJVcjA";
 
     // 2) Din style (Studio)
-    const sektion73StyleUrl = "mapbox://styles/YOUR_USER/YOUR_STYLE_ID";
+    const sektion73StyleUrl = "mapbox://styles/rutgersson/cml3w74bd009g01r458nuhgjn";
 
     // 3) Home (Surbrunnsvägen 2–8, Apelviken)
     // OBS: Justera om du har mer exakt punkt. Denna är en rimlig "home" i Apelviken.
