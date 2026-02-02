@@ -1169,6 +1169,7 @@ const sektion73Pins = [
   {
     id: "sektion73Pin_home_0000",
     label: "Boendet",
+    filter: "Boenden",
     iconKey: "as",
     ui: {
       bubbleBg: "#FFC33E",
@@ -1199,6 +1200,7 @@ const sektion73Pins = [
   {
     id: "sektion73Pin_tangkorar1_0000",
     label: "Tångkörarvägen 1",
+    filter: "Restauranger",
     iconKey: "solviken",
     ui: {
       bubbleBg: "#1d1d1b",
@@ -1228,6 +1230,7 @@ const sektion73Pins = [
   {
     id: "sektion73Pin_tangkorar1_0000",
     label: "Tångkörarvägen 1",
+         filter: "Boenden",
     iconKey: "kusthotellet",
     ui: {
       bubbleBg: "#fff",
@@ -1256,6 +1259,7 @@ const sektion73Pins = [
  {
     id: "sektion73Pin_livs_0000",
     label: "Apelviken Livs",
+        filter: "Butiker",
     iconKey: "livs", // använd en befintlig iconKey som finns i sektion73PinIcons
     ui: {
       bubbleBg: "#fff",
@@ -1283,6 +1287,7 @@ const sektion73Pins = [
   {
     id: "sektion73Pin_surfcenter_0000",
     label: "Tångkörarvägen 1",
+         filter: "Aktiviteter",
     iconKey: "surfcenter",
     ui: {
       bubbleBg: "#519AC7",
@@ -1312,6 +1317,7 @@ const sektion73Pins = [
   {
     id: "sektion73Pin_tangkorar_0001",
     label: "Punkt 1",
+         filter: "Restauranger",
     iconKey: "johns",
     ui: { bubbleBg: "#20212B", pointerTop: "#20212B" },
     lngLat: sektion73Tangkorar_4.lngLat,
@@ -1336,6 +1342,7 @@ const sektion73Pins = [
   {
     id: "sektion73Pin_sanatorie_0002",
     label: "Punkt 2",
+              filter: "Restauranger",
     iconKey: "nisses",
     ui: { bubbleBg: "#FFC33E", pointerTop: "#FFC33E" },
     lngLat: sektion73Sanatorie_4.lngLat,
@@ -1360,6 +1367,7 @@ const sektion73Pins = [
   {
     id: "sektion73Pin_tangkorar_0003",
     label: "Punkt 3",
+              filter: "Restauranger",     
     iconKey: "brittas",
     ui: { bubbleBg: "#1D252C", pointerTop: "#1D252C" },
     lngLat: sektion73Tangkorar_2.lngLat,
@@ -1384,6 +1392,7 @@ const sektion73Pins = [
   {
     id: "sektion73Pin_tangkorar_0004",
     label: "Punkt 4",
+              filter: "Restauranger",     
     iconKey: "olles",
     ui: { bubbleBg: "#fff", pointerTop: "#fff" },
     lngLat: sektion73Tangkorar_10.lngLat,
@@ -1408,6 +1417,7 @@ const sektion73Pins = [
   {
     id: "sektion73Pin_tangkorar_0005",
     label: "Punkt 5",
+                   filter: "Restauranger",
     iconKey: "strandkollektivet",
     ui: { bubbleBg: "#A5B99A", pointerTop: "#A5B99A" },
     lngLat: sektion73Tangkorar_17.lngLat,
@@ -1432,6 +1442,7 @@ const sektion73Pins = [
   {
     id: "sektion73Pin_ny_plats_0006",
     label: "Ny Plats",
+                   filter: "Restauranger",
     iconKey: "da", 
     ui: { 
       bubbleBg: "#fff", 
@@ -1459,13 +1470,16 @@ const sektion73Pins = [
 ];
 
 
-  function sektion73CreatePinEl(pin) {
+function sektion73CreatePinEl(pin) {
   const wrap = document.createElement("div");
   wrap.className = "sektion73PinWrap";
   wrap.id = pin.id;
 
   /* NYTT: gör iconKey tillgängligt för CSS */
   wrap.dataset.iconKey = String(pin.iconKey || "home");
+
+  /* NYTT: gör filter tillgängligt för logik/DOM */
+  wrap.dataset.filter = String(pin.filter || "").trim();
 
   // PER-PIN CSS vars (endast färger)
   const bubbleBg = (pin.ui && pin.ui.bubbleBg) ? String(pin.ui.bubbleBg) : "rgba(255,255,255,.92)";
@@ -1518,87 +1532,326 @@ const sektion73Pins = [
 }
 
 
-    const sektion73MarkersById = Object.create(null);
-    let sektion73IsZoomingToPin = false;
-    let sektion73PendingPinId = null;
-    let sektion73ActiveMoveEndHandler = null;
 
-       function sektion73ZoomToPinThenOpenModal(pin) {
-      // Stäng ev. befintlig modal direkt (så fokus blir zoom först)
-      if (sektion73ModalOpen) sektion73CloseModal();
+  const sektion73MarkersById = Object.create(null);
+let sektion73IsZoomingToPin = false;
+let sektion73PendingPinId = null;
+let sektion73ActiveMoveEndHandler = null;
 
-      // Safety: rensa tidigare moveend-hook om man klickar snabbt mellan pins
-      if (sektion73ActiveMoveEndHandler) {
-        sektion73Map.off("moveend", sektion73ActiveMoveEndHandler);
-        sektion73ActiveMoveEndHandler = null;
-      }
+/* =========================
+   FILTER UI (BOTTOM CENTER)
+   - Skapar en "slider" med filter-knappar
+   - Klick på filter: döljer pins som inte matchar
+   - Påverkar inte befintlig CSS/logik (ny, scoped DOM + egen style-tag)
+   ========================= */
 
-      // Spara vyn där användaren var innan pin-zoom
-      sektion73ReturnView = {
-        center: sektion73Map.getCenter().toArray(),
-        zoom: sektion73Map.getZoom(),
-        pitch: sektion73Map.getPitch(),
-        bearing: sektion73Map.getBearing()
-      };
+const sektion73FilterState = {
+  active: "Alla"
+};
 
-      sektion73IsZoomingToPin = true;
-      sektion73PendingPinId = pin.id;
+function sektion73NormFilter(v) {
+  return String(v || "").trim().toLowerCase();
+}
 
-      // Vänta på att zoomen är klar → öppna modal
-      const onMoveEnd = () => {
-        if (!sektion73IsZoomingToPin) return;
-        if (sektion73PendingPinId !== pin.id) return;
+function sektion73GetAvailableFilters() {
+  const set = new Set();
+  (sektion73Pins || []).forEach((p) => {
+    const f = String(p && p.filter ? p.filter : "").trim();
+    if (f) set.add(f);
+  });
 
-        sektion73Map.off("moveend", onMoveEnd);
-        sektion73ActiveMoveEndHandler = null;
+  const arr = Array.from(set);
+  arr.sort((a, b) => a.localeCompare(b, "sv"));
+  return ["Alla", ...arr];
+}
 
-        sektion73IsZoomingToPin = false;
-        sektion73PendingPinId = null;
+function sektion73InjectFilterCSS() {
+  if (document.getElementById("sektion73MapFilterStyle")) return;
 
-        sektion73OpenModal(pin.modal);
-      };
-
-      sektion73ActiveMoveEndHandler = onMoveEnd;
-      sektion73Map.on("moveend", onMoveEnd);
-
-      sektion73Map.easeTo({
-        center: pin.lngLat,
-        zoom: Math.min(sektion73PinZoom, sektion73MaxZoom),
-        pitch: sektion73Pitch,
-        bearing: sektion73Bearing,
-        duration: sektion73PinZoomDur,
-        easing: (t) => 1 - Math.pow(1 - t, 3) // ease-out cubic
-      });
+  const style = document.createElement("style");
+  style.id = "sektion73MapFilterStyle";
+  style.textContent = `
+    #sektion73MapFilterBar{
+      position: fixed;
+      left: 50%;
+      bottom: 14px;
+      transform: translateX(-50%);
+      z-index: 2147483003;
+      width: min(920px, calc(100vw - 24px));
+      pointer-events: auto;
     }
 
+    #sektion73MapFilterRail{
+      display: flex;
+      gap: 10px;
+      align-items: center;
+      justify-content: flex-start;
+      padding: 10px 10px;
+      border-radius: 999px;
+      background: rgba(255,255,255,.92);
+      border: 1px solid rgba(14,19,24,.14);
+      box-shadow: 0 18px 60px rgba(0,0,0,.18);
+      backdrop-filter: blur(10px);
+      overflow-x: auto;
+      -webkit-overflow-scrolling: touch;
+      scrollbar-width: none;
+    }
+    #sektion73MapFilterRail::-webkit-scrollbar{ display:none; }
 
-    function sektion73AddPin(pin) {
-      const { wrap, btn } = sektion73CreatePinEl(pin);
+    .sektion73FilterBtn{
+      all: unset;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      padding: 10px 14px;
+      border-radius: 999px;
+      border: 1px solid rgba(14,19,24,.12);
+      background: #ffffff;
+      color: #0e1318;
+      font-family: "Manrope", Inter, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, sans-serif;
+      font-size: 14px;
+      font-weight: 800;
+      white-space: nowrap;
+      user-select: none;
+      transition: transform 140ms ease, background 140ms ease, border-color 140ms ease;
+    }
+    .sektion73FilterBtn:hover{
+      transform: translateY(-1px);
+      border-color: rgba(14,19,24,.18);
+    }
+    .sektion73FilterBtn:active{
+      transform: translateY(0px);
+    }
 
-      btn.addEventListener("click", () => {
-        sektion73ZoomToPinThenOpenModal(pin);
+    .sektion73FilterBtn[aria-pressed="true"]{
+      background: #FFE6A3;
+      border-color: rgba(90,60,0,.22);
+      color: #5A3C00;
+    }
+
+    .sektion73FilterIco{
+      width: 18px;
+      height: 18px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      flex: 0 0 18px;
+      line-height: 0;
+      color: currentColor;
+    }
+    .sektion73FilterIco svg{
+      width: 18px;
+      height: 18px;
+      display: block;
+      fill: none;
+      stroke: currentColor;
+      stroke-width: 2.2;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+    }
+  `;
+  document.head.appendChild(style);
+}
+
+function sektion73BuildFilterIconBank() {
+  const bank = [
+    `<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 7h16M6 12h12M9 17h6"/></svg>`,
+    `<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 10h10M8 14h8"/><path d="M6 20h12a2 2 0 0 0 2-2V8a3 3 0 0 0-3-3H7a3 3 0 0 0-3 3v10a2 2 0 0 0 2 2Z"/></svg>`,
+    `<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 18h16"/><path d="M6 18V10a4 4 0 0 1 4-4h4a4 4 0 0 1 4 4v8"/></svg>`,
+    `<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 21s7-4.5 7-11a7 7 0 1 0-14 0c0 6.5 7 11 7 11Z"/><path d="M12 10.5h0"/></svg>`,
+    `<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h14"/><path d="M12 5v14"/></svg>`,
+    `<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 7l10 10M17 7L7 17"/></svg>`,
+    `<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 8h12"/><path d="M6 12h8"/><path d="M6 16h12"/></svg>`,
+    `<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 19V5"/><path d="M6 5h10l2 2v12H6"/></svg>`,
+    `<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 6h8"/><path d="M7 10h10"/><path d="M9 14h6"/><path d="M10 18h4"/></svg>`,
+    `<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 9h14"/><path d="M7 15h10"/></svg>`
+  ];
+
+  const named = {
+    "alla": `<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 7h16M6 12h12M9 17h6"/></svg>`,
+    "boenden": `<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 11l8-6 8 6"/><path d="M6 10v10h12V10"/></svg>`,
+    "restauranger": `<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 3v8"/><path d="M10 3v8"/><path d="M6 7h4"/><path d="M14 3v8a3 3 0 0 0 6 0V3"/></svg>`,
+    "aktiviteter": `<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 18h16"/><path d="M8 18l4-12 4 12"/></svg>`,
+    "service": `<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3v4"/><path d="M12 17v4"/><path d="M4.9 4.9l2.8 2.8"/><path d="M16.3 16.3l2.8 2.8"/><path d="M3 12h4"/><path d="M17 12h4"/><path d="M4.9 19.1l2.8-2.8"/><path d="M16.3 7.7l2.8-2.8"/><path d="M12 8a4 4 0 1 0 0 8"/></svg>`
+  };
+
+  return { bank, named };
+}
+
+function sektion73ApplyFilter(filterLabel) {
+  const fNorm = sektion73NormFilter(filterLabel);
+  const showAll = (fNorm === "alla" || fNorm === "");
+
+  Object.keys(sektion73MarkersById).forEach((id) => {
+    const entry = sektion73MarkersById[id];
+    if (!entry || !entry.marker || !entry.pin) return;
+
+    const pinFilter = sektion73NormFilter(entry.pin.filter);
+    const shouldShow = showAll ? true : (pinFilter === fNorm);
+
+    const el = entry.marker.getElement && entry.marker.getElement();
+    if (el) {
+      el.style.display = shouldShow ? "" : "none";
+      el.setAttribute("aria-hidden", shouldShow ? "false" : "true");
+    }
+  });
+
+  // Om modal är öppen och användaren filtrerar bort pinnen som nyss klickats:
+  // stäng modalen för att undvika "orphaned" state.
+  if (sektion73ModalOpen && window.__sektion73LastOpenedPinId) {
+    const last = sektion73MarkersById[window.__sektion73LastOpenedPinId];
+    const lastFilter = last && last.pin ? sektion73NormFilter(last.pin.filter) : "";
+    if (!showAll && lastFilter !== fNorm) {
+      sektion73CloseModal();
+    }
+  }
+}
+
+function sektion73EnsureFilterBar() {
+  if (document.getElementById("sektion73MapFilterBar")) return;
+
+  sektion73InjectFilterCSS();
+
+  const filters = sektion73GetAvailableFilters();
+  if (!filters || filters.length <= 1) return;
+
+  const { bank, named } = sektion73BuildFilterIconBank();
+
+  const bar = document.createElement("div");
+  bar.id = "sektion73MapFilterBar";
+
+  const rail = document.createElement("div");
+  rail.id = "sektion73MapFilterRail";
+
+  filters.forEach((label, idx) => {
+    const btn = document.createElement("button");
+    btn.type = "button";
+    btn.className = "sektion73FilterBtn";
+    btn.setAttribute("data-filter", String(label));
+    btn.setAttribute("aria-pressed", label === sektion73FilterState.active ? "true" : "false");
+    btn.setAttribute("aria-label", `Filter: ${label}`);
+
+    const ico = document.createElement("span");
+    ico.className = "sektion73FilterIco";
+
+    const key = sektion73NormFilter(label);
+    const svg = named[key] || bank[(idx % bank.length)];
+    ico.innerHTML = svg;
+
+    const txt = document.createElement("span");
+    txt.textContent = String(label);
+
+    btn.appendChild(ico);
+    btn.appendChild(txt);
+
+    btn.addEventListener("click", () => {
+      const next = String(btn.getAttribute("data-filter") || "Alla");
+      sektion73FilterState.active = next;
+
+      const allBtns = rail.querySelectorAll(".sektion73FilterBtn");
+      allBtns.forEach((b) => {
+        const isOn = String(b.getAttribute("data-filter") || "") === next;
+        b.setAttribute("aria-pressed", isOn ? "true" : "false");
       });
 
-      const marker = new mapboxgl.Marker({
-        element: wrap,
-        anchor: "bottom",
-        offset: [0, 10]
-      })
-        .setLngLat(pin.lngLat)
-        .addTo(sektion73Map);
+      sektion73ApplyFilter(next);
+    });
 
-      sektion73MarkersById[pin.id] = { marker, pin };
-    }
+    rail.appendChild(btn);
+  });
+
+  bar.appendChild(rail);
+  document.body.appendChild(bar);
+
+  // initial apply (om default inte är Alla i framtiden)
+  sektion73ApplyFilter(sektion73FilterState.active);
+}
+
+function sektion73ZoomToPinThenOpenModal(pin) {
+  // Stäng ev. befintlig modal direkt (så fokus blir zoom först)
+  if (sektion73ModalOpen) sektion73CloseModal();
+
+  // Safety: rensa tidigare moveend-hook om man klickar snabbt mellan pins
+  if (sektion73ActiveMoveEndHandler) {
+    sektion73Map.off("moveend", sektion73ActiveMoveEndHandler);
+    sektion73ActiveMoveEndHandler = null;
+  }
+
+  // Spara vyn där användaren var innan pin-zoom
+  sektion73ReturnView = {
+    center: sektion73Map.getCenter().toArray(),
+    zoom: sektion73Map.getZoom(),
+    pitch: sektion73Map.getPitch(),
+    bearing: sektion73Map.getBearing()
+  };
+
+  sektion73IsZoomingToPin = true;
+  sektion73PendingPinId = pin.id;
+
+  // Vänta på att zoomen är klar → öppna modal
+  const onMoveEnd = () => {
+    if (!sektion73IsZoomingToPin) return;
+    if (sektion73PendingPinId !== pin.id) return;
+
+    sektion73Map.off("moveend", onMoveEnd);
+    sektion73ActiveMoveEndHandler = null;
+
+    sektion73IsZoomingToPin = false;
+    sektion73PendingPinId = null;
+
+    sektion73OpenModal(pin.modal);
+  };
+
+  sektion73ActiveMoveEndHandler = onMoveEnd;
+  sektion73Map.on("moveend", onMoveEnd);
+
+  sektion73Map.easeTo({
+    center: pin.lngLat,
+    zoom: Math.min(sektion73PinZoom, sektion73MaxZoom),
+    pitch: sektion73Pitch,
+    bearing: sektion73Bearing,
+    duration: sektion73PinZoomDur,
+    easing: (t) => 1 - Math.pow(1 - t, 3) // ease-out cubic
+  });
+}
+
+
+
+ function sektion73AddPin(pin) {
+  const { wrap, btn } = sektion73CreatePinEl(pin);
+
+  btn.addEventListener("click", () => {
+    // används av filter för att kunna stänga modal om pin filtreras bort
+    window.__sektion73LastOpenedPinId = pin.id;
+
+    sektion73ZoomToPinThenOpenModal(pin);
+  });
+
+  const marker = new mapboxgl.Marker({
+    element: wrap,
+    anchor: "bottom",
+    offset: [0, 10]
+  })
+    .setLngLat(pin.lngLat)
+    .addTo(sektion73Map);
+
+  sektion73MarkersById[pin.id] = { marker, pin };
+}
 
 sektion73Map.once("load", function () {
   // pins (robust)
 
-      // pins
-      sektion73Pins.forEach(sektion73AddPin);
+  // pins
+  sektion73Pins.forEach(sektion73AddPin);
 
-      // säkerställ modal-DOM tidigt (ingen synlig effekt)
-      sektion73EnsureModalDOM();
-    });
+  // NYTT: skapa filter-slider efter att pins finns
+  sektion73EnsureFilterBar();
+
+  // säkerställ modal-DOM tidigt (ingen synlig effekt)
+  sektion73EnsureModalDOM();
+});
+
 
     /* =========================
        Debug helpers
