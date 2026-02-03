@@ -114,10 +114,10 @@ const sektion73Tangkorar_4 = {
 
     const sektion73MinZoom = 13.2;
     const sektion73MaxZoom = 17.9;
-    const sektion73StartZoom = 16.1;
+    const sektion73StartZoom = 15.3;
 const sektion73SecondaryPinsMinZoom = 15.8;
     // Kamera
-    const sektion73Pitch = 65;
+    const sektion73Pitch = 60;
 
     // Visa "från havet in mot land" (väst -> öst):
     // bearing 90 = öst uppåt i bild (kameran tittar mot öst med pitch)
@@ -126,7 +126,7 @@ const sektion73SecondaryPinsMinZoom = 15.8;
     const sektion73DisableRotate = true;
 
     // Zoom vid pin-klick
-    const sektion73PinZoom = 23.35;
+    const sektion73PinZoom = 24.15;
     const sektion73PinZoomDur = 950;
 
     // Mol animation
