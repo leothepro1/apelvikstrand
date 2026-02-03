@@ -565,10 +565,33 @@ center: sektion73InitialCenter.lngLat,
      - Console visar: layerId + featureId + properties
      ========================================================= */
 
-  (function sektion73DebugPickBuilding_00009() {
-    if (!sektion73Map || typeof sektion73Map.queryRenderedFeatures !== "function") return;
+ (function sektion73DebugPickBuilding_00009() {
+    if (!sektion73Map) return;
 
-    function sektion73GetExtrusionLayerIds_00010() {
+    // 0) Installationslogg (syns direkt vid load)
+    console.log("sektion73Pick: installerar debug click listeners...");
+
+    // 1) Rå DOM-klick på canvas (för att bevisa att klick når kartans canvas)
+    try {
+      const c = sektion73Map.getCanvas && sektion73Map.getCanvas();
+      if (c && !c.__sektion73DomClickBound_00010) {
+        c.__sektion73DomClickBound_00010 = true;
+        c.addEventListener(
+          "click",
+          (ev) => {
+            console.log("sektion73Pick: DOM canvas click", {
+              clientX: ev.clientX,
+              clientY: ev.clientY,
+              target: ev.target && ev.target.tagName ? ev.target.tagName : ev.target
+            });
+          },
+          { passive: true }
+        );
+      }
+    } catch (_) {}
+
+    // 2) Extrusion layer ids
+    function sektion73GetExtrusionLayerIds_00011() {
       try {
         const style = sektion73Map.getStyle && sektion73Map.getStyle();
         const layers = (style && style.layers) ? style.layers : [];
@@ -580,7 +603,7 @@ center: sektion73InitialCenter.lngLat,
       }
     }
 
-    function sektion73PickSimplifyProps_00011(props) {
+    function sektion73PickSimplifyProps_00012(props) {
       const p = props || {};
       const keep = [
         "id",
@@ -602,7 +625,7 @@ center: sektion73InitialCenter.lngLat,
       return out;
     }
 
-    function sektion73RankBuildingCandidates_00012(features) {
+    function sektion73RankBuildingCandidates_00013(features) {
       const scored = [];
       for (const f of features || []) {
         if (!f || !f.layer) continue;
@@ -623,9 +646,6 @@ center: sektion73InitialCenter.lngLat,
         if (props.render_height != null) score += 25;
         if (props.min_height != null) score += 10;
         if (props.render_min_height != null) score += 10;
-        if (props.underground != null) score += 5;
-        if (props.class === "building") score += 15;
-        if (props.extrude != null) score += 5;
 
         if (f.id != null) score += 20;
         if (props.id != null) score += 10;
@@ -640,30 +660,36 @@ center: sektion73InitialCenter.lngLat,
       return scored;
     }
 
-    function sektion73OnPick_00013(e) {
-      const extrusionLayerIds = sektion73GetExtrusionLayerIds_00010();
+    function sektion73OnPick_00014(e) {
+      // Bevis att Mapbox click triggas
+      console.log("sektion73Pick: MAPBOX click", { lngLat: e.lngLat, point: e.point });
 
+      // Query features
+      const extrusionLayerIds = sektion73GetExtrusionLayerIds_00011();
       let feats = [];
+
       try {
-        if (extrusionLayerIds.length) {
+        if (extrusionLayerIds.length && typeof sektion73Map.queryRenderedFeatures === "function") {
           feats = sektion73Map.queryRenderedFeatures(e.point, { layers: extrusionLayerIds }) || [];
         }
       } catch (_) {}
 
+      // Fallback: allt
       if (!feats.length) {
         try {
-          feats = sektion73Map.queryRenderedFeatures(e.point) || [];
+          if (typeof sektion73Map.queryRenderedFeatures === "function") {
+            feats = sektion73Map.queryRenderedFeatures(e.point) || [];
+          }
         } catch (_) {}
       }
 
-      const ranked = sektion73RankBuildingCandidates_00012(feats);
-
-      console.clear();
-      console.log("sektion73Pick: click lngLat =", e.lngLat);
       console.log("sektion73Pick: extrusion layer ids =", extrusionLayerIds);
+      console.log("sektion73Pick: features found =", feats.length);
+
+      const ranked = sektion73RankBuildingCandidates_00013(feats);
 
       if (!ranked.length) {
-        console.log("sektion73Pick: inga features vid klick. Zooma in lite och klicka mer exakt på taket.");
+        console.log("sektion73Pick: inga kandidater. Zooma in och klicka exakt på taket.");
         return;
       }
 
@@ -677,7 +703,7 @@ center: sektion73InitialCenter.lngLat,
           source: f.source || "",
           sourceLayer: f.sourceLayer || "",
           featureId: (f.id != null) ? f.id : null,
-          props: sektion73PickSimplifyProps_00011(f.properties || {})
+          props: sektion73PickSimplifyProps_00012(f.properties || {})
         };
       });
 
@@ -694,10 +720,11 @@ center: sektion73InitialCenter.lngLat,
       });
     }
 
-    if (!sektion73Map.__sektion73DebugPickBuildingBound_00014) {
-      sektion73Map.__sektion73DebugPickBuildingBound_00014 = true;
-      sektion73Map.on("click", sektion73OnPick_00013);
-      console.log("sektion73Pick: aktiv. Klicka på huset du vill ersätta så loggas kandidater.");
+    // 3) Binda Mapbox click (endast en gång)
+    if (!sektion73Map.__sektion73DebugPickBuildingBound_00015) {
+      sektion73Map.__sektion73DebugPickBuildingBound_00015 = true;
+      sektion73Map.on("click", sektion73OnPick_00014);
+      console.log("sektion73Pick: AKTIV. Klicka på huset nu.");
     }
   })();
 
