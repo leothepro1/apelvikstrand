@@ -1176,7 +1176,7 @@ let sektion73ReturnView = null;
 
 function sektion73OpenModal(payload) {
   const { overlay, modal } = sektion73EnsureModalDOM();
-  
+
   document.getElementById("sektion73ModalImgSrc").textContent = payload.imgSrc || "Bildkälla: —";
   document.getElementById("sektion73ModalBodyH").textContent = payload.h || "";
   document.getElementById("sektion73ModalBodyP").textContent = payload.p || "";
@@ -1212,11 +1212,24 @@ function sektion73OpenModal(payload) {
     };
   }
 
-  document.body.classList.add('sektion73-modal-open');
-  overlay.classList.add("is-open");
-  modal.classList.add("is-open");
+  // NYTT: säkerställ att första öppningen alltid får transition
+  // (speciellt när DOM + CSS kan ha skapats precis innan).
+  overlay.classList.remove("is-open");
+  modal.classList.remove("is-open");
+
+  // Force layout så browsern “registrerar” stängt-läget innan vi öppnar.
+  void modal.offsetWidth;
+
+  document.body.classList.add("sektion73-modal-open");
+
+  requestAnimationFrame(() => {
+    overlay.classList.add("is-open");
+    modal.classList.add("is-open");
+  });
+
   sektion73ModalOpen = true;
 }
+
 
 function sektion73CloseModal() {
   const overlay = document.getElementById("sektion73MapOverlay");
@@ -2366,6 +2379,10 @@ sektion73Map.once("load", function () {
     setTimeout(fn, d);
   };
 
+  // NYTT: injicera CSS som pinsen (och modalens transitions/vars) behöver direkt.
+  // Detta skapar INTE modal-DOM, bara en <style>-tagg.
+  sektion73InjectModalCSS();
+
   // 1) KRAV: kartan + ALLA pins ska synas direkt (ingen idle/defer här)
   sektion73Pins.forEach(sektion73AddPin);
 
@@ -2386,6 +2403,7 @@ sektion73Map.once("load", function () {
 
   // OBS: modalen skapas först vid första pin-klick via sektion73OpenModal() -> sektion73EnsureModalDOM()
 });
+
 
 
 
