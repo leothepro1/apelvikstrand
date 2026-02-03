@@ -56,29 +56,32 @@
     var ww = Math.max(320, Math.min(1280, Math.round(w * dpr)));
     var hh = Math.max(320, Math.min(1280, Math.round(h * dpr)));
 
-    return (
-      "https://api.mapbox.com/styles/v1/" +
-      encodeURIComponent(sektion73StyleUser) +
-      "/" +
-      encodeURIComponent(sektion73StyleId) +
-      "/static/" +
-      sektion73InitialLng +
-      "," +
-      sektion73InitialLat +
-      "," +
-      sektion73InitialZoom +
-      "," +
-      sektion73InitialBearing +
-      "," +
-      sektion73InitialPitch +
-      "/" +
-      ww +
-      "x" +
-      hh +
-      "?access_token=" +
-      encodeURIComponent(sektion73AccessToken) +
-      "&logo=false&attribution=false"
-    );
+ var sektion73PosterPitch = Math.max(0, Math.min(60, Number(sektion73InitialPitch) || 0));
+
+return (
+  "https://api.mapbox.com/styles/v1/" +
+  encodeURIComponent(sektion73StyleUser) +
+  "/" +
+  encodeURIComponent(sektion73StyleId) +
+  "/static/" +
+  sektion73InitialLng +
+  "," +
+  sektion73InitialLat +
+  "," +
+  sektion73InitialZoom +
+  "," +
+  sektion73InitialBearing +
+  "," +
+  sektion73PosterPitch +
+  "/" +
+  ww +
+  "x" +
+  hh +
+  "?access_token=" +
+  encodeURIComponent(sektion73AccessToken) +
+  "&logo=false&attribution=false"
+);
+
   }
 
   function sektion73EnsurePosterDom() {
