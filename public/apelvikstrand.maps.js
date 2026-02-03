@@ -1953,7 +1953,21 @@ background: #f2f4f5;
     .sektion73FilterBtn:active{
 background: #e2e4e5;
     }
-
+    @media (max-width: 768px){
+#sektion73MapFilterBar {
+    bottom: 0px;
+}
+#sektion73MapFilterRail {
+    display: flex;
+      gap: 12px;
+    align-items: center;
+    justify-content: start;
+    padding: 10px 17px 17px 17px;
+    border-radius: 0px;
+    width: 100vw;
+}
+      }
+         }
 .sektion73FilterBtn[aria-pressed="true"] {
     background: #FFE6A3;
     border-color: rgba(90, 60, 0, .22);
