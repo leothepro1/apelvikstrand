@@ -11,7 +11,16 @@
   // -----------------------------
   var sektion73MapboxJsSrc = "https://api.mapbox.com/mapbox-gl-js/v3.6.0/mapbox-gl.js";
   var sektion73MapboxCssHref = "https://api.mapbox.com/mapbox-gl-js/v3.6.0/mapbox-gl.css";
-  var sektion73HeavyMapsSrc = "/apelvikstrand.maps.js";
+ var sektion73HeavyMapsSrc = (function () {
+  try {
+    var s = document.currentScript && document.currentScript.src;
+    if (!s) return "https://apelvikstrand.pages.dev/apelvikstrand.maps.js";
+    return new URL("/apelvikstrand.maps.js", s).toString();
+  } catch (_) {
+    return "https://apelvikstrand.pages.dev/apelvikstrand.maps.js";
+  }
+})();
+
 
   // Hårdkodat från din maps-fil (behåll samma för identisk initial vy)
   var sektion73AccessToken =
