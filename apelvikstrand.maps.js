@@ -83,7 +83,7 @@
   // 2) Sanatorievägen 4, 432 53 Varberg
     const sektion73Sanatorie_4 = {
       title: "Sanatorievägen 4",
-      lngLat: [12.24786400, 57.08797000]
+      lngLat: [12.247915, 57.085573]
     };
 const sektion73Tangkorar_4 = {
   title: "Tångkörarvägen 4",
@@ -645,15 +645,14 @@ center: sektion73InitialCenter.lngLat,
   }
 
   /* =========================================================
-     sektion73 – GLASVÄGG (3D)
-     Vi använder Threebox (Three.js) som custom layer.
-     Detta möjliggör:
-       - paneler (transparenta "glasfyrkanter")
-       - stolpar (svarta pelare mellan panelerna)
-       - höjd från marken (riktig 3D)
+     sektion73 – GLASVÄGG (ÄKTA 3D) – FIXAD EDGE + KORTARE
+     - Väljer automatiskt den LÄNGSTA kanten i terrass-polygonen
+       (i praktiken din ytterkant mot “grönt” i den här formen)
+     - Väggens höjd är kortare
+     - Stolpar är fasta (inte att gapet blir en enda lång “pelare”)
      ========================================================= */
 
-  // 1) Minimal script-loader (ingen påverkan på övrig kod)
+  // Minimal script-loader (ingen påverkan på övrig kod)
   function sektion73LoadScriptOnce_00018(src, testFn) {
     return new Promise((resolve, reject) => {
       try {
@@ -675,17 +674,55 @@ center: sektion73InitialCenter.lngLat,
     });
   }
 
-  // 2) Edge-segment för “yttersta raden mot vägen”
-  // OBS: detta måste vara rätt segment. Just nu använder vi dina två första punkter.
-  const sektion73FenceA_00019 = [12.247720206361976, 57.085450446310944];
-  const sektion73FenceB_00020 = [12.247709540158297, 57.085478013960596];
+  // Plockar ut den LÄNGSTA kanten från terrass-polygons koordinater
+  // så glasväggen följer ytterkanten utan att du manuellt pekar A/B.
+  function sektion73PickLongestEdgeFromTerrace_00019() {
+    try {
+      const src = sektion73Map.getSource(sektion73ApelvikenSourceId);
+      if (!src || !src._data || !src._data.features) return null;
 
-  // 3) Bygg en custom layer som renderar 3D-glasväggen
+      const feat = src._data.features.find(
+        (f) => f && f.properties && f.properties.sektion73Style === "terrace_glass_00009"
+      );
+      if (!feat || !feat.geometry || feat.geometry.type !== "Polygon") return null;
+
+      const ring = (feat.geometry.coordinates && feat.geometry.coordinates[0]) ? feat.geometry.coordinates[0] : null;
+      if (!ring || ring.length < 2) return null;
+
+      // metrisk approx på lat/lng
+      const distM = (a, b) => {
+        const lng1 = a[0], lat1 = a[1];
+        const lng2 = b[0], lat2 = b[1];
+        const dLat = (lat2 - lat1) * 111320;
+        const dLng = (lng2 - lng1) * (111320 * Math.cos((lat1 * Math.PI) / 180));
+        return Math.sqrt(dLat * dLat + dLng * dLng);
+      };
+
+      let best = { a: ring[0], b: ring[1], d: -1 };
+
+      for (let i = 0; i < ring.length - 1; i++) {
+        const a = ring[i];
+        const b = ring[i + 1];
+        const d = distM(a, b);
+        if (d > best.d) best = { a, b, d };
+      }
+
+      // om polygonen inte är explicit stängd kan sista->första vara en kant:
+      const last = ring[ring.length - 1];
+      const first = ring[0];
+      const dLF = distM(last, first);
+      if (dLF > best.d) best = { a: last, b: first, d: dLF };
+
+      return { a: best.a, b: best.b };
+    } catch (_) {
+      return null;
+    }
+  }
+
+  // 3D-layer id
   const sektion73GlassWallLayerId_00021 = "sektion73Layer_glasswall_threebox_00021";
 
   if (!sektion73Map.getLayer(sektion73GlassWallLayerId_00021)) {
-    // Three.js + Threebox (UMD). Du sa att bibliotek får importeras.
-    // Threebox kräver window.THREE och window.Threebox.
     Promise.resolve()
       .then(() => sektion73LoadScriptOnce_00018(
         "https://unpkg.com/three@0.152.2/build/three.min.js",
@@ -702,75 +739,75 @@ center: sektion73InitialCenter.lngLat,
           renderingMode: "3d",
 
           onAdd: function (map, gl) {
-            // Threebox init
-            this.tb = new window.Threebox(
-              map,
-              gl,
-              {
-                defaultLights: true
-              }
-            );
+            this.tb = new window.Threebox(map, gl, { defaultLights: true });
 
             this.group = new window.THREE.Group();
             this.tb.world.add(this.group);
 
-            // --- PARAMS (justera fritt) ---
-            const wallHeightM = 1.35;       // höjd på glasvägg
-            const wallBottomLiftM = 0.06;   // “går inte emot marken”
-            const wallThicknessM = 0.06;    // tjocklek
-            const panelWidthM = 0.42;       // panelbredd (glasblock)
-            const gapM = 0.06;              // mellan paneler (stolpe)
-            const postWidthM = 0.035;       // pelarbredd
-            const postDepthM = 0.045;
+            // === PARAMS (kortare vägg) ===
+            const wallHeightM = 0.75;       // <-- KORTARE (var 1.35)
+            const wallBottomLiftM = 0.05;   // lite “svävar”
+            const wallThicknessM = 0.05;
 
-            // Material: glas (transparent + “blurrig” känsla via opacity + roughness)
+            const panelWidthM = 0.40;       // glasblock
+            const postGapM = 0.06;          // avstånd mellan paneler
+            const postWidthM = 0.03;        // stolpens bredd LÄNGS väggen (fix)
+            const postDepthM = 0.05;        // stolpens “tjocklek” utåt
+
+            // Glas-material (mjuk/blur-känsla)
             const glassMat = new window.THREE.MeshPhysicalMaterial({
               color: new window.THREE.Color(0xbfeaf3),
               transparent: true,
-              opacity: 0.35,
-              roughness: 0.35,
+              opacity: 0.28,
+              roughness: 0.55,
               metalness: 0.0,
               transmission: 0.55,
-              thickness: 0.4,
-              clearcoat: 0.15,
-              clearcoatRoughness: 0.65
+              thickness: 0.35,
+              clearcoat: 0.08,
+              clearcoatRoughness: 0.85
             });
 
-            // Material: stolpe (svart)
+            // Stolpar
             const postMat = new window.THREE.MeshStandardMaterial({
               color: new window.THREE.Color(0x0a0a0a),
-              roughness: 0.75,
-              metalness: 0.15
+              roughness: 0.85,
+              metalness: 0.10
             });
 
-            // Hjälp: meters -> “world units” via Threebox
-            const aWorld = this.tb.projectToWorld(sektion73FenceA_00019);
-            const bWorld = this.tb.projectToWorld(sektion73FenceB_00020);
+            // === Välj rätt ytterkant automatiskt ===
+            const edge = sektion73PickLongestEdgeFromTerrace_00019();
+            if (!edge) return;
+
+            const aLngLat = edge.a;
+            const bLngLat = edge.b;
+
+            const aWorld = this.tb.projectToWorld(aLngLat);
+            const bWorld = this.tb.projectToWorld(bLngLat);
 
             const dir = new window.THREE.Vector3().subVectors(bWorld, aWorld);
             const length = dir.length() || 1;
             dir.normalize();
 
-            // normal (för att ge tjocklek utåt)
             const up = new window.THREE.Vector3(0, 0, 1);
             const normal = new window.THREE.Vector3().crossVectors(dir, up).normalize();
 
-            // startpunkt
+            const rotZ = Math.atan2(dir.y, dir.x);
+
             let traveled = 0;
 
-            // Bygg segment: [glaspanel][stolpe][glaspanel]...
+            // Bygg: panel + stolpe (fast bredd) + gap
             while (traveled < length) {
-              const nextPanel = Math.min(panelWidthM, length - traveled);
+              // Panel-längd (håller oss inom segmentet)
+              const panelLen = Math.min(panelWidthM, Math.max(0, length - traveled));
+              if (panelLen <= 0.02) break;
 
-              // panel center
               const panelCenter = new window.THREE.Vector3()
                 .copy(aWorld)
-                .addScaledVector(dir, traveled + nextPanel / 2)
+                .addScaledVector(dir, traveled + panelLen / 2)
                 .addScaledVector(normal, wallThicknessM / 2);
 
-              // panel geometry
               const panelGeo = new window.THREE.BoxGeometry(
-                nextPanel,
+                panelLen,
                 wallThicknessM,
                 wallHeightM
               );
@@ -778,43 +815,22 @@ center: sektion73InitialCenter.lngLat,
               const panelMesh = new window.THREE.Mesh(panelGeo, glassMat);
               panelMesh.position.copy(panelCenter);
               panelMesh.position.z += wallBottomLiftM + wallHeightM / 2;
-
-              // rotera så panelen följer linjen
-              panelMesh.rotation.z = Math.atan2(dir.y, dir.x);
-
-              // “border-left” känsla: en tunn svart list på vänstersidan av panel
-              const leftBorderGeo = new window.THREE.BoxGeometry(
-                0.008,
-                wallThicknessM + 0.006,
-                wallHeightM * 0.98
-              );
-              const leftBorder = new window.THREE.Mesh(leftBorderGeo, postMat);
-
-              // placera “left border” vid panelens vänsterkant
-              const leftOffset = new window.THREE.Vector3()
-                .copy(dir)
-                .multiplyScalar(-nextPanel / 2 + 0.004);
-
-              leftBorder.position.copy(panelCenter).add(leftOffset);
-              leftBorder.position.z += wallBottomLiftM + wallHeightM / 2;
-              leftBorder.rotation.z = panelMesh.rotation.z;
+              panelMesh.rotation.z = rotZ;
 
               this.group.add(panelMesh);
-              this.group.add(leftBorder);
 
-              traveled += nextPanel;
+              traveled += panelLen;
 
-              // stolpe efter panel (om det finns kvar utrymme)
-              if (traveled < length) {
-                const nextGap = Math.min(gapM, length - traveled);
-
+              // Stolpe: FAST bredd (inte “gapet blir en pelare”)
+              // Placera stolpen precis efter panelen, om det finns plats.
+              if (traveled + postWidthM < length) {
                 const postCenter = new window.THREE.Vector3()
                   .copy(aWorld)
-                  .addScaledVector(dir, traveled + nextGap / 2)
+                  .addScaledVector(dir, traveled + postWidthM / 2)
                   .addScaledVector(normal, postDepthM / 2);
 
                 const postGeo = new window.THREE.BoxGeometry(
-                  nextGap,
+                  postWidthM,      // <-- FIX: fast stolpbredd
                   postDepthM,
                   wallHeightM
                 );
@@ -822,28 +838,30 @@ center: sektion73InitialCenter.lngLat,
                 const postMesh = new window.THREE.Mesh(postGeo, postMat);
                 postMesh.position.copy(postCenter);
                 postMesh.position.z += wallBottomLiftM + wallHeightM / 2;
-                postMesh.rotation.z = Math.atan2(dir.y, dir.x);
+                postMesh.rotation.z = rotZ;
 
                 this.group.add(postMesh);
 
-                traveled += nextGap;
+                traveled += postWidthM;
               }
+
+              // Gap efter stolpe (luft mellan glasblock)
+              traveled += postGapM;
             }
           },
 
           render: function () {
-            // Threebox render-loop
             this.tb.update();
           }
         };
 
-        // Lägg layer sist bland dina custom-grejer så den hamnar “över”
         sektion73Map.addLayer(customLayer);
       })
       .catch((e) => {
         console.error("[sektion73] Threebox glass wall failed:", e);
       });
   }
+
 
 
 
