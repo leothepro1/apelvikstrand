@@ -21,68 +21,43 @@
   var sektion73InitialLat = 57.082854;
   var sektion73InitialZoom = 14.9;
   var sektion73InitialBearing = 45;
-  var sektion73InitialPitch = 59;
+// Interaktiv karta kan ha vilken pitch du vill.
+// Postern (Static Images) får MAX 60, så vi hårdkodar den.
+var sektion73PosterPitchFixed = 55;
 
-  // Resurser som ska lazy-loadas vid interaction
-  var sektion73MapboxJsSrc = "https://api.mapbox.com/mapbox-gl-js/v3.6.0/mapbox-gl.js";
-  var sektion73HeavyMapsSrc = "https://apelvikstrand.pages.dev/apelvikstrand.maps.js?v=1";
+function sektion73BuildStaticUrl(w, h) {
+  var dpr = Math.max(1, Math.min(2, window.devicePixelRatio || 1));
+  var ww = Math.max(320, Math.min(1280, Math.round(w * dpr)));
+  var hh = Math.max(320, Math.min(1280, Math.round(h * dpr)));
 
-  // -----------------------------
-  // 1) Poster + shimmer overlay
-  // -----------------------------
-  function sektion73EnsurePosterCss() {
-    if (document.getElementById("sektion73PosterStyle")) return;
+  // Idiotsäker: pitch kan aldrig bli > 60
+  var sektion73PosterPitch = Math.max(0, Math.min(60, Number(sektion73PosterPitchFixed) || 0));
 
-    var style = document.createElement("style");
-    style.id = "sektion73PosterStyle";
-    style.textContent =
-      "" +
-      "#sektion73MapRoot{position:relative}\n" +
-      "#sektion73MapCanvas{position:relative;z-index:1}\n" +
-      "#sektion73PosterWrap{position:absolute;inset:0;z-index:5;pointer-events:auto}\n" +
-      "#sektion73PosterImg{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;display:block;filter:saturate(1.02) contrast(1.02)}\n" +
-      "#sektion73PosterShimmer{position:absolute;inset:0;background:linear-gradient(110deg, rgba(255,255,255,.00) 0%, rgba(255,255,255,.22) 35%, rgba(255,255,255,.00) 70%);transform:translateX(-60%);animation:sektion73PosterShimmerAnim 1.15s ease-in-out infinite;mix-blend-mode:overlay}\n" +
-      "#sektion73PosterTint{position:absolute;inset:0;background:rgba(255,255,255,.06)}\n" +
-      "#sektion73PosterHint{position:absolute;left:14px;bottom:14px;z-index:6;background:rgba(255,255,255,.78);backdrop-filter:blur(4px);-webkit-backdrop-filter:blur(4px);border-radius:999px;padding:9px 12px;font:600 13px/1.1 system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial,sans-serif;color:#0e1318;box-shadow:0 10px 45px rgba(0,0,0,.16)}\n" +
-      "#sektion73PosterHint span{opacity:.78;font-weight:600}\n" +
-      "@keyframes sektion73PosterShimmerAnim{0%{transform:translateX(-70%)}100%{transform:translateX(70%)}}\n";
-    document.head.appendChild(style);
-  }
+  return (
+    "https://api.mapbox.com/styles/v1/" +
+    encodeURIComponent(sektion73StyleUser) +
+    "/" +
+    encodeURIComponent(sektion73StyleId) +
+    "/static/" +
+    sektion73InitialLng +
+    "," +
+    sektion73InitialLat +
+    "," +
+    sektion73InitialZoom +
+    "," +
+    sektion73InitialBearing +
+    "," +
+    sektion73PosterPitch +
+    "/" +
+    ww +
+    "x" +
+    hh +
+    "?access_token=" +
+    encodeURIComponent(sektion73AccessToken) +
+    "&logo=false&attribution=false"
+  );
+}
 
-  function sektion73BuildStaticUrl(w, h) {
-    // Mapbox Static Images API:
-    // /styles/v1/{username}/{style_id}/static/{lon},{lat},{zoom},{bearing},{pitch}/{w}x{h}?access_token=...
-    var dpr = Math.max(1, Math.min(2, window.devicePixelRatio || 1));
-    var ww = Math.max(320, Math.min(1280, Math.round(w * dpr)));
-    var hh = Math.max(320, Math.min(1280, Math.round(h * dpr)));
-
- var sektion73PosterPitch = Math.max(0, Math.min(60, Number(sektion73InitialPitch) || 0));
-
-return (
-  "https://api.mapbox.com/styles/v1/" +
-  encodeURIComponent(sektion73StyleUser) +
-  "/" +
-  encodeURIComponent(sektion73StyleId) +
-  "/static/" +
-  sektion73InitialLng +
-  "," +
-  sektion73InitialLat +
-  "," +
-  sektion73InitialZoom +
-  "," +
-  sektion73InitialBearing +
-  "," +
-  sektion73PosterPitch +
-  "/" +
-  ww +
-  "x" +
-  hh +
-  "?access_token=" +
-  encodeURIComponent(sektion73AccessToken) +
-  "&logo=false&attribution=false"
-);
-
-  }
 
   function sektion73EnsurePosterDom() {
     if (document.getElementById("sektion73PosterWrap")) return;
