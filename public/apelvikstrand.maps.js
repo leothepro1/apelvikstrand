@@ -1963,6 +1963,7 @@ background: #e2e4e5;
     align-items: center;
     justify-content: start;
     padding: 10px 17px 17px 17px;
+        overflow-y: hidden;
     border-radius: 0px;
     width: 100vw;
 }
