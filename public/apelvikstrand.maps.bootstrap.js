@@ -37,7 +37,7 @@
     css.appendChild(
       document.createTextNode(
         ""
-          + "#sektion73LottieOverlay{position:fixed;inset:0;width:100vw;height:100vh;z-index:999999;display:grid;place-items:center;background:#fff;opacity:1;transition:opacity .42s ease;pointer-events:auto}\n"
+          + "#sektion73LottieOverlay{position:relative;inset:0;width:100vw;height:100vh;z-index:999999;display:grid;place-items:center;background:#fff;opacity:1;transition:opacity .42s ease;pointer-events:auto}\n"
           + "#sektion73LottieOverlay.sektion73LottieHiding{opacity:0;pointer-events:none}\n"
           + "#sektion73LottieOverlay .sektion73LottieInner{width:min(340px,82vw);height:min(340px,82vw);display:grid;place-items:center}\n"
           + "#sektion73LottieOverlay .sektion73LottieFallback{width:72px;height:72px;border-radius:999px;border:4px solid rgba(14,19,24,12);border-top-color:rgba(14,19,24,55);animation:sektion73Spin 0.9s linear infinite}\n"
