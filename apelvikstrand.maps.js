@@ -114,7 +114,7 @@ const sektion73Tangkorar_4 = {
 
     const sektion73MinZoom = 13.2;
     const sektion73MaxZoom = 17.9;
-    const sektion73StartZoom = 15.3;
+    const sektion73StartZoom = 16.3;
 const sektion73SecondaryPinsMinZoom = 15.8;
     // Kamera
     const sektion73Pitch = 65;
@@ -558,6 +558,149 @@ center: sektion73InitialCenter.lngLat,
       }
     });
   }
+
+  /* =========================================================
+     sektion73 – DEBUG PICK: logga exakt 3D-byggnad vid klick
+     - Klicka på huset (taket) du vill ersätta
+     - Console visar: layerId + featureId + properties
+     ========================================================= */
+
+  (function sektion73DebugPickBuilding_00009() {
+    if (!sektion73Map || typeof sektion73Map.queryRenderedFeatures !== "function") return;
+
+    function sektion73GetExtrusionLayerIds_00010() {
+      try {
+        const style = sektion73Map.getStyle && sektion73Map.getStyle();
+        const layers = (style && style.layers) ? style.layers : [];
+        return layers
+          .filter((l) => l && l.id && l.type === "fill-extrusion")
+          .map((l) => l.id);
+      } catch (e) {
+        return [];
+      }
+    }
+
+    function sektion73PickSimplifyProps_00011(props) {
+      const p = props || {};
+      const keep = [
+        "id",
+        "osm_id",
+        "name",
+        "type",
+        "class",
+        "height",
+        "render_height",
+        "min_height",
+        "render_min_height",
+        "underground",
+        "extrude"
+      ];
+      const out = {};
+      for (const k of keep) {
+        if (p[k] != null) out[k] = p[k];
+      }
+      return out;
+    }
+
+    function sektion73RankBuildingCandidates_00012(features) {
+      const scored = [];
+      for (const f of features || []) {
+        if (!f || !f.layer) continue;
+
+        const props = f.properties || {};
+        const layerId = (f.layer.id || "");
+        const layerType = (f.layer.type || "");
+        const sourceLayer = (f.sourceLayer || "");
+        const source = (f.source || "");
+
+        let score = 0;
+
+        if (layerType === "fill-extrusion") score += 100;
+        if ((sourceLayer + "").toLowerCase().includes("building")) score += 40;
+        if (layerId.toLowerCase().includes("building")) score += 30;
+
+        if (props.height != null) score += 25;
+        if (props.render_height != null) score += 25;
+        if (props.min_height != null) score += 10;
+        if (props.render_min_height != null) score += 10;
+        if (props.underground != null) score += 5;
+        if (props.class === "building") score += 15;
+        if (props.extrude != null) score += 5;
+
+        if (f.id != null) score += 20;
+        if (props.id != null) score += 10;
+        if (props.osm_id != null) score += 10;
+
+        if ((source + "").toLowerCase() === "composite") score += 5;
+
+        scored.push({ f, score });
+      }
+
+      scored.sort((a, b) => b.score - a.score);
+      return scored;
+    }
+
+    function sektion73OnPick_00013(e) {
+      const extrusionLayerIds = sektion73GetExtrusionLayerIds_00010();
+
+      let feats = [];
+      try {
+        if (extrusionLayerIds.length) {
+          feats = sektion73Map.queryRenderedFeatures(e.point, { layers: extrusionLayerIds }) || [];
+        }
+      } catch (_) {}
+
+      if (!feats.length) {
+        try {
+          feats = sektion73Map.queryRenderedFeatures(e.point) || [];
+        } catch (_) {}
+      }
+
+      const ranked = sektion73RankBuildingCandidates_00012(feats);
+
+      console.clear();
+      console.log("sektion73Pick: click lngLat =", e.lngLat);
+      console.log("sektion73Pick: extrusion layer ids =", extrusionLayerIds);
+
+      if (!ranked.length) {
+        console.log("sektion73Pick: inga features vid klick. Zooma in lite och klicka mer exakt på taket.");
+        return;
+      }
+
+      const rows = ranked.slice(0, 12).map((x, i) => {
+        const f = x.f;
+        return {
+          rank: i + 1,
+          score: x.score,
+          layerId: (f.layer && f.layer.id) ? f.layer.id : "",
+          layerType: (f.layer && f.layer.type) ? f.layer.type : "",
+          source: f.source || "",
+          sourceLayer: f.sourceLayer || "",
+          featureId: (f.id != null) ? f.id : null,
+          props: sektion73PickSimplifyProps_00011(f.properties || {})
+        };
+      });
+
+      console.table(rows);
+
+      const best = ranked[0].f;
+      console.log("sektion73Pick: BEST CANDIDATE (copy these):");
+      console.log({
+        layerId: best.layer ? best.layer.id : null,
+        featureId: best.id != null ? best.id : null,
+        source: best.source || null,
+        sourceLayer: best.sourceLayer || null,
+        properties: best.properties || null
+      });
+    }
+
+    if (!sektion73Map.__sektion73DebugPickBuildingBound_00014) {
+      sektion73Map.__sektion73DebugPickBuildingBound_00014 = true;
+      sektion73Map.on("click", sektion73OnPick_00013);
+      console.log("sektion73Pick: aktiv. Klicka på huset du vill ersätta så loggas kandidater.");
+    }
+  })();
+
 
 
       
