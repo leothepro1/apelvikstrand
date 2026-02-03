@@ -19,7 +19,7 @@
   // Din initiala camera (från din kod: sektion73InitialCenter + sektion73StartZoom + bearing/pitch)
   var sektion73InitialLng = 12.258774;
   var sektion73InitialLat = 57.082854;
-  var sektion73InitialZoom = 16.3;
+  var sektion73InitialZoom = 14.9;
   var sektion73InitialBearing = 45;
   var sektion73InitialPitch = 65;
 
