@@ -326,11 +326,6 @@ const sektion73Map = new mapboxgl.Map({
     });
 
 
-
-
-      
-});
-
 function sektion73InjectModalCSS() {
   if (document.getElementById("sektion73MapModalStyle")) return;
 
