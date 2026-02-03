@@ -113,7 +113,7 @@ const sektion73Tangkorar_4 = {
     ];
 
     const sektion73MinZoom = 13.2;
-    const sektion73MaxZoom = 19.4;
+    const sektion73MaxZoom = 17.9;
     const sektion73StartZoom = 15.3;
 const sektion73SecondaryPinsMinZoom = 15.8;
     // Kamera
@@ -411,40 +411,19 @@ center: sektion73InitialCenter.lngLat,
             }
           },
           {
-            "type": "Feature",
-            "properties": {
-              "sektion73Style": "pool"
-            },
-            "geometry": {
-              "type": "Polygon",
-              "coordinates": [
-                [
-                  [12.247493544756765, 57.08591042718817],
-                  [12.247601148376646, 57.085630578763215],
-                  [12.247901915736747, 57.08566479178353],
-                  [12.247789612501094, 57.085944973871904],
-                  [12.247493544756765, 57.08591042718817]
-                ]
-              ]
-            }
-          },
-          {
-            "type": "Feature",
-            "properties": {
-              "sektion73Style": "terrace_glass_00009"
-            },
-            "geometry": {
-              "type": "Polygon",
-              "coordinates": [
-                [
-                  [12.247720206361976, 57.085450446310944],
-                  [12.247709540158297, 57.085478013960596],
-                  [12.247627283248733, 57.0854692227438],
-                  [12.247584784444996, 57.08558099769786],
-                  [12.247544826130905, 57.085576680545074],
-                  [12.247593313277235, 57.08544897858138],
-                  [12.247636564807323, 57.085441409526766],
-                  [12.247720206361976, 57.085450446310944]
+  "type": "Feature",
+  "properties": {
+    "sektion73Style": "pool"
+  },
+  "geometry": {
+    "type": "Polygon",
+    "coordinates": [
+      [
+        [12.247493544756765, 57.08591042718817],
+        [12.247601148376646, 57.085630578763215],
+        [12.247901915736747, 57.08566479178353],
+        [12.247789612501094, 57.085944973871904],
+        [12.247493544756765, 57.08591042718817]
                 ]
               ]
             }
@@ -453,7 +432,6 @@ center: sektion73InitialCenter.lngLat,
       }
     });
   }
-
 
   if (!sektion73Map.getLayer(sektion73ApelvikenFillId)) {
     sektion73Map.addLayer({
@@ -558,7 +536,7 @@ center: sektion73InitialCenter.lngLat,
     });
   }
 
-   // 4) Mjuk highlight på kanten (ger “keramik”-känsla)
+  // 4) Mjuk highlight på kanten (ger “keramik”-känsla)
   if (!sektion73Map.getLayer("sektion73Layer_pool_rim_highlight_00008")) {
     sektion73Map.addLayer({
       id: "sektion73Layer_pool_rim_highlight_00008",
@@ -581,276 +559,9 @@ center: sektion73InitialCenter.lngLat,
     });
   }
 
-   /* =========================================================
-     sektion73 – TERRASS (3D SLAB) + GLASVÄGG (ÄKTA 3D MESH)
-     - Terrassfärg: #7E7D77
-     - Terrass: fill-extrusion slab (så den inte blir platt)
-     - Glasvägg: Threebox/Three.js custom layer (paneler + stolpar)
-     - Isolerat till sektion73Style === "terrace_glass_00009"
-     ========================================================= */
-
-  const sektion73TerraceFilter_00011 = ["==", ["get", "sektion73Style"], "terrace_glass_00009"];
-
-  // === A) Terrass: bas-fill (färg) ===
-  if (!sektion73Map.getLayer("sektion73Layer_terrace_fill_00012")) {
-    sektion73Map.addLayer({
-      id: "sektion73Layer_terrace_fill_00012",
-      type: "fill",
-      source: sektion73ApelvikenSourceId,
-      filter: sektion73TerraceFilter_00011,
-      paint: {
-        "fill-color": "#7E7D77",
-        "fill-opacity": 0.96
-      }
-    });
-  }
-
-  // === B) Terrass: 3D slab (tunn extrusion) ===
-  if (!sektion73Map.getLayer("sektion73Layer_terrace_slab_3d_00017")) {
-    sektion73Map.addLayer({
-      id: "sektion73Layer_terrace_slab_3d_00017",
-      type: "fill-extrusion",
-      source: sektion73ApelvikenSourceId,
-      filter: sektion73TerraceFilter_00011,
-      paint: {
-        "fill-extrusion-color": "#7E7D77",
-        "fill-extrusion-opacity": 0.99,
-        "fill-extrusion-base": 0,
-        "fill-extrusion-height": [
-          "interpolate",
-          ["linear"],
-          ["zoom"],
-          13, 0.18,
-          16, 0.28,
-          18.5, 0.40
-        ],
-        "fill-extrusion-vertical-gradient": true
-      }
-    });
-  }
-
-  // === C) Terrass: outline ===
-  if (!sektion73Map.getLayer("sektion73Layer_terrace_outline_00013")) {
-    sektion73Map.addLayer({
-      id: "sektion73Layer_terrace_outline_00013",
-      type: "line",
-      source: sektion73ApelvikenSourceId,
-      filter: sektion73TerraceFilter_00011,
-      paint: {
-        "line-color": "rgba(10,10,10,0.55)",
-        "line-width": ["interpolate", ["linear"], ["zoom"], 13, 1.0, 17, 2.5],
-        "line-blur": 0.2
-      }
-    });
-  }
-
-  /* =========================================================
-     sektion73 – GLASVÄGG (3D)
-     Vi använder Threebox (Three.js) som custom layer.
-     Detta möjliggör:
-       - paneler (transparenta "glasfyrkanter")
-       - stolpar (svarta pelare mellan panelerna)
-       - höjd från marken (riktig 3D)
-     ========================================================= */
-
-  // 1) Minimal script-loader (ingen påverkan på övrig kod)
-  function sektion73LoadScriptOnce_00018(src, testFn) {
-    return new Promise((resolve, reject) => {
-      try {
-        if (testFn && testFn()) return resolve(true);
-        const existing = document.querySelector(`script[data-sektion73="${src}"]`);
-        if (existing) return existing.addEventListener("load", () => resolve(true), { once: true });
-
-        const s = document.createElement("script");
-        s.src = src;
-        s.async = true;
-        s.defer = true;
-        s.dataset.sektion73 = src;
-        s.onload = () => resolve(true);
-        s.onerror = () => reject(new Error("Script load failed: " + src));
-        document.head.appendChild(s);
-      } catch (e) {
-        reject(e);
-      }
-    });
-  }
-
-  // 2) Edge-segment för “yttersta raden mot vägen”
-  // OBS: detta måste vara rätt segment. Just nu använder vi dina två första punkter.
-  const sektion73FenceA_00019 = [12.247720206361976, 57.085450446310944];
-  const sektion73FenceB_00020 = [12.247709540158297, 57.085478013960596];
-
-  // 3) Bygg en custom layer som renderar 3D-glasväggen
-  const sektion73GlassWallLayerId_00021 = "sektion73Layer_glasswall_threebox_00021";
-
-  if (!sektion73Map.getLayer(sektion73GlassWallLayerId_00021)) {
-    // Three.js + Threebox (UMD). Du sa att bibliotek får importeras.
-    // Threebox kräver window.THREE och window.Threebox.
-    Promise.resolve()
-      .then(() => sektion73LoadScriptOnce_00018(
-        "https://unpkg.com/three@0.152.2/build/three.min.js",
-        () => !!window.THREE
-      ))
-      .then(() => sektion73LoadScriptOnce_00018(
-        "https://unpkg.com/threebox-plugin@2.2.7/dist/threebox.min.js",
-        () => !!window.Threebox
-      ))
-      .then(() => {
-        const customLayer = {
-          id: sektion73GlassWallLayerId_00021,
-          type: "custom",
-          renderingMode: "3d",
-
-          onAdd: function (map, gl) {
-            // Threebox init
-            this.tb = new window.Threebox(
-              map,
-              gl,
-              {
-                defaultLights: true
-              }
-            );
-
-            this.group = new window.THREE.Group();
-            this.tb.world.add(this.group);
-
-            // --- PARAMS (justera fritt) ---
-            const wallHeightM = 1.35;       // höjd på glasvägg
-            const wallBottomLiftM = 0.06;   // “går inte emot marken”
-            const wallThicknessM = 0.06;    // tjocklek
-            const panelWidthM = 0.42;       // panelbredd (glasblock)
-            const gapM = 0.06;              // mellan paneler (stolpe)
-            const postWidthM = 0.035;       // pelarbredd
-            const postDepthM = 0.045;
-
-            // Material: glas (transparent + “blurrig” känsla via opacity + roughness)
-            const glassMat = new window.THREE.MeshPhysicalMaterial({
-              color: new window.THREE.Color(0xbfeaf3),
-              transparent: true,
-              opacity: 0.35,
-              roughness: 0.35,
-              metalness: 0.0,
-              transmission: 0.55,
-              thickness: 0.4,
-              clearcoat: 0.15,
-              clearcoatRoughness: 0.65
-            });
-
-            // Material: stolpe (svart)
-            const postMat = new window.THREE.MeshStandardMaterial({
-              color: new window.THREE.Color(0x0a0a0a),
-              roughness: 0.75,
-              metalness: 0.15
-            });
-
-            // Hjälp: meters -> “world units” via Threebox
-            const aWorld = this.tb.projectToWorld(sektion73FenceA_00019);
-            const bWorld = this.tb.projectToWorld(sektion73FenceB_00020);
-
-            const dir = new window.THREE.Vector3().subVectors(bWorld, aWorld);
-            const length = dir.length() || 1;
-            dir.normalize();
-
-            // normal (för att ge tjocklek utåt)
-            const up = new window.THREE.Vector3(0, 0, 1);
-            const normal = new window.THREE.Vector3().crossVectors(dir, up).normalize();
-
-            // startpunkt
-            let traveled = 0;
-
-            // Bygg segment: [glaspanel][stolpe][glaspanel]...
-            while (traveled < length) {
-              const nextPanel = Math.min(panelWidthM, length - traveled);
-
-              // panel center
-              const panelCenter = new window.THREE.Vector3()
-                .copy(aWorld)
-                .addScaledVector(dir, traveled + nextPanel / 2)
-                .addScaledVector(normal, wallThicknessM / 2);
-
-              // panel geometry
-              const panelGeo = new window.THREE.BoxGeometry(
-                nextPanel,
-                wallThicknessM,
-                wallHeightM
-              );
-
-              const panelMesh = new window.THREE.Mesh(panelGeo, glassMat);
-              panelMesh.position.copy(panelCenter);
-              panelMesh.position.z += wallBottomLiftM + wallHeightM / 2;
-
-              // rotera så panelen följer linjen
-              panelMesh.rotation.z = Math.atan2(dir.y, dir.x);
-
-              // “border-left” känsla: en tunn svart list på vänstersidan av panel
-              const leftBorderGeo = new window.THREE.BoxGeometry(
-                0.008,
-                wallThicknessM + 0.006,
-                wallHeightM * 0.98
-              );
-              const leftBorder = new window.THREE.Mesh(leftBorderGeo, postMat);
-
-              // placera “left border” vid panelens vänsterkant
-              const leftOffset = new window.THREE.Vector3()
-                .copy(dir)
-                .multiplyScalar(-nextPanel / 2 + 0.004);
-
-              leftBorder.position.copy(panelCenter).add(leftOffset);
-              leftBorder.position.z += wallBottomLiftM + wallHeightM / 2;
-              leftBorder.rotation.z = panelMesh.rotation.z;
-
-              this.group.add(panelMesh);
-              this.group.add(leftBorder);
-
-              traveled += nextPanel;
-
-              // stolpe efter panel (om det finns kvar utrymme)
-              if (traveled < length) {
-                const nextGap = Math.min(gapM, length - traveled);
-
-                const postCenter = new window.THREE.Vector3()
-                  .copy(aWorld)
-                  .addScaledVector(dir, traveled + nextGap / 2)
-                  .addScaledVector(normal, postDepthM / 2);
-
-                const postGeo = new window.THREE.BoxGeometry(
-                  nextGap,
-                  postDepthM,
-                  wallHeightM
-                );
-
-                const postMesh = new window.THREE.Mesh(postGeo, postMat);
-                postMesh.position.copy(postCenter);
-                postMesh.position.z += wallBottomLiftM + wallHeightM / 2;
-                postMesh.rotation.z = Math.atan2(dir.y, dir.x);
-
-                this.group.add(postMesh);
-
-                traveled += nextGap;
-              }
-            }
-          },
-
-          render: function () {
-            // Threebox render-loop
-            this.tb.update();
-          }
-        };
-
-        // Lägg layer sist bland dina custom-grejer så den hamnar “över”
-        sektion73Map.addLayer(customLayer);
-      })
-      .catch((e) => {
-        console.error("[sektion73] Threebox glass wall failed:", e);
-      });
-  }
-
-
-
 
       
 });
-
 
 function sektion73InjectModalCSS() {
   if (document.getElementById("sektion73MapModalStyle")) return;
@@ -1516,7 +1227,7 @@ const sektion73Pins = [
    {
     id: "sektion73Pin_home_fdbvc",
     label: "Golf",
-    filter: "Butiker",
+    filter: "service",
       priority: "secondary",
     iconKey: "surfers",
     ui: {
@@ -1635,7 +1346,7 @@ const sektion73Pins = [
  {
     id: "sektion73Pin_321gfdfgdfghgkgjyytr",
     label: "Apelviken Livs",
-        filter: "Butiker",
+        filter: "service",
     iconKey: "livs", // använd en befintlig iconKey som finns i sektion73PinIcons
     ui: {
       bubbleBg: "#fff",
@@ -1763,7 +1474,7 @@ const sektion73Pins = [
       h: "Vår reception",
       p: "Receptionen finns här om något dyker upp under vistelsen. Frågor, funderingar eller bara ett behov av att få lite hjälp på vägen. Här får man tips om området, praktiska svar och hjälp med det som behövs.Aktuella öppettider hittar du via länken nedan.",
       cta1Text: "Se öppetider",
-      cta1Href: "/kundButiker",
+      cta1Href: "/kundservice",
       cta2Text: "Visa vägen",
       cta2Href: "https://www.google.com/maps/dir/57.502272,12.087438/Destination+Apelviken+AB,+Sanatoriev%C3%A4gen+4,+432+53+Varberg/@57.2985223,11.831482,75982m/data=!3m1!1e3!4m9!4m8!1m1!4e1!1m5!1m1!1s0x46502af829613979:0x5e859dbc3c4cea18!2m2!1d12.2478642!2d57.0879688?entry=ttu&g_ep=EgoyMDI2MDEyOC4wIKXMDSoASAFQAw%3D%3D"
     }
@@ -2117,9 +1828,9 @@ function sektion73BuildFilterIconBank() {
   const named = {
     "alla": `<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 7h16M6 12h12M9 17h6"/></svg>`,
     "boenden": `<svg width="800" height="800" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><g/><path fill="currentcolor" d="M21 8c0-2.2-1.8-4-4-4H7C4.8 4 3 5.8 3 8v3.8c-.6.5-1 1.3-1 2.2v5c0 .6.4 1 1 1s1-.4 1-1v-1h16v1c0 .6.4 1 1 1s1-.4 1-1v-5c0-.9-.4-1.7-1-2.2zM5 8c0-1.1.9-2 2-2h10c1.1 0 1 .9 2 2v3h-1v-1c0-1.7-1.3-3-3-3h-1c-.8 0-1.5.3-2 .8-.5-.5-1.2-.8-2-.8H9c-1.7 0-3 1.3-3 3v1H5zm11 2v1h-3v-1c0-.6.4-1 1-1h1c.6 0 1 .4 1 1m-5 0v1H8v-1c0-.6.4-1 1-1h1c.6 0 1 .4 1 1m9 6H4v-2c0-.6.4-1 1-1h14c.6 0 1 .4 1 1z"/></svg>`,
-    "mat & dryck": `<svg width="800" height="800" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" fill="currentcolor"><path d="M17 13V8.9c1.7-.2 3-1.7 3-3.4C20 3.6 18.4 2 16.5 2c-1.8 0-3.2 1.3-3.4 3h-2.3l-.9-2.3C9.8 2.3 9.4 2 9 2H5c-.6 0-1 .4-1 1s.4 1 1 1h3.3l.3 1H8c-.6 0-1 .4-1 1v7c0 2.4 1.7 4.4 4 4.9V20h-1c-.6 0-1 .4-1 1s.4 1 1 1h4c.6 0 1-.4 1-1s-.4-1-1-1h-1v-2.1c2.3-.5 4-2.5 4-4.9m-.5-9c.8 0 1.5.7 1.5 1.5 0 .7-.4 1.2-1 1.4V6c0-.6-.4-1-1-1h-.9c.2-.6.7-1 1.4-1M12 16c-1.7 0-3-1.3-3-3V7h6v6c0 1.7-1.3 3-3 3"/></svg>`,
+    "restauranger": `<svg width="800" height="800" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" fill="currentColor"><g/><path d="M5 16c-1.1 0-2 .9-2 2 0 1.7 1.3 3 3 3h12c1.7 0 3-1.3 3-3 0-1.1-.9-2-2-2h-6v-1h7c.6 0 1-.4 1-1 0-4.6-3.5-8.4-8-8.9V5h1c.6 0 1-.4 1-1s-.4-1-1-1h-4c-.6 0-1 .4-1 1s.4 1 1 1h1v.1c-4.5.5-8 4.3-8 8.9 0 .6.4 1 1 1h7v1zm.1-3c.5-3.4 3.4-6 6.9-6s6.4 2.6 6.9 6zM19 18c0 .6-.4 1-1 1H6c-.6 0-1-.4-1-1z"/></svg>`,
     "Att göra": `<svg width="800" height="800" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" fill="currentcolor"><path d="M17 13V8.9c1.7-.2 3-1.7 3-3.4C20 3.6 18.4 2 16.5 2c-1.8 0-3.2 1.3-3.4 3h-2.3l-.9-2.3C9.8 2.3 9.4 2 9 2H5c-.6 0-1 .4-1 1s.4 1 1 1h3.3l.3 1H8c-.6 0-1 .4-1 1v7c0 2.4 1.7 4.4 4 4.9V20h-1c-.6 0-1 .4-1 1s.4 1 1 1h4c.6 0 1-.4 1-1s-.4-1-1-1h-1v-2.1c2.3-.5 4-2.5 4-4.9m-.5-9c.8 0 1.5.7 1.5 1.5 0 .7-.4 1.2-1 1.4V6c0-.6-.4-1-1-1h-.9c.2-.6.7-1 1.4-1M12 16c-1.7 0-3-1.3-3-3V7h6v6c0 1.7-1.3 3-3 3"/></svg>`,
-    "Butiker": `<svg width="800" height="800" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" fill="currentcolor"><path d="M19.8 5.4c-.2-.2-.5-.4-.8-.4 0-1.7-1.3-3-3-3H8C6.3 2 5 3.3 5 5c-.3 0-.6.2-.8.4L2.9 7.3c-.6.9-.8 2-.5 3S3.2 12 4 12.4V17c0 2.2 1.8 4 4 4h8c2.2 0 4-1.8 4-4v-4.6c.8-.5 1.3-1.2 1.6-2.1.3-1 .1-2.2-.5-3zM8 4h8c.6 0 1 .4 1 1H7c0-.6.4-1 1-1m6 3v2c0 1.1-.9 2-2 2s-2-.9-2-2V7zm-8.3 4c-.1 0-.3-.1-.4-.1s-.2-.1-.2-.1c-.4-.2-.6-.5-.7-.9-.1-.5 0-1 .2-1.4l1-1.4H8v1.8c0 .9-.6 1.8-1.4 2h-.8c0 .1 0 .1-.1.1m7.3 8h-2v-2c0-.6.4-1 1-1s1 .4 1 1zm5-2c0 1.1-.9 2-2 2h-1v-2c0-1.7-1.3-3-3-3s-3 1.3-3 3v2H8c-1.1 0-2-.9-2-2v-4h.4c.1 0 .2 0 .3-.1.1 0 .2 0 .3-.1.1 0 .2-.1.4-.1.2-.1.3-.1.4-.2q.75-.3 1.2-.9l.1.1.3.3c.1.1.2.1.3.2s.3.2.4.3.2.1.3.2c.2.1.3.1.5.2.1 0 .2.1.3.1h.8c.3 0 .6 0 .8-.1.1 0 .2-.1.3-.1.2-.1.4-.1.5-.2.1 0 .2-.1.3-.2s.3-.2.4-.3.2-.1.3-.2l.3-.3s.1 0 .1-.1c.3.4.7.7 1.1.9.1.1.3.1.4.2.1 0 .2.1.4.1.1 0 .2 0 .3.1.1 0 .2 0 .3.1h.4V17zm1.6-7.2c-.1.4-.4.8-.7.9-.1 0-.2.1-.3.1s-.2.1-.4.1h-.9c-.8-.3-1.4-1.1-1.4-2V7h2.5l1 1.4c.3.4.4 1 .2 1.4"/></svg>`
+    "service": `<svg width="800" height="800" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" fill="currentcolor"><path d="M19.8 5.4c-.2-.2-.5-.4-.8-.4 0-1.7-1.3-3-3-3H8C6.3 2 5 3.3 5 5c-.3 0-.6.2-.8.4L2.9 7.3c-.6.9-.8 2-.5 3S3.2 12 4 12.4V17c0 2.2 1.8 4 4 4h8c2.2 0 4-1.8 4-4v-4.6c.8-.5 1.3-1.2 1.6-2.1.3-1 .1-2.2-.5-3zM8 4h8c.6 0 1 .4 1 1H7c0-.6.4-1 1-1m6 3v2c0 1.1-.9 2-2 2s-2-.9-2-2V7zm-8.3 4c-.1 0-.3-.1-.4-.1s-.2-.1-.2-.1c-.4-.2-.6-.5-.7-.9-.1-.5 0-1 .2-1.4l1-1.4H8v1.8c0 .9-.6 1.8-1.4 2h-.8c0 .1 0 .1-.1.1m7.3 8h-2v-2c0-.6.4-1 1-1s1 .4 1 1zm5-2c0 1.1-.9 2-2 2h-1v-2c0-1.7-1.3-3-3-3s-3 1.3-3 3v2H8c-1.1 0-2-.9-2-2v-4h.4c.1 0 .2 0 .3-.1.1 0 .2 0 .3-.1.1 0 .2-.1.4-.1.2-.1.3-.1.4-.2q.75-.3 1.2-.9l.1.1.3.3c.1.1.2.1.3.2s.3.2.4.3.2.1.3.2c.2.1.3.1.5.2.1 0 .2.1.3.1h.8c.3 0 .6 0 .8-.1.1 0 .2-.1.3-.1.2-.1.4-.1.5-.2.1 0 .2-.1.3-.2s.3-.2.4-.3.2-.1.3-.2l.3-.3s.1 0 .1-.1c.3.4.7.7 1.1.9.1.1.3.1.4.2.1 0 .2.1.4.1.1 0 .2 0 .3.1.1 0 .2 0 .3.1h.4V17zm1.6-7.2c-.1.4-.4.8-.7.9-.1 0-.2.1-.3.1s-.2.1-.4.1h-.9c-.8-.3-1.4-1.1-1.4-2V7h2.5l1 1.4c.3.4.4 1 .2 1.4"/></svg>`
   };
 
   return { bank, named };
