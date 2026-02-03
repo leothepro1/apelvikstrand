@@ -553,10 +553,7 @@ function sektion73InjectModalCSS() {
     line-height: 1.55em;
     margin-top: 13px;
 }
-#sektion73MapFilterRail{
-backdrop-filter: blur(16px);
--webkit-backdrop-filter: blur(16px);
-}
+
 .sektion73ModalActions {
     margin-top: 27px;
     display: flex;
@@ -1498,7 +1495,6 @@ function sektion73InjectFilterCSS() {
   opacity: 0;
   pointer-events: none;
 }
-
 #sektion73MapFilterRail {
     display: flex;
     gap: 0.5rem;
@@ -1506,10 +1502,9 @@ function sektion73InjectFilterCSS() {
     justify-content: center;
     padding: 0.5rem 0.7rem;
     border-radius: 999px;
-    background: rgba(255, 255, 255, .42);
+    background: rgba(255, 255, 255, 1);
     border: none;
-    box-shadow: 0 5px 60px rgba(0, 0, 0, .12);
-    backdrop-filter: blur(3px);
+    box-shadow: 0 3px 40px rgba(0, 0, 0, .08);
     overflow-x: auto;
     -webkit-overflow-scrolling: touch;
     scrollbar-width: none;
@@ -2024,25 +2019,7 @@ sektion73Map.once("load", function () {
     }, 1800);
   }, 650);
 
-  // OBS: modalen skapas först vid första pin-klick via sektion73OpenModal() -> sektion73EnsureModalDOM()
-});
+})();
 
-
-
-
-
-    /* =========================
-       Debug helpers
-       ========================= */
-    window.sektion73MapInstance = sektion73Map;
-
-    window.sektion73PrintBounds = function () {
-      const b = sektion73Map.getBounds();
-      const sw = b.getSouthWest();
-      const ne = b.getNorthEast();
-      console.log("Bounds SW:", [Number(sw.lng.toFixed(6)), Number(sw.lat.toFixed(6))]);
-      console.log("Bounds NE:", [Number(ne.lng.toFixed(6)), Number(ne.lat.toFixed(6))]);
-      return { sw: [sw.lng, sw.lat], ne: [ne.lng, ne.lat] };
-    };
   });
 })();
