@@ -1967,7 +1967,6 @@ background: #e2e4e5;
     width: 100vw;
 }
       }
-         }
 .sektion73FilterBtn[aria-pressed="true"] {
     background: #FFE6A3;
     border-color: rgba(90, 60, 0, .22);
