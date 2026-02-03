@@ -114,7 +114,7 @@ const sektion73Tangkorar_4 = {
 
     const sektion73MinZoom = 13.2;
     const sektion73MaxZoom = 17.9;
-    const sektion73StartZoom = 15.3;
+    const sektion73StartZoom = 15.6;
 const sektion73SecondaryPinsMinZoom = 15.8;
     // Kamera
     const sektion73Pitch = 60;
@@ -2396,7 +2396,6 @@ sektion73Map.once("load", function () {
 
   // OBS: modalen skapas först vid första pin-klick via sektion73OpenModal() -> sektion73EnsureModalDOM()
 });
-
 
 
 
