@@ -1901,8 +1901,8 @@ function sektion73InjectFilterCSS() {
     display: none;
 }
 .sektion73FilterClose {
-    width: 19px;
-    height: 19px;
+    width: 20px;
+    height: 20px;
     display: inline-flex;
     align-items: center;
     justify-content: center;
@@ -1912,12 +1912,12 @@ function sektion73InjectFilterCSS() {
     background: transparent;
     fill: currentColor;
     stroke: currentColor;
-    stroke-width: 2.4;
-    margin-left: -2px;
+    stroke-width: 0;
+    margin-left: 0px;
 }
 
 .sektion73FilterClose:hover{
-  background: rgba(255,255,255,.9);
+  background: rgba(255,255,255,.5);
 }
 .sektion73FilterIco svg {
     width: 20px;
@@ -2185,9 +2185,7 @@ function sektion73EnsureFilterBar() {
   labelEl.textContent = "Filtrera:";
   rail.appendChild(labelEl);
 
-  const closeSvg = `<svg viewBox="0 0 24 24" aria-hidden="true">
-    <path d="M6 6l12 12M18 6L6 18"></path>
-  </svg>`;
+  const closeSvg = `<svg width="800" height="800" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><title>Close</title><g fill="none" fill-rule="evenodd"><path d="M0 0h24v24H0z"/><path stroke="currentColor" stroke-width="2" stroke-linecap="round" d="M17 7 7 17M7 7l10 10"/></g></svg>`;
 
 const setActive = (nextLabel) => {
   const prev = String(sektion73FilterState.active || "").trim();
