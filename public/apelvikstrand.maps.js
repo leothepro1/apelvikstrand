@@ -2014,7 +2014,6 @@ sektion73Map.once("load", function () {
     }, 1800);
   }, 650);
 
-})();
+  // OBS: modalen skapas först vid första pin-klick via sektion73OpenModal() -> sektion73EnsureModalDOM()
+});
 
-  });
-})();
