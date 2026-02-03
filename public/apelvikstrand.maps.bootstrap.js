@@ -17,8 +17,8 @@
   var sektion73StyleId = "cml5ejbz8000r01qx4ba1dwmn";
 
   // Din initiala camera (från din kod: sektion73InitialCenter + sektion73StartZoom + bearing/pitch)
-  var sektion73InitialLng = 12.258774;
-  var sektion73InitialLat = 57.082854;
+  var sektion73InitialLng = 12.256681;
+  var sektion73InitialLat = 57.084976;
   var sektion73InitialZoom = 14.9;
   var sektion73InitialBearing = 45;
 // Interaktiv karta kan ha vilken pitch du vill.
