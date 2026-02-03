@@ -1,13 +1,4 @@
-/* apelvikstrand.maps.bootstrap.js
-   - Visar en statisk "poster" + shimmer direkt (snabb FCP / bättre perceived performance)
-   - Laddar Mapbox GL JS + din tunga apelvikstrand.maps.js först vid första user interaction
-   - Mapbox tar över vid första klick/drag/zoom/wheel/touch/keydown på kartytan
-*/
-/* apelvikstrand.maps.bootstrap.js
-   - Visar en statisk "poster" + shimmer direkt (snabb FCP / bättre perceived performance)
-   - Laddar Mapbox GL JS + din tunga apelvikstrand.maps.js först vid första user interaction
-   - Mapbox tar över vid första klick/drag/zoom/wheel/touch/keydown på kartytan
-*/
+
 (function () {
   "use strict";
 
@@ -20,7 +11,7 @@
   // -----------------------------
   var sektion73MapboxJsSrc = "https://api.mapbox.com/mapbox-gl-js/v3.6.0/mapbox-gl.js";
   var sektion73MapboxCssHref = "https://api.mapbox.com/mapbox-gl-js/v3.6.0/mapbox-gl.css";
-  var sektion73HeavyMapsSrc = "apelvikstrand.maps.js";
+  var sektion73HeavyMapsSrc = "/apelvikstrand.maps.js";
 
   // Hårdkodat från din maps-fil (behåll samma för identisk initial vy)
   var sektion73AccessToken =
