@@ -592,6 +592,19 @@ center: sektion73InitialCenter.lngLat,
   const sektion73TerraceFilter_00011 = ["==", ["get", "sektion73Style"], "terrace_glass_00009"];
 
   // === A) Terrass: bas-fill (färg) ===
+  if (sektion73Map.getLayer("sektion73Layer_terrace_posts_00015")) sektion73Map.removeLayer("sektion73Layer_terrace_posts_00015");
+  if (sektion73Map.getLayer("sektion73Layer_terrace_glass_00014")) sektion73Map.removeLayer("sektion73Layer_terrace_glass_00014");
+  if (sektion73Map.getLayer("sektion73Layer_terrace_fence_shadow_00016")) sektion73Map.removeLayer("sektion73Layer_terrace_fence_shadow_00016");
+
+  // Rensa ev. kvarvarande 3D custom-layer (Threebox) (om den finns från tidigare)
+  if (sektion73Map.getLayer("sektion73Layer_glasswall_threebox_00021")) sektion73Map.removeLayer("sektion73Layer_glasswall_threebox_00021");
+
+  // Rensa fence-source (om den finns från tidigare)
+  if (sektion73Map.getSource("sektion73Geojson_terrace_fence_00010")) sektion73Map.removeSource("sektion73Geojson_terrace_fence_00010");
+
+  const sektion73TerraceFilter_00011 = ["==", ["get", "sektion73Style"], "terrace_glass_00009"];
+
+  // Terrass – yta (2D)
   if (!sektion73Map.getLayer("sektion73Layer_terrace_fill_00012")) {
     sektion73Map.addLayer({
       id: "sektion73Layer_terrace_fill_00012",
@@ -600,31 +613,22 @@ center: sektion73InitialCenter.lngLat,
       filter: sektion73TerraceFilter_00011,
       paint: {
         "fill-color": "#7E7D77",
-        "fill-opacity": 0.96
+        "fill-opacity": 1
       }
     });
   }
 
-  // === B) Terrass: 3D slab (tunn extrusion) ===
-  if (!sektion73Map.getLayer("sektion73Layer_terrace_slab_3d_00017")) {
+  // Terrass – outline (2D)
+  if (!sektion73Map.getLayer("sektion73Layer_terrace_outline_00013")) {
     sektion73Map.addLayer({
-      id: "sektion73Layer_terrace_slab_3d_00017",
-      type: "fill-extrusion",
+      id: "sektion73Layer_terrace_outline_00013",
+      type: "line",
       source: sektion73ApelvikenSourceId,
       filter: sektion73TerraceFilter_00011,
       paint: {
-        "fill-extrusion-color": "#7E7D77",
-        "fill-extrusion-opacity": 0.99,
-        "fill-extrusion-base": 0,
-        "fill-extrusion-height": [
-          "interpolate",
-          ["linear"],
-          ["zoom"],
-          13, 0.18,
-          16, 0.28,
-          18.5, 0.40
-        ],
-        "fill-extrusion-vertical-gradient": true
+        "line-color": "rgba(20,20,20,0.55)",
+        "line-width": ["interpolate", ["linear"], ["zoom"], 13, 1.0, 17, 2.5],
+        "line-blur": 0.2
       }
     });
   }
