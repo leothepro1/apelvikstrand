@@ -20,7 +20,7 @@
 
   // Viktigt: MÅSTE matcha din faktiska deploy-path.
   // (Du hade tidigare 404 på .maps.js, så detta måste peka på rätt fil/host)
-  var sektion73HeavyMapsSrc = "https://apelvikstrand.webflow.io/apelvikstrand.maps.js";
+  var sektion73HeavyMapsSrc = "https://apelvikstrand.pages.dev/apelvikstrand.maps.js";
 
   // -----------------------------
   // 1) Lottie-overlay (ersätter poster/static image)
