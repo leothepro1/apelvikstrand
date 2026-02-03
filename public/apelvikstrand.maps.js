@@ -70,7 +70,7 @@
     };
               const sektion73InitialCenter = {
       title: "Apelviken livs",
-      lngLat: [12.258774, 57.082854]
+      lngLat: [12.256681, 57.084976]
     };
                    const sektion73apelviken = {
       title: "Apelviken livs",
@@ -114,7 +114,7 @@ const sektion73Tangkorar_4 = {
 
     const sektion73MinZoom = 13.2;
     const sektion73MaxZoom = 17.9;
-    const sektion73StartZoom = 16.3;
+    const sektion73StartZoom = 15.3;
 const sektion73SecondaryPinsMinZoom = 15.8;
     // Kamera
     const sektion73Pitch = 65;
