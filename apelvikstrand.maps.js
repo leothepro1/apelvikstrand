@@ -440,7 +440,7 @@ center: sektion73InitialCenter.lngLat,
       source: sektion73ApelvikenSourceId,
       paint: {
         "fill-color": "rgba(242,178,0,0.35)",
-        "fill-opacity": 1,
+        "fill-opacity": 0,
         "fill-outline-color": "rgba(242,178,0,0.95)"
       }
     });
@@ -453,7 +453,7 @@ center: sektion73InitialCenter.lngLat,
       source: sektion73ApelvikenSourceId,
       paint: {
         "line-color": "rgba(242,178,0,1)",
-        "line-width": 2
+        "line-width": 0
       }
     });
   }
