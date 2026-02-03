@@ -54,7 +54,7 @@ function sektion73BuildStaticUrl(w, h) {
     hh +
     "?access_token=" +
     encodeURIComponent(sektion73AccessToken) +
-    "&logo=false&attribution=false"
+ "&logo=false&attribution=false&fresh=true"
   );
 }
 
