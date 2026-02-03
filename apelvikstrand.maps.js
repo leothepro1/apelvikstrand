@@ -1402,7 +1402,7 @@ const sektion73Pins = [
     {
     id: "sektion73Pin_home_tyyfdg",
     label: "Golf",
-    filter: "restauranger",
+    filter: "Mat & dryck",
        priority: "secondary",
     iconKey: "majas",
     ui: {
@@ -1432,7 +1432,7 @@ const sektion73Pins = [
   {
     id: "sektion73Pin_tangkorar1_90999",
     label: "Tångkörarvägen 1",
-    filter: "restauranger",
+    filter: "Mat & dryck",
     iconKey: "solviken",
     ui: {
       bubbleBg: "#1d1d1b",
@@ -1462,7 +1462,7 @@ const sektion73Pins = [
   {
     id: "sektion73Pin_tangkorar1_hgfwea1",
     label: "Tångkörarvägen 1",
-         filter: "restauranger",
+         filter: "Mat & dryck",
     iconKey: "kusthotellet",
     ui: {
       bubbleBg: "#fff",
@@ -1535,7 +1535,7 @@ const sektion73Pins = [
         "https://res.cloudinary.com/dmgmoisae/image/upload/v1769983462/68b2a7_e5363328ffb14dedb976e83ffc1abaa5_mv2_vrzs29.jpg"
       ],
       h: "Destination Apelviken",
-      p: "Beläget strax söder om Varbergs stadskärna, med gång- och cykelavstånd till både strand och centrum. Platsen har vuxit fram över tid, från enkel tältplats till ett sammanhållet område med camping, hotell, Att göra och restauranger. Ett vardagsliv som pågår året runt, med mycket nära och utan behov av att ta bilen.",
+      p: "Beläget strax söder om Varbergs stadskärna, med gång- och cykelavstånd till både strand och centrum. Platsen har vuxit fram över tid, från enkel tältplats till ett sammanhållet område med camping, hotell, Att göra och Mat & dryck. Ett vardagsliv som pågår året runt, med mycket nära och utan behov av att ta bilen.",
       cta1Text: "Läs mer",
       cta1Href: "https://www.apelviken.se/",
       cta2Text: "Vägbeskrivning",
@@ -1577,7 +1577,7 @@ const sektion73Pins = [
   {
     id: "sektion73Pin_tangkorar_231fds1",
     label: "Punkt 1",
-         filter: "restauranger",
+         filter: "Mat & dryck",
     iconKey: "johns",
     ui: { bubbleBg: "#20212B", pointerTop: "#20212B" },
     lngLat: sektion73Tangkorar_4.lngLat,
@@ -1627,7 +1627,7 @@ const sektion73Pins = [
   {
     id: "sektion73Pin_tangkorar_0003",
     label: "Punkt 3",
-              filter: "restauranger",     
+              filter: "Mat & dryck",     
     iconKey: "brittas",
     ui: { bubbleBg: "#1D252C", pointerTop: "#1D252C" },
     lngLat: sektion73Tangkorar_2.lngLat,
@@ -1652,7 +1652,7 @@ const sektion73Pins = [
   {
     id: "sektion73Pin_tangkorar_0004",
     label: "Punkt 4",
-              filter: "restauranger",     
+              filter: "Mat & dryck",     
     iconKey: "olles",
     ui: { bubbleBg: "#fff", pointerTop: "#fff" },
     lngLat: sektion73Tangkorar_10.lngLat,
@@ -1677,7 +1677,7 @@ const sektion73Pins = [
   {
     id: "sektion73Pin_tangkorar_0005",
     label: "Punkt 5",
-                   filter: "restauranger",
+                   filter: "Mat & dryck",
     iconKey: "strandkollektivet",
     ui: { bubbleBg: "#A5B99A", pointerTop: "#A5B99A" },
     lngLat: sektion73Tangkorar_17.lngLat,
@@ -1702,7 +1702,7 @@ const sektion73Pins = [
   {
     id: "sektion73Pin_ny_plats_0006",
     label: "Ny Plats",
-     filter: "restauranger",
+     filter: "Mat & dryck",
     iconKey: "da", 
     ui: { 
       bubbleBg: "#fff", 
@@ -1973,7 +1973,7 @@ function sektion73BuildFilterIconBank() {
   const named = {
     "alla": `<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 7h16M6 12h12M9 17h6"/></svg>`,
     "boenden": `<svg width="800" height="800" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><g/><path fill="currentcolor" d="M21 8c0-2.2-1.8-4-4-4H7C4.8 4 3 5.8 3 8v3.8c-.6.5-1 1.3-1 2.2v5c0 .6.4 1 1 1s1-.4 1-1v-1h16v1c0 .6.4 1 1 1s1-.4 1-1v-5c0-.9-.4-1.7-1-2.2zM5 8c0-1.1.9-2 2-2h10c1.1 0 1 .9 2 2v3h-1v-1c0-1.7-1.3-3-3-3h-1c-.8 0-1.5.3-2 .8-.5-.5-1.2-.8-2-.8H9c-1.7 0-3 1.3-3 3v1H5zm11 2v1h-3v-1c0-.6.4-1 1-1h1c.6 0 1 .4 1 1m-5 0v1H8v-1c0-.6.4-1 1-1h1c.6 0 1 .4 1 1m9 6H4v-2c0-.6.4-1 1-1h14c.6 0 1 .4 1 1z"/></svg>`,
-    "restauranger": `<svg width="800" height="800" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" fill="currentColor"><g/><path d="M5 16c-1.1 0-2 .9-2 2 0 1.7 1.3 3 3 3h12c1.7 0 3-1.3 3-3 0-1.1-.9-2-2-2h-6v-1h7c.6 0 1-.4 1-1 0-4.6-3.5-8.4-8-8.9V5h1c.6 0 1-.4 1-1s-.4-1-1-1h-4c-.6 0-1 .4-1 1s.4 1 1 1h1v.1c-4.5.5-8 4.3-8 8.9 0 .6.4 1 1 1h7v1zm.1-3c.5-3.4 3.4-6 6.9-6s6.4 2.6 6.9 6zM19 18c0 .6-.4 1-1 1H6c-.6 0-1-.4-1-1z"/></svg>`,
+    "Mat & dryck": `<svg width="800" height="800" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" fill="currentcolor"><path d="M17 13V8.9c1.7-.2 3-1.7 3-3.4C20 3.6 18.4 2 16.5 2c-1.8 0-3.2 1.3-3.4 3h-2.3l-.9-2.3C9.8 2.3 9.4 2 9 2H5c-.6 0-1 .4-1 1s.4 1 1 1h3.3l.3 1H8c-.6 0-1 .4-1 1v7c0 2.4 1.7 4.4 4 4.9V20h-1c-.6 0-1 .4-1 1s.4 1 1 1h4c.6 0 1-.4 1-1s-.4-1-1-1h-1v-2.1c2.3-.5 4-2.5 4-4.9m-.5-9c.8 0 1.5.7 1.5 1.5 0 .7-.4 1.2-1 1.4V6c0-.6-.4-1-1-1h-.9c.2-.6.7-1 1.4-1M12 16c-1.7 0-3-1.3-3-3V7h6v6c0 1.7-1.3 3-3 3"/></svg>`,
     "Att göra": `<svg width="800" height="800" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" fill="currentcolor"><path d="M17 13V8.9c1.7-.2 3-1.7 3-3.4C20 3.6 18.4 2 16.5 2c-1.8 0-3.2 1.3-3.4 3h-2.3l-.9-2.3C9.8 2.3 9.4 2 9 2H5c-.6 0-1 .4-1 1s.4 1 1 1h3.3l.3 1H8c-.6 0-1 .4-1 1v7c0 2.4 1.7 4.4 4 4.9V20h-1c-.6 0-1 .4-1 1s.4 1 1 1h4c.6 0 1-.4 1-1s-.4-1-1-1h-1v-2.1c2.3-.5 4-2.5 4-4.9m-.5-9c.8 0 1.5.7 1.5 1.5 0 .7-.4 1.2-1 1.4V6c0-.6-.4-1-1-1h-.9c.2-.6.7-1 1.4-1M12 16c-1.7 0-3-1.3-3-3V7h6v6c0 1.7-1.3 3-3 3"/></svg>`,
     "service": `<svg width="800" height="800" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" fill="currentcolor"><path d="M19.8 5.4c-.2-.2-.5-.4-.8-.4 0-1.7-1.3-3-3-3H8C6.3 2 5 3.3 5 5c-.3 0-.6.2-.8.4L2.9 7.3c-.6.9-.8 2-.5 3S3.2 12 4 12.4V17c0 2.2 1.8 4 4 4h8c2.2 0 4-1.8 4-4v-4.6c.8-.5 1.3-1.2 1.6-2.1.3-1 .1-2.2-.5-3zM8 4h8c.6 0 1 .4 1 1H7c0-.6.4-1 1-1m6 3v2c0 1.1-.9 2-2 2s-2-.9-2-2V7zm-8.3 4c-.1 0-.3-.1-.4-.1s-.2-.1-.2-.1c-.4-.2-.6-.5-.7-.9-.1-.5 0-1 .2-1.4l1-1.4H8v1.8c0 .9-.6 1.8-1.4 2h-.8c0 .1 0 .1-.1.1m7.3 8h-2v-2c0-.6.4-1 1-1s1 .4 1 1zm5-2c0 1.1-.9 2-2 2h-1v-2c0-1.7-1.3-3-3-3s-3 1.3-3 3v2H8c-1.1 0-2-.9-2-2v-4h.4c.1 0 .2 0 .3-.1.1 0 .2 0 .3-.1.1 0 .2-.1.4-.1.2-.1.3-.1.4-.2q.75-.3 1.2-.9l.1.1.3.3c.1.1.2.1.3.2s.3.2.4.3.2.1.3.2c.2.1.3.1.5.2.1 0 .2.1.3.1h.8c.3 0 .6 0 .8-.1.1 0 .2-.1.3-.1.2-.1.4-.1.5-.2.1 0 .2-.1.3-.2s.3-.2.4-.3.2-.1.3-.2l.3-.3s.1 0 .1-.1c.3.4.7.7 1.1.9.1.1.3.1.4.2.1 0 .2.1.4.1.1 0 .2 0 .3.1.1 0 .2 0 .3.1h.4V17zm1.6-7.2c-.1.4-.4.8-.7.9-.1 0-.2.1-.3.1s-.2.1-.4.1h-.9c-.8-.3-1.4-1.1-1.4-2V7h2.5l1 1.4c.3.4.4 1 .2 1.4"/></svg>`
   };
@@ -2351,29 +2351,42 @@ requestAnimationFrame(() => {
 }
 
 sektion73Map.once("load", function () {
-  const sektion73Defer = (fn) => {
+  const sektion73Idle = (fn, timeoutMs) => {
+    const t = (typeof timeoutMs === "number" ? timeoutMs : 1200);
+
     if (typeof window.requestIdleCallback === "function") {
-      window.requestIdleCallback(() => fn(), { timeout: 1200 });
+      window.requestIdleCallback(() => fn(), { timeout: t });
     } else {
       setTimeout(fn, 0);
     }
   };
 
-  sektion73Defer(() => {
-    sektion73Pins.forEach(sektion73AddPin);
+  const sektion73Later = (fn, ms) => {
+    const d = (typeof ms === "number" ? ms : 700);
+    setTimeout(fn, d);
+  };
 
-    sektion73EnsureFilterBar();
-    // OBS: modalen skapas först vid första pin-klick via sektion73OpenModal() -> sektion73EnsureModalDOM()
+  // 1) KRAV: kartan + ALLA pins ska synas direkt (ingen idle/defer här)
+  sektion73Pins.forEach(sektion73AddPin);
 
-    // initialt — applicera (döljer ev. secondary vid startzoom)
-    sektion73ApplyFilter(sektion73FilterState.active || "");
-  });
+  // initialt — applicera (döljer ev. secondary vid startzoom)
+  sektion73ApplyFilter(sektion73FilterState.active || "");
 
   // vid zoom — uppdatera så secondary blir synliga när man zoomar in
   sektion73Map.on("zoomend", () => {
     sektion73ApplyFilter(sektion73FilterState.active || "");
   });
+
+  // 2) Filter-slider får ladda in lite senare (efter att pins redan syns)
+  sektion73Later(() => {
+    sektion73Idle(() => {
+      sektion73EnsureFilterBar();
+    }, 1800);
+  }, 650);
+
+  // OBS: modalen skapas först vid första pin-klick via sektion73OpenModal() -> sektion73EnsureModalDOM()
 });
+
 
 
 
