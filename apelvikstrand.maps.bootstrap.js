@@ -21,7 +21,7 @@
   var sektion73InitialLat = 57.082854;
   var sektion73InitialZoom = 16.3;
   var sektion73InitialBearing = 45;
-  var sektion73InitialPitch = 65;
+  var sektion73InitialPitch = 59;
 
   // Resurser som ska lazy-loadas vid interaction
   var sektion73MapboxJsSrc = "https://api.mapbox.com/mapbox-gl-js/v3.6.0/mapbox-gl.js";
