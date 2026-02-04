@@ -1661,8 +1661,8 @@ background: #DDD7D2;
 .sektion73ModalGalleryTop, 
 .sektion73ModalGallery,
 .sektion73ModalThumb {
-height: 287px !important;
-min-height: 287px !important;
+height: 297px !important;
+min-height: 297px !important;
 aspect-ratio: auto !important;
 }
 #sektion73MapFilterRail {
