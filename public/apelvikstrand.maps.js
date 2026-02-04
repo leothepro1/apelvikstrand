@@ -794,6 +794,19 @@ function sektion73InjectModalCSS() {
         scroll-snap-type: none !important;
         scroll-behavior: auto !important;
     }
+    .sektion73ModalBodyP {
+    font-size: 15px !important;
+}
+.sektion73ModalBodyH {
+    font-size: 31px !important;
+}
+    .sektion73ModalMeta {
+    padding: 26px 26px 0px !important;
+}
+.sektion73ModalActions {
+    margin-top: 25px !important;
+    padding: 0px 26px !important;
+}
   .sektion73ModalGallery::-webkit-scrollbar{ display:none; }
 #sektion73MapModal.is-open {
     transform: translateY(0);
