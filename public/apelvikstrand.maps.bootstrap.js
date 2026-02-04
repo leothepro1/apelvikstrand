@@ -58,7 +58,7 @@
       "#sektion73MapRoot{position:relative}" +
       "#" +
       sektion73OverlayId +
-      "{position:absolute;inset:0;width:100%;height:100%;z-index:9999;display:grid;place-items:center;background:#fff;opacity:1;transition:opacity .28s ease;pointer-events:auto}" +
+      "{position:absolute;inset:0;width:100%;height:100%;z-index:9999;display:grid;place-items:center;background:#F7F1EB;opacity:1;transition:opacity .28s ease;pointer-events:auto}" +
       "#" +
       sektion73OverlayId +
       ".sektion73LottieHiding{opacity:0;pointer-events:none}" +
