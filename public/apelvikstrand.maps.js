@@ -603,7 +603,7 @@ function sektion73InjectModalCSS() {
     display: flex;
     padding: 0px 40px;
     flex-direction: row;
-    gap: 12px;
+    gap: 16px;
 }
 .sektion73ModalBtn {
     width: 100%;
