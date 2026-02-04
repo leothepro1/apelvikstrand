@@ -829,24 +829,22 @@ function sektion73InjectModalCSS() {
     display: contents !important;
   }
 
-  /* Alla bilder blir cards med “peek” av nästa under swipe */
+ @media (max-width: 768px){
   .sektion73ModalGalleryTop,
   .sektion73ModalThumb{
     flex: 0 0 auto;
     width: 82vw;
     max-width: 420px;
-    aspect-ratio: 1.67778 / 1;
+    aspect-ratio: 5 / 4 !important; /* <-- NYTT */
     border-radius: 16px;
     overflow: hidden;
     border: none;
-
-    /* säkerställ att inget snap smyger in */
     scroll-snap-align: none !important;
   }
 
-  /* Säkerställ att thumbs inte har en annan ratio på mobil */
+  /* redundans-säkring så inget annat ratio vinner */
   .sektion73ModalThumb{
-    aspect-ratio: 1.67778 / 1 !important;
+    aspect-ratio: 5 / 4 !important; /* <-- NYTT */
   }
 }
 
