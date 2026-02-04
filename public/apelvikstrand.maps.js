@@ -133,6 +133,8 @@ const sektion73Map = new mapboxgl.Map({
   style: sektion73StyleUrl,
   center: sektion73InitialCenter.lngLat,
   zoom: sektion73StartZoom,
+  pitch: sektion73Pitch,
+  bearing: sektion73Bearing,
   maxBounds: sektion73Bounds,
   attributionControl: false,
   antialias: false,
