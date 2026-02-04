@@ -487,26 +487,28 @@ function sektion73InjectModalCSS() {
       margin:0;
     }
 .sektion73ModalClose {
-    width: 36px;
-    height: 36px;
+    width: 38px;
+    height: 38px;
     border-radius: 80px;
     border: none;
     background: rgba(250, 250, 250, 0.72);
     cursor: pointer;
-    display: grid;
-    place-items: center;
-    flex: 0 0 auto;
+    display: flex;
+    place-content: center;
+    flex: 0 0 18px;
     position: absolute;
     top: 18px;
     right: 18px;
     backdrop-filter: blur(24px) saturate(1.6);
     -webkit-backdrop-filter: blur(24px) saturate(1.6);
     z-index: 9769675965799657;
+    box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
+    flex-wrap: wrap;
 }
 .sektion73ModalClose svg {
-    width: 18px;
-    height: 18px;
-    flex: 0 0 18px;
+    width: 20px;
+    height: 20px;
+    flex: 0 0 20px;
 }
 
     .sektion73ModalGallery{
