@@ -846,7 +846,6 @@ function sektion73InjectModalCSS() {
   .sektion73ModalThumb{
     aspect-ratio: 5 / 4 !important; /* <-- NYTT */
   }
-}
 
     .sektion73ModalTop{
       display:flex;
