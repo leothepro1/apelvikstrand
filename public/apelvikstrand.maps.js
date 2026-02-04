@@ -63,7 +63,7 @@
     };
 const sektion73InitialCenter = {
   title: "Apelviken livs",
-  lngLat: [12.252698, 57.083651]
+  lngLat: [12.25593, 57.084152]
 };
                    const sektion73apelviken = {
       title: "Apelviken livs",
