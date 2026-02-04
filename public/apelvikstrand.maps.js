@@ -781,9 +781,9 @@ function sektion73InjectModalCSS() {
     }
 
 @media (max-width: 768px){
-  /* MOBIL: galleriet blir en horisontell lista med cards */
+  /* MOBIL: horisontell lista med bild-cards (ingen snap) */
   .sektion73ModalGallery{
-    display:flex;
+    display:flex !important;
     flex-direction: row;
     gap:12px;
     padding: 0px 24px;
@@ -800,13 +800,12 @@ function sektion73InjectModalCSS() {
   }
   .sektion73ModalGallery::-webkit-scrollbar{ display:none; }
 
-  /* Gör att thumbnailsen inte ligger i en egen grid-rad på mobil,
-     utan flödar som syskon i samma rad (cards efter varandra) */
+  /* Låt thumbnails “försvinna” som grid-rad och istället bli cards i samma rad */
   .sektion73ModalGalleryRow{
-    display: contents;
+    display: contents !important;
   }
 
-  /* Varje bild (top + thumbs) blir ett card i raden */
+  /* Alla bilder blir cards med “peek” av nästa under swipe */
   .sektion73ModalGalleryTop,
   .sektion73ModalThumb{
     flex: 0 0 auto;
@@ -817,13 +816,13 @@ function sektion73InjectModalCSS() {
     overflow: hidden;
     border: none;
 
-    /* säkerställ att inga snap-inställningar smyger in */
+    /* säkerställ att inget snap smyger in */
     scroll-snap-align: none !important;
   }
 
-  /* Viktigt: thumbs ska inte ha sin gamla ratio på mobil */
+  /* Säkerställ att thumbs inte har en annan ratio på mobil */
   .sektion73ModalThumb{
-    object-fit: initial;
+    aspect-ratio: 1.67778 / 1 !important;
   }
 }
 
