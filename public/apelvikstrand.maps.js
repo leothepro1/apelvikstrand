@@ -108,8 +108,8 @@ const sektion73Tangkorar_4 = {
     };
     // Bounds (justera vid behov)
     const sektion73Bounds = [
-      [12.245, 57.0775],
-      [12.285, 57.0875] 
+      [12.235, 57.070], // SW
+      [12.285, 57.095] // NE
     ];
 
     const sektion73MinZoom = 13.2;
@@ -2441,15 +2441,6 @@ requestAnimationFrame(() => {
 }
 
 sektion73Map.once("load", function () {
-  // NYTT: säkerställ att cropp/maxBounds inte påverkar start-zoom (eller start-center)
-  // (Mapbox kan ibland "kännas" mer inzoomad när bounds clampas vid init)
-  try {
-    sektion73Map.jumpTo({
-      center: sektion73InitialCenter.lngLat,
-      zoom: sektion73StartZoom
-    });
-  } catch (_) {}
-
   const sektion73Idle = (fn, timeoutMs) => {
     const t = (typeof timeoutMs === "number" ? timeoutMs : 1200);
 
