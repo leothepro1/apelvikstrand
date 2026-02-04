@@ -817,6 +817,7 @@ function sektion73InjectModalCSS() {
     overscroll-behavior: contain;
     border-radius: 20px 20px 0px 0px;
     overflow: auto;
+            top: auto;
 }
   /* Låt thumbnails “försvinna” som grid-rad och istället bli cards i samma rad */
   .sektion73ModalGalleryRow{
@@ -828,7 +829,7 @@ function sektion73InjectModalCSS() {
   .sektion73ModalThumb{
     flex: 0 0 auto;
     width: 82vw;
-    max-width: 420px;
+    max-width: 350px;
     aspect-ratio: 1.67778 / 1;
     border-radius: 16px;
     overflow: hidden;
@@ -1971,8 +1972,8 @@ function sektion73InjectFilterCSS() {
     gap: 6px;
     padding: 6px 12px;
     border-radius: 999px;
-    border: 1px solid #e6e6e6;
-    background: #ffffff;
+    border: none;
+    background: #F6F3F1;
     color: rgb(64, 61, 59);
     font-family: 'Inter Variablefont Opsz Wght';
     font-size: 14.5px;
@@ -1983,14 +1984,21 @@ function sektion73InjectFilterCSS() {
     text-transform: capitalize;
 }
     .sektion73FilterBtn:hover{
-background: #f2f4f5;
+background: #ece6e1;
     }
     .sektion73FilterBtn:active{
-background: #e2e4e5;
+background: #e2d8d2;
     }
     @media (max-width: 768px){
 #sektion73MapFilterBar {
     bottom: 0px;
+}
+.sektion73ModalGalleryTop, 
+.sektion73ModalGallery,
+.sektion73ModalThumb {
+height: 267px !important;
+min-height: 267px !important;
+aspect-ratio: auto !important;
 }
 #sektion73MapFilterRail {
     display: flex;
