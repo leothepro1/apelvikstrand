@@ -1,10 +1,3 @@
-/* apelvikstrand.maps.bootstrap.js
-   ÄNDRING: Lottie-overlay från fixed -> relativ i DOM
-   - Overlay placeras inne i #sektion73MapRoot (normal DOM-hierarki)
-   - Overlay är position:absolute och täcker exakt viewport: 100vw / 100vh
-   - Den blir inte “större än skärmen”
-   - Övrig logik (load order, timing, map-load-detektion) är oförändrad
-*/
 (function () {
   "use strict";
 
@@ -24,7 +17,7 @@
     "https://lottie.host/fee9973e-0e4b-44ce-9a88-4238341dc0b1/uBOZF4orQB.lottie";
 
   // -----------------------------
-  // Mål: bättre FCP/LCP
+  // Overlay settings
   // -----------------------------
   var sektion73OverlayId = "sektion73LottieOverlay";
   var sektion73CssId = "sektion73LottieCss";
@@ -60,31 +53,24 @@
     css.id = sektion73CssId;
     css.type = "text/css";
 
+    // FIX: overlay ska täcka endast #sektion73MapRoot (inte hela viewporten)
     css.textContent =
-      /* Root måste vara referens för absolute (men påverkar inte layout visuellt) */
       "#sektion73MapRoot{position:relative}" +
-
-      /* Overlay: ligger i root (normal DOM), ej fixed */
       "#" +
       sektion73OverlayId +
-      "{position:absolute;top:0;left:50%;transform:translateX(-50%);width:100vw;height:100vh;z-index:2147483647;display:grid;place-items:center;background:#fff;opacity:1;transition:opacity .28s ease;pointer-events:auto}" +
-
+      "{position:absolute;inset:0;width:100%;height:100%;z-index:9999;display:grid;place-items:center;background:#fff;opacity:1;transition:opacity .28s ease;pointer-events:auto}" +
       "#" +
       sektion73OverlayId +
       ".sektion73LottieHiding{opacity:0;pointer-events:none}" +
-
       "#" +
       sektion73OverlayId +
       " .sektion73LottieInner{width:min(320px,74vw);height:min(320px,74vw);display:grid;place-items:center}" +
-
       "#" +
       sektion73OverlayId +
       " .sektion73LottiePoster{width:100%;height:100%;display:grid;place-items:center}" +
-
       "#" +
       sektion73OverlayId +
       " .sektion73LottieSpinner{width:60px;height:60px;border-radius:999px;border:4px solid rgba(14,19,24,.12);border-top-color:rgba(14,19,24,.55);animation:sektion73Spin .85s linear infinite}" +
-
       "#" +
       sektion73OverlayId +
       " dotlottie-wc{width:100%;height:100%;display:block}" +
@@ -112,7 +98,7 @@
     inner.appendChild(poster);
     overlay.appendChild(inner);
 
-    /* NYTT: lägg overlay i #sektion73MapRoot istället för body/html */
+    // FIX: overlay läggs i root (så absolute/inset:0 baseras på root)
     sektion73Root.appendChild(overlay);
   }
 
@@ -263,7 +249,7 @@
   }
 
   // -----------------------------
-  // Kör: overlay först, resten efter första paint
+  // Start
   // -----------------------------
   sektion73EnsureOverlayDom();
   sektion73EnsureEarlyConnections();
@@ -273,3 +259,4 @@
     sektion73BootInteractiveMap();
   });
 })();
+
