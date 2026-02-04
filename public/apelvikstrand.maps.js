@@ -781,30 +781,35 @@ function sektion73InjectModalCSS() {
     }
 
 @media (max-width: 768px){
-  .sektion73ModalGallery{
-    display:flex !important;
-    flex-direction: row;
-    padding: 0px;
-    overflow-x: auto;
-    overflow-y: hidden;
-    -webkit-overflow-scrolling: touch;
-    overscroll-behavior-x: contain;
-    scrollbar-width: none;
-    touch-action: pan-x;
-    scroll-snap-type: none !important;
-    scroll-behavior: auto !important;
-  }
-  .sektion73ModalGallery::-webkit-scrollbar{ display:none; 
-  }
-
-  #sektion73MapModal{
+.sektion73ModalGallery {
+        display: flex !important;
+        flex-direction: row;
+        padding: 0px;
+        overflow-x: auto;
+        overflow-y: hidden;
+        -webkit-overflow-scrolling: touch;
+        overscroll-behavior-x: contain;
+        scrollbar-width: none;
+        touch-action: pan-x;
+        scroll-snap-type: none !important;
+        scroll-behavior: auto !important;
+    }
+  .sektion73ModalGallery::-webkit-scrollbar{ display:none; }
+    #sektion73MapModal.is-open {
+        transform: translateY(0);
+        left: 0;
+        right: 0;
+        bottom: 0;
+        width: 100%;
+        height: 95dvh;
+        top: auto;
+    }
+#sektion73MapModal {
     position: fixed;
-    left: 0;
     right: 0;
     bottom: 0;
-    top: auto;
+    height: 95vh;
     width: 100%;
-    height: 95dvh;
     background: var(--sektion73-modal-bg);
     color: var(--sektion73-modal-text);
     border: none;
@@ -818,30 +823,13 @@ function sektion73InjectModalCSS() {
     overscroll-behavior: contain;
     border-radius: 20px 20px 0px 0px;
     overflow: auto;
-  }
-
-  /* Modal: öppet läge */
-  #sektion73MapModal.is-open{
-    transform: translateY(0);
-  }
-
-  /* Thumbs -> cards i samma rad */
+}
+  /* Låt thumbnails “försvinna” som grid-rad och istället bli cards i samma rad */
   .sektion73ModalGalleryRow{
     display: contents !important;
   }
 
-  /* Cards: aspect-ratio 5/4 på mobil */
-  .sektion73ModalGalleryTop,
-  .sektion73ModalThumb{
-    flex: 0 0 auto;
-    width: 82vw;
-    max-width: 420px;
-    aspect-ratio: 5 / 4 !important;
-    border-radius: 16px;
-    overflow: hidden;
-    border: none;
-    scroll-snap-align: none !important;
-  }
+ @media (max-width: 768px){
   .sektion73ModalGalleryTop,
   .sektion73ModalThumb{
     flex: 0 0 auto;
@@ -858,6 +846,7 @@ function sektion73InjectModalCSS() {
   .sektion73ModalThumb{
     aspect-ratio: 5 / 4 !important; /* <-- NYTT */
   }
+}
 
     .sektion73ModalTop{
       display:flex;
