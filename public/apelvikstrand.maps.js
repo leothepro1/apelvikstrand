@@ -65,7 +65,7 @@ const sektion73InitialCenter = {
   title: "Apelviken livs",
   lngLat: [12.25294, 57.084152]
 };
-                   const sektion73apelviken = {
+                   const sektion73destinationapelviken = {
       title: "Apelviken livs",
       lngLat: [12.249075, 57.083966]
     };
@@ -1201,7 +1201,7 @@ const sektion73Pins = [
       bubbleBg: "#366591",
       pointerTop: "#366591"
     },
-    lngLat: sektion73apelviken.lngLat,
+    lngLat: sektion73destinationapelviken.lngLat,
     modal: {
       kicker: "BUTIK",
       title: "Apelviken Livs",
