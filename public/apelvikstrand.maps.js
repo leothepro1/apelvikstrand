@@ -795,15 +795,9 @@ function sektion73InjectModalCSS() {
         scroll-behavior: auto !important;
     }
   .sektion73ModalGallery::-webkit-scrollbar{ display:none; }
-    #sektion73MapModal.is-open {
-        transform: translateY(0);
-        left: 0;
-        right: 0;
-        bottom: 0;
-        width: 100%;
-        height: 95dvh;
-        top: auto;
-    }
+#sektion73MapModal.is-open {
+    transform: translateY(0);
+}
 #sektion73MapModal {
     position: fixed;
     right: 0;
@@ -813,7 +807,7 @@ function sektion73InjectModalCSS() {
     background: var(--sektion73-modal-bg);
     color: var(--sektion73-modal-text);
     border: none;
-    transform: translateY(110%);
+    transform: translateY(104%);
     transition: transform var(--sektion73-modal-dur) var(--sektion73-modal-ease);
     z-index: 2147483001;
     display: flex;
@@ -829,22 +823,24 @@ function sektion73InjectModalCSS() {
     display: contents !important;
   }
 
- @media (max-width: 768px){
+  /* Alla bilder blir cards med “peek” av nästa under swipe */
   .sektion73ModalGalleryTop,
   .sektion73ModalThumb{
     flex: 0 0 auto;
     width: 82vw;
     max-width: 420px;
-    aspect-ratio: 5 / 4 !important; /* <-- NYTT */
+    aspect-ratio: 1.67778 / 1;
     border-radius: 16px;
     overflow: hidden;
     border: none;
+
+    /* säkerställ att inget snap smyger in */
     scroll-snap-align: none !important;
   }
 
-  /* redundans-säkring så inget annat ratio vinner */
+  /* Säkerställ att thumbs inte har en annan ratio på mobil */
   .sektion73ModalThumb{
-    aspect-ratio: 5 / 4 !important; /* <-- NYTT */
+    aspect-ratio: 1.67778 / 1 !important;
   }
 }
 
