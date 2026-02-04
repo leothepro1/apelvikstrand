@@ -1600,7 +1600,7 @@ function sektion73InjectFilterCSS() {
     white-space: nowrap;
     user-select: none;
     transition: 0.15s ease-in-out;
-    text-transform: capitalize;
+    text-transform: none;
 }
     .sektion73FilterBtn:hover{
 background: #E6E1DD;
