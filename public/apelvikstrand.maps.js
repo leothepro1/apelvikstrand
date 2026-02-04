@@ -780,35 +780,52 @@ function sektion73InjectModalCSS() {
       transform:translateX(0);
     }
 
-    @media (max-width: 768px){
-    #sektion73MapModal {
-        left: 0;
-        right: 0;
-        top: auto;
-        bottom: 0;
-        width: 100%;
-        height: min(94dvh, 720px);
-        border-left: none;
-        border-top: none;
-        border-top-left-radius: 20px;
-        border-top-right-radius: 20px;
-        transform: translateY(104%);
-        border-bottom-left-radius: 0px;
-    }
-    .sektion73ModalBodyH {
-    font-size: 32px !important;
+@media (max-width: 768px){
+  /* MOBIL: galleriet blir en horisontell lista med cards */
+  .sektion73ModalGallery{
+    display:flex;
+    flex-direction: row;
+    gap:12px;
+    padding: 0px 24px;
+    overflow-x:auto;
+    overflow-y:hidden;
+    -webkit-overflow-scrolling: touch;
+    overscroll-behavior-x: contain;
+    scrollbar-width: none;
+    touch-action: pan-x;
+
+    /* uttryckligen ingen snap */
+    scroll-snap-type: none !important;
+    scroll-behavior: auto !important;
+  }
+  .sektion73ModalGallery::-webkit-scrollbar{ display:none; }
+
+  /* Gör att thumbnailsen inte ligger i en egen grid-rad på mobil,
+     utan flödar som syskon i samma rad (cards efter varandra) */
+  .sektion73ModalGalleryRow{
+    display: contents;
+  }
+
+  /* Varje bild (top + thumbs) blir ett card i raden */
+  .sektion73ModalGalleryTop,
+  .sektion73ModalThumb{
+    flex: 0 0 auto;
+    width: 82vw;
+    max-width: 420px;
+    aspect-ratio: 1.67778 / 1;
+    border-radius: 16px;
+    overflow: hidden;
+    border: none;
+
+    /* säkerställ att inga snap-inställningar smyger in */
+    scroll-snap-align: none !important;
+  }
+
+  /* Viktigt: thumbs ska inte ha sin gamla ratio på mobil */
+  .sektion73ModalThumb{
+    object-fit: initial;
+  }
 }
-    .sektion73ModalMeta {
-    padding: 24px 24px 0px !important;
-}
-.sektion73ModalActions {
-    margin-top: 25px;
-    padding: 0px 24px !important;
-}
-      #sektion73MapModal.is-open{
-        transform:translateY(0);
-      }
-    }
 
     .sektion73ModalTop{
       display:flex;
@@ -832,7 +849,7 @@ function sektion73InjectModalCSS() {
     height: 34px;
     border-radius: 80px;
     border: none;
-    background: #fff;
+    background: rgba(250, 250, 250, 0.72);
     cursor: pointer;
     display: grid;
     place-items: center;
@@ -840,7 +857,8 @@ function sektion73InjectModalCSS() {
     position: absolute;
     top: 18px;
     right: 18px;
-    box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
+    backdrop-filter: blur(24px) saturate(1.6);
+    -webkit-backdrop-filter: blur(24px) saturate(1.6);
 }
     .sektion73ModalClose svg{ width:18px; height:18px; }
 
