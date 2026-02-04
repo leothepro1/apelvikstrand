@@ -408,7 +408,10 @@ function sektion73InjectModalCSS() {
     font-size: 31px !important;
 }
     .sektion73ModalMeta {
-    padding: 26px 26px 0px !important;
+    padding: 20px 26px 0px !important;
+    border-radius: 20px !important;
+    margin-top: -20px !important;
+    background: #fff !important;
 }
 .sektion73ModalActions {
     margin-top: 25px !important;
@@ -499,7 +502,11 @@ function sektion73InjectModalCSS() {
     -webkit-backdrop-filter: blur(24px) saturate(1.6);
     z-index: 9769675965799657;
 }
-    .sektion73ModalClose svg{ width:18px; height:18px; }
+.sektion73ModalClose svg {
+    width: 18px;
+    height: 18px;
+    flex: 0 0 18px;
+}
 
     .sektion73ModalGallery{
       display:grid;
