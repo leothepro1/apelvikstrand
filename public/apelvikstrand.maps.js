@@ -1496,10 +1496,9 @@ function sektion73GetAvailableFilters() {
 
 
 function sektion73InjectFilterCSS() {
-  if (document.getElementById("sektion73MapFilterStyle")) return;
-
+  if (document.getElementById("sektion73FilterCss")) return;
   const style = document.createElement("style");
-  style.id = "sektion73MapFilterStyle";
+  style.id = "sektion73FilterCss";
   style.textContent = `
 #sektion73MapFilterBar{
   position: fixed;
@@ -1573,7 +1572,7 @@ function sektion73InjectFilterCSS() {
 }
 
 .sektion73FilterClose:hover{
-  background: rgba(255,255,255,.5);
+  background: rgba(255,255,255,5);
 }
 .sektion73FilterIco svg {
     width: 20px;
@@ -1609,6 +1608,46 @@ background: #ece6e1;
     .sektion73FilterBtn:active{
 background: #e2d8d2;
     }
+
+/* ===========================
+   NYTT: 2D/3D toggle group
+   - två knappar utan rail-gap mellan sig
+   =========================== */
+.sektion73ViewToggleGroup{
+  display: inline-flex;
+  gap: 0;
+  border-radius: 999px;
+  overflow: hidden;
+  background: #F6F3F1;
+}
+.sektion73ViewToggleBtn{
+  all: unset;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 6px 10px;
+  background: #F6F3F1;
+  color: rgb(64, 61, 59);
+  font-family: 'Inter Variablefont Opsz Wght';
+  font-size: 14px;
+  font-weight: 600;
+  white-space: nowrap;
+  user-select: none;
+  transition: 0.15s ease-in-out;
+}
+.sektion73ViewToggleBtn:hover{
+  background: #ece6e1;
+}
+.sektion73ViewToggleBtn:active{
+  background: #e2d8d2;
+}
+.sektion73ViewToggleBtn[aria-pressed="true"]{
+  background: #FFE6A3;
+  color: #5A3C00;
+  font-weight: 700;
+}
+
     @media (max-width: 768px){
 #sektion73MapFilterBar {
     bottom: 0px;
@@ -1644,6 +1683,7 @@ display:inline-flex;
   `;
   document.head.appendChild(style);
 }
+
 
 function sektion73BuildFilterIconBank() {
   const bank = [
@@ -1843,6 +1883,68 @@ function sektion73EnsureFilterBar() {
   const rail = document.createElement("div");
   rail.id = "sektion73MapFilterRail";
 
+  /* ===========================
+     NYTT: 2D/3D toggle (först i rail)
+     - två knappar utan rail-gap mellan sig
+     =========================== */
+  const viewGroup = document.createElement("div");
+  viewGroup.className = "sektion73ViewToggleGroup";
+
+  const btn3d = document.createElement("button");
+  btn3d.type = "button";
+  btn3d.className = "sektion73ViewToggleBtn";
+  btn3d.textContent = "3D";
+  btn3d.setAttribute("data-view", "3d");
+  btn3d.setAttribute("aria-pressed", "true");
+  btn3d.setAttribute("aria-label", "3D vy");
+
+  const btn2d = document.createElement("button");
+  btn2d.type = "button";
+  btn2d.className = "sektion73ViewToggleBtn";
+  btn2d.textContent = "2D";
+  btn2d.setAttribute("data-view", "2d");
+  btn2d.setAttribute("aria-pressed", "false");
+  btn2d.setAttribute("aria-label", "2D vy");
+
+  viewGroup.appendChild(btn3d);
+  viewGroup.appendChild(btn2d);
+
+  function sektion73SetViewMode(mode) {
+    const is2d = String(mode) === "2d";
+
+    btn3d.setAttribute("aria-pressed", is2d ? "false" : "true");
+    btn2d.setAttribute("aria-pressed", is2d ? "true" : "false");
+
+    if (!sektion73Map) return;
+
+    const targetPitch = is2d ? 0 : sektion73Pitch;
+
+    // Samma “känsla” som pin-click (easeTo + duration/easing)
+    sektion73Map.easeTo({
+      center: sektion73Map.getCenter(),
+      zoom: sektion73Map.getZoom(),
+      bearing: sektion73Map.getBearing(),
+      pitch: targetPitch,
+      duration: sektion73PinZoomDur,
+      easing: (t) => 1 - Math.pow(1 - t, 3) // ease-out cubic
+    });
+  }
+
+  btn3d.addEventListener("click", () => {
+    // redan aktiv? gör inget
+    if (btn3d.getAttribute("aria-pressed") === "true") return;
+    sektion73SetViewMode("3d");
+  });
+
+  btn2d.addEventListener("click", () => {
+    // redan aktiv? gör inget
+    if (btn2d.getAttribute("aria-pressed") === "true") return;
+    sektion73SetViewMode("2d");
+  });
+
+  // Lägg först i rail
+  rail.appendChild(viewGroup);
+
   // NYTT: label istället för "Alla"-knapp
   const labelEl = document.createElement("span");
   labelEl.className = "sektion73FilterLabel";
@@ -1894,8 +1996,6 @@ close.addEventListener("click", (e) => {
     sektion73RestorePreFilterView();
   });
 });
-
-
 
         b.appendChild(close);
       }
