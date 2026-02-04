@@ -781,7 +781,6 @@ function sektion73InjectModalCSS() {
     }
 
 @media (max-width: 768px){
-  /* Gallery: cards-rad */
   .sektion73ModalGallery{
     display:flex !important;
     flex-direction: row;
@@ -795,9 +794,9 @@ function sektion73InjectModalCSS() {
     scroll-snap-type: none !important;
     scroll-behavior: auto !important;
   }
-  .sektion73ModalGallery::-webkit-scrollbar{ display:none; }
+  .sektion73ModalGallery::-webkit-scrollbar{ display:none; 
+  }
 
-  /* Modal: bottom sheet (stängt läge) */
   #sektion73MapModal{
     position: fixed;
     left: 0;
@@ -843,9 +842,6 @@ function sektion73InjectModalCSS() {
     border: none;
     scroll-snap-align: none !important;
   }
-}
-
- @media (max-width: 768px){
   .sektion73ModalGalleryTop,
   .sektion73ModalThumb{
     flex: 0 0 auto;
