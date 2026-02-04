@@ -367,7 +367,7 @@ function sektion73InjectModalCSS() {
     position: fixed;
     right: 0;
     top: 0;
-    height: 100dvh;
+    height: 100vh;
     width: min(520px, 92vw);
     background: var(--sektion73-modal-bg);
     color: var(--sektion73-modal-text);
@@ -422,7 +422,7 @@ function sektion73InjectModalCSS() {
     position: fixed;
     right: 0;
     bottom: 0;
-    height: 95vh;
+    height: 95%;
     width: 100%;
     background: var(--sektion73-modal-bg);
     color: var(--sektion73-modal-text);
