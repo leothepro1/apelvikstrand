@@ -408,9 +408,9 @@ function sektion73InjectModalCSS() {
     font-size: 31px !important;
 }
     .sektion73ModalMeta {
-    padding: 20px 26px 0px !important;
+    padding: 26px 26px 0px !important;
     border-radius: 20px !important;
-    margin-top: -20px !important;
+    margin-top: 0px !important;
     background: #fff !important;
             z-index: 4;
 }
@@ -1672,7 +1672,7 @@ aspect-ratio: auto !important;
     gap: 12px;
     align-items: center;
     justify-content: start;
-    padding: 10px 17px 17px 17px;
+    padding: 13px 17px 20px 17px;
     overflow-y: hidden;
     border-radius: 0px;
     width: 100% !important;
