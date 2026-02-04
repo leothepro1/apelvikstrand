@@ -1664,6 +1664,7 @@ background: #DDD7D2;
 .sektion73ModalThumb {
 height: 297px !important;
 min-height: 297px !important;
+z-index: 0 !important;
 aspect-ratio: auto !important;
 }
 #sektion73MapFilterRail {
