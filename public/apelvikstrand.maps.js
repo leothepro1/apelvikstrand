@@ -67,7 +67,7 @@ const sektion73InitialCenter = {
 };
                    const sektion73destinationapelviken = {
       title: "Apelviken livs",
-      lngLat: [12.249075, 57.083966]
+      lngLat: [12.249162, 57.086926]
     };
               const sektion73minigolf = {
       title: "Tångkörarvägen 1",
