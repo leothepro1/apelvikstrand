@@ -487,8 +487,8 @@ function sektion73InjectModalCSS() {
       margin:0;
     }
 .sektion73ModalClose {
-    width: 38px;
-    height: 38px;
+    width: 36px;
+    height: 36px;
     border-radius: 80px;
     border: none;
     background: rgba(250, 250, 250, 0.72);
@@ -506,9 +506,9 @@ function sektion73InjectModalCSS() {
     flex-wrap: wrap;
 }
 .sektion73ModalClose svg {
-    width: 20px;
-    height: 20px;
-    flex: 0 0 20px;
+    width: 18px;
+    height: 18px;
+    flex: 0 0 18px;
 }
 
     .sektion73ModalGallery{
