@@ -1,11 +1,4 @@
-/* apelvikstrand.maps
-   Apelvikstrand – Interaktiv karta (Mapbox Standard / imports)
-   - Låst till Apelviken (maxBounds + zoom-intervall)
-   - Home: Surbrunnsvägen 2–8, 432 53 Varberg
-   - 3D: pitch + bearing + show3dBuildings/show3dObjects (Standard config)
-   - Labels: dölj företag/POI + ortnamn/platser. Behåll vägar
-   - Custom pins (2 st) + zoom-then-modal (desktop: slide-in right, mobile: slide-up)
-*/
+
 (function () {
   function sektion73Ready(fn) {
     if (document.readyState === "loading") {
@@ -320,8 +313,6 @@ const sektion73Map = new mapboxgl.Map({
       sektion73Map.on("click", sektion73OnPick_00013);
       console.log("sektion73Pick: aktiv. Klicka på huset du vill ersätta så loggas kandidater.");
     }
-  })();
-});
 
 function sektion73InjectModalCSS() {
   if (document.getElementById("sektion73MapModalStyle")) return;
