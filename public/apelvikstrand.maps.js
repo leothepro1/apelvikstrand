@@ -640,9 +640,9 @@ display: none;
 display:inline-flex;
 align-items:center;
 justify-content:center;
-width:62px;
+width:56px;
 height:auto;
-flex:0 0 62px;
+flex:0 0 56px;
 line-height:0;
 }
     body.sektion73-modal-open {
@@ -660,7 +660,7 @@ background: var(--sektion73-accent);
 display: none;
 }
 #sektion73MapCanvas .sektion73PinBubble .sektion73PinIco svg{
-width:62px;
+width:56px;
 height:auto;
 display:block;
 color:currentColor;
@@ -1592,7 +1592,7 @@ function sektion73InjectFilterCSS() {
     padding: 6px 12px;
     border-radius: 999px;
     border: none;
-    background: #F6F3F1;
+    background: #F0ECE9;
     color: rgb(64, 61, 59);
     font-family: 'Inter Variablefont Opsz Wght';
     font-size: 14.5px;
@@ -1603,10 +1603,10 @@ function sektion73InjectFilterCSS() {
     text-transform: capitalize;
 }
     .sektion73FilterBtn:hover{
-background: #ece6e1;
+background: #E6E1DD;
     }
     .sektion73FilterBtn:active{
-background: #e2d8d2;
+background: #DDD7D2;
     }
 
 /* ===========================
@@ -1620,32 +1620,32 @@ background: #e2d8d2;
   overflow: hidden;
   background: #F6F3F1;
 }
-.sektion73ViewToggleBtn{
-  all: unset;
-  cursor: pointer;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  padding: 6px 10px;
-  background: #F6F3F1;
-  color: rgb(64, 61, 59);
-  font-family: 'Inter Variablefont Opsz Wght';
-  font-size: 14px;
-  font-weight: 600;
-  white-space: nowrap;
-  user-select: none;
-  transition: 0.15s ease-in-out;
+.sektion73ViewToggleBtn {
+    all: unset;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 6px 10px;
+    background: #F0ECE9;
+    color: rgb(64, 61, 59);
+    font-family: 'Inter Variablefont Opsz Wght';
+    font-size: 14.5px;
+    font-weight: 500;
+    white-space: nowrap;
+    user-select: none;
+    transition: 0.15s ease-in-out;
 }
 .sektion73ViewToggleBtn:hover{
-  background: #ece6e1;
+  background: #E6E1DD;
 }
 .sektion73ViewToggleBtn:active{
-  background: #e2d8d2;
+  background: #DDD7D2;
 }
 .sektion73ViewToggleBtn[aria-pressed="true"]{
   background: #FFE6A3;
   color: #5A3C00;
-  font-weight: 700;
+  font-weight: 600;
 }
 
     @media (max-width: 768px){
