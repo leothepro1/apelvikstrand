@@ -1608,17 +1608,14 @@ background: #E6E1DD;
     .sektion73FilterBtn:active{
 background: #DDD7D2;
     }
-
-/* ===========================
-   NYTT: 2D/3D toggle group
-   - två knappar utan rail-gap mellan sig
-   =========================== */
-.sektion73ViewToggleGroup{
-  display: inline-flex;
-  gap: 0;
-  border-radius: 999px;
-  overflow: hidden;
-  background: #F6F3F1;
+.sektion73ViewToggleGroup {
+    display: inline-flex;
+    gap: 0;
+    border-radius: 999px;
+    overflow: hidden;
+    background: #F6F3F1;
+    width: 100% !important;
+    min-width: max-content;
 }
 .sektion73ViewToggleBtn {
     all: unset;
