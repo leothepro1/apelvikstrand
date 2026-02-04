@@ -1,9 +1,6 @@
 /* apelvikstrand.maps.bootstrap.js
-   - INGEN LOTTIE
-   - Visar en spinner-overlay direkt (DOM + minimal CSS injiceras direkt)
-   - Overlay ligger i #sektion73MapRoot och täcker bara kartytan (100% x 100%)
-   - Laddar Mapbox CSS -> Mapbox JS -> heavy maps.js
-   - Tar bort overlay efter map "load" (med minsta visningstid)
+   - Spinner overlay ligger kvar (tas INTE bort automatiskt)
+   - All laddlogik för mapbox + heavy maps är oförändrad
 */
 (function () {
   "use strict";
@@ -24,8 +21,8 @@
   // -----------------------------
   var sektion73OverlayId = "sektion73LoadingOverlay";
   var sektion73CssId = "sektion73LoadingCss";
-  var sektion73MinOverlayMs = 650;
-  var sektion73StartedAt = performance.now();
+  var sektion73MinOverlayMs = 650; // kvar men används inte när vi inte auto-hidear
+  var sektion73StartedAt = performance.now(); // kvar men används inte när vi inte auto-hidear
 
   function sektion73EnsureEarlyConnections() {
     var origins = [
@@ -57,10 +54,7 @@
       "#sektion73MapRoot{position:relative}" +
       "#" +
       sektion73OverlayId +
-      "{position:absolute;inset:0;width:100%;height:100%;z-index:9999;display:grid;place-items:center;background:#F7F1EB;opacity:1;transition:opacity .28s ease;pointer-events:auto}" +
-      "#" +
-      sektion73OverlayId +
-      ".sektion73LoadingHiding{opacity:0;pointer-events:none}" +
+      "{position:absolute;inset:0;width:100%;height:100%;z-index:9999;display:grid;place-items:center;background:#F7F1EB;opacity:1;pointer-events:auto}" +
       "#" +
       sektion73OverlayId +
       " .sektion73LoadingInner{width:min(120px,40vw);height:min(120px,40vw);display:grid;place-items:center}" +
@@ -93,24 +87,9 @@
     sektion73Root.appendChild(overlay);
   }
 
+  // OBS: intentionally disabled (spinner ska aldrig försvinna)
   function sektion73HideOverlayWhenAllowed() {
-    var overlay = document.getElementById(sektion73OverlayId);
-    if (!overlay) return;
-
-    var elapsed = performance.now() - sektion73StartedAt;
-    var wait = Math.max(0, sektion73MinOverlayMs - elapsed);
-
-    window.setTimeout(function () {
-      var o = document.getElementById(sektion73OverlayId);
-      if (!o) return;
-
-      o.classList.add("sektion73LoadingHiding");
-
-      window.setTimeout(function () {
-        var el = document.getElementById(sektion73OverlayId);
-        if (el && el.parentNode) el.parentNode.removeChild(el);
-      }, 340);
-    }, wait);
+    // no-op
   }
 
   function sektion73LoadCss(href, onDone) {
@@ -168,7 +147,7 @@
     };
 
     s.onerror = function () {
-      sektion73HideOverlayWhenAllowed();
+      // spinner ligger kvar även vid fel (avsiktligt)
       console.error("sektion73 bootstrap: kunde inte ladda", src);
       if (onDone) onDone();
     };
@@ -176,44 +155,23 @@
     document.head.appendChild(s);
   }
 
+  // OBS: intentionally disabled (spinner ska aldrig försvinna)
   function sektion73WaitForMapLoadThenHideOverlay() {
-    var tries = 0;
-    var maxTries = 60 * 12;
-
-    function tick() {
-      tries++;
-
-      var m = window.sektion73Map;
-      if (m && typeof m.once === "function") {
-        m.once("load", function () {
-          requestAnimationFrame(sektion73HideOverlayWhenAllowed);
-        });
-        return;
-      }
-
-      if (tries >= maxTries) {
-        sektion73HideOverlayWhenAllowed();
-        return;
-      }
-
-      requestAnimationFrame(tick);
-    }
-
-    requestAnimationFrame(tick);
+    // no-op
   }
 
   function sektion73BootInteractiveMap() {
     sektion73LoadCss(sektion73MapboxCssHref, function () {
       sektion73LoadScript(sektion73MapboxJsSrc, function () {
         sektion73LoadScript(sektion73HeavyMapsSrc, function () {
-          sektion73WaitForMapLoadThenHideOverlay();
+          // no hide
         });
       });
     });
   }
 
   // -----------------------------
-  // Start (overlay först, sedan tunga resurser)
+  // Start
   // -----------------------------
   sektion73EnsureOverlayDom();
   sektion73EnsureEarlyConnections();
@@ -222,4 +180,3 @@
     sektion73BootInteractiveMap();
   });
 })();
-
