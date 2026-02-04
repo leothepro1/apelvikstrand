@@ -1212,7 +1212,7 @@ const sektion73Pins = [
         "https://res.cloudinary.com/dmgmoisae/image/upload/v1769983462/68b2a7_e5363328ffb14dedb976e83ffc1abaa5_mv2_vrzs29.jpg"
       ],
       h: "Destination Apelviken",
-      p: "Beläget strax söder om Varbergs stadskärna, med gång- och cykelavstånd till både strand och centrum. Platsen har vuxit fram över tid, från enkel tältplats till ett sammanhållet område med camping, hotell, Att göra och Mat & dryck. Ett vardagsliv som pågår året runt, med mycket nära och utan behov av att ta bilen.",
+      p: "Beläget strax söder om Varbergs stadskärna, med gång- och cykelavstånd till både strand och centrum. Platsen har vuxit fram över tid, från enkel tältplats till ett sammanhållet område med camping, hotell, mycket att göra och flertalet restauranger. Ett vardagsliv som pågår året runt, med mycket nära och utan behov av att ta bilen.",
       cta1Text: "Läs mer",
       cta1Href: "https://www.apelviken.se/",
       cta2Text: "Vägbeskrivning",
