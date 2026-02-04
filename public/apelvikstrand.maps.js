@@ -2050,6 +2050,13 @@ requestAnimationFrame(() => {
 }
 
 sektion73Map.once("load", function () {
+  // Säkerställ att initial kameravy verkligen blir som dina konstanter
+  // (matchar beteendet i AS.MAPS2 som sätter pitch/bearing explicit)
+  try {
+    sektion73Map.setPitch(sektion73Pitch);
+    sektion73Map.setBearing(sektion73Bearing);
+  } catch (_) {}
+
   const sektion73Idle = (fn, timeoutMs) => {
     const t = (typeof timeoutMs === "number" ? timeoutMs : 1200);
 
