@@ -27,9 +27,9 @@
 
   // NYTT: split
   var sektion73MapsCoreSrc =
-    "https://apelvikstrand.pages.dev/apelvikstrand.maps.core.js";
+    "https://apelvikstrand.pages.dev/maps.core.js";
   var sektion73MapsUiSrc =
-    "https://apelvikstrand.pages.dev/apelvikstrand.maps.ui.js";
+    "https://apelvikstrand.pages.dev/maps.ui.js";
 
   var sektion73LottieModuleSrc =
     "https://unpkg.com/@lottiefiles/dotlottie-wc@0.7.1/dist/dotlottie-wc.js";
