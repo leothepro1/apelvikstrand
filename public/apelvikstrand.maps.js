@@ -63,7 +63,7 @@
     };
 const sektion73InitialCenter = {
   title: "Apelviken livs",
-  lngLat: [12.254700, 57.085720]
+  lngLat: [12.255015, 57.084067]
 };
                    const sektion73apelviken = {
       title: "Apelviken livs",
@@ -110,7 +110,7 @@ const sektion73Tangkorar_4 = {
     const sektion73StartZoom = 14.5;
 const sektion73SecondaryPinsMinZoom = 15.8;
     // Kamera
-    const sektion73Pitch = 60;
+    const sektion73Pitch = 63;
 
     // Visa "från havet in mot land" (väst -> öst):
     // bearing 90 = öst uppåt i bild (kameran tittar mot öst med pitch)
