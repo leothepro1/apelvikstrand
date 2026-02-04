@@ -169,5 +169,5 @@
   sektion73EnsureLottieDom();
   
   // Starta kartinladdning efter en minimal fördröjning för att säkerställa overlay är synlig
-  setTimeout(sektion73BootInteractiveMap, 100);
+  setTimeout(sektion73BootInteractiveMap, 400);
 })();
