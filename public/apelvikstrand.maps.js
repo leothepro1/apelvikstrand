@@ -1568,7 +1568,7 @@ function sektion73InjectFilterCSS() {
     fill: currentColor;
     stroke: currentColor;
     stroke-width: 0;
-    margin-left: 0px;
+    margin-left: -2px;
 }
 
 .sektion73FilterClose:hover{
@@ -1588,7 +1588,7 @@ function sektion73InjectFilterCSS() {
     cursor: pointer;
     display: inline-flex;
     align-items: center;
-    gap: 6px;
+    gap: 8px;
     padding: 6px 12px;
     border-radius: 999px;
     border: none;
@@ -1642,12 +1642,13 @@ background: #DDD7D2;
 .sektion73ViewToggleBtn[aria-pressed="true"]{
   background: #FFE6A3;
   color: #5A3C00;
-  font-weight: 600;
+  font-weight: 700;
 }
 
     @media (max-width: 768px){
 #sektion73MapFilterBar {
     bottom: 0px;
+            width: 100% !important;
 }
 .sektion73ModalGalleryTop, 
 .sektion73ModalGallery,
@@ -1658,20 +1659,20 @@ aspect-ratio: auto !important;
 }
 #sektion73MapFilterRail {
     display: flex;
-      gap: 12px;
+    gap: 12px;
     align-items: center;
     justify-content: start;
     padding: 10px 17px 17px 17px;
-        overflow-y: hidden;
+    overflow-y: hidden;
     border-radius: 0px;
-    width: 100vw;
+    width: 100% !important;
 }
       }
 .sektion73FilterBtn[aria-pressed="true"] {
     background: #FFE6A3;
     border-color: rgba(90, 60, 0, .22);
     color: #5A3C00;
-    font-weight: 600;
+    font-weight: 700;
 }
 
     .sektion73FilterIco{
