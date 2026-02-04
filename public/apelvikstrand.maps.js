@@ -450,7 +450,7 @@ function sektion73InjectModalCSS() {
     flex: 0 0 auto;
     width: 82vw;
     max-width: 350px;
-    aspect-ratio: 1.67778 / 1;
+    aspect-ratio: 1.57778 / 1;
     border-radius: 16px;
     overflow: hidden;
     border: none;
@@ -506,7 +506,7 @@ function sektion73InjectModalCSS() {
     }
 .sektion73ModalGalleryTop {
     width: 100%;
-    aspect-ratio: 1.67778 / 1;
+    aspect-ratio: 1.57778 / 1;
     border-radius: 20px 0px 0px 0px;
     overflow: hidden;
     border: none;
@@ -548,7 +548,7 @@ function sektion73InjectModalCSS() {
     gap: 2px;
 }
 .sektion73ModalThumb {
-    aspect-ratio: 1.27778 / 1;
+    aspect-ratio: 1.39778 / 1;
     border-radius: 0px;
     overflow: hidden;
     border: none;
@@ -1653,8 +1653,8 @@ background: #DDD7D2;
 .sektion73ModalGalleryTop, 
 .sektion73ModalGallery,
 .sektion73ModalThumb {
-height: 267px !important;
-min-height: 267px !important;
+height: 287px !important;
+min-height: 287px !important;
 aspect-ratio: auto !important;
 }
 #sektion73MapFilterRail {
