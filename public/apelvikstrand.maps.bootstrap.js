@@ -1,3 +1,10 @@
+/* apelvikstrand.maps.bootstrap.js
+   - INGEN LOTTIE
+   - Visar en spinner-overlay direkt (DOM + minimal CSS injiceras direkt)
+   - Overlay ligger i #sektion73MapRoot och täcker bara kartytan (100% x 100%)
+   - Laddar Mapbox CSS -> Mapbox JS -> heavy maps.js
+   - Tar bort overlay efter map "load" (med minsta visningstid)
+*/
 (function () {
   "use strict";
 
@@ -11,16 +18,12 @@
   var sektion73MapboxJsSrc = "https://api.mapbox.com/mapbox-gl-js/v3.18.1/mapbox-gl.js";
   var sektion73MapboxCssHref = "https://api.mapbox.com/mapbox-gl-js/v3.18.1/mapbox-gl.css";
   var sektion73HeavyMapsSrc = "https://apelvikstrand.pages.dev/apelvikstrand.maps.js";
-  var sektion73LottieModuleSrc =
-    "https://unpkg.com/@lottiefiles/dotlottie-wc@0.7.1/dist/dotlottie-wc.js";
-  var sektion73LottieFileSrc =
-    "https://lottie.host/fee9973e-0e4b-44ce-9a88-4238341dc0b1/uBOZF4orQB.lottie";
 
   // -----------------------------
   // Overlay settings
   // -----------------------------
-  var sektion73OverlayId = "sektion73LottieOverlay";
-  var sektion73CssId = "sektion73LottieCss";
+  var sektion73OverlayId = "sektion73LoadingOverlay";
+  var sektion73CssId = "sektion73LoadingCss";
   var sektion73MinOverlayMs = 650;
   var sektion73StartedAt = performance.now();
 
@@ -28,8 +31,6 @@
     var origins = [
       "https://api.mapbox.com",
       "https://events.mapbox.com",
-      "https://unpkg.com",
-      "https://lottie.host",
       "https://apelvikstrand.pages.dev"
     ];
 
@@ -52,8 +53,6 @@
     var css = document.createElement("style");
     css.id = sektion73CssId;
     css.type = "text/css";
-
-    // FIX: overlay ska täcka endast #sektion73MapRoot (inte hela viewporten)
     css.textContent =
       "#sektion73MapRoot{position:relative}" +
       "#" +
@@ -61,21 +60,14 @@
       "{position:absolute;inset:0;width:100%;height:100%;z-index:9999;display:grid;place-items:center;background:#F7F1EB;opacity:1;transition:opacity .28s ease;pointer-events:auto}" +
       "#" +
       sektion73OverlayId +
-      ".sektion73LottieHiding{opacity:0;pointer-events:none}" +
+      ".sektion73LoadingHiding{opacity:0;pointer-events:none}" +
       "#" +
       sektion73OverlayId +
-      " .sektion73LottieInner{width:min(320px,74vw);height:min(320px,74vw);display:grid;place-items:center}" +
+      " .sektion73LoadingInner{width:min(120px,40vw);height:min(120px,40vw);display:grid;place-items:center}" +
       "#" +
       sektion73OverlayId +
-      " .sektion73LottiePoster{width:100%;height:100%;display:grid;place-items:center}" +
-      "#" +
-      sektion73OverlayId +
-      " .sektion73LottieSpinner{width:60px;height:60px;border-radius:999px;border:4px solid rgba(14,19,24,.12);border-top-color:rgba(14,19,24,.55);animation:sektion73Spin .85s linear infinite}" +
-      "#" +
-      sektion73OverlayId +
-      " dotlottie-wc{width:100%;height:100%;display:block}" +
+      " .sektion73LoadingSpinner{width:60px;height:60px;border-radius:999px;border:4px solid rgba(14,19,24,.12);border-top-color:rgba(14,19,24,.55);animation:sektion73Spin .85s linear infinite}" +
       "@keyframes sektion73Spin{to{transform:rotate(360deg)}}";
-
     document.head.appendChild(css);
   }
 
@@ -89,16 +81,15 @@
     overlay.setAttribute("aria-hidden", "false");
 
     var inner = document.createElement("div");
-    inner.className = "sektion73LottieInner";
+    inner.className = "sektion73LoadingInner";
 
-    var poster = document.createElement("div");
-    poster.className = "sektion73LottiePoster";
-    poster.innerHTML = '<div class="sektion73LottieSpinner" aria-hidden="true"></div>';
+    var spinner = document.createElement("div");
+    spinner.className = "sektion73LoadingSpinner";
+    spinner.setAttribute("aria-hidden", "true");
 
-    inner.appendChild(poster);
+    inner.appendChild(spinner);
     overlay.appendChild(inner);
 
-    // FIX: overlay läggs i root (så absolute/inset:0 baseras på root)
     sektion73Root.appendChild(overlay);
   }
 
@@ -113,7 +104,7 @@
       var o = document.getElementById(sektion73OverlayId);
       if (!o) return;
 
-      o.classList.add("sektion73LottieHiding");
+      o.classList.add("sektion73LoadingHiding");
 
       window.setTimeout(function () {
         var el = document.getElementById(sektion73OverlayId);
@@ -152,7 +143,7 @@
     document.head.appendChild(l);
   }
 
-  function sektion73LoadScript(src, onDone, opts) {
+  function sektion73LoadScript(src, onDone) {
     var existing = document.querySelector('script[data-sektion73-src="' + src + '"]');
 
     if (existing) {
@@ -171,8 +162,6 @@
     s.defer = true;
     s.dataset.sektion73Src = src;
 
-    if (opts && opts.type) s.type = opts.type;
-
     s.onload = function () {
       s.dataset.sektion73Loaded = "1";
       if (onDone) onDone();
@@ -185,31 +174,6 @@
     };
 
     document.head.appendChild(s);
-  }
-
-  function sektion73MountLottiePlayer() {
-    sektion73LoadScript(
-      sektion73LottieModuleSrc,
-      function () {
-        var overlay = document.getElementById(sektion73OverlayId);
-        if (!overlay) return;
-
-        var inner = overlay.querySelector(".sektion73LottieInner");
-        if (!inner) return;
-
-        inner.innerHTML = "";
-
-        var player = document.createElement("dotlottie-wc");
-        player.setAttribute("src", sektion73LottieFileSrc);
-        player.setAttribute("speed", "1");
-        player.setAttribute("mode", "forward");
-        player.setAttribute("loop", "");
-        player.setAttribute("autoplay", "");
-
-        inner.appendChild(player);
-      },
-      { type: "module" }
-    );
   }
 
   function sektion73WaitForMapLoadThenHideOverlay() {
@@ -249,13 +213,12 @@
   }
 
   // -----------------------------
-  // Start
+  // Start (overlay först, sedan tunga resurser)
   // -----------------------------
   sektion73EnsureOverlayDom();
   sektion73EnsureEarlyConnections();
 
   requestAnimationFrame(function () {
-    sektion73MountLottiePlayer();
     sektion73BootInteractiveMap();
   });
 })();
