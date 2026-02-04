@@ -108,8 +108,8 @@ const sektion73Tangkorar_4 = {
     };
     // Bounds (justera vid behov)
     const sektion73Bounds = [
-      [12.235, 57.070], // SW
-      [12.285, 57.095] // NE
+      [12.245, 57.0775],
+      [12.285, 57.0875] 
     ];
 
     const sektion73MinZoom = 13.2;
