@@ -781,25 +781,43 @@ function sektion73InjectModalCSS() {
     }
 
 @media (max-width: 768px){
-  /* MOBIL: horisontell lista med bild-cards (ingen snap) */
-  .sektion73ModalGallery{
-    display:flex !important;
-    flex-direction: row;
-    gap:12px;
-    padding: 0px 24px;
-    overflow-x:auto;
-    overflow-y:hidden;
-    -webkit-overflow-scrolling: touch;
-    overscroll-behavior-x: contain;
-    scrollbar-width: none;
-    touch-action: pan-x;
-
-    /* uttryckligen ingen snap */
-    scroll-snap-type: none !important;
-    scroll-behavior: auto !important;
-  }
+.sektion73ModalGallery {
+        display: flex !important;
+        flex-direction: row;
+        padding: 0px;
+        overflow-x: auto;
+        overflow-y: hidden;
+        -webkit-overflow-scrolling: touch;
+        overscroll-behavior-x: contain;
+        scrollbar-width: none;
+        touch-action: pan-x;
+        scroll-snap-type: none !important;
+        scroll-behavior: auto !important;
+    }
   .sektion73ModalGallery::-webkit-scrollbar{ display:none; }
-
+#sektion73MapModal.is-open {
+    transform: translateY(0);
+}
+#sektion73MapModal {
+    position: fixed;
+    right: 0;
+    bottom: 0;
+    height: 95vh;
+    width: 100%;
+    background: var(--sektion73-modal-bg);
+    color: var(--sektion73-modal-text);
+    border: none;
+    transform: translateY(104%);
+    transition: transform var(--sektion73-modal-dur) var(--sektion73-modal-ease);
+    z-index: 2147483001;
+    display: flex;
+    flex-direction: column;
+    padding-bottom: 32px;
+    gap: 0px;
+    overscroll-behavior: contain;
+    border-radius: 20px 20px 0px 0px;
+    overflow: auto;
+}
   /* Låt thumbnails “försvinna” som grid-rad och istället bli cards i samma rad */
   .sektion73ModalGalleryRow{
     display: contents !important;
