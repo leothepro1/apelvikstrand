@@ -15,7 +15,7 @@
     if (!window.mapboxgl) {
       console.error("Mapbox GL JS saknas. Kontrollera att mapbox-gl.js laddas före apelvikstrand.maps");
       return;
-    } SALAM ALEJKOM
+    } 
 
     /* =========================
        CONFIG
