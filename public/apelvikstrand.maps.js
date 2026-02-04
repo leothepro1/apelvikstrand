@@ -483,8 +483,8 @@ function sektion73InjectModalCSS() {
       margin:0;
     }
 .sektion73ModalClose {
-    width: 34px;
-    height: 34px;
+    width: 36px;
+    height: 36px;
     border-radius: 80px;
     border: none;
     background: rgba(250, 250, 250, 0.72);
@@ -497,6 +497,7 @@ function sektion73InjectModalCSS() {
     right: 18px;
     backdrop-filter: blur(24px) saturate(1.6);
     -webkit-backdrop-filter: blur(24px) saturate(1.6);
+    z-index: 9769675965799657;
 }
     .sektion73ModalClose svg{ width:18px; height:18px; }
 
