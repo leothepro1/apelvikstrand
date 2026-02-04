@@ -795,9 +795,15 @@ function sektion73InjectModalCSS() {
         scroll-behavior: auto !important;
     }
   .sektion73ModalGallery::-webkit-scrollbar{ display:none; }
-#sektion73MapModal.is-open {
-    transform: translateY(0);
-}
+    #sektion73MapModal.is-open {
+        transform: translateY(0);
+        left: 0;
+        right: 0;
+        bottom: 0;
+        width: 100%;
+        height: 95dvh;
+        top: auto;
+    }
 #sektion73MapModal {
     position: fixed;
     right: 0;
@@ -807,7 +813,7 @@ function sektion73InjectModalCSS() {
     background: var(--sektion73-modal-bg);
     color: var(--sektion73-modal-text);
     border: none;
-    transform: translateY(104%);
+    transform: translateY(110%);
     transition: transform var(--sektion73-modal-dur) var(--sektion73-modal-ease);
     z-index: 2147483001;
     display: flex;
