@@ -61,10 +61,10 @@
       title: "Apelviken livs",
       lngLat: [12.250247, 57.084998]
     };
-              const sektion73InitialCenter = {
-      title: "Apelviken livs",
-      lngLat: [12.255780, 57.085314]
-    };
+const sektion73InitialCenter = {
+  title: "Apelviken livs",
+  lngLat: [12.254480, 57.085314]
+};
                    const sektion73apelviken = {
       title: "Apelviken livs",
       lngLat: [12.249075, 57.086676]
@@ -166,9 +166,7 @@ const sektion73Map = new mapboxgl.Map({
     }
 
     sektion73Map.addControl(new mapboxgl.AttributionControl({ compact: true }), "bottom-right");
-    /* =========================
-       STANDARD CONFIG (SAFETY)
-       ========================= */
+
 
 
 
