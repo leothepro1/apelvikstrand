@@ -218,25 +218,13 @@ center: sektion73InitialCenter.lngLat,
     sektion73ForceStandardConfig();
   }
 
-  if (typeof sektion73Map.setConfigProperty === "function") {
-    const scope = "basemap";
+sektion73Map.on("style.load", () => {
+  sektion73Map.setPitch(sektion73Pitch);
+  sektion73Map.setBearing(sektion73Bearing);
 
-    const setSafe = (key, value) => {
-      try {
-        sektion73Map.setConfigProperty(scope, key, value);
-      } catch (_) {}
-    };
-
-    setSafe("theme", "faded");
-    setSafe("lightPreset", "dawn");
-    setSafe("showPointOfInterestLabels", false);
-    setSafe("showPlaceLabels", false);
-    setSafe("showRoadLabels", true);
-    setSafe("show3dBuildings", true);
-    setSafe("show3dObjects", true);
-
-    sektion73Map.triggerRepaint();
-  }
+  // Studio ska äga theme/light/labels/3D-lagers styling.
+  // Låt JS bara styra UX (pins, modaler, filter, camera moves).
+});
 
   /* =========================================================
      sektion73 – DEBUG PICK: logga exakt 3D-byggnad vid klick
