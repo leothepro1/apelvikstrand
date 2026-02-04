@@ -1056,7 +1056,7 @@ const sektion73Pins = [
       p: "Apelvikstrand är platsen att bo på när man vill vara nära havet och nära vardagen i viken. Här bor man i strandhus och lägenheter med egen dörr, eget tempo och kort väg ner till stranden, maten och livet runtomkring. Det är enkelt att komma och gå, lätt att stanna inne eller vara ute hela dagen. Ett boende som följer platsen, snarare än tvärtom.",
       cta1Text: "Boka",
       cta1Href: "https://booking.apelvikstrand.se/accommodation?channelId=667aaf79-f2db-462b-9ede-6dc07f5cc457&_gl=1*s0zgnu*_gcl_au*NTkyMjkzOTgyLjE3Njc2MTk1Nzg.*_ga*NzQwNzE1ODIyLjE3Njc2MTk1Nzg.*_ga_6GS1LST6VV*czE3Njk3ODk1MzMkbzI1JGcxJHQxNzY5NzkwNTA5JGoyNiRsMCRoMA..",
-      cta2Text: "Visa Boenden",
+      cta2Text: "Visa boenden",
       cta2Href:
         "https://apelvikstrand.webflow.io/strandhusen"
     }
