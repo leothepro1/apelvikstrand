@@ -2385,6 +2385,15 @@ requestAnimationFrame(() => {
 }
 
 sektion73Map.once("load", function () {
+  // NYTT: säkerställ att cropp/maxBounds inte påverkar start-zoom (eller start-center)
+  // (Mapbox kan ibland "kännas" mer inzoomad när bounds clampas vid init)
+  try {
+    sektion73Map.jumpTo({
+      center: sektion73InitialCenter.lngLat,
+      zoom: sektion73StartZoom
+    });
+  } catch (_) {}
+
   const sektion73Idle = (fn, timeoutMs) => {
     const t = (typeof timeoutMs === "number" ? timeoutMs : 1200);
 
