@@ -412,6 +412,7 @@ function sektion73InjectModalCSS() {
     border-radius: 20px !important;
     margin-top: -20px !important;
     background: #fff !important;
+            z-index: 4;
 }
 .sektion73ModalActions {
     margin-top: 25px !important;
