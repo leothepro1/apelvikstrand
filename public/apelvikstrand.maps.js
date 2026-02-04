@@ -308,11 +308,12 @@ const sektion73Map = new mapboxgl.Map({
       });
     }
 
-    if (!sektion73Map.__sektion73DebugPickBuildingBound_00014) {
-      sektion73Map.__sektion73DebugPickBuildingBound_00014 = true;
-      sektion73Map.on("click", sektion73OnPick_00013);
-      console.log("sektion73Pick: aktiv. Klicka på huset du vill ersätta så loggas kandidater.");
-    }
+if (!sektion73Map.__sektion73DebugPickBuildingBound_00014) {
+  sektion73Map.__sektion73DebugPickBuildingBound_00014 = true;
+  sektion73Map.on("click", sektion73OnPick_00013);
+  console.log("sektion73Pick: aktiv. Klicka på huset du vill ersätta så loggas kandidater.");
+}
+})();
 
 function sektion73InjectModalCSS() {
   if (document.getElementById("sektion73MapModalStyle")) return;
