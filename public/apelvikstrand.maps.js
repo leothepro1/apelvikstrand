@@ -138,28 +138,15 @@ const sektion73SecondaryPinsMinZoom = 15.8;
 const sektion73Map = new mapboxgl.Map({
   container: sektion73Canvas,
   style: sektion73StyleUrl,
-
-center: sektion73InitialCenter.lngLat,
-
+  center: sektion73InitialCenter.lngLat,
   zoom: sektion73StartZoom,
   maxBounds: sektion73Bounds,
-
   attributionControl: false,
   antialias: false,
-
   pitchWithRotate: false,
-  dragRotate: false,
-
-  config: {
-    basemap: {
-      show3dBuildings: true,
-      show3dObjects: true,
-      showPointOfInterestLabels: false,
-      showPlaceLabels: false,
-      showRoadLabels: true
-    }
-  }
+  dragRotate: false
 });
+
 
 
     // Exponera map-instansen för devtools/snabbtest (som du gjort i console)
@@ -188,43 +175,7 @@ center: sektion73InitialCenter.lngLat,
        STANDARD CONFIG (SAFETY)
        ========================= */
 
-    function sektion73HasImportsStyle() {
-      const s = sektion73Map.getStyle && sektion73Map.getStyle();
-      return !!(s && Array.isArray(s.imports) && s.imports.length);
-    }
 
-
-    function sektion73ForceStandardConfig() {
-      if (typeof sektion73Map.setConfigProperty !== "function") return;
-
-      const setSafe = (group, key, value) => {
-        try {
-          sektion73Map.setConfigProperty(group, key, value);
-        } catch (_) {}
-      };
-
-      setSafe("basemap", "show3dBuildings", true);
-      setSafe("basemap", "show3dObjects", true);
-      setSafe("basemap", "showPointOfInterestLabels", false);
-      setSafe("basemap", "showPlaceLabels", false);
-      setSafe("basemap", "showRoadLabels", true);
-    }
-
- sektion73Map.on("style.load", () => {
-  sektion73Map.setPitch(sektion73Pitch);
-  sektion73Map.setBearing(sektion73Bearing);
-
-  if (sektion73HasImportsStyle()) {
-    sektion73ForceStandardConfig();
-  }
-
-sektion73Map.on("style.load", () => {
-  sektion73Map.setPitch(sektion73Pitch);
-  sektion73Map.setBearing(sektion73Bearing);
-
-  // Studio ska äga theme/light/labels/3D-lagers styling.
-  // Låt JS bara styra UX (pins, modaler, filter, camera moves).
-});
 
   /* =========================================================
      sektion73 – DEBUG PICK: logga exakt 3D-byggnad vid klick
