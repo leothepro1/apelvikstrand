@@ -67,7 +67,7 @@
       " .sektion73LoadingInner{width:min(120px,40vw);height:min(120px,40vw);display:grid;place-items:center}" +
       "#" +
       sektion73OverlayId +
-      " .sektion73LoadingSpinner{width:77px;height:77px;border-radius:999px;5px solid rgba(61,42,0,.18);border-top-color:rgba(61,42,0,.75);animation:sektion73Spin .70s linear infinite}" +
+      " .sektion73LoadingSpinner{width:77px;height:77px;border-radius:999px;border:5px solid rgba(61,42,0,.18);border-top-color:rgba(61,42,0,.75);animation:sektion73Spin .70s linear infinite}" +
       "@keyframes sektion73Spin{to{transform:rotate(360deg)}}";
 
     document.head.appendChild(css);
