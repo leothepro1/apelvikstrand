@@ -576,7 +576,7 @@ function sektion73InjectModalCSS() {
     display: flex;
     flex-direction: column;
     gap: 0px;
-    padding: 32px 32px 0px;
+    padding: 32px 40px 0px;
 }
 .sektion73ModalImgSrc {
     display: none;
@@ -601,7 +601,7 @@ function sektion73InjectModalCSS() {
 .sektion73ModalActions {
     margin-top: 27px;
     display: flex;
-    padding: 0px 32px;
+    padding: 0px 40px;
     flex-direction: row;
     gap: 12px;
 }
