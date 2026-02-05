@@ -62,33 +62,37 @@
     };
 const sektion73InitialCenter = {
   title: "",
-  lngLat: [12.25294, 57.084152]
+  lngLat: [12.26231500, 57.08160800]
 };
                    const sektion73destinationapelviken = {
       title: "",
       lngLat: [12.249162, 57.086926]
     };
-              const sektion73minigolf = {
+                    const sektion73streethuset = {
       title: "",
-      lngLat: [12.250167, 57.084695]
-    };
-  // 2) Sanatorievägen 4, 432 53 Varberg
-    const sektion73Sanatorie_4 = {
-      title: "",
-      lngLat: [12.24786400, 57.08797000]
-    };
-const sektion73Tangkorar_4 = {
-  title: "",
-  lngLat: [12.258103, 57.083380]
-};
-    // 3) Tångkörarvägen 2, 432 54 Varberg
-    const sektion73Tangkorar_2 = {
-      title: "",
-      lngLat: [12.25519800, 57.08474700]
+      lngLat: [12.25237511, 57.08448050]
     };
 
-    // 4) Tångkörarvägen 10, 432 54 Varberg
-    const sektion73Tangkorar_10 = {
+    // 1) Surbrunnsvägen 2-8, 432 53 Varberg
+    const sektion73Surbrunnsvagen_2_8 = {
+      title: "",
+      lngLat: [12.26231500, 57.08160800]
+    };
+
+    // 2) Sanatorievägen 4, 432 53 Varberg
+    const sektion73Sanatorievagen_4 = {
+      title: "",
+      lngLat: [12.26165550, 57.08288410]
+    };
+
+    // 3) Surbrunnsvägen 8E, 432 53 Varberg
+    const sektion73Surbrunnsvagen_8E = {
+      title: "",
+      lngLat: [12.26309450, 57.08161920]
+    };
+
+    // 4) Tångkörarvägen 13, 432 54 Varberg
+    const sektion73Tangkorar_13 = {
       title: "",
       lngLat: [12.26327010, 57.07738420]
     };
@@ -98,18 +102,21 @@ const sektion73Tangkorar_4 = {
       title: "",
       lngLat: [12.26374100, 57.07980300]
     };
-    // Bounds (justera vid behov)
+
+    // Bounds (mycket tight runt Surbrunnsvägen 2–8)
+    // Center: [12.262315, 57.081608]
     const sektion73Bounds = [
-      [12.235, 57.070], // SW
-      [12.285, 57.095] // NE
+      [12.255500, 57.078500], // SW
+      [12.269200, 57.084700]  // NE
     ];
 
-    const sektion73MinZoom = 13.2;
+    const sektion73MinZoom = 15.6;
     const sektion73MaxZoom = 17.9;
-    const sektion73StartZoom = 14.5;
+    const sektion73StartZoom = 16.4;
 const sektion73SecondaryPinsMinZoom = 15.8;
+
     // Kamera
-    const sektion73Pitch = 63;
+    const sektion73Pitch = 43;
 
     // Visa "från havet in mot land" (väst -> öst):
     // bearing 90 = öst uppåt i bild (kameran tittar mot öst med pitch)
