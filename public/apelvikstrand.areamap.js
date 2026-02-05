@@ -622,9 +622,16 @@ function sektion73InjectModalCSS() {
         padding: 0px;
         height: 100%;
     }
-    #sektion73MapModal {
-    height: min(28vh, 720px);
-}
+#sektion73MapModal {
+        height: auto !important;
+        max-height: 93% !important;
+        overflow: auto !important;
+        -webkit-overflow-scrolling: touch;
+        width: 100% !important;
+        bottom: 0% !important;
+        top: auto !important;
+        border-radius: 20px 20px 0px 0px !important;
+    }
 .sektion73ModalRight {
     width: auto;
     flex: 3 1 0;
