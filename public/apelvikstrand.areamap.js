@@ -26,10 +26,11 @@
 
     const sektion73StyleUrl = "mapbox://styles/rutgersson/cml85l84y003c01s6by4kazii";
 
-    const sektion73Home = {
-      title: "",
-      lngLat: [12.262921, 57.081185]
-    };
+const sektion73Home = {
+  title: "",
+  // Perfekt centrerad ovanifrån: (lat 57.081171, lng 12.262932)
+  lngLat: [12.262932, 57.081171]
+};
          const sektion73Golf = {
       title: "",
       lngLat: [12.248763, 57.084963]
@@ -62,7 +63,7 @@
     };
 const sektion73InitialCenter = {
   title: "",
- lngLat: [12.26231500, 57.08160800]
+  lngLat: [12.262932, 57.081171]
 };
                    const sektion73destinationapelviken = {
       title: "",
@@ -103,24 +104,18 @@ const sektion73InitialCenter = {
       lngLat: [12.26374100, 57.07980300]
     };
 
-    // Bounds (mycket tight runt Surbrunnsvägen 2–8)
-    // Center: [12.262315, 57.081608]
-    const sektion73Bounds = [
-  [12.255500, 57.078500], // SW
-  [12.269200, 57.084700]  // NE
-    ];
+const sektion73Bounds = [
+  [12.247493544756765, 57.076066029216946], // SW
+  [12.264902275326449, 57.085944973871904]  // NE
+];
 
-const sektion73MinZoom = 15.6;
-const sektion73MaxZoom = 18.3;   // kan vara lite högre på områdeskarta
-const sektion73StartZoom = 16.6; // mer inzoomad start
-const sektion73SecondaryPinsMinZoom = 15.8;
+const sektion73MinZoom = 16.4;
+const sektion73MaxZoom = 18.6;
+const sektion73StartZoom = 17.2;
 
-    // Kamera
-    const sektion73Pitch = 40;
-
-    // Visa "från havet in mot land" (väst -> öst):
-    // bearing 90 = öst uppåt i bild (kameran tittar mot öst med pitch)
-    const sektion73Bearing = 45;
+// Kamera: “ovanifrån” + norr upp
+const sektion73Pitch = 0;
+const sektion73Bearing = 0;
 
     const sektion73DisableRotate = true;
 
@@ -152,6 +147,7 @@ const sektion73Map = new mapboxgl.Map({
   pitchWithRotate: false,
   dragRotate: false
 });
+
 
 
 
