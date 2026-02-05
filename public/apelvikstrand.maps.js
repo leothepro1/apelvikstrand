@@ -120,7 +120,7 @@ const sektion73SecondaryPinsMinZoom = 15.8;
 
     // Zoom vid pin-klick
     const sektion73PinZoom = 18.3;
-    const sektion73PinZoomDur = 950;
+    const sektion73PinZoomDur = 1100;
 
     // Mol animation
     const sektion73ModalDurMs = 420;
@@ -2124,13 +2124,15 @@ requestAnimationFrame(() => {
   sektion73ActiveMoveEndHandler = onMoveEnd;
   sektion73Map.on("moveend", onMoveEnd);
 
+  const sektion73EaseInOutCubic_00035 = (t) => (t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2);
+
   sektion73Map.easeTo({
     center: pin.lngLat,
     zoom: Math.min(sektion73PinZoom, sektion73MaxZoom),
     pitch: sektion73Pitch,
     bearing: sektion73Bearing,
     duration: sektion73PinZoomDur,
-    easing: (t) => 1 - Math.pow(1 - t, 3) // ease-out cubic
+    easing: sektion73EaseInOutCubic_00035 // mjuk ease-in + mjuk inbromsning
   });
 }
 
