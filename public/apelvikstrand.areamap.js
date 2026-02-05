@@ -105,15 +105,16 @@ const sektion73InitialCenter = {
     };
 
 const sektion73Bounds = [
-  [12.262174411021249, 57.08039342800501],  // SW
-  [12.263751180743157, 57.08191756107672]   // NE
+  [12.255800, 57.077900], // SW
+  [12.271000, 57.084800]  // NE
 ];
 
-const sektion73MinZoom = 16.4;
+// Mindre inzoomad start (justera vid behov)
+const sektion73MinZoom = 14.8;
 const sektion73MaxZoom = 18.6;
-const sektion73StartZoom = 17.2;
+const sektion73StartZoom = 15.9;
 
-// Kamera: “ovanifrån” + norr upp
+// Ovanifrån + norr upp
 const sektion73Pitch = 0;
 const sektion73Bearing = 0;
 
