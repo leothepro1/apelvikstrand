@@ -520,31 +520,41 @@ function sektion73InjectModalCSS() {
       gap:12px;
     }
 
-#sektion73MapModal #sektion73ModalTitleIcons {
-    display: inline-flex;
-    align-items: center;
-    gap: 8px;
-    margin-left: 0px;
-    transform: translateY(1px);
+#sektion73MapModal #sektion73ModalTitleIcons{
+  margin-top: 14px;     /* under actions */
 }
 
-#sektion73MapModal .sektion73ModalTitleIcon {
-    width: auto;
-    height: auto;
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    border-radius: 999px;
-    background: transparent;
-    color: #5A3C00;
-    flex: 0 0 24px;
+#sektion73MapModal .sektion73ModalIconRow{
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 6px 0;
 }
-#sektion73MapModal .sektion73ModalTitleIcon svg {
-    width: 24px;
-    height: 24px;
-    display: block;
-    stroke: currentColor;
-    fill: none;
+
+#sektion73MapModal .sektion73ModalTitleIcon{
+  width: 24px;
+  height: 24px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  color: #5A3C00;
+  flex: 0 0 24px;
+}
+
+#sektion73MapModal .sektion73ModalTitleIcon svg{
+  width: 24px;
+  height: 24px;
+  display: block;
+  stroke: currentColor;
+  fill: none;
+}
+
+#sektion73MapModal .sektion73ModalTitleIconTxt{
+  font-family: "Manrope", Inter, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, sans-serif;
+  font-size: 14px;
+  font-weight: 700;
+  color: #5A3C00;
+  line-height: 1.25em;
 }
 .sektion73ModalBodyH {
     font-family: "Manrope", Inter, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, sans-serif;
@@ -707,99 +717,104 @@ display: none !important;
 }
 
 
- function sektion73EnsureModalDOM() {
-      sektion73InjectModalCSS();
+function sektion73EnsureModalDOM() {
+  sektion73InjectModalCSS();
 
-      let overlay = document.getElementById("sektion73MapOverlay");
-      if (!overlay) {
-        overlay = document.createElement("div");
-        overlay.id = "sektion73MapOverlay";
-        overlay.addEventListener("click", sektion73CloseModal);
-        document.body.appendChild(overlay);
-      }
+  let overlay = document.getElementById("sektion73MapOverlay");
+  if (!overlay) {
+    overlay = document.createElement("div");
+    overlay.id = "sektion73MapOverlay";
+    overlay.addEventListener("click", sektion73CloseModal);
+    document.body.appendChild(overlay);
+  }
 
-      let modal = document.getElementById("sektion73MapModal");
-      if (!modal) {
-        modal = document.createElement("aside");
-        modal.id = "sektion73MapModal";
-        modal.setAttribute("role", "dialog");
-        modal.setAttribute("aria-modal", "true");
-        modal.setAttribute("aria-label", "Information");
-
+  let modal = document.getElementById("sektion73MapModal");
+  if (!modal) {
+    modal = document.createElement("aside");
+    modal.id = "sektion73MapModal";
+    modal.setAttribute("role", "dialog");
+    modal.setAttribute("aria-modal", "true");
+    modal.setAttribute("aria-label", "Information");
 
     modal.innerHTML = `
-          <div class="sektion73ModalLayout" role="document">
-            <div class="sektion73ModalLeft">
-              <button class="sektion73ModalClose sektion73ModalCloseAbs" type="button" id="sektion73ModalCloseBtn" aria-label="Stäng">
-                <svg fill="currentcolor" height="21" viewBox="0 0 1000 1000" width="21" xmlns="http://www.w3.org/2000/svg"><path d="M159 204l55-54 659 659-55 55-659-660m709 5L205 877l-55-59 664-664"></path></svg>
-              </button>
+      <div class="sektion73ModalLayout" role="document">
+        <div class="sektion73ModalLeft">
+          <button class="sektion73ModalClose sektion73ModalCloseAbs" type="button" id="sektion73ModalCloseBtn" aria-label="Stäng">
+            <svg fill="currentcolor" height="21" viewBox="0 0 1000 1000" width="21" xmlns="http://www.w3.org/2000/svg"><path d="M159 204l55-54 659 659-55 55-659-660m709 5L205 877l-55-59 664-664"></path></svg>
+          </button>
 
-              <div class="sektion73ModalLeftImgWrap">
-                <img id="sektion73ModalImg0" alt="" loading="lazy" class="sektion73ModalLeftImg skeleton-loader">
-                <img id="sektion73ModalImg1" alt="" loading="lazy" class="skeleton-loader" style="display:none">
-                <img id="sektion73ModalImg2" alt="" loading="lazy" class="skeleton-loader" style="display:none">
-                <img id="sektion73ModalImg3" alt="" loading="lazy" class="skeleton-loader" style="display:none">
-              </div>
+          <div class="sektion73ModalLeftImgWrap">
+            <img id="sektion73ModalImg0" alt="" loading="lazy" class="sektion73ModalLeftImg skeleton-loader">
+            <img id="sektion73ModalImg1" alt="" loading="lazy" class="skeleton-loader" style="display:none">
+            <img id="sektion73ModalImg2" alt="" loading="lazy" class="skeleton-loader" style="display:none">
+            <img id="sektion73ModalImg3" alt="" loading="lazy" class="skeleton-loader" style="display:none">
+          </div>
 
-              <p class="sektion73ModalImgSrc" id="sektion73ModalImgSrc"></p>
+          <p class="sektion73ModalImgSrc" id="sektion73ModalImgSrc"></p>
+        </div>
+
+        <div class="sektion73ModalRight">
+          <div class="sektion73ModalRightTop">
+            <div class="sektion73ModalTitleRow">
+              <h3 class="sektion73ModalBodyH" id="sektion73ModalBodyH">Rubrik</h3>
             </div>
 
-            <div class="sektion73ModalRight">
-              <div class="sektion73ModalRightTop">
-                <div class="sektion73ModalTitleRow">
-                  <h3 class="sektion73ModalBodyH" id="sektion73ModalBodyH">Rubrik</h3>
-
-                  <span class="sektion73ModalTitleIcons" id="sektion73ModalTitleIcons" aria-hidden="true">
-                    <span class="sektion73ModalTitleIcon" id="sektion73ModalIcon1"></span>
-                    <span class="sektion73ModalTitleIcon" id="sektion73ModalIcon2"></span>
-                  </span>
-                </div>
-
-                <div class="sektion73ModalBodyPWrap" id="sektion73ModalBodyPWrap">
-                  <p class="sektion73ModalBodyP" id="sektion73ModalBodyP">Brödtext…</p>
-                  <button type="button" class="sektion73ModalReadMore" id="sektion73ModalReadMoreBtn">Läs mer</button>
-                </div>
-              </div>
-
-              <div class="sektion73ModalActions" style="display:flex">
-                <button class="sektion73ModalBtn sektion73ModalBtnPrimary" type="button" id="sektion73ModalCtaPrimary">
-                  <span id="sektion73ModalCtaPrimaryTxt">Primär CTA</span>
-                </button>
-
-                <button class="sektion73ModalBtn" type="button" id="sektion73ModalCtaSecondary">
-                  <span id="sektion73ModalCtaSecondaryTxt">Sekundär CTA</span>
-                  <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
-                    <path d="M9 6l6 6-6 6" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/>
-                  </svg>
-                </button>
-              </div>
+            <div class="sektion73ModalBodyPWrap" id="sektion73ModalBodyPWrap">
+              <p class="sektion73ModalBodyP" id="sektion73ModalBodyP">Brödtext…</p>
+              <button type="button" class="sektion73ModalReadMore" id="sektion73ModalReadMoreBtn">Läs mer</button>
             </div>
           </div>
-        `;
 
+          <div class="sektion73ModalActions" style="display:flex">
+            <button class="sektion73ModalBtn sektion73ModalBtnPrimary" type="button" id="sektion73ModalCtaPrimary">
+              <span id="sektion73ModalCtaPrimaryTxt">Primär CTA</span>
+            </button>
 
-        document.body.appendChild(modal);
+            <button class="sektion73ModalBtn" type="button" id="sektion73ModalCtaSecondary">
+              <span id="sektion73ModalCtaSecondaryTxt">Sekundär CTA</span>
+              <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                <path d="M9 6l6 6-6 6" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+            </button>
+          </div>
 
-        const closeBtn = document.getElementById("sektion73ModalCloseBtn");
-        if (closeBtn) closeBtn.addEventListener("click", sektion73CloseModal);
+          <div class="sektion73ModalTitleIcons" id="sektion73ModalTitleIcons" aria-hidden="true" style="display:none">
+            <div class="sektion73ModalIconRow" id="sektion73ModalIconRow1" style="display:none">
+              <span class="sektion73ModalTitleIcon" id="sektion73ModalIcon1"></span>
+              <span class="sektion73ModalTitleIconTxt" id="sektion73ModalIconTxt1"></span>
+            </div>
 
-        const rmBtn = document.getElementById("sektion73ModalReadMoreBtn");
-        if (rmBtn) {
-          rmBtn.addEventListener("click", () => {
-            const wrap = document.getElementById("sektion73ModalBodyPWrap");
-            if (!wrap) return;
-            const isExpanded = wrap.classList.toggle("is-expanded");
-            rmBtn.textContent = isExpanded ? "Visa mindre" : "Läs mer";
-          });
-        }
+            <div class="sektion73ModalIconRow" id="sektion73ModalIconRow2" style="display:none">
+              <span class="sektion73ModalTitleIcon" id="sektion73ModalIcon2"></span>
+              <span class="sektion73ModalTitleIconTxt" id="sektion73ModalIconTxt2"></span>
+            </div>
+          </div>
+        </div>
+      </div>
+    `;
 
-        document.addEventListener("keydown", (e) => {
-          if (e.key === "Escape") sektion73CloseModal();
-        });
-      }
+    document.body.appendChild(modal);
 
-      return { overlay, modal };
+    const closeBtn = document.getElementById("sektion73ModalCloseBtn");
+    if (closeBtn) closeBtn.addEventListener("click", sektion73CloseModal);
+
+    const rmBtn = document.getElementById("sektion73ModalReadMoreBtn");
+    if (rmBtn) {
+      rmBtn.addEventListener("click", () => {
+        const wrap = document.getElementById("sektion73ModalBodyPWrap");
+        if (!wrap) return;
+        const isExpanded = wrap.classList.toggle("is-expanded");
+        rmBtn.textContent = isExpanded ? "Visa mindre" : "Läs mer";
+      });
     }
+
+    document.addEventListener("keydown", (e) => {
+      if (e.key === "Escape") sektion73CloseModal();
+    });
+  }
+
+  return { overlay, modal };
+}
 
   let sektion73ModalOpen = false;
 
@@ -820,16 +835,42 @@ function sektion73OpenModal(payload) {
   document.getElementById("sektion73ModalBodyP").textContent = payload.p || "";
 
   const iconWrap = document.getElementById("sektion73ModalTitleIcons");
+
+  const row1 = document.getElementById("sektion73ModalIconRow1");
+  const row2 = document.getElementById("sektion73ModalIconRow2");
+
   const icon1 = document.getElementById("sektion73ModalIcon1");
   const icon2 = document.getElementById("sektion73ModalIcon2");
-  const icons = (payload && payload.icons && Array.isArray(payload.icons)) ? payload.icons : [];
 
-  if (icon1) icon1.innerHTML = icons[0] || "";
-  if (icon2) icon2.innerHTML = icons[1] || "";
-  if (iconWrap) {
-    const hasAny = Boolean((icons[0] && String(icons[0]).trim()) || (icons[1] && String(icons[1]).trim()));
-    iconWrap.style.display = hasAny ? "" : "none";
-  }
+  const txt1 = document.getElementById("sektion73ModalIconTxt1");
+  const txt2 = document.getElementById("sektion73ModalIconTxt2");
+
+  const iconItems = (payload && payload.iconItems && Array.isArray(payload.iconItems)) ? payload.iconItems : [];
+  const legacyIcons = (payload && payload.icons && Array.isArray(payload.icons)) ? payload.icons : [];
+  const legacyTexts = (payload && payload.iconTexts && Array.isArray(payload.iconTexts)) ? payload.iconTexts : [];
+
+  const i1 = iconItems[0] || null;
+  const i2 = iconItems[1] || null;
+
+  const svg1 = (i1 && i1.svg != null) ? i1.svg : (legacyIcons[0] || "");
+  const svg2 = (i2 && i2.svg != null) ? i2.svg : (legacyIcons[1] || "");
+
+  const t1 = (i1 && i1.text != null) ? i1.text : (legacyTexts[0] || "");
+  const t2 = (i2 && i2.text != null) ? i2.text : (legacyTexts[1] || "");
+
+  if (icon1) icon1.innerHTML = svg1 || "";
+  if (icon2) icon2.innerHTML = svg2 || "";
+
+  if (txt1) txt1.textContent = t1 || "";
+  if (txt2) txt2.textContent = t2 || "";
+
+  const hasRow1 = Boolean((svg1 && String(svg1).trim()) || (t1 && String(t1).trim()));
+  const hasRow2 = Boolean((svg2 && String(svg2).trim()) || (t2 && String(t2).trim()));
+  const hasAny = Boolean(hasRow1 || hasRow2);
+
+  if (row1) row1.style.display = hasRow1 ? "flex" : "none";
+  if (row2) row2.style.display = hasRow2 ? "flex" : "none";
+  if (iconWrap) iconWrap.style.display = hasAny ? "" : "none";
 
   const pWrap = document.getElementById("sektion73ModalBodyPWrap");
   const rmBtn = document.getElementById("sektion73ModalReadMoreBtn");
@@ -947,38 +988,872 @@ if (sektion73Map && view && typeof sektion73Map.easeTo === "function") {
        PINS (2 st) – zoom först, modal efter "moveend"
        ========================= */
 const sektion73Pins = [
-{ id: "sektion73Pin_00001", label: "Pin 1",  labelText: "1",  lngLat: [12.26197312396269, 57.08162693545353], filter: "", priority: "priority", ui: { bubbleBg: "#A88867" }, modal: { imgSrc: "https://res.cloudinary.com/dmgmoisae/image/upload/v1769875471/strandhuse21q_hh50lb.png", h: "Strandhus 1 | 6x", p: "Bo precis vid havet i Apelviken, i ett av våra strandhus. Här bor du med stranden alldeles intill och med plats att vara på under hela dagen. Egen dörr, egen uteplats och ett boende som fungerar lika bra mellan strandpassen som på kvällen.", icons: ['<svg width="24" height="24" viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentcolor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"><circle cx="8" cy="6" r="3.25"/><path d="M2.75 14.25c0-2.5 2-5 5.25-5s5.25 2.5 5.25 5"/></svg>', '<svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M12 10V3m0 0L9 6m3-3 3 3m-9 6-1-1m13 1 1-1M3 18h18M5 21h14M7 18a5 5 0 0 1 10 0" stroke="currentcolor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>'], images: ["", "", "", ""], cta1Text: "Vägbeskrivning", cta1Href: "https://www.google.com/maps/dir/?api=1&destination=ApelvikStrand,+Surbrunnsv%C3%A4gen+2-8,+432+53+Varberg", cta2Text: "", cta2Href: "" } },
-  { id: "sektion73Pin_00002", label: "Pin 2",  labelText: "2",  lngLat: [12.262082176983768, 57.081600917569034], filter: "", priority: "priority", ui: { bubbleBg: "#A88867" }, modal: { imgSrc: "https://res.cloudinary.com/dmgmoisae/image/upload/v1769875471/strandhuse21q_hh50lb.png", h: "Strandhus 2 | 6x", p: "Bo precis vid havet i Apelviken, i ett av våra strandhus. Här bor du med stranden alldeles intill och med plats att vara på under hela dagen. Egen dörr, egen uteplats och ett boende som fungerar lika bra mellan strandpassen som på kvällen.", icons: ['<svg width="24" height="24" viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentcolor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"><circle cx="8" cy="6" r="3.25"/><path d="M2.75 14.25c0-2.5 2-5 5.25-5s5.25 2.5 5.25 5"/></svg>', '<svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M12 10V3m0 0L9 6m3-3 3 3m-9 6-1-1m13 1 1-1M3 18h18M5 21h14M7 18a5 5 0 0 1 10 0" stroke="currentcolor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>'], images: ["", "", "", ""], cta1Text: "Vägbeskrivning", cta1Href: "https://www.google.com/maps/dir/?api=1&destination=ApelvikStrand,+Surbrunnsv%C3%A4gen+2-8,+432+53+Varberg", cta2Text: "", cta2Href: "" } },
-  { id: "sektion73Pin_00003", label: "Pin 3",  labelText: "3",  lngLat: [12.262318128134382, 57.08166527756367], filter: "", priority: "priority", ui: { bubbleBg: "#A88867" }, modal: { imgSrc: "https://res.cloudinary.com/dmgmoisae/image/upload/v1769875471/strandhuse21q_hh50lb.png", h: "Strandhus 3 | 6x", p: "Bo precis vid havet i Apelviken, i ett av våra strandhus. Här bor du med stranden alldeles intill och med plats att vara på under hela dagen. Egen dörr, egen uteplats och ett boende som fungerar lika bra mellan strandpassen som på kvällen.", icons: ['<svg width="24" height="24" viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentcolor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"><circle cx="8" cy="6" r="3.25"/><path d="M2.75 14.25c0-2.5 2-5 5.25-5s5.25 2.5 5.25 5"/></svg>', '<svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M12 10V3m0 0L9 6m3-3 3 3m-9 6-1-1m13 1 1-1M3 18h18M5 21h14M7 18a5 5 0 0 1 10 0" stroke="currentcolor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>'], images: ["", "", "", ""], cta1Text: "Vägbeskrivning", cta1Href: "https://www.google.com/maps/dir/?api=1&destination=ApelvikStrand,+Surbrunnsv%C3%A4gen+2-8,+432+53+Varberg", cta2Text: "", cta2Href: "" } },
-  { id: "sektion73Pin_00004", label: "Pin 4",  labelText: "4",  lngLat: [12.262428503055986, 57.081637688307154], filter: "", priority: "priority", ui: { bubbleBg: "#A88867" }, modal: { imgSrc: "https://res.cloudinary.com/dmgmoisae/image/upload/v1769875471/strandhuse21q_hh50lb.png", h: "Strandhus 4 | 6x", p: "Bo precis vid havet i Apelviken, i ett av våra strandhus. Här bor du med stranden alldeles intill och med plats att vara på under hela dagen. Egen dörr, egen uteplats och ett boende som fungerar lika bra mellan strandpassen som på kvällen.", icons: ['<svg width="24" height="24" viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentcolor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"><circle cx="8" cy="6" r="3.25"/><path d="M2.75 14.25c0-2.5 2-5 5.25-5s5.25 2.5 5.25 5"/></svg>', '<svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M12 10V3m0 0L9 6m3-3 3 3m-9 6-1-1m13 1 1-1M3 18h18M5 21h14M7 18a5 5 0 0 1 10 0" stroke="currentcolor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>'], images: ["", "", "", ""], cta1Text: "Vägbeskrivning", cta1Href: "https://www.google.com/maps/dir/?api=1&destination=ApelvikStrand,+Surbrunnsv%C3%A4gen+2-8,+432+53+Varberg", cta2Text: "", cta2Href: "" } },
-  { id: "sektion73Pin_00005", label: "Pin 5",  labelText: "5",  lngLat: [12.26266048860353, 57.08170492165513], filter: "", priority: "priority", ui: { bubbleBg: "#A88867" }, modal: { imgSrc: "https://res.cloudinary.com/dmgmoisae/image/upload/v1769875471/strandhuse21q_hh50lb.png", h: "Strandhus 5 | 6x", p: "Bo precis vid havet i Apelviken, i ett av våra strandhus. Här bor du med stranden alldeles intill och med plats att vara på under hela dagen. Egen dörr, egen uteplats och ett boende som fungerar lika bra mellan strandpassen som på kvällen.", icons: ['<svg width="24" height="24" viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentcolor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"><circle cx="8" cy="6" r="3.25"/><path d="M2.75 14.25c0-2.5 2-5 5.25-5s5.25 2.5 5.25 5"/></svg>', '<svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M12 10V3m0 0L9 6m3-3 3 3m-9 6-1-1m13 1 1-1M3 18h18M5 21h14M7 18a5 5 0 0 1 10 0" stroke="currentcolor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>'], images: ["", "", "", ""], cta1Text: "Vägbeskrivning", cta1Href: "https://www.google.com/maps/dir/?api=1&destination=ApelvikStrand,+Surbrunnsv%C3%A4gen+2-8,+432+53+Varberg", cta2Text: "", cta2Href: "" } },
-  { id: "sektion73Pin_00006", label: "Pin 6",  labelText: "6",  lngLat: [12.262768219804656, 57.08167948749295], filter: "", priority: "priority", ui: { bubbleBg: "#A88867" }, modal: { imgSrc: "https://res.cloudinary.com/dmgmoisae/image/upload/v1769875471/strandhuse21q_hh50lb.png", h: "Strandhus 6 | 6x", p: "Bo precis vid havet i Apelviken, i ett av våra strandhus. Här bor du med stranden alldeles intill och med plats att vara på under hela dagen. Egen dörr, egen uteplats och ett boende som fungerar lika bra mellan strandpassen som på kvällen.", icons: ['<svg width="24" height="24" viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentcolor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"><circle cx="8" cy="6" r="3.25"/><path d="M2.75 14.25c0-2.5 2-5 5.25-5s5.25 2.5 5.25 5"/></svg>', '<svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M12 10V3m0 0L9 6m3-3 3 3m-9 6-1-1m13 1 1-1M3 18h18M5 21h14M7 18a5 5 0 0 1 10 0" stroke="currentcolor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>'], images: ["", "", "", ""], cta1Text: "Vägbeskrivning", cta1Href: "https://www.google.com/maps/dir/?api=1&destination=ApelvikStrand,+Surbrunnsv%C3%A4gen+2-8,+432+53+Varberg", cta2Text: "", cta2Href: "" } },
-  { id: "sektion73Pin_00007", label: "Pin 7",  labelText: "7",  lngLat: [12.26300152723178, 57.081747439114935], filter: "", priority: "priority", ui: { bubbleBg: "#7A936B" }, modal: { imgSrc: "https://res.cloudinary.com/dmgmoisae/image/upload/v1769875471/strandhuse21q_hh50lb.png", h: "Strandhus 7 | 6x", p: "Bo precis vid havet i Apelviken, i ett av våra strandhus. Här bor du med stranden alldeles intill och med plats att vara på under hela dagen. Egen dörr, egen uteplats och ett boende som fungerar lika bra mellan strandpassen som på kvällen.", icons: ['<svg width="24" height="24" viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentcolor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"><circle cx="8" cy="6" r="3.25"/><path d="M2.75 14.25c0-2.5 2-5 5.25-5s5.25 2.5 5.25 5"/></svg>', ""], images: ["", "", "", ""], cta1Text: "Vägbeskrivning", cta1Href: "https://www.google.com/maps/dir/?api=1&destination=ApelvikStrand,+Surbrunnsv%C3%A4gen+2-8,+432+53+Varberg", cta2Text: "", cta2Href: "" } },
-  { id: "sektion73Pin_00008", label: "Pin 9",  labelText: "8",  lngLat: [12.263106614727718, 57.081720568270754], filter: "", priority: "priority", ui: { bubbleBg: "#7A936B" }, modal: { imgSrc: "https://res.cloudinary.com/dmgmoisae/image/upload/v1769875471/strandhuse21q_hh50lb.png", h: "Strandhus 8 | 6x", p: "Bo precis vid havet i Apelviken, i ett av våra strandhus. Här bor du med stranden alldeles intill och med plats att vara på under hela dagen. Egen dörr, egen uteplats och ett boende som fungerar lika bra mellan strandpassen som på kvällen.", icons: ['<svg width="24" height="24" viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentcolor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"><circle cx="8" cy="6" r="3.25"/><path d="M2.75 14.25c0-2.5 2-5 5.25-5s5.25 2.5 5.25 5"/></svg>', ""], images: ["", "", "", ""], cta1Text: "Vägbeskrivning", cta1Href: "https://www.google.com/maps/dir/?api=1&destination=ApelvikStrand,+Surbrunnsv%C3%A4gen+2-8,+432+53+Varberg", cta2Text: "", cta2Href: "" } },
-  { id: "sektion73Pin_00009", label: "Pin 9",  labelText: "9",  lngLat: [12.262194869335389, 57.08127715798125], filter: "", priority: "priority", ui: { bubbleBg: "#446D74" }, modal: { imgSrc: "https://res.cloudinary.com/dmgmoisae/image/upload/v1769875471/strandhuse21q_hh50lb.png", h: "Strandhus 9 | 6x", p: "Bo precis vid havet i Apelviken, i ett av våra strandhus. Här bor du med stranden alldeles intill och med plats att vara på under hela dagen. Egen dörr, egen uteplats och ett boende som fungerar lika bra mellan strandpassen som på kvällen.", icons: ['<svg width="24" height="24" viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentcolor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"><circle cx="8" cy="6" r="3.25"/><path d="M2.75 14.25c0-2.5 2-5 5.25-5s5.25 2.5 5.25 5"/></svg>', '<svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="m6 12-1-1m13 1 1-1M3 18h18M5 21h14M7 18a5 5 0 0 1 10 0M12 3v7m0 0 3-3m-3 3L9 7" stroke="currentcolor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>'], images: ["", "", "", ""], cta1Text: "Vägbeskrivning", cta1Href: "https://www.google.com/maps/dir/?api=1&destination=ApelvikStrand,+Surbrunnsv%C3%A4gen+2-8,+432+53+Varberg", cta2Text: "", cta2Href: "" } },
-  { id: "sektion73Pin_00010", label: "Pin 11", labelText: "10", lngLat: [12.262270876009751, 57.081331461506295], filter: "", priority: "priority", ui: { bubbleBg: "#446D74" }, modal: { imgSrc: "https://res.cloudinary.com/dmgmoisae/image/upload/v1769875471/strandhuse21q_hh50lb.png", h: "Strandhus 10 | 6x", p: "Bo precis vid havet i Apelviken, i ett av våra strandhus. Här bor du med stranden alldeles intill och med plats att vara på under hela dagen. Egen dörr, egen uteplats och ett boende som fungerar lika bra mellan strandpassen som på kvällen.", icons: ['<svg width="24" height="24" viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentcolor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"><circle cx="8" cy="6" r="3.25"/><path d="M2.75 14.25c0-2.5 2-5 5.25-5s5.25 2.5 5.25 5"/></svg>', '<svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="m6 12-1-1m13 1 1-1M3 18h18M5 21h14M7 18a5 5 0 0 1 10 0M12 3v7m0 0 3-3m-3 3L9 7" stroke="currentcolor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>'], images: ["", "", "", ""], cta1Text: "Vägbeskrivning", cta1Href: "https://www.google.com/maps/dir/?api=1&destination=ApelvikStrand,+Surbrunnsv%C3%A4gen+2-8,+432+53+Varberg", cta2Text: "", cta2Href: "" } },
-  { id: "sektion73Pin_00011", label: "Pin 12", labelText: "11", lngLat: [12.262477746343166, 57.08131249231994], filter: "", priority: "priority", ui: { bubbleBg: "#446D74" }, modal: { imgSrc: "https://res.cloudinary.com/dmgmoisae/image/upload/v1769800477/jpeg-optimizer_ApelvikStrand_0356_1_llpb1s.jpg", h: "Strandhus 11 | 6x", p: "Bo precis vid havet i Apelviken, i ett av våra strandhus. Här bor du med stranden alldeles intill och med plats att vara på under hela dagen. Egen dörr, egen uteplats och ett boende som fungerar lika bra mellan strandpassen som på kvällen.", icons: ['<svg width="24" height="24" viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentcolor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"><circle cx="8" cy="6" r="3.25"/><path d="M2.75 14.25c0-2.5 2-5 5.25-5s5.25 2.5 5.25 5"/></svg>', '<svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="m6 12-1-1m13 1 1-1M3 18h18M5 21h14M7 18a5 5 0 0 1 10 0M12 3v7m0 0 3-3m-3 3L9 7" stroke="currentcolor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>'], images: ["", "", "", ""], cta1Text: "Vägbeskrivning", cta1Href: "https://www.google.com/maps/dir/?api=1&destination=ApelvikStrand,+Surbrunnsv%C3%A4gen+2-8,+432+53+Varberg", cta2Text: "", cta2Href: "" } },
-  { id: "sektion73Pin_00012", label: "Pin 13", labelText: "12", lngLat: [12.262555074877127, 57.081368232510044], filter: "", priority: "priority", ui: { bubbleBg: "#446D74" }, modal: { imgSrc: "https://res.cloudinary.com/dmgmoisae/image/upload/v1769800477/jpeg-optimizer_ApelvikStrand_0356_1_llpb1s.jpg", h: "Strandhus 12 | 6x", p: "Bo precis vid havet i Apelviken, i ett av våra strandhus. Här bor du med stranden alldeles intill och med plats att vara på under hela dagen. Egen dörr, egen uteplats och ett boende som fungerar lika bra mellan strandpassen som på kvällen.", icons: ['<svg width="24" height="24" viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentcolor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"><circle cx="8" cy="6" r="3.25"/><path d="M2.75 14.25c0-2.5 2-5 5.25-5s5.25 2.5 5.25 5"/></svg>', '<svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="m6 12-1-1m13 1 1-1M3 18h18M5 21h14M7 18a5 5 0 0 1 10 0M12 3v7m0 0 3-3m-3 3L9 7" stroke="currentcolor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>'], images: ["", "", "", ""], cta1Text: "Vägbeskrivning", cta1Href: "https://www.google.com/maps/dir/?api=1&destination=ApelvikStrand,+Surbrunnsv%C3%A4gen+2-8,+432+53+Varberg", cta2Text: "", cta2Href: "" } },
-  { id: "sektion73Pin_00013", label: "Pin 14", labelText: "13", lngLat: [12.262769876313968, 57.08134782663265], filter: "", priority: "priority", ui: { bubbleBg: "#446D74" }, modal: { imgSrc: "https://res.cloudinary.com/dmgmoisae/image/upload/v1769800477/jpeg-optimizer_ApelvikStrand_0356_1_llpb1s.jpg", h: "Strandhus 13 | 6x", p: "Bo precis vid havet i Apelviken, i ett av våra strandhus. Här bor du med stranden alldeles intill och med plats att vara på under hela dagen. Egen dörr, egen uteplats och ett boende som fungerar lika bra mellan strandpassen som på kvällen.", icons: ['<svg width="24" height="24" viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentcolor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"><circle cx="8" cy="6" r="3.25"/><path d="M2.75 14.25c0-2.5 2-5 5.25-5s5.25 2.5 5.25 5"/></svg>', '<svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="m6 12-1-1m13 1 1-1M3 18h18M5 21h14M7 18a5 5 0 0 1 10 0M12 3v7m0 0 3-3m-3 3L9 7" stroke="currentcolor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>'], images: ["", "", "", ""], cta1Text: "Vägbeskrivning", cta1Href: "https://www.google.com/maps/dir/?api=1&destination=ApelvikStrand,+Surbrunnsv%C3%A4gen+2-8,+432+53+Varberg", cta2Text: "", cta2Href: "" } },
-  { id: "sektion73Pin_00014", label: "Pin 15", labelText: "14", lngLat: [12.262845536788006, 57.081402712344186], filter: "", priority: "priority", ui: { bubbleBg: "#446D74" }, modal: { imgSrc: "https://res.cloudinary.com/dmgmoisae/image/upload/v1769800477/jpeg-optimizer_ApelvikStrand_0356_1_llpb1s.jpg", h: "Strandhus 14 | 6x", p: "Bo precis vid havet i Apelviken, i ett av våra strandhus. Här bor du med stranden alldeles intill och med plats att vara på under hela dagen. Egen dörr, egen uteplats och ett boende som fungerar lika bra mellan strandpassen som på kvällen.", icons: ['<svg width="24" height="24" viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentcolor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"><circle cx="8" cy="6" r="3.25"/><path d="M2.75 14.25c0-2.5 2-5 5.25-5s5.25 2.5 5.25 5"/></svg>', '<svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="m6 12-1-1m13 1 1-1M3 18h18M5 21h14M7 18a5 5 0 0 1 10 0M12 3v7m0 0 3-3m-3 3L9 7" stroke="currentcolor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>'], images: ["", "", "", ""], cta1Text: "Vägbeskrivning", cta1Href: "https://www.google.com/maps/dir/?api=1&destination=ApelvikStrand,+Surbrunnsv%C3%A4gen+2-8,+432+53+Varberg", cta2Text: "", cta2Href: "" } },
-  { id: "sektion73Pin_00015", label: "Pin 16", labelText: "15", lngLat: [12.263068269369796, 57.08138589827087], filter: "", priority: "priority", ui: { bubbleBg: "#7A936B" }, modal: { imgSrc: "https://res.cloudinary.com/dmgmoisae/image/upload/v1769800477/jpeg-optimizer_ApelvikStrand_0356_1_llpb1s.jpg", h: "Strandhus 15 | 6x", p: "Bo precis vid havet i Apelviken, i ett av våra strandhus. Här bor du med stranden alldeles intill och med plats att vara på under hela dagen. Egen dörr, egen uteplats och ett boende som fungerar lika bra mellan strandpassen som på kvällen.", icons: ['<svg width="24" height="24" viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentcolor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"><circle cx="8" cy="6" r="3.25"/><path d="M2.75 14.25c0-2.5 2-5 5.25-5s5.25 2.5 5.25 5"/></svg>', ""], images: ["", "", "", ""], cta1Text: "Vägbeskrivning", cta1Href: "https://www.google.com/maps/dir/?api=1&destination=ApelvikStrand,+Surbrunnsv%C3%A4gen+2-8,+432+53+Varberg", cta2Text: "", cta2Href: "" } },
-  { id: "sektion73Pin_00016", label: "Pin 17", labelText: "16", lngLat: [12.263144276036485, 57.08143589149515], filter: "", priority: "priority", ui: { bubbleBg: "#7A936B" }, modal: { imgSrc: "https://res.cloudinary.com/dmgmoisae/image/upload/v1769800477/jpeg-optimizer_ApelvikStrand_0356_1_llpb1s.jpg", h: "Strandhus 16 | 6x", p: "Bo precis vid havet i Apelviken, i ett av våra strandhus. Här bor du med stranden alldeles intill och med plats att vara på under hela dagen. Egen dörr, egen uteplats och ett boende som fungerar lika bra mellan strandpassen som på kvällen.", icons: ['<svg width="24" height="24" viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentcolor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"><circle cx="8" cy="6" r="3.25"/><path d="M2.75 14.25c0-2.5 2-5 5.25-5s5.25 2.5 5.25 5"/></svg>', ""], images: ["", "", "", ""], cta1Text: "Vägbeskrivning", cta1Href: "https://www.google.com/maps/dir/?api=1&destination=ApelvikStrand,+Surbrunnsv%C3%A4gen+2-8,+432+53+Varberg", cta2Text: "", cta2Href: "" } },
-  { id: "sektion73Pin_00017", label: "Pin 18", labelText: "17", lngLat: [12.262463879109788, 57.08101975420533], filter: "", priority: "priority", ui: { bubbleBg: "#A88867" }, modal: { imgSrc: "https://res.cloudinary.com/dmgmoisae/image/upload/v1769800477/jpeg-optimizer_ApelvikStrand_0356_1_llpb1s.jpg", h: "Strandhus 17 | 6x", p: "Bo precis vid havet i Apelviken, i ett av våra strandhus. Här bor du med stranden alldeles intill och med plats att vara på under hela dagen. Egen dörr, egen uteplats och ett boende som fungerar lika bra mellan strandpassen som på kvällen.", icons: ['<svg width="24" height="24" viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentcolor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"><circle cx="8" cy="6" r="3.25"/><path d="M2.75 14.25c0-2.5 2-5 5.25-5s5.25 2.5 5.25 5"/></svg>', '<svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M12 10V3m0 0L9 6m3-3 3 3m-9 6-1-1m13 1 1-1M3 18h18M5 21h14M7 18a5 5 0 0 1 10 0" stroke="currentcolor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>'], images: ["", "", "", ""], cta1Text: "Vägbeskrivning", cta1Href: "https://www.google.com/maps/dir/?api=1&destination=ApelvikStrand,+Surbrunnsv%C3%A4gen+2-8,+432+53+Varberg", cta2Text: "", cta2Href: "" } },
-  { id: "sektion73Pin_00018", label: "Pin 19", labelText: "18", lngLat: [12.262570288438837, 57.08098569917749], filter: "", priority: "priority", ui: { bubbleBg: "#A88867" }, modal: { imgSrc: "https://res.cloudinary.com/dmgmoisae/image/upload/v1769800477/jpeg-optimizer_ApelvikStrand_0356_1_llpb1s.jpg", h: "Strandhus 18 | 6x", p: "Bo precis vid havet i Apelviken, i ett av våra strandhus. Här bor du med stranden alldeles intill och med plats att vara på under hela dagen. Egen dörr, egen uteplats och ett boende som fungerar lika bra mellan strandpassen som på kvällen.", icons: ['<svg width="24" height="24" viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentcolor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"><circle cx="8" cy="6" r="3.25"/><path d="M2.75 14.25c0-2.5 2-5 5.25-5s5.25 2.5 5.25 5"/></svg>', '<svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M12 10V3m0 0L9 6m3-3 3 3m-9 6-1-1m13 1 1-1M3 18h18M5 21h14M7 18a5 5 0 0 1 10 0" stroke="currentcolor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>'], images: ["", "", "", ""], cta1Text: "Vägbeskrivning", cta1Href: "https://www.google.com/maps/dir/?api=1&destination=ApelvikStrand,+Surbrunnsv%C3%A4gen+2-8,+432+53+Varberg", cta2Text: "", cta2Href: "" } },
-  { id: "sektion73Pin_00019", label: "Pin 20", labelText: "19", lngLat: [12.262750721669505, 57.08105293370133], filter: "", priority: "priority", ui: { bubbleBg: "#A88867" }, modal: { imgSrc: "https://res.cloudinary.com/dmgmoisae/image/upload/v1769800477/jpeg-optimizer_ApelvikStrand_0356_1_llpb1s.jpg", h: "Strandhus 19 | 6x", p: "Bo precis vid havet i Apelviken, i ett av våra strandhus. Här bor du med stranden alldeles intill och med plats att vara på under hela dagen. Egen dörr, egen uteplats och ett boende som fungerar lika bra mellan strandpassen som på kvällen.", icons: ['<svg width="24" height="24" viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentcolor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"><circle cx="8" cy="6" r="3.25"/><path d="M2.75 14.25c0-2.5 2-5 5.25-5s5.25 2.5 5.25 5"/></svg>', '<svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M12 10V3m0 0L9 6m3-3 3 3m-9 6-1-1m13 1 1-1M3 18h18M5 21h14M7 18a5 5 0 0 1 10 0" stroke="currentcolor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>'], images: ["", "", "", ""], cta1Text: "Vägbeskrivning", cta1Href: "https://www.google.com/maps/dir/?api=1&destination=ApelvikStrand,+Surbrunnsv%C3%A4gen+2-8,+432+53+Varberg", cta2Text: "", cta2Href: "" } },
-  { id: "sektion73Pin_00020", label: "Pin 21", labelText: "20", lngLat: [12.262854487289673, 57.08102103379619], filter: "", priority: "priority", ui: { bubbleBg: "#A88867" }, modal: { imgSrc: "https://res.cloudinary.com/dmgmoisae/image/upload/v1769800477/jpeg-optimizer_ApelvikStrand_0356_1_llpb1s.jpg", h: "Strandhus 20 | 6x", p: "Bo precis vid havet i Apelviken, i ett av våra strandhus. Här bor du med stranden alldeles intill och med plats att vara på under hela dagen. Egen dörr, egen uteplats och ett boende som fungerar lika bra mellan strandpassen som på kvällen.", icons: ['<svg width="24" height="24" viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentcolor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"><circle cx="8" cy="6" r="3.25"/><path d="M2.75 14.25c0-2.5 2-5 5.25-5s5.25 2.5 5.25 5"/></svg>', '<svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M12 10V3m0 0L9 6m3-3 3 3m-9 6-1-1m13 1 1-1M3 18h18M5 21h14M7 18a5 5 0 0 1 10 0" stroke="currentcolor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>'], images: ["", "", "", ""], cta1Text: "Vägbeskrivning", cta1Href: "https://www.google.com/maps/dir/?api=1&destination=ApelvikStrand,+Surbrunnsv%C3%A4gen+2-8,+432+53+Varberg", cta2Text: "", cta2Href: "" } },
-  { id: "sektion73Pin_00021", label: "Pin 22", labelText: "21", lngLat: [12.263044173496866, 57.08108754989141], filter: "", priority: "priority", ui: { bubbleBg: "#A88867" }, modal: { imgSrc: "https://res.cloudinary.com/dmgmoisae/image/upload/v1769800477/jpeg-optimizer_ApelvikStrand_0356_1_llpb1s.jpg", h: "Strandhus 21 | 6x", p: "Bo precis vid havet i Apelviken, i ett av våra strandhus. Här bor du med stranden alldeles intill och med plats att vara på under hela dagen. Egen dörr, egen uteplats och ett boende som fungerar lika bra mellan strandpassen som på kvällen.", icons: ['<svg width="24" height="24" viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentcolor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"><circle cx="8" cy="6" r="3.25"/><path d="M2.75 14.25c0-2.5 2-5 5.25-5s5.25 2.5 5.25 5"/></svg>', '<svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M12 10V3m0 0L9 6m3-3 3 3m-9 6-1-1m13 1 1-1M3 18h18M5 21h14M7 18a5 5 0 0 1 10 0" stroke="currentcolor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>'], images: ["", "", "", ""], cta1Text: "Vägbeskrivning", cta1Href: "https://www.google.com/maps/dir/?api=1&destination=ApelvikStrand,+Surbrunnsv%C3%A4gen+2-8,+432+53+Varberg", cta2Text: "", cta2Href: "" } },
-  { id: "sektion73Pin_00022", label: "Pin 23", labelText: "22", lngLat: [12.263142651741532, 57.08105636837058], filter: "", priority: "priority", ui: { bubbleBg: "#A88867" }, modal: { imgSrc: "https://res.cloudinary.com/dmgmoisae/image/upload/v1769800477/jpeg-optimizer_ApelvikStrand_0356_1_llpb1s.jpg", h: "Strandhus 22 | 6x", p: "Bo precis vid havet i Apelviken, i ett av våra strandhus. Här bor du med stranden alldeles intill och med plats att vara på under hela dagen. Egen dörr, egen uteplats och ett boende som fungerar lika bra mellan strandpassen som på kvällen.", icons: ['<svg width="24" height="24" viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentcolor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"><circle cx="8" cy="6" r="3.25"/><path d="M2.75 14.25c0-2.5 2-5 5.25-5s5.25 2.5 5.25 5"/></svg>', '<svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M12 10V3m0 0L9 6m3-3 3 3m-9 6-1-1m13 1 1-1M3 18h18M5 21h14M7 18a5 5 0 0 1 10 0" stroke="currentcolor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>'], images: ["", "", "", ""], cta1Text: "Vägbeskrivning", cta1Href: "https://www.google.com/maps/dir/?api=1&destination=ApelvikStrand,+Surbrunnsv%C3%A4gen+2-8,+432+53+Varberg", cta2Text: "", cta2Href: "" } },
-  { id: "sektion73Pin_00023", label: "Pin 24", labelText: "23", lngLat: [12.263333659783598, 57.08112001095327], filter: "", priority: "priority", ui: { bubbleBg: "#7A936B" }, modal: { imgSrc: "https://res.cloudinary.com/dmgmoisae/image/upload/v1769800477/jpeg-optimizer_ApelvikStrand_0356_1_llpb1s.jpg", h: "Strandhus 23 | 6x", p: "Bo precis vid havet i Apelviken, i ett av våra strandhus. Här bor du med stranden alldeles intill och med plats att vara på under hela dagen. Egen dörr, egen uteplats och ett boende som fungerar lika bra mellan strandpassen som på kvällen.", icons: ['<svg width="24" height="24" viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentcolor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"><circle cx="8" cy="6" r="3.25"/><path d="M2.75 14.25c0-2.5 2-5 5.25-5s5.25 2.5 5.25 5"/></svg>', ""], images: ["", "", "", ""], cta1Text: "Vägbeskrivning", cta1Href: "https://www.google.com/maps/dir/?api=1&destination=ApelvikStrand,+Surbrunnsv%C3%A4gen+2-8,+432+53+Varberg", cta2Text: "", cta2Href: "" } },
-  { id: "sektion73Pin_00024", label: "Pin 25", labelText: "24", lngLat: [12.263433459837302, 57.081090266196355], filter: "", priority: "priority", ui: { bubbleBg: "#7A936B" }, modal: { imgSrc: "https://res.cloudinary.com/dmgmoisae/image/upload/v1769800477/jpeg-optimizer_ApelvikStrand_0356_1_llpb1s.jpg", h: "Strandhus 24 | 6x", p: "Bo precis vid havet i Apelviken, i ett av våra strandhus. Här bor du med stranden alldeles intill och med plats att vara på under hela dagen. Egen dörr, egen uteplats och ett boende som fungerar lika bra mellan strandpassen som på kvällen.", icons: ['<svg width="24" height="24" viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentcolor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"><circle cx="8" cy="6" r="3.25"/><path d="M2.75 14.25c0-2.5 2-5 5.25-5s5.25 2.5 5.25 5"/></svg>', ""], images: ["", "", "", ""], cta1Text: "Vägbeskrivning", cta1Href: "https://www.google.com/maps/dir/?api=1&destination=ApelvikStrand,+Surbrunnsv%C3%A4gen+2-8,+432+53+Varberg", cta2Text: "", cta2Href: "" } },
-  { id: "sektion73Pin_00025", label: "Pin 26", labelText: "25", lngLat: [12.262675279675818, 57.080665309036135], filter: "", priority: "priority", ui: { bubbleBg: "#446D74" }, modal: { imgSrc: "https://res.cloudinary.com/dmgmoisae/image/upload/v1769800477/jpeg-optimizer_ApelvikStrand_0356_1_llpb1s.jpg", h: "Strandhus 25 | 6x", p: "Bo precis vid havet i Apelviken, i ett av våra strandhus. Här bor du med stranden alldeles intill och med plats att vara på under hela dagen. Egen dörr, egen uteplats och ett boende som fungerar lika bra mellan strandpassen som på kvällen.", icons: ['<svg width="24" height="24" viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentcolor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"><circle cx="8" cy="6" r="3.25"/><path d="M2.75 14.25c0-2.5 2-5 5.25-5s5.25 2.5 5.25 5"/></svg>', '<svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="m6 12-1-1m13 1 1-1M3 18h18M5 21h14M7 18a5 5 0 0 1 10 0M12 3v7m0 0 3-3m-3 3L9 7" stroke="currentcolor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>'], images: ["", "", "", ""], cta1Text: "Vägbeskrivning", cta1Href: "https://www.google.com/maps/dir/?api=1&destination=ApelvikStrand,+Surbrunnsv%C3%A4gen+2-8,+432+53+Varberg", cta2Text: "", cta2Href: "" } },
-  { id: "sektion73Pin_00026", label: "Pin 27", labelText: "26", lngLat: [12.262745995033498, 57.08071961344976], filter: "", priority: "priority", ui: { bubbleBg: "#446D74" }, modal: { imgSrc: "https://res.cloudinary.com/dmgmoisae/image/upload/v1769800477/jpeg-optimizer_ApelvikStrand_0356_1_llpb1s.jpg", h: "Strandhus 26 | 6x", p: "Bo precis vid havet i Apelviken, i ett av våra strandhus. Här bor du med stranden alldeles intill och med plats att vara på under hela dagen. Egen dörr, egen uteplats och ett boende som fungerar lika bra mellan strandpassen som på kvällen.", icons: ['<svg width="24" height="24" viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentcolor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"><circle cx="8" cy="6" r="3.25"/><path d="M2.75 14.25c0-2.5 2-5 5.25-5s5.25 2.5 5.25 5"/></svg>', '<svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="m6 12-1-1m13 1 1-1M3 18h18M5 21h14M7 18a5 5 0 0 1 10 0M12 3v7m0 0 3-3m-3 3L9 7" stroke="currentcolor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>'], images: ["", "", "", ""], cta1Text: "Vägbeskrivning", cta1Href: "https://www.google.com/maps/dir/?api=1&destination=ApelvikStrand,+Surbrunnsv%C3%A4gen+2-8,+432+53+Varberg", cta2Text: "", cta2Href: "" } },
-  { id: "sektion73Pin_00027", label: "Pin 28", labelText: "27", lngLat: [12.26301367068126, 57.08070064395787], filter: "", priority: "priority", ui: { bubbleBg: "#446D74" }, modal: { imgSrc: "https://res.cloudinary.com/dmgmoisae/image/upload/v1769800477/jpeg-optimizer_ApelvikStrand_0356_1_llpb1s.jpg", h: "Strandhus 27 | 6x", p: "Bo precis vid havet i Apelviken, i ett av våra strandhus. Här bor du med stranden alldeles intill och med plats att vara på under hela dagen. Egen dörr, egen uteplats och ett boende som fungerar lika bra mellan strandpassen som på kvällen.", icons: ['<svg width="24" height="24" viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentcolor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"><circle cx="8" cy="6" r="3.25"/><path d="M2.75 14.25c0-2.5 2-5 5.25-5s5.25 2.5 5.25 5"/></svg>', '<svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="m6 12-1-1m13 1 1-1M3 18h18M5 21h14M7 18a5 5 0 0 1 10 0M12 3v7m0 0 3-3m-3 3L9 7" stroke="currentcolor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>'], images: ["", "", "", ""], cta1Text: "Vägbeskrivning", cta1Href: "https://www.google.com/maps/dir/?api=1&destination=ApelvikStrand,+Surbrunnsv%C3%A4gen+2-8,+432+53+Varberg", cta2Text: "", cta2Href: "" } },
-  { id: "sektion73Pin_00028", label: "Pin 29", labelText: "28", lngLat: [12.263080424389472, 57.08075782180549], filter: "", priority: "priority", ui: { bubbleBg: "#446D74" }, modal: { imgSrc: "https://res.cloudinary.com/dmgmoisae/image/upload/v1769800477/jpeg-optimizer_ApelvikStrand_0356_1_llpb1s.jpg", h: "Strandhus 28 | 6x", p: "Bo precis vid havet i Apelviken, i ett av våra strandhus. Här bor du med stranden alldeles intill och med plats att vara på under hela dagen. Egen dörr, egen uteplats och ett boende som fungerar lika bra mellan strandpassen som på kvällen.", icons: ['<svg width="24" height="24" viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentcolor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"><circle cx="8" cy="6" r="3.25"/><path d="M2.75 14.25c0-2.5 2-5 5.25-5s5.25 2.5 5.25 5"/></svg>', '<svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="m6 12-1-1m13 1 1-1M3 18h18M5 21h14M7 18a5 5 0 0 1 10 0M12 3v7m0 0 3-3m-3 3L9 7" stroke="currentcolor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>'], images: ["", "", "", ""], cta1Text: "Vägbeskrivning", cta1Href: "https://www.google.com/maps/dir/?api=1&destination=ApelvikStrand,+Surbrunnsv%C3%A4gen+2-8,+432+53+Varberg", cta2Text: "", cta2Href: "" } },
-  { id: "sektion73Pin_00029", label: "Pin 30", labelText: "29", lngLat: [12.263353387445193, 57.080743162558974], filter: "", priority: "priority", ui: { bubbleBg: "#446D74" }, modal: { imgSrc: "https://res.cloudinary.com/dmgmoisae/image/upload/v1769800477/jpeg-optimizer_ApelvikStrand_0356_1_llpb1s.jpg", h: "Strandhus 29 | 6x", p: "Bo precis vid havet i Apelviken, i ett av våra strandhus. Här bor du med stranden alldeles intill och med plats att vara på under hela dagen. Egen dörr, egen uteplats och ett boende som fungerar lika bra mellan strandpassen som på kvällen.", icons: ['<svg width="24" height="24" viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentcolor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"><circle cx="8" cy="6" r="3.25"/><path d="M2.75 14.25c0-2.5 2-5 5.25-5s5.25 2.5 5.25 5"/></svg>', '<svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="m6 12-1-1m13 1 1-1M3 18h18M5 21h14M7 18a5 5 0 0 1 10 0M12 3v7m0 0 3-3m-3 3L9 7" stroke="currentcolor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>'], images: ["", "", "", ""], cta1Text: "Vägbeskrivning", cta1Href: "https://www.google.com/maps/dir/?api=1&destination=ApelvikStrand,+Surbrunnsv%C3%A4gen+2-8,+432+53+Varberg", cta2Text: "", cta2Href: "" } },
-  { id: "sektion73Pin_00030", label: "Pin 31", labelText: "30", lngLat: [12.263421462996916, 57.08080105871713], filter: "", priority: "priority", ui: { bubbleBg: "#446D74" }, modal: { imgSrc: "https://res.cloudinary.com/dmgmoisae/image/upload/v1769800477/jpeg-optimizer_ApelvikStrand_0356_1_llpb1s.jpg", h: "Strandhus 30 | 6x", p: "Bo precis vid havet i Apelviken, i ett av våra strandhus. Här bor du med stranden alldeles intill och med plats att vara på under hela dagen. Egen dörr, egen uteplats och ett boende som fungerar lika bra mellan strandpassen som på kvällen.", icons: ['<svg width="24" height="24" viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentcolor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"><circle cx="8" cy="6" r="3.25"/><path d="M2.75 14.25c0-2.5 2-5 5.25-5s5.25 2.5 5.25 5"/></svg>', '<svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="m6 12-1-1m13 1 1-1M3 18h18M5 21h14M7 18a5 5 0 0 1 10 0M12 3v7m0 0 3-3m-3 3L9 7" stroke="currentcolor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>'], images: ["", "", "", ""], cta1Text: "Vägbeskrivning", cta1Href: "https://www.google.com/maps/dir/?api=1&destination=ApelvikStrand,+Surbrunnsv%C3%A4gen+2-8,+432+53+Varberg", cta2Text: "", cta2Href: "" } },
-  { id: "sektion73Pin_00031", label: "Pin 32", labelText: "31", lngLat: [12.263694426079951, 57.08078208926068], filter: "", priority: "priority", ui: { bubbleBg: "#A88867" }, modal: { imgSrc: "https://res.cloudinary.com/dmgmoisae/image/upload/v1769800477/jpeg-optimizer_ApelvikStrand_0356_1_llpb1s.jpg", h: "Strandhus 31 | 6x", p: "Bo precis vid havet i Apelviken, i ett av våra strandhus. Här bor du med stranden alldeles intill och med plats att vara på under hela dagen. Egen dörr, egen uteplats och ett boende som fungerar lika bra mellan strandpassen som på kvällen.", icons: ['<svg width="24" height="24" viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentcolor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"><circle cx="8" cy="6" r="3.25"/><path d="M2.75 14.25c0-2.5 2-5 5.25-5s5.25 2.5 5.25 5"/></svg>', ""], images: ["", "", "", ""], cta1Text: "Vägbeskrivning", cta1Href: "https://www.google.com/maps/dir/?api=1&destination=ApelvikStrand,+Surbrunnsv%C3%A4gen+2-8,+432+53+Varberg", cta2Text: "", cta2Href: "" } },
-  { id: "sektion73Pin_00032", label: "Pin 33", labelText: "32", lngLat: [12.263763823459442, 57.080838548618544], filter: "", priority: "priority", ui: { bubbleBg: "#A88867" }, modal: { imgSrc: "https://res.cloudinary.com/dmgmoisae/image/upload/v1769800477/jpeg-optimizer_ApelvikStrand_0356_1_llpb1s.jpg", h: "Strandhus 32 | 6x", p: "Bo precis vid havet i Apelviken, i ett av våra strandhus. Här bor du med stranden alldeles intill och med plats att vara på under hela dagen. Egen dörr, egen uteplats och ett boende som fungerar lika bra mellan strandpassen som på kvällen.", icons: ['<svg width="24" height="24" viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentcolor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"><circle cx="8" cy="6" r="3.25"/><path d="M2.75 14.25c0-2.5 2-5 5.25-5s5.25 2.5 5.25 5"/></svg>', ""], images: ["", "", "", ""], cta1Text: "Vägbeskrivning", cta1Href: "https://www.google.com/maps/dir/?api=1&destination=ApelvikStrand,+Surbrunnsv%C3%A4gen+2-8,+432+53+Varberg", cta2Text: "", cta2Href: "" } }
+{
+  id: "sektion73Pin_00001",
+  label: "Pin 1",
+  labelText: "1",
+  lngLat: [12.26197312396269, 57.08162693545353],
+  filter: "",
+  priority: "priority",
+  ui: { bubbleBg: "#A88867" },
+  modal: {
+    imgSrc: "https://res.cloudinary.com/dmgmoisae/image/upload/v1769875471/strandhuse21q_hh50lb.png",
+    h: "Strandhus 1",
+    p: "Bo precis vid havet i Apelviken, i ett av våra strandhus. Här bor du med stranden alldeles intill och med plats att vara på under hela dagen. Egen dörr, egen uteplats och ett boende som fungerar lika bra mellan strandpassen som på kvällen.",
+    iconItems: [
+      {
+        svg: '<svg width="24" height="24" viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentcolor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"><circle cx="8" cy="6" r="3.25"/><path d="M2.75 14.25c0-2.5 2-5 5.25-5s5.25 2.5 5.25 5"/></svg>',
+        text: "4 vuxna & 2 barn"
+      },
+      {
+        svg: '<svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M12 10V3m0 0L9 6m3-3 3 3m-9 6-1-1m13 1 1-1M3 18h18M5 21h14M7 18a5 5 0 0 1 10 0" stroke="currentcolor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>',
+        text: "Morgonsol"
+      }
+    ],
+    images: ["", "", "", ""],
+    cta1Text: "Vägbeskrivning",
+    cta1Href: "https://www.google.com/maps/dir/?api=1&destination=ApelvikStrand,+Surbrunnsv%C3%A4gen+2-8,+432+53+Varberg",
+    cta2Text: "",
+    cta2Href: ""
+  }
+},
+{
+  id: "sektion73Pin_00002",
+  label: "Pin 2",
+  labelText: "2",
+  lngLat: [12.262082176983768, 57.081600917569034],
+  filter: "",
+  priority: "priority",
+  ui: { bubbleBg: "#A88867" },
+  modal: {
+    imgSrc: "https://res.cloudinary.com/dmgmoisae/image/upload/v1769875471/strandhuse21q_hh50lb.png",
+    h: "Strandhus 2 | 6x",
+    p: "Bo precis vid havet i Apelviken, i ett av våra strandhus. Här bor du med stranden alldeles intill och med plats att vara på under hela dagen. Egen dörr, egen uteplats och ett boende som fungerar lika bra mellan strandpassen som på kvällen.",
+    icons: [
+      '<svg width="24" height="24" viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentcolor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"><circle cx="8" cy="6" r="3.25"/><path d="M2.75 14.25c0-2.5 2-5 5.25-5s5.25 2.5 5.25 5"/></svg>',
+      '<svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M12 10V3m0 0L9 6m3-3 3 3m-9 6-1-1m13 1 1-1M3 18h18M5 21h14M7 18a5 5 0 0 1 10 0" stroke="currentcolor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>'
+    ],
+    iconTexts: [
+      "6 bäddar",
+      "Incheckning i app"
+    ],
+    images: ["", "", "", ""],
+    cta1Text: "Vägbeskrivning",
+    cta1Href: "https://www.google.com/maps/dir/?api=1&destination=ApelvikStrand,+Surbrunnsv%C3%A4gen+2-8,+432+53+Varberg",
+    cta2Text: "",
+    cta2Href: ""
+  }
+},
+{
+  id: "sektion73Pin_00003",
+  label: "Pin 3",
+  labelText: "3",
+  lngLat: [12.262318128134382, 57.08166527756367],
+  filter: "",
+  priority: "priority",
+  ui: { bubbleBg: "#A88867" },
+  modal: {
+    imgSrc: "https://res.cloudinary.com/dmgmoisae/image/upload/v1769875471/strandhuse21q_hh50lb.png",
+    h: "Strandhus 3 | 6x",
+    p: "Bo precis vid havet i Apelviken, i ett av våra strandhus. Här bor du med stranden alldeles intill och med plats att vara på under hela dagen. Egen dörr, egen uteplats och ett boende som fungerar lika bra mellan strandpassen som på kvällen.",
+    icons: [
+      '<svg width="24" height="24" viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentcolor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"><circle cx="8" cy="6" r="3.25"/><path d="M2.75 14.25c0-2.5 2-5 5.25-5s5.25 2.5 5.25 5"/></svg>',
+      '<svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M12 10V3m0 0L9 6m3-3 3 3m-9 6-1-1m13 1 1-1M3 18h18M5 21h14M7 18a5 5 0 0 1 10 0" stroke="currentcolor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>'
+    ],
+    iconTexts: [
+      "6 bäddar",
+      "Incheckning i app"
+    ],
+    images: ["", "", "", ""],
+    cta1Text: "Vägbeskrivning",
+    cta1Href: "https://www.google.com/maps/dir/?api=1&destination=ApelvikStrand,+Surbrunnsv%C3%A4gen+2-8,+432+53+Varberg",
+    cta2Text: "",
+    cta2Href: ""
+  }
+},
+{
+  id: "sektion73Pin_00004",
+  label: "Pin 4",
+  labelText: "4",
+  lngLat: [12.262428503055986, 57.081637688307154],
+  filter: "",
+  priority: "priority",
+  ui: { bubbleBg: "#A88867" },
+  modal: {
+    imgSrc: "https://res.cloudinary.com/dmgmoisae/image/upload/v1769875471/strandhuse21q_hh50lb.png",
+    h: "Strandhus 4 | 6x",
+    p: "Bo precis vid havet i Apelviken, i ett av våra strandhus. Här bor du med stranden alldeles intill och med plats att vara på under hela dagen. Egen dörr, egen uteplats och ett boende som fungerar lika bra mellan strandpassen som på kvällen.",
+    icons: [
+      '<svg width="24" height="24" viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentcolor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"><circle cx="8" cy="6" r="3.25"/><path d="M2.75 14.25c0-2.5 2-5 5.25-5s5.25 2.5 5.25 5"/></svg>',
+      '<svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M12 10V3m0 0L9 6m3-3 3 3m-9 6-1-1m13 1 1-1M3 18h18M5 21h14M7 18a5 5 0 0 1 10 0" stroke="currentcolor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>'
+    ],
+    iconTexts: [
+      "6 bäddar",
+      "Incheckning i app"
+    ],
+    images: ["", "", "", ""],
+    cta1Text: "Vägbeskrivning",
+    cta1Href: "https://www.google.com/maps/dir/?api=1&destination=ApelvikStrand,+Surbrunnsv%C3%A4gen+2-8,+432+53+Varberg",
+    cta2Text: "",
+    cta2Href: ""
+  }
+},
+{
+  id: "sektion73Pin_00005",
+  label: "Pin 5",
+  labelText: "5",
+  lngLat: [12.26266048860353, 57.08170492165513],
+  filter: "",
+  priority: "priority",
+  ui: { bubbleBg: "#A88867" },
+  modal: {
+    imgSrc: "https://res.cloudinary.com/dmgmoisae/image/upload/v1769875471/strandhuse21q_hh50lb.png",
+    h: "Strandhus 5 | 6x",
+    p: "Bo precis vid havet i Apelviken, i ett av våra strandhus. Här bor du med stranden alldeles intill och med plats att vara på under hela dagen. Egen dörr, egen uteplats och ett boende som fungerar lika bra mellan strandpassen som på kvällen.",
+    icons: [
+      '<svg width="24" height="24" viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentcolor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"><circle cx="8" cy="6" r="3.25"/><path d="M2.75 14.25c0-2.5 2-5 5.25-5s5.25 2.5 5.25 5"/></svg>',
+      '<svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M12 10V3m0 0L9 6m3-3 3 3m-9 6-1-1m13 1 1-1M3 18h18M5 21h14M7 18a5 5 0 0 1 10 0" stroke="currentcolor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>'
+    ],
+    iconTexts: [
+      "6 bäddar",
+      "Incheckning i app"
+    ],
+    images: ["", "", "", ""],
+    cta1Text: "Vägbeskrivning",
+    cta1Href: "https://www.google.com/maps/dir/?api=1&destination=ApelvikStrand,+Surbrunnsv%C3%A4gen+2-8,+432+53+Varberg",
+    cta2Text: "",
+    cta2Href: ""
+  }
+},
+{
+  id: "sektion73Pin_00006",
+  label: "Pin 6",
+  labelText: "6",
+  lngLat: [12.262768219804656, 57.08167948749295],
+  filter: "",
+  priority: "priority",
+  ui: { bubbleBg: "#A88867" },
+  modal: {
+    imgSrc: "https://res.cloudinary.com/dmgmoisae/image/upload/v1769875471/strandhuse21q_hh50lb.png",
+    h: "Strandhus 6 | 6x",
+    p: "Bo precis vid havet i Apelviken, i ett av våra strandhus. Här bor du med stranden alldeles intill och med plats att vara på under hela dagen. Egen dörr, egen uteplats och ett boende som fungerar lika bra mellan strandpassen som på kvällen.",
+    icons: [
+      '<svg width="24" height="24" viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentcolor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"><circle cx="8" cy="6" r="3.25"/><path d="M2.75 14.25c0-2.5 2-5 5.25-5s5.25 2.5 5.25 5"/></svg>',
+      '<svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M12 10V3m0 0L9 6m3-3 3 3m-9 6-1-1m13 1 1-1M3 18h18M5 21h14M7 18a5 5 0 0 1 10 0" stroke="currentcolor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>'
+    ],
+    iconTexts: [
+      "6 bäddar",
+      "Incheckning i app"
+    ],
+    images: ["", "", "", ""],
+    cta1Text: "Vägbeskrivning",
+    cta1Href: "https://www.google.com/maps/dir/?api=1&destination=ApelvikStrand,+Surbrunnsv%C3%A4gen+2-8,+432+53+Varberg",
+    cta2Text: "",
+    cta2Href: ""
+  }
+},
+{
+  id: "sektion73Pin_00007",
+  label: "Pin 7",
+  labelText: "7",
+  lngLat: [12.26300152723178, 57.081747439114935],
+  filter: "",
+  priority: "priority",
+  ui: { bubbleBg: "#7A936B" },
+  modal: {
+    imgSrc: "https://res.cloudinary.com/dmgmoisae/image/upload/v1769875471/strandhuse21q_hh50lb.png",
+    h: "Strandhus 7 | 6x",
+    p: "Bo precis vid havet i Apelviken, i ett av våra strandhus. Här bor du med stranden alldeles intill och med plats att vara på under hela dagen. Egen dörr, egen uteplats och ett boende som fungerar lika bra mellan strandpassen som på kvällen.",
+    icons: [
+      '<svg width="24" height="24" viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentcolor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"><circle cx="8" cy="6" r="3.25"/><path d="M2.75 14.25c0-2.5 2-5 5.25-5s5.25 2.5 5.25 5"/></svg>',
+      ""
+    ],
+    iconTexts: [
+      "6 bäddar",
+      ""
+    ],
+    images: ["", "", "", ""],
+    cta1Text: "Vägbeskrivning",
+    cta1Href: "https://www.google.com/maps/dir/?api=1&destination=ApelvikStrand,+Surbrunnsv%C3%A4gen+2-8,+432+53+Varberg",
+    cta2Text: "",
+    cta2Href: ""
+  }
+},
+{
+  id: "sektion73Pin_00008",
+  label: "Pin 9",
+  labelText: "8",
+  lngLat: [12.263106614727718, 57.081720568270754],
+  filter: "",
+  priority: "priority",
+  ui: { bubbleBg: "#7A936B" },
+  modal: {
+    imgSrc: "https://res.cloudinary.com/dmgmoisae/image/upload/v1769875471/strandhuse21q_hh50lb.png",
+    h: "Strandhus 8 | 6x",
+    p: "Bo precis vid havet i Apelviken, i ett av våra strandhus. Här bor du med stranden alldeles intill och med plats att vara på under hela dagen. Egen dörr, egen uteplats och ett boende som fungerar lika bra mellan strandpassen som på kvällen.",
+    icons: [
+      '<svg width="24" height="24" viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentcolor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"><circle cx="8" cy="6" r="3.25"/><path d="M2.75 14.25c0-2.5 2-5 5.25-5s5.25 2.5 5.25 5"/></svg>',
+      ""
+    ],
+    iconTexts: [
+      "6 bäddar",
+      ""
+    ],
+    images: ["", "", "", ""],
+    cta1Text: "Vägbeskrivning",
+    cta1Href: "https://www.google.com/maps/dir/?api=1&destination=ApelvikStrand,+Surbrunnsv%C3%A4gen+2-8,+432+53+Varberg",
+    cta2Text: "",
+    cta2Href: ""
+  }
+},
+{
+  id: "sektion73Pin_00009",
+  label: "Pin 9",
+  labelText: "9",
+  lngLat: [12.262194869335389, 57.08127715798125],
+  filter: "",
+  priority: "priority",
+  ui: { bubbleBg: "#446D74" },
+  modal: {
+    imgSrc: "https://res.cloudinary.com/dmgmoisae/image/upload/v1769875471/strandhuse21q_hh50lb.png",
+    h: "Strandhus 9 | 6x",
+    p: "Bo precis vid havet i Apelviken, i ett av våra strandhus. Här bor du med stranden alldeles intill och med plats att vara på under hela dagen. Egen dörr, egen uteplats och ett boende som fungerar lika bra mellan strandpassen som på kvällen.",
+    icons: [
+      '<svg width="24" height="24" viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentcolor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"><circle cx="8" cy="6" r="3.25"/><path d="M2.75 14.25c0-2.5 2-5 5.25-5s5.25 2.5 5.25 5"/></svg>',
+      '<svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="m6 12-1-1m13 1 1-1M3 18h18M5 21h14M7 18a5 5 0 0 1 10 0M12 3v7m0 0 3-3m-3 3L9 7" stroke="currentcolor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>'
+    ],
+    iconTexts: [
+      "6 bäddar",
+      "Incheckning i app"
+    ],
+    images: ["", "", "", ""],
+    cta1Text: "Vägbeskrivning",
+    cta1Href: "https://www.google.com/maps/dir/?api=1&destination=ApelvikStrand,+Surbrunnsv%C3%A4gen+2-8,+432+53+Varberg",
+    cta2Text: "",
+    cta2Href: ""
+  }
+},
+{
+  id: "sektion73Pin_00010",
+  label: "Pin 11",
+  labelText: "10",
+  lngLat: [12.262270876009751, 57.081331461506295],
+  filter: "",
+  priority: "priority",
+  ui: { bubbleBg: "#446D74" },
+  modal: {
+    imgSrc: "https://res.cloudinary.com/dmgmoisae/image/upload/v1769875471/strandhuse21q_hh50lb.png",
+    h: "Strandhus 10 | 6x",
+    p: "Bo precis vid havet i Apelviken, i ett av våra strandhus. Här bor du med stranden alldeles intill och med plats att vara på under hela dagen. Egen dörr, egen uteplats och ett boende som fungerar lika bra mellan strandpassen som på kvällen.",
+    icons: [
+      '<svg width="24" height="24" viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentcolor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"><circle cx="8" cy="6" r="3.25"/><path d="M2.75 14.25c0-2.5 2-5 5.25-5s5.25 2.5 5.25 5"/></svg>',
+      '<svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="m6 12-1-1m13 1 1-1M3 18h18M5 21h14M7 18a5 5 0 0 1 10 0M12 3v7m0 0 3-3m-3 3L9 7" stroke="currentcolor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>'
+    ],
+    iconTexts: [
+      "6 bäddar",
+      "Incheckning i app"
+    ],
+    images: ["", "", "", ""],
+    cta1Text: "Vägbeskrivning",
+    cta1Href: "https://www.google.com/maps/dir/?api=1&destination=ApelvikStrand,+Surbrunnsv%C3%A4gen+2-8,+432+53+Varberg",
+    cta2Text: "",
+    cta2Href: ""
+  }
+},
+{
+  id: "sektion73Pin_00011",
+  label: "Pin 12",
+  labelText: "11",
+  lngLat: [12.262477746343166, 57.08131249231994],
+  filter: "",
+  priority: "priority",
+  ui: { bubbleBg: "#446D74" },
+  modal: {
+    imgSrc: "https://res.cloudinary.com/dmgmoisae/image/upload/v1769800477/jpeg-optimizer_ApelvikStrand_0356_1_llpb1s.jpg",
+    h: "Strandhus 11 | 6x",
+    p: "Bo precis vid havet i Apelviken, i ett av våra strandhus. Här bor du med stranden alldeles intill och med plats att vara på under hela dagen. Egen dörr, egen uteplats och ett boende som fungerar lika bra mellan strandpassen som på kvällen.",
+    icons: [
+      '<svg width="24" height="24" viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentcolor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"><circle cx="8" cy="6" r="3.25"/><path d="M2.75 14.25c0-2.5 2-5 5.25-5s5.25 2.5 5.25 5"/></svg>',
+      '<svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="m6 12-1-1m13 1 1-1M3 18h18M5 21h14M7 18a5 5 0 0 1 10 0M12 3v7m0 0 3-3m-3 3L9 7" stroke="currentcolor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>'
+    ],
+    iconTexts: [
+      "6 bäddar",
+      "Incheckning i app"
+    ],
+    images: ["", "", "", ""],
+    cta1Text: "Vägbeskrivning",
+    cta1Href: "https://www.google.com/maps/dir/?api=1&destination=ApelvikStrand,+Surbrunnsv%C3%A4gen+2-8,+432+53+Varberg",
+    cta2Text: "",
+    cta2Href: ""
+  }
+},
+{
+  id: "sektion73Pin_00012",
+  label: "Pin 13",
+  labelText: "12",
+  lngLat: [12.262555074877127, 57.081368232510044],
+  filter: "",
+  priority: "priority",
+  ui: { bubbleBg: "#446D74" },
+  modal: {
+    imgSrc: "https://res.cloudinary.com/dmgmoisae/image/upload/v1769800477/jpeg-optimizer_ApelvikStrand_0356_1_llpb1s.jpg",
+    h: "Strandhus 12 | 6x",
+    p: "Bo precis vid havet i Apelviken, i ett av våra strandhus. Här bor du med stranden alldeles intill och med plats att vara på under hela dagen. Egen dörr, egen uteplats och ett boende som fungerar lika bra mellan strandpassen som på kvällen.",
+    icons: [
+      '<svg width="24" height="24" viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentcolor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"><circle cx="8" cy="6" r="3.25"/><path d="M2.75 14.25c0-2.5 2-5 5.25-5s5.25 2.5 5.25 5"/></svg>',
+      '<svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="m6 12-1-1m13 1 1-1M3 18h18M5 21h14M7 18a5 5 0 0 1 10 0M12 3v7m0 0 3-3m-3 3L9 7" stroke="currentcolor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>'
+    ],
+    iconTexts: [
+      "6 bäddar",
+      "Incheckning i app"
+    ],
+    images: ["", "", "", ""],
+    cta1Text: "Vägbeskrivning",
+    cta1Href: "https://www.google.com/maps/dir/?api=1&destination=ApelvikStrand,+Surbrunnsv%C3%A4gen+2-8,+432+53+Varberg",
+    cta2Text: "",
+    cta2Href: ""
+  }
+},
+{
+  id: "sektion73Pin_00013",
+  label: "Pin 14",
+  labelText: "13",
+  lngLat: [12.262769876313968, 57.08134782663265],
+  filter: "",
+  priority: "priority",
+  ui: { bubbleBg: "#446D74" },
+  modal: {
+    imgSrc: "https://res.cloudinary.com/dmgmoisae/image/upload/v1769800477/jpeg-optimizer_ApelvikStrand_0356_1_llpb1s.jpg",
+    h: "Strandhus 13 | 6x",
+    p: "Bo precis vid havet i Apelviken, i ett av våra strandhus. Här bor du med stranden alldeles intill och med plats att vara på under hela dagen. Egen dörr, egen uteplats och ett boende som fungerar lika bra mellan strandpassen som på kvällen.",
+    icons: [
+      '<svg width="24" height="24" viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentcolor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"><circle cx="8" cy="6" r="3.25"/><path d="M2.75 14.25c0-2.5 2-5 5.25-5s5.25 2.5 5.25 5"/></svg>',
+      '<svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="m6 12-1-1m13 1 1-1M3 18h18M5 21h14M7 18a5 5 0 0 1 10 0M12 3v7m0 0 3-3m-3 3L9 7" stroke="currentcolor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>'
+    ],
+    iconTexts: [
+      "6 bäddar",
+      "Incheckning i app"
+    ],
+    images: ["", "", "", ""],
+    cta1Text: "Vägbeskrivning",
+    cta1Href: "https://www.google.com/maps/dir/?api=1&destination=ApelvikStrand,+Surbrunnsv%C3%A4gen+2-8,+432+53+Varberg",
+    cta2Text: "",
+    cta2Href: ""
+  }
+},
+{
+  id: "sektion73Pin_00014",
+  label: "Pin 15",
+  labelText: "14",
+  lngLat: [12.262845536788006, 57.081402712344186],
+  filter: "",
+  priority: "priority",
+  ui: { bubbleBg: "#446D74" },
+  modal: {
+    imgSrc: "https://res.cloudinary.com/dmgmoisae/image/upload/v1769800477/jpeg-optimizer_ApelvikStrand_0356_1_llpb1s.jpg",
+    h: "Strandhus 14 | 6x",
+    p: "Bo precis vid havet i Apelviken, i ett av våra strandhus. Här bor du med stranden alldeles intill och med plats att vara på under hela dagen. Egen dörr, egen uteplats och ett boende som fungerar lika bra mellan strandpassen som på kvällen.",
+    icons: [
+      '<svg width="24" height="24" viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentcolor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"><circle cx="8" cy="6" r="3.25"/><path d="M2.75 14.25c0-2.5 2-5 5.25-5s5.25 2.5 5.25 5"/></svg>',
+      '<svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="m6 12-1-1m13 1 1-1M3 18h18M5 21h14M7 18a5 5 0 0 1 10 0M12 3v7m0 0 3-3m-3 3L9 7" stroke="currentcolor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>'
+    ],
+    iconTexts: [
+      "6 bäddar",
+      "Incheckning i app"
+    ],
+    images: ["", "", "", ""],
+    cta1Text: "Vägbeskrivning",
+    cta1Href: "https://www.google.com/maps/dir/?api=1&destination=ApelvikStrand,+Surbrunnsv%C3%A4gen+2-8,+432+53+Varberg",
+    cta2Text: "",
+    cta2Href: ""
+  }
+},
+{
+  id: "sektion73Pin_00015",
+  label: "Pin 16",
+  labelText: "15",
+  lngLat: [12.263068269369796, 57.08138589827087],
+  filter: "",
+  priority: "priority",
+  ui: { bubbleBg: "#7A936B" },
+  modal: {
+    imgSrc: "https://res.cloudinary.com/dmgmoisae/image/upload/v1769800477/jpeg-optimizer_ApelvikStrand_0356_1_llpb1s.jpg",
+    h: "Strandhus 15 | 6x",
+    p: "Bo precis vid havet i Apelviken, i ett av våra strandhus. Här bor du med stranden alldeles intill och med plats att vara på under hela dagen. Egen dörr, egen uteplats och ett boende som fungerar lika bra mellan strandpassen som på kvällen.",
+    icons: [
+      '<svg width="24" height="24" viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentcolor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"><circle cx="8" cy="6" r="3.25"/><path d="M2.75 14.25c0-2.5 2-5 5.25-5s5.25 2.5 5.25 5"/></svg>',
+      ""
+    ],
+    iconTexts: [
+      "6 bäddar",
+      ""
+    ],
+    images: ["", "", "", ""],
+    cta1Text: "Vägbeskrivning",
+    cta1Href: "https://www.google.com/maps/dir/?api=1&destination=ApelvikStrand,+Surbrunnsv%C3%A4gen+2-8,+432+53+Varberg",
+    cta2Text: "",
+    cta2Href: ""
+  }
+},
+{
+  id: "sektion73Pin_00016",
+  label: "Pin 17",
+  labelText: "16",
+  lngLat: [12.263144276036485, 57.08143589149515],
+  filter: "",
+  priority: "priority",
+  ui: { bubbleBg: "#7A936B" },
+  modal: {
+    imgSrc: "https://res.cloudinary.com/dmgmoisae/image/upload/v1769800477/jpeg-optimizer_ApelvikStrand_0356_1_llpb1s.jpg",
+    h: "Strandhus 16 | 6x",
+    p: "Bo precis vid havet i Apelviken, i ett av våra strandhus. Här bor du med stranden alldeles intill och med plats att vara på under hela dagen. Egen dörr, egen uteplats och ett boende som fungerar lika bra mellan strandpassen som på kvällen.",
+    icons: [
+      '<svg width="24" height="24" viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentcolor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"><circle cx="8" cy="6" r="3.25"/><path d="M2.75 14.25c0-2.5 2-5 5.25-5s5.25 2.5 5.25 5"/></svg>',
+      ""
+    ],
+    iconTexts: [
+      "6 bäddar",
+      ""
+    ],
+    images: ["", "", "", ""],
+    cta1Text: "Vägbeskrivning",
+    cta1Href: "https://www.google.com/maps/dir/?api=1&destination=ApelvikStrand,+Surbrunnsv%C3%A4gen+2-8,+432+53+Varberg",
+    cta2Text: "",
+    cta2Href: ""
+  }
+},
+{
+  id: "sektion73Pin_00017",
+  label: "Pin 18",
+  labelText: "17",
+  lngLat: [12.262463879109788, 57.08101975420533],
+  filter: "",
+  priority: "priority",
+  ui: { bubbleBg: "#A88867" },
+  modal: {
+    imgSrc: "https://res.cloudinary.com/dmgmoisae/image/upload/v1769800477/jpeg-optimizer_ApelvikStrand_0356_1_llpb1s.jpg",
+    h: "Strandhus 17 | 6x",
+    p: "Bo precis vid havet i Apelviken, i ett av våra strandhus. Här bor du med stranden alldeles intill och med plats att vara på under hela dagen. Egen dörr, egen uteplats och ett boende som fungerar lika bra mellan strandpassen som på kvällen.",
+    icons: [
+      '<svg width="24" height="24" viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentcolor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"><circle cx="8" cy="6" r="3.25"/><path d="M2.75 14.25c0-2.5 2-5 5.25-5s5.25 2.5 5.25 5"/></svg>',
+      '<svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M12 10V3m0 0L9 6m3-3 3 3m-9 6-1-1m13 1 1-1M3 18h18M5 21h14M7 18a5 5 0 0 1 10 0" stroke="currentcolor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>'
+    ],
+    iconTexts: [
+      "6 bäddar",
+      "Incheckning i app"
+    ],
+    images: ["", "", "", ""],
+    cta1Text: "Vägbeskrivning",
+    cta1Href: "https://www.google.com/maps/dir/?api=1&destination=ApelvikStrand,+Surbrunnsv%C3%A4gen+2-8,+432+53+Varberg",
+    cta2Text: "",
+    cta2Href: ""
+  }
+},
+{
+  id: "sektion73Pin_00018",
+  label: "Pin 19",
+  labelText: "18",
+  lngLat: [12.262570288438837, 57.08098569917749],
+  filter: "",
+  priority: "priority",
+  ui: { bubbleBg: "#A88867" },
+  modal: {
+    imgSrc: "https://res.cloudinary.com/dmgmoisae/image/upload/v1769800477/jpeg-optimizer_ApelvikStrand_0356_1_llpb1s.jpg",
+    h: "Strandhus 18 | 6x",
+    p: "Bo precis vid havet i Apelviken, i ett av våra strandhus. Här bor du med stranden alldeles intill och med plats att vara på under hela dagen. Egen dörr, egen uteplats och ett boende som fungerar lika bra mellan strandpassen som på kvällen.",
+    icons: [
+      '<svg width="24" height="24" viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentcolor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"><circle cx="8" cy="6" r="3.25"/><path d="M2.75 14.25c0-2.5 2-5 5.25-5s5.25 2.5 5.25 5"/></svg>',
+      '<svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M12 10V3m0 0L9 6m3-3 3 3m-9 6-1-1m13 1 1-1M3 18h18M5 21h14M7 18a5 5 0 0 1 10 0" stroke="currentcolor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>'
+    ],
+    iconTexts: [
+      "6 bäddar",
+      "Incheckning i app"
+    ],
+    images: ["", "", "", ""],
+    cta1Text: "Vägbeskrivning",
+    cta1Href: "https://www.google.com/maps/dir/?api=1&destination=ApelvikStrand,+Surbrunnsv%C3%A4gen+2-8,+432+53+Varberg",
+    cta2Text: "",
+    cta2Href: ""
+  }
+},
+{
+  id: "sektion73Pin_00019",
+  label: "Pin 20",
+  labelText: "19",
+  lngLat: [12.262750721669505, 57.08105293370133],
+  filter: "",
+  priority: "priority",
+  ui: { bubbleBg: "#A88867" },
+  modal: {
+    imgSrc: "https://res.cloudinary.com/dmgmoisae/image/upload/v1769800477/jpeg-optimizer_ApelvikStrand_0356_1_llpb1s.jpg",
+    h: "Strandhus 19 | 6x",
+    p: "Bo precis vid havet i Apelviken, i ett av våra strandhus. Här bor du med stranden alldeles intill och med plats att vara på under hela dagen. Egen dörr, egen uteplats och ett boende som fungerar lika bra mellan strandpassen som på kvällen.",
+    icons: [
+      '<svg width="24" height="24" viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentcolor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"><circle cx="8" cy="6" r="3.25"/><path d="M2.75 14.25c0-2.5 2-5 5.25-5s5.25 2.5 5.25 5"/></svg>',
+      '<svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M12 10V3m0 0L9 6m3-3 3 3m-9 6-1-1m13 1 1-1M3 18h18M5 21h14M7 18a5 5 0 0 1 10 0" stroke="currentcolor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>'
+    ],
+    iconTexts: [
+      "6 bäddar",
+      "Incheckning i app"
+    ],
+    images: ["", "", "", ""],
+    cta1Text: "Vägbeskrivning",
+    cta1Href: "https://www.google.com/maps/dir/?api=1&destination=ApelvikStrand,+Surbrunnsv%C3%A4gen+2-8,+432+53+Varberg",
+    cta2Text: "",
+    cta2Href: ""
+  }
+},
+{
+  id: "sektion73Pin_00020",
+  label: "Pin 21",
+  labelText: "20",
+  lngLat: [12.262854487289673, 57.08102103379619],
+  filter: "",
+  priority: "priority",
+  ui: { bubbleBg: "#A88867" },
+  modal: {
+    imgSrc: "https://res.cloudinary.com/dmgmoisae/image/upload/v1769800477/jpeg-optimizer_ApelvikStrand_0356_1_llpb1s.jpg",
+    h: "Strandhus 20 | 6x",
+    p: "Bo precis vid havet i Apelviken, i ett av våra strandhus. Här bor du med stranden alldeles intill och med plats att vara på under hela dagen. Egen dörr, egen uteplats och ett boende som fungerar lika bra mellan strandpassen som på kvällen.",
+    icons: [
+      '<svg width="24" height="24" viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentcolor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"><circle cx="8" cy="6" r="3.25"/><path d="M2.75 14.25c0-2.5 2-5 5.25-5s5.25 2.5 5.25 5"/></svg>',
+      '<svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M12 10V3m0 0L9 6m3-3 3 3m-9 6-1-1m13 1 1-1M3 18h18M5 21h14M7 18a5 5 0 0 1 10 0" stroke="currentcolor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>'
+    ],
+    iconTexts: [
+      "6 bäddar",
+      "Incheckning i app"
+    ],
+    images: ["", "", "", ""],
+    cta1Text: "Vägbeskrivning",
+    cta1Href: "https://www.google.com/maps/dir/?api=1&destination=ApelvikStrand,+Surbrunnsv%C3%A4gen+2-8,+432+53+Varberg",
+    cta2Text: "",
+    cta2Href: ""
+  }
+},
+{
+  id: "sektion73Pin_00021",
+  label: "Pin 22",
+  labelText: "21",
+  lngLat: [12.263044173496866, 57.08108754989141],
+  filter: "",
+  priority: "priority",
+  ui: { bubbleBg: "#A88867" },
+  modal: {
+    imgSrc: "https://res.cloudinary.com/dmgmoisae/image/upload/v1769800477/jpeg-optimizer_ApelvikStrand_0356_1_llpb1s.jpg",
+    h: "Strandhus 21 | 6x",
+    p: "Bo precis vid havet i Apelviken, i ett av våra strandhus. Här bor du med stranden alldeles intill och med plats att vara på under hela dagen. Egen dörr, egen uteplats och ett boende som fungerar lika bra mellan strandpassen som på kvällen.",
+    icons: [
+      '<svg width="24" height="24" viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentcolor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"><circle cx="8" cy="6" r="3.25"/><path d="M2.75 14.25c0-2.5 2-5 5.25-5s5.25 2.5 5.25 5"/></svg>',
+      '<svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M12 10V3m0 0L9 6m3-3 3 3m-9 6-1-1m13 1 1-1M3 18h18M5 21h14M7 18a5 5 0 0 1 10 0" stroke="currentcolor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>'
+    ],
+    iconTexts: [
+      "6 bäddar",
+      "Incheckning i app"
+    ],
+    images: ["", "", "", ""],
+    cta1Text: "Vägbeskrivning",
+    cta1Href: "https://www.google.com/maps/dir/?api=1&destination=ApelvikStrand,+Surbrunnsv%C3%A4gen+2-8,+432+53+Varberg",
+    cta2Text: "",
+    cta2Href: ""
+  }
+},
+{
+  id: "sektion73Pin_00022",
+  label: "Pin 23",
+  labelText: "22",
+  lngLat: [12.263142651741532, 57.08105636837058],
+  filter: "",
+  priority: "priority",
+  ui: { bubbleBg: "#A88867" },
+  modal: {
+    imgSrc: "https://res.cloudinary.com/dmgmoisae/image/upload/v1769800477/jpeg-optimizer_ApelvikStrand_0356_1_llpb1s.jpg",
+    h: "Strandhus 22 | 6x",
+    p: "Bo precis vid havet i Apelviken, i ett av våra strandhus. Här bor du med stranden alldeles intill och med plats att vara på under hela dagen. Egen dörr, egen uteplats och ett boende som fungerar lika bra mellan strandpassen som på kvällen.",
+    icons: [
+      '<svg width="24" height="24" viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentcolor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"><circle cx="8" cy="6" r="3.25"/><path d="M2.75 14.25c0-2.5 2-5 5.25-5s5.25 2.5 5.25 5"/></svg>',
+      '<svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M12 10V3m0 0L9 6m3-3 3 3m-9 6-1-1m13 1 1-1M3 18h18M5 21h14M7 18a5 5 0 0 1 10 0" stroke="currentcolor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>'
+    ],
+    iconTexts: [
+      "6 bäddar",
+      "Incheckning i app"
+    ],
+    images: ["", "", "", ""],
+    cta1Text: "Vägbeskrivning",
+    cta1Href: "https://www.google.com/maps/dir/?api=1&destination=ApelvikStrand,+Surbrunnsv%C3%A4gen+2-8,+432+53+Varberg",
+    cta2Text: "",
+    cta2Href: ""
+  }
+},
+{
+  id: "sektion73Pin_00023",
+  label: "Pin 24",
+  labelText: "23",
+  lngLat: [12.263333659783598, 57.08112001095327],
+  filter: "",
+  priority: "priority",
+  ui: { bubbleBg: "#7A936B" },
+  modal: {
+    imgSrc: "https://res.cloudinary.com/dmgmoisae/image/upload/v1769800477/jpeg-optimizer_ApelvikStrand_0356_1_llpb1s.jpg",
+    h: "Strandhus 23 | 6x",
+    p: "Bo precis vid havet i Apelviken, i ett av våra strandhus. Här bor du med stranden alldeles intill och med plats att vara på under hela dagen. Egen dörr, egen uteplats och ett boende som fungerar lika bra mellan strandpassen som på kvällen.",
+    icons: [
+      '<svg width="24" height="24" viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentcolor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"><circle cx="8" cy="6" r="3.25"/><path d="M2.75 14.25c0-2.5 2-5 5.25-5s5.25 2.5 5.25 5"/></svg>',
+      ""
+    ],
+    iconTexts: [
+      "6 bäddar",
+      ""
+    ],
+    images: ["", "", "", ""],
+    cta1Text: "Vägbeskrivning",
+    cta1Href: "https://www.google.com/maps/dir/?api=1&destination=ApelvikStrand,+Surbrunnsv%C3%A4gen+2-8,+432+53+Varberg",
+    cta2Text: "",
+    cta2Href: ""
+  }
+},
+{
+  id: "sektion73Pin_00024",
+  label: "Pin 25",
+  labelText: "24",
+  lngLat: [12.263433459837302, 57.081090266196355],
+  filter: "",
+  priority: "priority",
+  ui: { bubbleBg: "#7A936B" },
+  modal: {
+    imgSrc: "https://res.cloudinary.com/dmgmoisae/image/upload/v1769800477/jpeg-optimizer_ApelvikStrand_0356_1_llpb1s.jpg",
+    h: "Strandhus 24 | 6x",
+    p: "Bo precis vid havet i Apelviken, i ett av våra strandhus. Här bor du med stranden alldeles intill och med plats att vara på under hela dagen. Egen dörr, egen uteplats och ett boende som fungerar lika bra mellan strandpassen som på kvällen.",
+    icons: [
+      '<svg width="24" height="24" viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentcolor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"><circle cx="8" cy="6" r="3.25"/><path d="M2.75 14.25c0-2.5 2-5 5.25-5s5.25 2.5 5.25 5"/></svg>',
+      ""
+    ],
+    iconTexts: [
+      "6 bäddar",
+      ""
+    ],
+    images: ["", "", "", ""],
+    cta1Text: "Vägbeskrivning",
+    cta1Href: "https://www.google.com/maps/dir/?api=1&destination=ApelvikStrand,+Surbrunnsv%C3%A4gen+2-8,+432+53+Varberg",
+    cta2Text: "",
+    cta2Href: ""
+  }
+},
+{
+  id: "sektion73Pin_00025",
+  label: "Pin 26",
+  labelText: "25",
+  lngLat: [12.262675279675818, 57.080665309036135],
+  filter: "",
+  priority: "priority",
+  ui: { bubbleBg: "#446D74" },
+  modal: {
+    imgSrc: "https://res.cloudinary.com/dmgmoisae/image/upload/v1769800477/jpeg-optimizer_ApelvikStrand_0356_1_llpb1s.jpg",
+    h: "Strandhus 25 | 6x",
+    p: "Bo precis vid havet i Apelviken, i ett av våra strandhus. Här bor du med stranden alldeles intill och med plats att vara på under hela dagen. Egen dörr, egen uteplats och ett boende som fungerar lika bra mellan strandpassen som på kvällen.",
+    icons: [
+      '<svg width="24" height="24" viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentcolor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"><circle cx="8" cy="6" r="3.25"/><path d="M2.75 14.25c0-2.5 2-5 5.25-5s5.25 2.5 5.25 5"/></svg>',
+      '<svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="m6 12-1-1m13 1 1-1M3 18h18M5 21h14M7 18a5 5 0 0 1 10 0M12 3v7m0 0 3-3m-3 3L9 7" stroke="currentcolor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>'
+    ],
+    iconTexts: [
+      "6 bäddar",
+      "Incheckning i app"
+    ],
+    images: ["", "", "", ""],
+    cta1Text: "Vägbeskrivning",
+    cta1Href: "https://www.google.com/maps/dir/?api=1&destination=ApelvikStrand,+Surbrunnsv%C3%A4gen+2-8,+432+53+Varberg",
+    cta2Text: "",
+    cta2Href: ""
+  }
+},
+{
+  id: "sektion73Pin_00026",
+  label: "Pin 27",
+  labelText: "26",
+  lngLat: [12.262745995033498, 57.08071961344976],
+  filter: "",
+  priority: "priority",
+  ui: { bubbleBg: "#446D74" },
+  modal: {
+    imgSrc: "https://res.cloudinary.com/dmgmoisae/image/upload/v1769800477/jpeg-optimizer_ApelvikStrand_0356_1_llpb1s.jpg",
+    h: "Strandhus 26 | 6x",
+    p: "Bo precis vid havet i Apelviken, i ett av våra strandhus. Här bor du med stranden alldeles intill och med plats att vara på under hela dagen. Egen dörr, egen uteplats och ett boende som fungerar lika bra mellan strandpassen som på kvällen.",
+    icons: [
+      '<svg width="24" height="24" viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentcolor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"><circle cx="8" cy="6" r="3.25"/><path d="M2.75 14.25c0-2.5 2-5 5.25-5s5.25 2.5 5.25 5"/></svg>',
+      '<svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="m6 12-1-1m13 1 1-1M3 18h18M5 21h14M7 18a5 5 0 0 1 10 0M12 3v7m0 0 3-3m-3 3L9 7" stroke="currentcolor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>'
+    ],
+    iconTexts: [
+      "6 bäddar",
+      "Incheckning i app"
+    ],
+    images: ["", "", "", ""],
+    cta1Text: "Vägbeskrivning",
+    cta1Href: "https://www.google.com/maps/dir/?api=1&destination=ApelvikStrand,+Surbrunnsv%C3%A4gen+2-8,+432+53+Varberg",
+    cta2Text: "",
+    cta2Href: ""
+  }
+},
+{
+  id: "sektion73Pin_00027",
+  label: "Pin 28",
+  labelText: "27",
+  lngLat: [12.26301367068126, 57.08070064395787],
+  filter: "",
+  priority: "priority",
+  ui: { bubbleBg: "#446D74" },
+  modal: {
+    imgSrc: "https://res.cloudinary.com/dmgmoisae/image/upload/v1769800477/jpeg-optimizer_ApelvikStrand_0356_1_llpb1s.jpg",
+    h: "Strandhus 27 | 6x",
+    p: "Bo precis vid havet i Apelviken, i ett av våra strandhus. Här bor du med stranden alldeles intill och med plats att vara på under hela dagen. Egen dörr, egen uteplats och ett boende som fungerar lika bra mellan strandpassen som på kvällen.",
+    icons: [
+      '<svg width="24" height="24" viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentcolor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"><circle cx="8" cy="6" r="3.25"/><path d="M2.75 14.25c0-2.5 2-5 5.25-5s5.25 2.5 5.25 5"/></svg>',
+      '<svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="m6 12-1-1m13 1 1-1M3 18h18M5 21h14M7 18a5 5 0 0 1 10 0M12 3v7m0 0 3-3m-3 3L9 7" stroke="currentcolor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>'
+    ],
+    iconTexts: [
+      "6 bäddar",
+      "Incheckning i app"
+    ],
+    images: ["", "", "", ""],
+    cta1Text: "Vägbeskrivning",
+    cta1Href: "https://www.google.com/maps/dir/?api=1&destination=ApelvikStrand,+Surbrunnsv%C3%A4gen+2-8,+432+53+Varberg",
+    cta2Text: "",
+    cta2Href: ""
+  }
+},
+{
+  id: "sektion73Pin_00028",
+  label: "Pin 29",
+  labelText: "28",
+  lngLat: [12.263080424389472, 57.08075782180549],
+  filter: "",
+  priority: "priority",
+  ui: { bubbleBg: "#446D74" },
+  modal: {
+    imgSrc: "https://res.cloudinary.com/dmgmoisae/image/upload/v1769800477/jpeg-optimizer_ApelvikStrand_0356_1_llpb1s.jpg",
+    h: "Strandhus 28 | 6x",
+    p: "Bo precis vid havet i Apelviken, i ett av våra strandhus. Här bor du med stranden alldeles intill och med plats att vara på under hela dagen. Egen dörr, egen uteplats och ett boende som fungerar lika bra mellan strandpassen som på kvällen.",
+    icons: [
+      '<svg width="24" height="24" viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentcolor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"><circle cx="8" cy="6" r="3.25"/><path d="M2.75 14.25c0-2.5 2-5 5.25-5s5.25 2.5 5.25 5"/></svg>',
+      '<svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="m6 12-1-1m13 1 1-1M3 18h18M5 21h14M7 18a5 5 0 0 1 10 0M12 3v7m0 0 3-3m-3 3L9 7" stroke="currentcolor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>'
+    ],
+    iconTexts: [
+      "6 bäddar",
+      "Incheckning i app"
+    ],
+    images: ["", "", "", ""],
+    cta1Text: "Vägbeskrivning",
+    cta1Href: "https://www.google.com/maps/dir/?api=1&destination=ApelvikStrand,+Surbrunnsv%C3%A4gen+2-8,+432+53+Varberg",
+    cta2Text: "",
+    cta2Href: ""
+  }
+},
+{
+  id: "sektion73Pin_00029",
+  label: "Pin 30",
+  labelText: "29",
+  lngLat: [12.263353387445193, 57.080743162558974],
+  filter: "",
+  priority: "priority",
+  ui: { bubbleBg: "#446D74" },
+  modal: {
+    imgSrc: "https://res.cloudinary.com/dmgmoisae/image/upload/v1769800477/jpeg-optimizer_ApelvikStrand_0356_1_llpb1s.jpg",
+    h: "Strandhus 29 | 6x",
+    p: "Bo precis vid havet i Apelviken, i ett av våra strandhus. Här bor du med stranden alldeles intill och med plats att vara på under hela dagen. Egen dörr, egen uteplats och ett boende som fungerar lika bra mellan strandpassen som på kvällen.",
+    icons: [
+      '<svg width="24" height="24" viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentcolor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"><circle cx="8" cy="6" r="3.25"/><path d="M2.75 14.25c0-2.5 2-5 5.25-5s5.25 2.5 5.25 5"/></svg>',
+      '<svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="m6 12-1-1m13 1 1-1M3 18h18M5 21h14M7 18a5 5 0 0 1 10 0M12 3v7m0 0 3-3m-3 3L9 7" stroke="currentcolor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>'
+    ],
+    iconTexts: [
+      "6 bäddar",
+      "Incheckning i app"
+    ],
+    images: ["", "", "", ""],
+    cta1Text: "Vägbeskrivning",
+    cta1Href: "https://www.google.com/maps/dir/?api=1&destination=ApelvikStrand,+Surbrunnsv%C3%A4gen+2-8,+432+53+Varberg",
+    cta2Text: "",
+    cta2Href: ""
+  }
+},
+{
+  id: "sektion73Pin_00030",
+  label: "Pin 31",
+  labelText: "30",
+  lngLat: [12.263421462996916, 57.08080105871713],
+  filter: "",
+  priority: "priority",
+  ui: { bubbleBg: "#446D74" },
+  modal: {
+    imgSrc: "https://res.cloudinary.com/dmgmoisae/image/upload/v1769800477/jpeg-optimizer_ApelvikStrand_0356_1_llpb1s.jpg",
+    h: "Strandhus 30 | 6x",
+    p: "Bo precis vid havet i Apelviken, i ett av våra strandhus. Här bor du med stranden alldeles intill och med plats att vara på under hela dagen. Egen dörr, egen uteplats och ett boende som fungerar lika bra mellan strandpassen som på kvällen.",
+    icons: [
+      '<svg width="24" height="24" viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentcolor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"><circle cx="8" cy="6" r="3.25"/><path d="M2.75 14.25c0-2.5 2-5 5.25-5s5.25 2.5 5.25 5"/></svg>',
+      '<svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="m6 12-1-1m13 1 1-1M3 18h18M5 21h14M7 18a5 5 0 0 1 10 0M12 3v7m0 0 3-3m-3 3L9 7" stroke="currentcolor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>'
+    ],
+    iconTexts: [
+      "6 bäddar",
+      "Incheckning i app"
+    ],
+    images: ["", "", "", ""],
+    cta1Text: "Vägbeskrivning",
+    cta1Href: "https://www.google.com/maps/dir/?api=1&destination=ApelvikStrand,+Surbrunnsv%C3%A4gen+2-8,+432+53+Varberg",
+    cta2Text: "",
+    cta2Href: ""
+  }
+},
+{
+  id: "sektion73Pin_00031",
+  label: "Pin 32",
+  labelText: "31",
+  lngLat: [12.263694426079951, 57.08078208926068],
+  filter: "",
+  priority: "priority",
+  ui: { bubbleBg: "#A88867" },
+  modal: {
+    imgSrc: "https://res.cloudinary.com/dmgmoisae/image/upload/v1769800477/jpeg-optimizer_ApelvikStrand_0356_1_llpb1s.jpg",
+    h: "Strandhus 31 | 6x",
+    p: "Bo precis vid havet i Apelviken, i ett av våra strandhus. Här bor du med stranden alldeles intill och med plats att vara på under hela dagen. Egen dörr, egen uteplats och ett boende som fungerar lika bra mellan strandpassen som på kvällen.",
+    icons: [
+      '<svg width="24" height="24" viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentcolor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"><circle cx="8" cy="6" r="3.25"/><path d="M2.75 14.25c0-2.5 2-5 5.25-5s5.25 2.5 5.25 5"/></svg>',
+      ""
+    ],
+    iconTexts: [
+      "6 bäddar",
+      ""
+    ],
+    images: ["", "", "", ""],
+    cta1Text: "Vägbeskrivning",
+    cta1Href: "https://www.google.com/maps/dir/?api=1&destination=ApelvikStrand,+Surbrunnsv%C3%A4gen+2-8,+432+53+Varberg",
+    cta2Text: "",
+    cta2Href: ""
+  }
+},
+{
+  id: "sektion73Pin_00032",
+  label: "Pin 33",
+  labelText: "32",
+  lngLat: [12.263763823459442, 57.080838548618544],
+  filter: "",
+  priority: "priority",
+  ui: { bubbleBg: "#A88867" },
+  modal: {
+    imgSrc: "https://res.cloudinary.com/dmgmoisae/image/upload/v1769800477/jpeg-optimizer_ApelvikStrand_0356_1_llpb1s.jpg",
+    h: "Strandhus 32 | 6x",
+    p: "Bo precis vid havet i Apelviken, i ett av våra strandhus. Här bor du med stranden alldeles intill och med plats att vara på under hela dagen. Egen dörr, egen uteplats och ett boende som fungerar lika bra mellan strandpassen som på kvällen.",
+    icons: [
+      '<svg width="24" height="24" viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentcolor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"><circle cx="8" cy="6" r="3.25"/><path d="M2.75 14.25c0-2.5 2-5 5.25-5s5.25 2.5 5.25 5"/></svg>',
+      ""
+    ],
+    iconTexts: [
+      "6 bäddar",
+      ""
+    ],
+    images: ["", "", "", ""],
+    cta1Text: "Vägbeskrivning",
+    cta1Href: "https://www.google.com/maps/dir/?api=1&destination=ApelvikStrand,+Surbrunnsv%C3%A4gen+2-8,+432+53+Varberg",
+    cta2Text: "",
+    cta2Href: ""
+  }
+}
 ];
 
 function sektion73CreatePinEl(pin) {
