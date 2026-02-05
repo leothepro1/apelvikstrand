@@ -62,7 +62,7 @@
     };
 const sektion73InitialCenter = {
   title: "",
-  lngLat: [12.26231500, 57.08160800]
+ lngLat: [12.26231500, 57.08160800]
 };
                    const sektion73destinationapelviken = {
       title: "",
@@ -106,17 +106,17 @@ const sektion73InitialCenter = {
     // Bounds (mycket tight runt Surbrunnsvägen 2–8)
     // Center: [12.262315, 57.081608]
     const sektion73Bounds = [
-      [12.255500, 57.078500], // SW
-      [12.269200, 57.084700]  // NE
+  [12.255500, 57.078500], // SW
+  [12.269200, 57.084700]  // NE
     ];
 
-    const sektion73MinZoom = 15.6;
-    const sektion73MaxZoom = 17.9;
-    const sektion73StartZoom = 16.4;
+const sektion73MinZoom = 15.6;
+const sektion73MaxZoom = 18.3;   // kan vara lite högre på områdeskarta
+const sektion73StartZoom = 16.6; // mer inzoomad start
 const sektion73SecondaryPinsMinZoom = 15.8;
 
     // Kamera
-    const sektion73Pitch = 43;
+    const sektion73Pitch = 40;
 
     // Visa "från havet in mot land" (väst -> öst):
     // bearing 90 = öst uppåt i bild (kameran tittar mot öst med pitch)
