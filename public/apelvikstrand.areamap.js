@@ -112,7 +112,7 @@ const sektion73Bounds = [
 // Mindre inzoomad start (justera vid behov)
 const sektion73MinZoom = 14.8;
 const sektion73MaxZoom = 18.6;
-const sektion73StartZoom = 15.9;
+const sektion73StartZoom = 17.2;
 
 // Ovanifrån + norr upp
 const sektion73Pitch = 0;
