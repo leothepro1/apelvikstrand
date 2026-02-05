@@ -622,26 +622,35 @@ display: none;
       filter:drop-shadow(0 8px 10px rgba(0,0,0,.18));
     }
 
-    .sektion73PinBtn{
-      all:unset;
-      cursor:pointer;
-      width:100%;
-      height:100%;
-      border-radius:999px;
-      display:flex;
-      align-items:center;
-      justify-content:center;
-      position:relative;
-      z-index:2;
-    }
+.sektion73PinBtn {
+    all: unset;
+    cursor: pointer;
+    width: 100%;
+    height: 100%;
+    border-radius: 999px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    z-index: 2;
+    background: #3E3E3F;
+    padding: 2.3px;
+    aspect-ratio: 1 / 1;
+    color: #fff;
+    font-family: 'Inter Variablefont Opsz Wght';
+    font-size: 14.5px;
+    font-weight: 500;
+}
 
-    .sektion73PinText{
-      font:900 12px/1 system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;
-      letter-spacing:-0.2px;
-      color:currentColor;
-      user-select:none;
-      pointer-events:none;
-    }
+.sektion73PinText {
+    letter-spacing: 0;
+    color: currentColor;
+    user-select: none;
+    pointer-events: none;
+    font-family: 'Inter Variablefont Opsz Wght';
+    font-size: 12px;
+    font-weight: 500;
+}
 
     /* Behåll (kompat) så äldre DOM inte kraschar om något refererar */
     .sektion73PinPointer{ display:none; }
