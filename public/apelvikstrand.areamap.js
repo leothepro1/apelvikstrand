@@ -399,28 +399,31 @@ function sektion73InjectModalCSS() {
       flex-direction:row;
       width:100%;
       height:100%;
-      min-height:420px;
+      min-height:auto;
     }
 
-    .sektion73ModalLeft{
-      width:30%;
-      min-width:240px;
-      position:relative;
-      display:flex;
-      flex-direction:column;
-      gap:12px;
-      padding:18px;
-      border-right:1px solid rgba(14,19,24,.10);
-      background:var(--sektion73-modal-bg);
-    }
+.sektion73ModalLeft {
+    width: 40%;
+    min-width: 240px;
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    padding: 0px;
+    border-right: none;
+    background: var(--sektion73-modal-bg);
+    height: 100%;
+    min-height: 100%;
+    object-fit: cover;
+}
 
-    .sektion73ModalLeftImgWrap{
-      width:100%;
-      border-radius:14px;
-      overflow:hidden;
-      background:#f1f3f4;
-      aspect-ratio: 1 / 1.1;
-    }
+.sektion73ModalLeftImgWrap {
+    width: 100%;
+    border-radius: 0px;
+    overflow: hidden;
+    background: #f2f4f5;
+    aspect-ratio: 1 / 1.1;
+}
 
     .sektion73ModalLeftImg{
       width:100%;
@@ -429,18 +432,29 @@ function sektion73InjectModalCSS() {
       display:block;
     }
 
-    .sektion73ModalClose{
-      width:44px;
-      height:44px;
-      border-radius:12px;
-      border:none;
-      background:rgba(255,255,255,.92);
-      cursor:pointer;
-      display:grid;
-      place-items:center;
-      color:var(--sektion73-modal-text);
-      box-shadow:0 10px 26px rgba(0,0,0,.14);
-    }
+.sektion73ModalClose {
+    width: 36px;
+    height: 36px;
+    border-radius: 888px;
+    border: none;
+    background: rgba(255, 255, 255, .92);
+    cursor: pointer;
+    display: grid;
+    place-items: center;
+    color: var(--sektion73-modal-text);
+    background: rgba(250, 250, 250, 0.72);
+    cursor: pointer;
+    display: flex;
+    place-content: center;
+    flex: 0 0 18px;
+    position: absolute;
+    top: 18px;
+    right: 18px;
+    backdrop-filter: blur(24px) saturate(1.6);
+    -webkit-backdrop-filter: blur(24px) saturate(1.6);
+    box-shadow: rgba(0, 0, 0, 0.14) 0px 3px 8px;
+    flex-wrap: wrap;
+}
     .sektion73ModalClose:hover{ background:rgba(255,255,255,.98); }
     .sektion73ModalClose:active{ transform:translateY(1px); }
 
@@ -451,23 +465,26 @@ function sektion73InjectModalCSS() {
       z-index:5;
     }
 
-    .sektion73ModalImgSrc{
-      margin:0;
-      font-family: 'Inter Variablefont Opsz Wght';
-      font-size:13px;
-      line-height:1.3em;
-      color:rgba(14,19,24,.62);
-      word-break:break-word;
-    }
+.sektion73ModalImgSrc {
+    margin: 0;
+    font-family: 'Inter Variablefont Opsz Wght';
+    font-size: 13px;
+    line-height: 1.3em;
+    color: rgba(14, 19, 24, .62);
+    word-break: break-word;
+    display: none;
+}
 
-    .sektion73ModalRight{
-      width:70%;
-      display:flex;
-      flex-direction:column;
-      padding:22px 26px;
-      gap:0px;
-      overflow:auto;
-    }
+.sektion73ModalRight {
+    width: 70%;
+    display: flex;
+    flex-direction: column;
+    padding: 22px 26px;
+    gap: 0px;
+    overflow: auto;
+    place-content: center;
+    flex-wrap: wrap;
+}
 
     .sektion73ModalRightTop{
       display:flex;
@@ -496,13 +513,13 @@ function sektion73InjectModalCSS() {
       place-items:center;
     }
 
-    .sektion73ModalBodyH{
-      font-family: "Manrope", Inter, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, sans-serif;
-      margin:0;
-      line-height:1.25em;
-      font-weight:700;
-      font-size:34px;
-    }
+.sektion73ModalBodyH {
+    font-family: "Manrope", Inter, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, sans-serif;
+    margin: 0;
+    line-height: 1.25em;
+    font-weight: 700;
+    font-size: 31px;
+}
 
     .sektion73ModalBodyPWrap{
       position:relative;
@@ -880,7 +897,7 @@ if (sektion73Map && view && typeof sektion73Map.easeTo === "function") {
        PINS (2 st) – zoom först, modal efter "moveend"
        ========================= */
 const sektion73Pins = [
-{ id: "sektion73Pin_00001", label: "Pin 1",  labelText: "1",  lngLat: [12.26197312396269, 57.08162693545353], filter: "", priority: "priority", ui: { bubbleBg: "#A88867" }, modal: { imgSrc: "https://res.cloudinary.com/dmgmoisae/image/upload/v1769875471/strandhuse21q_hh50lb.png", h: "Strandhus 1 | 6x", p: "Bo precis vid havet i Apelviken, i ett av våra strandhus. Här bor du med stranden alldeles intill och med plats att vara på under hela dagen. Egen dörr, egen uteplats och ett boende som fungerar lika bra mellan strandpassen som på kvällen.", icons: ['<svg width="24" height="24" viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentcolor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"><circle cx="8" cy="6" r="3.25"/><path d="M2.75 14.25c0-2.5 2-5 5.25-5s5.25 2.5 5.25 5"/></svg>', '<svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M12 10V3m0 0L9 6m3-3 3 3m-9 6-1-1m13 1 1-1M3 18h18M5 21h14M7 18a5 5 0 0 1 10 0" stroke="currentcolor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>'], images: ["", "", "", ""], cta1Text: "", cta1Href: "", cta2Text: "", cta2Href: "" } },
+{ id: "sektion73Pin_00001", label: "Pin 1",  labelText: "1",  lngLat: [12.26197312396269, 57.08162693545353], filter: "", priority: "priority", ui: { bubbleBg: "#A88867" }, modal: { imgSrc: "https://res.cloudinary.com/dmgmoisae/image/upload/v1769875471/strandhuse21q_hh50lb.png", h: "Strandhus 1 | 6x", p: "Bo precis vid havet i Apelviken, i ett av våra strandhus. Här bor du med stranden alldeles intill och med plats att vara på under hela dagen. Egen dörr, egen uteplats och ett boende som fungerar lika bra mellan strandpassen som på kvällen.", icons: ['<svg width="24" height="24" viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentcolor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"><circle cx="8" cy="6" r="3.25"/><path d="M2.75 14.25c0-2.5 2-5 5.25-5s5.25 2.5 5.25 5"/></svg>', '<svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M12 10V3m0 0L9 6m3-3 3 3m-9 6-1-1m13 1 1-1M3 18h18M5 21h14M7 18a5 5 0 0 1 10 0" stroke="currentcolor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>'], images: ["", "", "", ""], cta1Text: "Vägbeskrivning", cta1Href: "", cta2Text: "", cta2Href: "" } },
   { id: "sektion73Pin_00002", label: "Pin 2",  labelText: "2",  lngLat: [12.262082176983768, 57.081600917569034], filter: "", priority: "priority", ui: { bubbleBg: "#A88867" }, modal: { imgSrc: "https://res.cloudinary.com/dmgmoisae/image/upload/v1769875471/strandhuse21q_hh50lb.png", h: "Strandhus 2 | 6x", p: "Bo precis vid havet i Apelviken, i ett av våra strandhus. Här bor du med stranden alldeles intill och med plats att vara på under hela dagen. Egen dörr, egen uteplats och ett boende som fungerar lika bra mellan strandpassen som på kvällen.", icons: ['<svg width="24" height="24" viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentcolor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"><circle cx="8" cy="6" r="3.25"/><path d="M2.75 14.25c0-2.5 2-5 5.25-5s5.25 2.5 5.25 5"/></svg>', '<svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M12 10V3m0 0L9 6m3-3 3 3m-9 6-1-1m13 1 1-1M3 18h18M5 21h14M7 18a5 5 0 0 1 10 0" stroke="currentcolor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>'], images: ["", "", "", ""], cta1Text: "", cta1Href: "", cta2Text: "", cta2Href: "" } },
   { id: "sektion73Pin_00003", label: "Pin 3",  labelText: "3",  lngLat: [12.262318128134382, 57.08166527756367], filter: "", priority: "priority", ui: { bubbleBg: "#A88867" }, modal: { imgSrc: "https://res.cloudinary.com/dmgmoisae/image/upload/v1769875471/strandhuse21q_hh50lb.png", h: "Strandhus 3 | 6x", p: "Bo precis vid havet i Apelviken, i ett av våra strandhus. Här bor du med stranden alldeles intill och med plats att vara på under hela dagen. Egen dörr, egen uteplats och ett boende som fungerar lika bra mellan strandpassen som på kvällen.", icons: ['<svg width="24" height="24" viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentcolor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"><circle cx="8" cy="6" r="3.25"/><path d="M2.75 14.25c0-2.5 2-5 5.25-5s5.25 2.5 5.25 5"/></svg>', '<svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M12 10V3m0 0L9 6m3-3 3 3m-9 6-1-1m13 1 1-1M3 18h18M5 21h14M7 18a5 5 0 0 1 10 0" stroke="currentcolor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>'], images: ["", "", "", ""], cta1Text: "", cta1Href: "", cta2Text: "", cta2Href: "" } },
   { id: "sektion73Pin_00004", label: "Pin 4",  labelText: "4",  lngLat: [12.262428503055986, 57.081637688307154], filter: "", priority: "priority", ui: { bubbleBg: "#A88867" }, modal: { imgSrc: "https://res.cloudinary.com/dmgmoisae/image/upload/v1769875471/strandhuse21q_hh50lb.png", h: "Strandhus 4 | 6x", p: "Bo precis vid havet i Apelviken, i ett av våra strandhus. Här bor du med stranden alldeles intill och med plats att vara på under hela dagen. Egen dörr, egen uteplats och ett boende som fungerar lika bra mellan strandpassen som på kvällen.", icons: ['<svg width="24" height="24" viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentcolor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"><circle cx="8" cy="6" r="3.25"/><path d="M2.75 14.25c0-2.5 2-5 5.25-5s5.25 2.5 5.25 5"/></svg>', '<svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M12 10V3m0 0L9 6m3-3 3 3m-9 6-1-1m13 1 1-1M3 18h18M5 21h14M7 18a5 5 0 0 1 10 0" stroke="currentcolor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>'], images: ["", "", "", ""], cta1Text: "", cta1Href: "", cta2Text: "", cta2Href: "" } },
