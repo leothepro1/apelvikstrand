@@ -384,218 +384,155 @@ function sektion73InjectModalCSS() {
       border:none;
       transition:transform var(--sektion73-modal-dur) var(--sektion73-modal-ease);
       z-index:2147483001;
-      display:flex;
-      flex-direction:column;
-      padding-bottom:32px;
-      gap:0px;
-      overscroll-behavior:contain;
-      border-radius:20px;
-      overflow:auto;
+      border-radius:18px;
+      overflow:hidden;
       box-shadow:var(--sektion73-modal-shadow);
     }
     #sektion73MapModal.is-open{
       transform:translateX(-50%) translateY(0);
     }
 
-@media (max-width: 768px){
-.sektion73ModalGallery {
-        display: flex !important;
-        flex-direction: row;
-        padding: 0px;
-        overflow-x: auto;
-        overflow-y: hidden;
-        -webkit-overflow-scrolling: touch;
-        overscroll-behavior-x: contain;
-        scrollbar-width: none;
-        touch-action: pan-x;
-        scroll-snap-type: none !important;
-        scroll-behavior: auto !important;
-    }
-    .sektion73ModalBodyP {
-    font-size: 15px !important;
-}
-.sektion73ModalBodyH {
-    font-size: 31px !important;
-}
-    .sektion73ModalMeta {
-    padding: 26px 26px 0px !important;
-    border-radius: 20px !important;
-    margin-top: 0px !important;
-    background: #fff !important;
-            z-index: 4;
-}
-.sektion73ModalActions {
-    margin-top: 25px !important;
-    padding: 0px 26px !important;
-}
-  .sektion73ModalGallery::-webkit-scrollbar{ display:none; }
-#sektion73MapModal.is-open{
-    transform:translateX(-50%) translateY(0);
-}
-}
     .sektion73ModalTop{
       display:flex;
       align-items:center;
       justify-content:space-between;
-      padding: 0px;
-      border-bottom:none;
-      position:sticky;
-      top:0;
-      background:var(--sektion73-modal-bg);
-      z-index:2;
+      padding:14px 14px 8px;
     }
     .sektion73ModalClose{
-      width:52px;
-      height:52px;
-      border-radius:12px;
-      border:none;
-      background:transparent;
+      all:unset;
       cursor:pointer;
+      width:40px;
+      height:40px;
+      border-radius:999px;
+      display:inline-flex;
+      align-items:center;
+      justify-content:center;
+      color:#111;
+      background:rgba(0,0,0,.04);
+      transition:background 120ms ease, transform 120ms ease;
+    }
+    .sektion73ModalClose:hover{ background:rgba(0,0,0,.07); transform:scale(1.02); }
+    .sektion73ModalClose:active{ transform:scale(.98); }
+
+.sektion73ModalGallery{
+  display:flex;
+  flex-direction:column;
+  gap:8px;
+  padding:0 14px 10px;
+}
+.sektion73ModalGalleryTop{
+  width:100%;
+  aspect-ratio: 16 / 10;
+  border-radius:14px;
+  overflow:hidden;
+  background:#f1f3f4;
+}
+.sektion73ModalGalleryTop img{
+  width:100%;
+  height:100%;
+  object-fit:cover;
+  display:block;
+}
+.sektion73ModalGalleryRow{
+  display:grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap:8px;
+}
+.sektion73ModalThumb{
+  width:100%;
+  aspect-ratio: 1 / 1;
+  border-radius:12px;
+  overflow:hidden;
+  background:#f1f3f4;
+}
+.sektion73ModalThumb img{
+  width:100%;
+  height:100%;
+  object-fit:cover;
+  display:block;
+}
+
+.skeleton-loader{
+  background: linear-gradient(90deg, #f1f3f4 25%, #eaeef1 50%, #f1f3f4 75%);
+  background-size: 200% 100%;
+  animation: skeletonShimmer 1.1s infinite;
+}
+
+@keyframes skeletonShimmer {
+  0% { background-position: 200% 0; }
+  100% { background-position: -200% 0; }
+}
+
+    .sektion73ModalMeta{
+      padding:4px 14px 10px;
+    }
+    .sektion73ModalImgSrc{
+      margin:0 0 6px;
+      font-size:12px;
+      color:var(--sektion73-modal-muted);
+    }
+    .sektion73ModalBodyH{
+      margin:0 0 6px;
+      font-size:20px;
+      letter-spacing:-.01em;
+      line-height:1.2;
+    }
+    .sektion73ModalBodyP{
+      margin:0;
+      color:var(--sektion73-modal-muted);
+      line-height:1.55;
+      font-size:14px;
+    }
+
+    .sektion73ModalActions{
+      padding:12px 14px 14px;
       display:grid;
-      place-items:center;
-      color:var(--sektion73-modal-text);
+      grid-template-columns:1fr 1fr;
+      gap:10px;
+      border-top:1px solid var(--sektion73-modal-line);
+      background:rgba(255,255,255,.92);
+      backdrop-filter:saturate(140%) blur(10px);
     }
-    .sektion73ModalClose:hover{ background:rgba(0,0,0,.05); }
-    .sektion73ModalClose:active{ background:rgba(0,0,0,.09); }
+    .sektion73ModalBtn{
+      all:unset;
+      cursor:pointer;
+      height:46px;
+      border-radius:999px;
+      padding:0 14px;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      gap:10px;
+      font-weight:600;
+      font-size:14px;
+      color:#111;
+      background:rgba(0,0,0,.06);
+      transition:transform 140ms ease, background 140ms ease;
+      user-select:none;
+    }
+    .sektion73ModalBtn:hover{ background:rgba(0,0,0,.085); transform:translateY(-1px); }
+    .sektion73ModalBtn:active{ transform:translateY(0); }
 
-    .sektion73ModalGallery{
-      padding:0px;
-      display:grid;
-      gap:0px;
-    }
-    .sektion73ModalGalleryTop{
-      border-radius: 0px;
-      overflow:hidden;
-      border:0px solid rgba(0,0,0,.10);
-      aspect-ratio: 1.39778 / 1;
-      background:#f1f3f4;
-    }
-    .sektion73ModalGalleryTop img{
-      width:100%;
-      height:100%;
-      object-fit:cover;
-      display:block;
-    }
-.sektion73ModalGalleryRow {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 2px;
-}
-.sektion73ModalThumb {
-    aspect-ratio: 1.39778 / 1;
-    border-radius: 0px;
-    overflow: hidden;
-    border: none;
-    object-fit: cover;
-}
-    .sektion73ModalThumb img{
-      width:100%;
-      height:100%;
-      object-fit:cover;
-      display:block;
-    }
-
-.sektion73ModalMeta {
-    display: flex;
-    flex-direction: column;
-    gap: 0px;
-    padding: 32px 40px 0px;
-}
-.sektion73ModalImgSrc {
-    display: none;
-}
-.sektion73ModalBodyH {
-    font-family: "Manrope", Inter, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, sans-serif;
-    margin: 0;
-    line-height: 1.25em;
-    font-weight: 700;
-    font-size: 35px;
-}
-.sektion73ModalBodyP {
-    color: rgb(64, 61, 59);
-    margin: 0;
-    font-family: 'Inter Variablefont Opsz Wght';
-    font-weight: 400;
-    font-size: 16px;
-    line-height: 1.55em;
-    margin-top: 13px;
-}
-
-.sektion73ModalActions {
-    margin-top: 27px;
-    display: flex;
-    padding: 0px 40px;
-    flex-direction: row;
-    gap: 16px;
-}
-.sektion73ModalBtn {
-    width: 100%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 12px;
-    padding: 11px 13px;
-    border-radius: 8px;
-    border: none;
-    transition: 0.15s ease-in-out;
-    cursor: pointer;
-    font-family: "Manrope", Inter, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, sans-serif;
-    color: var(--sektion73-modal-text);
-    font-size: 15px;
-    font-weight: 700;
-}
     .sektion73ModalBtnPrimary{
       background:var(--sektion73-accent);
     }
-         .sektion73ModalBtnPrimary:hover{
-      background:#d89f00;
-    }
-                 .sektion73ModalBtnPrimary:active{
-      background:#a67b02;
-    }
-            [id="sektion73ModalCtaSecondary"] {
-background: #FFE6A3;
-color: #5A3C00;
-border: none;
-}
+    .sektion73ModalBtnPrimary:hover{ background:var(--sektion73-accent); filter:brightness(.98); }
 
-[id="sektion73ModalCtaSecondary"]:hover {
-background: #FFD870;
-}
-
-[id="sektion73ModalCtaSecondary"]:active {
-background: #FFD157;
-}
-.sektion73ModalBtn svg {
-display: none;
-}
-
-    body.sektion73-modal-open {
-      overflow: hidden;
-      position: fixed;
-      width: 100%;
-      height: 100%;
-      touch-action: none;
+    body.sektion73-modal-open{
+      overflow:hidden;
+      position:fixed;
+      width:100%;
     }
 
-    /* NYTT: klassisk kart-pin (cirkel + pekare), med text i cirkeln */
+    /* Pins */
     .sektion73PinWrap{
-      display:inline-flex;
-      flex-direction:column;
-      align-items:center;
-      gap:0;
-      transform:translateZ(0);
-      position:relative;
-      z-index:1;
-    }
-
-    #sektion73MapCanvas .sektion73PinWrap:hover,
-    #sektion73MapCanvas .sektion73PinWrap:focus-within{
-      z-index:9999;
+      width:auto;
+      height:auto;
+      user-select:none;
     }
 
     .sektion73PinBubble{
-      width:34px;
+      min-width:34px;
       height:34px;
       border-radius:999px;
       background:var(--sektion73-pin-bubble-bg, var(--sektion73-accent));
@@ -658,6 +595,309 @@ display: none;
     .sektion73PinDot{ display:none; }
   `;
   document.head.appendChild(style);
+}
+
+function sektion73InjectOverviewCSS_00001() {
+  if (document.getElementById("sektion73OverviewStyle_00001")) return;
+
+  const style = document.createElement("style");
+  style.id = "sektion73OverviewStyle_00001";
+  style.textContent = `
+    #sektion73OverviewPanel_00001{
+      position:fixed;
+      top:14px;
+      right:14px;
+      z-index:2147482998;
+      width:min(360px, calc(100vw - 28px));
+      max-height:52px;
+      overflow:hidden;
+      border-radius:16px;
+      background:#ffffff;
+      box-shadow:0 18px 50px rgba(0,0,0,.18);
+      border:1px solid rgba(14,19,24,.10);
+      transition:max-height 300ms cubic-bezier(.2,.8,.2,1);
+      font-family:'Inter Variablefont Opsz Wght';
+      color:#0e1318;
+    }
+
+    @media (min-width: 900px){
+      #sektion73OverviewPanel_00001{
+        position:absolute;
+        top:14px;
+        right:14px;
+      }
+    }
+
+    #sektion73OverviewPanel_00001.is-open{
+      max-height:520px;
+    }
+
+    #sektion73OverviewHeader_00001{
+      padding:10px 10px 8px;
+    }
+
+    #sektion73OverviewToggleBtn_00002{
+      all:unset;
+      cursor:pointer;
+      width:100%;
+      height:34px;
+      border-radius:12px;
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      padding:0 12px;
+      background:rgba(0,0,0,.05);
+      transition:transform 300ms cubic-bezier(.2,.8,.2,1), background 140ms ease;
+      user-select:none;
+    }
+    #sektion73OverviewToggleBtn_00002:hover{ background:rgba(0,0,0,.07); }
+    #sektion73OverviewPanel_00001.is-open #sektion73OverviewToggleBtn_00002{
+      transform:translateY(8px);
+    }
+
+    #sektion73OverviewToggleTxt_00003{
+      font-size:14px;
+      font-weight:600;
+      letter-spacing:-.01em;
+    }
+
+    #sektion73OverviewChevron_00004{
+      width:18px;
+      height:18px;
+      transition:transform 300ms cubic-bezier(.2,.8,.2,1);
+      color:#0e1318;
+      opacity:.9;
+    }
+    #sektion73OverviewPanel_00001.is-open #sektion73OverviewChevron_00004{
+      transform:rotate(180deg);
+    }
+
+    #sektion73OverviewBody_00005{
+      padding:10px 12px 12px;
+      opacity:0;
+      transform:translateY(-6px);
+      transition:opacity 220ms ease, transform 300ms cubic-bezier(.2,.8,.2,1);
+      pointer-events:none;
+    }
+    #sektion73OverviewPanel_00001.is-open #sektion73OverviewBody_00005{
+      opacity:1;
+      transform:translateY(0);
+      pointer-events:auto;
+    }
+
+    #sektion73OverviewRows_00006{
+      display:flex;
+      flex-direction:column;
+      gap:10px;
+      padding-top:10px;
+    }
+
+    .sektion73OverviewRow_00007{
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:10px;
+    }
+
+    .sektion73OverviewLeft_00008{
+      display:flex;
+      align-items:center;
+      gap:10px;
+      min-width:0;
+      flex:1 1 auto;
+    }
+
+    .sektion73OverviewSwatch_00009{
+      width:14px;
+      height:14px;
+      border-radius:4px;
+      flex:0 0 auto;
+      box-shadow:inset 0 0 0 1px rgba(0,0,0,.12);
+    }
+
+    .sektion73OverviewLabel_00010{
+      font-size:13px;
+      font-weight:600;
+      white-space:nowrap;
+      overflow:hidden;
+      text-overflow:ellipsis;
+    }
+
+    .sektion73OverviewIcons_00011{
+      display:flex;
+      align-items:center;
+      gap:8px;
+      flex:0 0 auto;
+    }
+
+    .sektion73OverviewIconBtn_00012{
+      all:unset;
+      cursor:pointer;
+      width:32px;
+      height:32px;
+      border-radius:999px;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      background:rgba(0,0,0,.05);
+      transition:background 140ms ease, transform 140ms ease;
+      color:#0e1318;
+    }
+    .sektion73OverviewIconBtn_00012:hover{ background:rgba(0,0,0,.08); transform:translateY(-1px); }
+    .sektion73OverviewIconBtn_00012:active{ transform:translateY(0); }
+
+    #sektion73OverviewCtaWrap_00013{
+      margin-top:12px;
+      padding-top:12px;
+      border-top:1px solid rgba(14,19,24,.12);
+    }
+
+    #sektion73OverviewCtaBtn_00014{
+      all:unset;
+      cursor:pointer;
+      width:100%;
+      height:44px;
+      border-radius:999px;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      gap:10px;
+      font-weight:700;
+      font-size:14px;
+      background:var(--sektion73-accent);
+      color:#111;
+      transition:transform 140ms ease, filter 140ms ease;
+      user-select:none;
+    }
+    #sektion73OverviewCtaBtn_00014:hover{ filter:brightness(.98); transform:translateY(-1px); }
+    #sektion73OverviewCtaBtn_00014:active{ transform:translateY(0); }
+
+    #sektion73OverviewPanel_00001:not(.is-open) #sektion73OverviewCtaWrap_00013{
+      display:none;
+    }
+  `;
+  document.head.appendChild(style);
+}
+
+function sektion73EnsureOverviewPanelDOM_00002() {
+  sektion73InjectOverviewCSS_00001();
+
+  let panel = document.getElementById("sektion73OverviewPanel_00001");
+  if (panel) return panel;
+
+  const host = document.getElementById("sektion73MapRoot") || document.body;
+
+  panel = document.createElement("aside");
+  panel.id = "sektion73OverviewPanel_00001";
+  panel.setAttribute("role", "region");
+  panel.setAttribute("aria-label", "Översikt");
+
+  panel.innerHTML = `
+    <div id="sektion73OverviewHeader_00001">
+      <button id="sektion73OverviewToggleBtn_00002" type="button" aria-expanded="false">
+        <span id="sektion73OverviewToggleTxt_00003">Fäll ut översikt</span>
+        <svg id="sektion73OverviewChevron_00004" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+          <path d="M6 9l6 6 6-6" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+      </button>
+    </div>
+
+    <div id="sektion73OverviewBody_00005">
+      <div id="sektion73OverviewRows_00006"></div>
+
+      <div id="sektion73OverviewCtaWrap_00013">
+        <button id="sektion73OverviewCtaBtn_00014" type="button">
+          <span id="sektion73OverviewCtaTxt_00015">Fäll ihop översikt</span>
+          <svg id="sektion73OverviewCtaChevron_00016" viewBox="0 0 24 24" fill="none" aria-hidden="true" width="18" height="18">
+            <path d="M6 15l6-6 6 6" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </button>
+      </div>
+    </div>
+  `;
+
+  host.appendChild(panel);
+
+  const rowsEl = document.getElementById("sektion73OverviewRows_00006");
+  if (rowsEl) {
+    const rows = [
+      { color: "#F2B200", label: "Mat & dryck" },
+      { color: "#3E3E3F", label: "Boenden" },
+      { color: "#1F7A8C", label: "Att göra" },
+      { color: "#7C3AED", label: "Butiker" },
+      { color: "#0EA5E9", label: "Service" },
+      { color: "#16A34A", label: "Parkering" }
+    ];
+
+    rowsEl.innerHTML = rows
+      .map((r, i) => `
+        <div class="sektion73OverviewRow_00007" data-row="${i}">
+          <div class="sektion73OverviewLeft_00008">
+            <span class="sektion73OverviewSwatch_00009" style="background:${r.color}"></span>
+            <span class="sektion73OverviewLabel_00010">${r.label}</span>
+          </div>
+
+          <div class="sektion73OverviewIcons_00011">
+            <button class="sektion73OverviewIconBtn_00012" type="button" aria-label="Info: ${r.label}" data-action="info" data-label="${r.label}">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                <path d="M12 22c5.523 0 10-4.477 10-10S17.523 2 12 2 2 6.477 2 12s4.477 10 10 10Z" stroke="currentColor" stroke-width="2.2"/>
+                <path d="M12 10v7" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/>
+                <path d="M12 7h.01" stroke="currentColor" stroke-width="3.2" stroke-linecap="round"/>
+              </svg>
+            </button>
+
+            <button class="sektion73OverviewIconBtn_00012" type="button" aria-label="Fokus: ${r.label}" data-action="focus" data-label="${r.label}">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                <path d="M12 4v3" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/>
+                <path d="M12 17v3" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/>
+                <path d="M4 12h3" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/>
+                <path d="M17 12h3" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/>
+                <path d="M12 15a3 3 0 1 0 0-6 3 3 0 0 0 0 6Z" stroke="currentColor" stroke-width="2.2"/>
+              </svg>
+            </button>
+          </div>
+        </div>
+      `)
+      .join("");
+  }
+
+  const toggleBtn = document.getElementById("sektion73OverviewToggleBtn_00002");
+  const toggleTxt = document.getElementById("sektion73OverviewToggleTxt_00003");
+  const ctaBtn = document.getElementById("sektion73OverviewCtaBtn_00014");
+
+  function sektion73SetOverviewOpen_00003(open) {
+    panel.classList.toggle("is-open", !!open);
+    if (toggleBtn) toggleBtn.setAttribute("aria-expanded", open ? "true" : "false");
+    if (toggleTxt) toggleTxt.textContent = open ? "Översikt" : "Fäll ut översikt";
+  }
+
+  if (toggleBtn) {
+    toggleBtn.addEventListener("click", () => {
+      const isOpen = panel.classList.contains("is-open");
+      sektion73SetOverviewOpen_00003(!isOpen);
+    });
+  }
+
+  if (ctaBtn) {
+    ctaBtn.addEventListener("click", () => {
+      sektion73SetOverviewOpen_00003(false);
+    });
+  }
+
+  panel.addEventListener("click", (e) => {
+    const t = e.target && e.target.closest ? e.target.closest("[data-action]") : null;
+    if (!t) return;
+
+    const action = t.getAttribute("data-action");
+    const label = t.getAttribute("data-label") || "";
+
+    // Behåller logik neutral: inga kartförflyttningar här (endast hook)
+    // Byt senare till valfri handling per rad om du vill.
+    console.log("sektion73Overview:", action, label);
+  });
+
+  sektion73SetOverviewOpen_00003(false);
+  return panel;
 }
 
 
@@ -1276,6 +1516,7 @@ sektion73Map.once("load", function () {
   // NYTT: injicera CSS som pinsen (och modalens transitions/vars) behöver direkt.
   // Detta skapar INTE modal-DOM, bara en <style>-tagg.
   sektion73InjectModalCSS();
+  sektion73EnsureOverviewPanelDOM_00002();
 
   // 1) KRAV: kartan + ALLA pins ska synas direkt (ingen idle/defer här)
   sektion73Pins.forEach(sektion73AddPin);
@@ -1314,4 +1555,3 @@ sektion73Map.once("load", function () {
       return { sw: [sw.lng, sw.lat], ne: [ne.lng, ne.lat] };
     };
   });
-})();
