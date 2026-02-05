@@ -815,8 +815,18 @@ function sektion73OpenModal(payload) {
   const cta1t = document.getElementById("sektion73ModalCtaPrimaryTxt");
   const cta2t = document.getElementById("sektion73ModalCtaSecondaryTxt");
 
+  const actionsWrap = modal ? modal.querySelector(".sektion73ModalActions") : null;
+
+  const hasCta1 = Boolean(payload && payload.cta1Text && String(payload.cta1Text).trim());
+  const hasCta2 = Boolean(payload && payload.cta2Text && String(payload.cta2Text).trim());
+  const hasAnyCta = Boolean(hasCta1 || hasCta2);
+
   if (cta1t) cta1t.textContent = payload.cta1Text || "";
   if (cta2t) cta2t.textContent = payload.cta2Text || "";
+
+  if (cta1) cta1.style.display = hasCta1 ? "" : "none";
+  if (cta2) cta2.style.display = hasCta2 ? "" : "none";
+  if (actionsWrap) actionsWrap.style.display = hasAnyCta ? "flex" : "none";
 
   if (cta1) {
     cta1.onclick = function () {
