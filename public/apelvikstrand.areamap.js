@@ -394,6 +394,7 @@ function sektion73InjectModalCSS() {
     #sektion73MapModal{
       position:fixed;
       left:50%;
+      height: 367px;
       bottom:18px;
       transform:translateX(-50%) translateY(115%);
       width:min(920px, calc(100vw - 24px));
@@ -494,18 +495,17 @@ function sektion73InjectModalCSS() {
     display: none;
 }
 
-.sektion73ModalRight{
-  width: auto;       /* ersätter width:70% */
-  flex: 3 1 0;       /* flex-styrd kolumn */
-  min-width: 0;      /* viktigt för overflow i flex */
-
-  display: flex;
-  flex-direction: column;
-  padding: 22px 26px;
-  gap: 0px;
-  overflow: auto;
-  place-content: center;
-  flex-wrap: wrap;
+.sektion73ModalRight {
+    width: auto;
+    flex: 3 1 0;
+    min-width: 0;
+    display: flex;
+    flex-direction: column;
+    padding: 40px;
+    gap: 0px;
+    overflow: auto;
+    place-content: center;
+    flex-wrap: wrap;
 }
 
     .sektion73ModalRightTop{
@@ -520,8 +520,10 @@ function sektion73InjectModalCSS() {
       gap:12px;
     }
 
-#sektion73MapModal #sektion73ModalTitleIcons{
-  margin-top: 14px;     /* under actions */
+#sektion73MapModal #sektion73ModalTitleIcons {
+    margin-top: 24px;
+    border-top: 1px solid #e6e6e6;
+    padding-top: 24px;
 }
 
 #sektion73MapModal .sektion73ModalIconRow{
@@ -537,24 +539,24 @@ function sektion73InjectModalCSS() {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  color: #5A3C00;
-  flex: 0 0 24px;
+  color: #646463;
+  flex: 0 0 18px;
 }
 
-#sektion73MapModal .sektion73ModalTitleIcon svg{
-  width: 24px;
-  height: 24px;
-  display: block;
-  stroke: currentColor;
-  fill: none;
+#sektion73MapModal .sektion73ModalTitleIcon svg {
+    width: 18px;
+    height: 18px;
+    display: block;
+    stroke: currentColor;
+    fill: none;
 }
 
-#sektion73MapModal .sektion73ModalTitleIconTxt{
-  font-family: "Manrope", Inter, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, sans-serif;
-  font-size: 14px;
-  font-weight: 700;
-  color: #5A3C00;
-  line-height: 1.25em;
+#sektion73MapModal .sektion73ModalTitleIconTxt {
+    font-family: 'Inter Variablefont Opsz Wght';
+    font-size: 14px;
+    font-weight: 500;
+    color: #646463;
+    line-height: 1.25em;
 }
 .sektion73ModalBodyH {
     font-family: "Manrope", Inter, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, sans-serif;
@@ -623,15 +625,18 @@ function sektion73InjectModalCSS() {
     #sektion73MapModal {
     height: min(28vh, 720px);
 }
-    .sektion73ModalRight {
-        width: auto;
-        flex: auto;
-        padding: 18px 18px 22px;
-        overflow: hidden;
-        flex-direction: column;
-        flex-wrap: nowrap;
-    }
-
+.sektion73ModalRight {
+    width: auto;
+    flex: 3 1 0;
+    min-width: 0;
+    display: flex;
+    flex-direction: column;
+    padding: 40px;
+    gap: 0px;
+    overflow: auto;
+    place-content: center;
+    flex-wrap: nowrap;
+}
       .sektion73ModalBodyH{ font-size:21px; }
       .sektion73ModalBodyP{ font-size:15px; }
     }
@@ -1027,15 +1032,15 @@ const sektion73Pins = [
   ui: { bubbleBg: "#A88867" },
   modal: {
     imgSrc: "https://res.cloudinary.com/dmgmoisae/image/upload/v1769875471/strandhuse21q_hh50lb.png",
-    h: "Strandhus 2 | 6x",
+    h: "Strandhus 2  ",
     p: "Bo precis vid havet i Apelviken, i ett av våra strandhus. Här bor du med stranden alldeles intill och med plats att vara på under hela dagen. Egen dörr, egen uteplats och ett boende som fungerar lika bra mellan strandpassen som på kvällen.",
     icons: [
       '<svg width="24" height="24" viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentcolor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"><circle cx="8" cy="6" r="3.25"/><path d="M2.75 14.25c0-2.5 2-5 5.25-5s5.25 2.5 5.25 5"/></svg>',
       '<svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M12 10V3m0 0L9 6m3-3 3 3m-9 6-1-1m13 1 1-1M3 18h18M5 21h14M7 18a5 5 0 0 1 10 0" stroke="currentcolor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>'
     ],
     iconTexts: [
-      "6 bäddar",
-      "Incheckning i app"
+      "4 vuxna & 2 barn",
+      "Morgonsol"
     ],
     images: ["", "", "", ""],
     cta1Text: "Vägbeskrivning",
@@ -1054,15 +1059,15 @@ const sektion73Pins = [
   ui: { bubbleBg: "#A88867" },
   modal: {
     imgSrc: "https://res.cloudinary.com/dmgmoisae/image/upload/v1769875471/strandhuse21q_hh50lb.png",
-    h: "Strandhus 3 | 6x",
+    h: "Strandhus 3  ",
     p: "Bo precis vid havet i Apelviken, i ett av våra strandhus. Här bor du med stranden alldeles intill och med plats att vara på under hela dagen. Egen dörr, egen uteplats och ett boende som fungerar lika bra mellan strandpassen som på kvällen.",
     icons: [
       '<svg width="24" height="24" viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentcolor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"><circle cx="8" cy="6" r="3.25"/><path d="M2.75 14.25c0-2.5 2-5 5.25-5s5.25 2.5 5.25 5"/></svg>',
       '<svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M12 10V3m0 0L9 6m3-3 3 3m-9 6-1-1m13 1 1-1M3 18h18M5 21h14M7 18a5 5 0 0 1 10 0" stroke="currentcolor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>'
     ],
     iconTexts: [
-      "6 bäddar",
-      "Incheckning i app"
+      "4 vuxna & 2 barn",
+      "Morgonsol"
     ],
     images: ["", "", "", ""],
     cta1Text: "Vägbeskrivning",
@@ -1081,15 +1086,15 @@ const sektion73Pins = [
   ui: { bubbleBg: "#A88867" },
   modal: {
     imgSrc: "https://res.cloudinary.com/dmgmoisae/image/upload/v1769875471/strandhuse21q_hh50lb.png",
-    h: "Strandhus 4 | 6x",
+    h: "Strandhus 4  ",
     p: "Bo precis vid havet i Apelviken, i ett av våra strandhus. Här bor du med stranden alldeles intill och med plats att vara på under hela dagen. Egen dörr, egen uteplats och ett boende som fungerar lika bra mellan strandpassen som på kvällen.",
     icons: [
       '<svg width="24" height="24" viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentcolor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"><circle cx="8" cy="6" r="3.25"/><path d="M2.75 14.25c0-2.5 2-5 5.25-5s5.25 2.5 5.25 5"/></svg>',
       '<svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M12 10V3m0 0L9 6m3-3 3 3m-9 6-1-1m13 1 1-1M3 18h18M5 21h14M7 18a5 5 0 0 1 10 0" stroke="currentcolor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>'
     ],
     iconTexts: [
-      "6 bäddar",
-      "Incheckning i app"
+      "4 vuxna & 2 barn",
+      "Morgonsol"
     ],
     images: ["", "", "", ""],
     cta1Text: "Vägbeskrivning",
@@ -1108,15 +1113,15 @@ const sektion73Pins = [
   ui: { bubbleBg: "#A88867" },
   modal: {
     imgSrc: "https://res.cloudinary.com/dmgmoisae/image/upload/v1769875471/strandhuse21q_hh50lb.png",
-    h: "Strandhus 5 | 6x",
+    h: "Strandhus 5  ",
     p: "Bo precis vid havet i Apelviken, i ett av våra strandhus. Här bor du med stranden alldeles intill och med plats att vara på under hela dagen. Egen dörr, egen uteplats och ett boende som fungerar lika bra mellan strandpassen som på kvällen.",
     icons: [
       '<svg width="24" height="24" viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentcolor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"><circle cx="8" cy="6" r="3.25"/><path d="M2.75 14.25c0-2.5 2-5 5.25-5s5.25 2.5 5.25 5"/></svg>',
       '<svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M12 10V3m0 0L9 6m3-3 3 3m-9 6-1-1m13 1 1-1M3 18h18M5 21h14M7 18a5 5 0 0 1 10 0" stroke="currentcolor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>'
     ],
     iconTexts: [
-      "6 bäddar",
-      "Incheckning i app"
+      "4 vuxna & 2 barn",
+      "Morgonsol"
     ],
     images: ["", "", "", ""],
     cta1Text: "Vägbeskrivning",
@@ -1135,15 +1140,15 @@ const sektion73Pins = [
   ui: { bubbleBg: "#A88867" },
   modal: {
     imgSrc: "https://res.cloudinary.com/dmgmoisae/image/upload/v1769875471/strandhuse21q_hh50lb.png",
-    h: "Strandhus 6 | 6x",
+    h: "Strandhus 6  ",
     p: "Bo precis vid havet i Apelviken, i ett av våra strandhus. Här bor du med stranden alldeles intill och med plats att vara på under hela dagen. Egen dörr, egen uteplats och ett boende som fungerar lika bra mellan strandpassen som på kvällen.",
     icons: [
       '<svg width="24" height="24" viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentcolor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"><circle cx="8" cy="6" r="3.25"/><path d="M2.75 14.25c0-2.5 2-5 5.25-5s5.25 2.5 5.25 5"/></svg>',
       '<svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M12 10V3m0 0L9 6m3-3 3 3m-9 6-1-1m13 1 1-1M3 18h18M5 21h14M7 18a5 5 0 0 1 10 0" stroke="currentcolor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>'
     ],
     iconTexts: [
-      "6 bäddar",
-      "Incheckning i app"
+      "4 vuxna & 2 barn",
+      "Morgonsol"
     ],
     images: ["", "", "", ""],
     cta1Text: "Vägbeskrivning",
@@ -1162,15 +1167,17 @@ const sektion73Pins = [
   ui: { bubbleBg: "#7A936B" },
   modal: {
     imgSrc: "https://res.cloudinary.com/dmgmoisae/image/upload/v1769875471/strandhuse21q_hh50lb.png",
-    h: "Strandhus 7 | 6x",
+    h: "Strandhus 7  ",
     p: "Bo precis vid havet i Apelviken, i ett av våra strandhus. Här bor du med stranden alldeles intill och med plats att vara på under hela dagen. Egen dörr, egen uteplats och ett boende som fungerar lika bra mellan strandpassen som på kvällen.",
     icons: [
       '<svg width="24" height="24" viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentcolor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"><circle cx="8" cy="6" r="3.25"/><path d="M2.75 14.25c0-2.5 2-5 5.25-5s5.25 2.5 5.25 5"/></svg>',
-      ""
+     '<svg fill="currentcolor" width="800" height="800" viewBox="0 0 256 256" xmlns="http://www.w3.org/2000/svg"><path d="M189.02 145.34a31.35 31.35 0 0 1-14.928-18.734 47.998 47.998 0 0 0-92.183-.006 31.35 31.35 0 0 1-14.93 18.74 44.007 44.007 0 0 0 38.118 79.21 60.16 60.16 0 0 1 45.806 0 44.007 44.007 0 0 0 38.118-79.21M168 204a19.9 19.9 0 0 1-7.8-1.576l-.135-.056a84.03 84.03 0 0 0-64.13 0l-.134.056a20.007 20.007 0 0 1-17.315-36.022l.107-.06a55.2 55.2 0 0 0 26.364-33.047 24 24 0 0 1 46.089.005 55.2 55.2 0 0 0 26.361 33.043l.107.059A20.004 20.004 0 0 1 168 204m64-100a24 24 0 1 1-24-24 24 24 0 0 1 24 24M48 128a24 24 0 1 1 24-24 24 24 0 0 1-24 24m24-72a24 24 0 1 1 24 24 24 24 0 0 1-24-24m64 0a24 24 0 1 1 24 24 24 24 0 0 1-24-24"/></svg>',
+            '<svg fill="currentcolor" width="800" height="800" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><circle cx="9" cy="4" r="2"/><path d="M16.98 14.804A1 1 0 0 0 16 14h-4.133l-.429-3H16V9h-4.847l-.163-1.142A1 1 0 0 0 10 7H9a1.003 1.003 0 0 0-.99 1.142l.877 6.142A2.01 2.01 0 0 0 10.867 16h4.313l.839 4.196c.094.467.504.804.981.804h3v-2h-2.181z"/><path d="M12.51 17.5c-.739 1.476-2.25 2.5-4.01 2.5A4.505 4.505 0 0 1 4 15.5a4.5 4.5 0 0 1 2.817-4.167l-.289-2.025C3.905 10.145 2 12.604 2 15.5 2 19.084 4.916 22 8.5 22a6.5 6.5 0 0 0 5.545-3.126l-.274-1.374z"/></svg>'
     ],
     iconTexts: [
-      "6 bäddar",
-      ""
+      "4 vuxna & 2 barn",
+      "Djurvänlig",
+      "Handikappsvänlig"     
     ],
     images: ["", "", "", ""],
     cta1Text: "Vägbeskrivning",
@@ -1189,15 +1196,17 @@ const sektion73Pins = [
   ui: { bubbleBg: "#7A936B" },
   modal: {
     imgSrc: "https://res.cloudinary.com/dmgmoisae/image/upload/v1769875471/strandhuse21q_hh50lb.png",
-    h: "Strandhus 8 | 6x",
+    h: "Strandhus 8  ",
     p: "Bo precis vid havet i Apelviken, i ett av våra strandhus. Här bor du med stranden alldeles intill och med plats att vara på under hela dagen. Egen dörr, egen uteplats och ett boende som fungerar lika bra mellan strandpassen som på kvällen.",
     icons: [
-      '<svg width="24" height="24" viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentcolor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"><circle cx="8" cy="6" r="3.25"/><path d="M2.75 14.25c0-2.5 2-5 5.25-5s5.25 2.5 5.25 5"/></svg>',
-      ""
+           '<svg width="24" height="24" viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentcolor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"><circle cx="8" cy="6" r="3.25"/><path d="M2.75 14.25c0-2.5 2-5 5.25-5s5.25 2.5 5.25 5"/></svg>',
+     '<svg fill="currentcolor" width="800" height="800" viewBox="0 0 256 256" xmlns="http://www.w3.org/2000/svg"><path d="M189.02 145.34a31.35 31.35 0 0 1-14.928-18.734 47.998 47.998 0 0 0-92.183-.006 31.35 31.35 0 0 1-14.93 18.74 44.007 44.007 0 0 0 38.118 79.21 60.16 60.16 0 0 1 45.806 0 44.007 44.007 0 0 0 38.118-79.21M168 204a19.9 19.9 0 0 1-7.8-1.576l-.135-.056a84.03 84.03 0 0 0-64.13 0l-.134.056a20.007 20.007 0 0 1-17.315-36.022l.107-.06a55.2 55.2 0 0 0 26.364-33.047 24 24 0 0 1 46.089.005 55.2 55.2 0 0 0 26.361 33.043l.107.059A20.004 20.004 0 0 1 168 204m64-100a24 24 0 1 1-24-24 24 24 0 0 1 24 24M48 128a24 24 0 1 1 24-24 24 24 0 0 1-24 24m24-72a24 24 0 1 1 24 24 24 24 0 0 1-24-24m64 0a24 24 0 1 1 24 24 24 24 0 0 1-24-24"/></svg>',
+            '<svg fill="currentcolor" width="800" height="800" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><circle cx="9" cy="4" r="2"/><path d="M16.98 14.804A1 1 0 0 0 16 14h-4.133l-.429-3H16V9h-4.847l-.163-1.142A1 1 0 0 0 10 7H9a1.003 1.003 0 0 0-.99 1.142l.877 6.142A2.01 2.01 0 0 0 10.867 16h4.313l.839 4.196c.094.467.504.804.981.804h3v-2h-2.181z"/><path d="M12.51 17.5c-.739 1.476-2.25 2.5-4.01 2.5A4.505 4.505 0 0 1 4 15.5a4.5 4.5 0 0 1 2.817-4.167l-.289-2.025C3.905 10.145 2 12.604 2 15.5 2 19.084 4.916 22 8.5 22a6.5 6.5 0 0 0 5.545-3.126l-.274-1.374z"/></svg>'
     ],
     iconTexts: [
-      "6 bäddar",
-      ""
+      "4 vuxna & 2 barn",
+      "Djurvänlig",
+      "Handikappsvänlig"
     ],
     images: ["", "", "", ""],
     cta1Text: "Vägbeskrivning",
@@ -1216,15 +1225,15 @@ const sektion73Pins = [
   ui: { bubbleBg: "#446D74" },
   modal: {
     imgSrc: "https://res.cloudinary.com/dmgmoisae/image/upload/v1769875471/strandhuse21q_hh50lb.png",
-    h: "Strandhus 9 | 6x",
+    h: "Strandhus 9  ",
     p: "Bo precis vid havet i Apelviken, i ett av våra strandhus. Här bor du med stranden alldeles intill och med plats att vara på under hela dagen. Egen dörr, egen uteplats och ett boende som fungerar lika bra mellan strandpassen som på kvällen.",
     icons: [
       '<svg width="24" height="24" viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentcolor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"><circle cx="8" cy="6" r="3.25"/><path d="M2.75 14.25c0-2.5 2-5 5.25-5s5.25 2.5 5.25 5"/></svg>',
       '<svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="m6 12-1-1m13 1 1-1M3 18h18M5 21h14M7 18a5 5 0 0 1 10 0M12 3v7m0 0 3-3m-3 3L9 7" stroke="currentcolor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>'
     ],
     iconTexts: [
-      "6 bäddar",
-      "Incheckning i app"
+      "4 vuxna & 2 barn",
+      "Kvällssol"
     ],
     images: ["", "", "", ""],
     cta1Text: "Vägbeskrivning",
@@ -1243,15 +1252,15 @@ const sektion73Pins = [
   ui: { bubbleBg: "#446D74" },
   modal: {
     imgSrc: "https://res.cloudinary.com/dmgmoisae/image/upload/v1769875471/strandhuse21q_hh50lb.png",
-    h: "Strandhus 10 | 6x",
+    h: "Strandhus 10  ",
     p: "Bo precis vid havet i Apelviken, i ett av våra strandhus. Här bor du med stranden alldeles intill och med plats att vara på under hela dagen. Egen dörr, egen uteplats och ett boende som fungerar lika bra mellan strandpassen som på kvällen.",
     icons: [
       '<svg width="24" height="24" viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentcolor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"><circle cx="8" cy="6" r="3.25"/><path d="M2.75 14.25c0-2.5 2-5 5.25-5s5.25 2.5 5.25 5"/></svg>',
       '<svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="m6 12-1-1m13 1 1-1M3 18h18M5 21h14M7 18a5 5 0 0 1 10 0M12 3v7m0 0 3-3m-3 3L9 7" stroke="currentcolor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>'
     ],
     iconTexts: [
-      "6 bäddar",
-      "Incheckning i app"
+      "4 vuxna & 2 barn",
+      "Kvällssol"
     ],
     images: ["", "", "", ""],
     cta1Text: "Vägbeskrivning",
@@ -1270,15 +1279,15 @@ const sektion73Pins = [
   ui: { bubbleBg: "#446D74" },
   modal: {
     imgSrc: "https://res.cloudinary.com/dmgmoisae/image/upload/v1769800477/jpeg-optimizer_ApelvikStrand_0356_1_llpb1s.jpg",
-    h: "Strandhus 11 | 6x",
+    h: "Strandhus 11  ",
     p: "Bo precis vid havet i Apelviken, i ett av våra strandhus. Här bor du med stranden alldeles intill och med plats att vara på under hela dagen. Egen dörr, egen uteplats och ett boende som fungerar lika bra mellan strandpassen som på kvällen.",
     icons: [
       '<svg width="24" height="24" viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentcolor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"><circle cx="8" cy="6" r="3.25"/><path d="M2.75 14.25c0-2.5 2-5 5.25-5s5.25 2.5 5.25 5"/></svg>',
       '<svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="m6 12-1-1m13 1 1-1M3 18h18M5 21h14M7 18a5 5 0 0 1 10 0M12 3v7m0 0 3-3m-3 3L9 7" stroke="currentcolor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>'
     ],
     iconTexts: [
-      "6 bäddar",
-      "Incheckning i app"
+      "4 vuxna & 2 barn",
+      "Kvällssol"
     ],
     images: ["", "", "", ""],
     cta1Text: "Vägbeskrivning",
@@ -1297,15 +1306,15 @@ const sektion73Pins = [
   ui: { bubbleBg: "#446D74" },
   modal: {
     imgSrc: "https://res.cloudinary.com/dmgmoisae/image/upload/v1769800477/jpeg-optimizer_ApelvikStrand_0356_1_llpb1s.jpg",
-    h: "Strandhus 12 | 6x",
+    h: "Strandhus 12  ",
     p: "Bo precis vid havet i Apelviken, i ett av våra strandhus. Här bor du med stranden alldeles intill och med plats att vara på under hela dagen. Egen dörr, egen uteplats och ett boende som fungerar lika bra mellan strandpassen som på kvällen.",
     icons: [
       '<svg width="24" height="24" viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentcolor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"><circle cx="8" cy="6" r="3.25"/><path d="M2.75 14.25c0-2.5 2-5 5.25-5s5.25 2.5 5.25 5"/></svg>',
       '<svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="m6 12-1-1m13 1 1-1M3 18h18M5 21h14M7 18a5 5 0 0 1 10 0M12 3v7m0 0 3-3m-3 3L9 7" stroke="currentcolor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>'
     ],
     iconTexts: [
-      "6 bäddar",
-      "Incheckning i app"
+       "4 vuxna & 2 barn",
+      "Kvällssol"
     ],
     images: ["", "", "", ""],
     cta1Text: "Vägbeskrivning",
@@ -1324,15 +1333,15 @@ const sektion73Pins = [
   ui: { bubbleBg: "#446D74" },
   modal: {
     imgSrc: "https://res.cloudinary.com/dmgmoisae/image/upload/v1769800477/jpeg-optimizer_ApelvikStrand_0356_1_llpb1s.jpg",
-    h: "Strandhus 13 | 6x",
+    h: "Strandhus 13  ",
     p: "Bo precis vid havet i Apelviken, i ett av våra strandhus. Här bor du med stranden alldeles intill och med plats att vara på under hela dagen. Egen dörr, egen uteplats och ett boende som fungerar lika bra mellan strandpassen som på kvällen.",
     icons: [
       '<svg width="24" height="24" viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentcolor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"><circle cx="8" cy="6" r="3.25"/><path d="M2.75 14.25c0-2.5 2-5 5.25-5s5.25 2.5 5.25 5"/></svg>',
       '<svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="m6 12-1-1m13 1 1-1M3 18h18M5 21h14M7 18a5 5 0 0 1 10 0M12 3v7m0 0 3-3m-3 3L9 7" stroke="currentcolor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>'
     ],
     iconTexts: [
-      "6 bäddar",
-      "Incheckning i app"
+      "4 vuxna & 2 barn",
+      "Kvällssol"
     ],
     images: ["", "", "", ""],
     cta1Text: "Vägbeskrivning",
@@ -1351,15 +1360,15 @@ const sektion73Pins = [
   ui: { bubbleBg: "#446D74" },
   modal: {
     imgSrc: "https://res.cloudinary.com/dmgmoisae/image/upload/v1769800477/jpeg-optimizer_ApelvikStrand_0356_1_llpb1s.jpg",
-    h: "Strandhus 14 | 6x",
+    h: "Strandhus 14  ",
     p: "Bo precis vid havet i Apelviken, i ett av våra strandhus. Här bor du med stranden alldeles intill och med plats att vara på under hela dagen. Egen dörr, egen uteplats och ett boende som fungerar lika bra mellan strandpassen som på kvällen.",
     icons: [
       '<svg width="24" height="24" viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentcolor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"><circle cx="8" cy="6" r="3.25"/><path d="M2.75 14.25c0-2.5 2-5 5.25-5s5.25 2.5 5.25 5"/></svg>',
       '<svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="m6 12-1-1m13 1 1-1M3 18h18M5 21h14M7 18a5 5 0 0 1 10 0M12 3v7m0 0 3-3m-3 3L9 7" stroke="currentcolor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>'
     ],
     iconTexts: [
-      "6 bäddar",
-      "Incheckning i app"
+      "4 vuxna & 2 barn",
+      "Kvällssol"
     ],
     images: ["", "", "", ""],
     cta1Text: "Vägbeskrivning",
@@ -1378,15 +1387,17 @@ const sektion73Pins = [
   ui: { bubbleBg: "#7A936B" },
   modal: {
     imgSrc: "https://res.cloudinary.com/dmgmoisae/image/upload/v1769800477/jpeg-optimizer_ApelvikStrand_0356_1_llpb1s.jpg",
-    h: "Strandhus 15 | 6x",
+    h: "Strandhus 15  ",
     p: "Bo precis vid havet i Apelviken, i ett av våra strandhus. Här bor du med stranden alldeles intill och med plats att vara på under hela dagen. Egen dörr, egen uteplats och ett boende som fungerar lika bra mellan strandpassen som på kvällen.",
     icons: [
-      '<svg width="24" height="24" viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentcolor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"><circle cx="8" cy="6" r="3.25"/><path d="M2.75 14.25c0-2.5 2-5 5.25-5s5.25 2.5 5.25 5"/></svg>',
-      ""
+           '<svg width="24" height="24" viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentcolor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"><circle cx="8" cy="6" r="3.25"/><path d="M2.75 14.25c0-2.5 2-5 5.25-5s5.25 2.5 5.25 5"/></svg>',
+     '<svg fill="currentcolor" width="800" height="800" viewBox="0 0 256 256" xmlns="http://www.w3.org/2000/svg"><path d="M189.02 145.34a31.35 31.35 0 0 1-14.928-18.734 47.998 47.998 0 0 0-92.183-.006 31.35 31.35 0 0 1-14.93 18.74 44.007 44.007 0 0 0 38.118 79.21 60.16 60.16 0 0 1 45.806 0 44.007 44.007 0 0 0 38.118-79.21M168 204a19.9 19.9 0 0 1-7.8-1.576l-.135-.056a84.03 84.03 0 0 0-64.13 0l-.134.056a20.007 20.007 0 0 1-17.315-36.022l.107-.06a55.2 55.2 0 0 0 26.364-33.047 24 24 0 0 1 46.089.005 55.2 55.2 0 0 0 26.361 33.043l.107.059A20.004 20.004 0 0 1 168 204m64-100a24 24 0 1 1-24-24 24 24 0 0 1 24 24M48 128a24 24 0 1 1 24-24 24 24 0 0 1-24 24m24-72a24 24 0 1 1 24 24 24 24 0 0 1-24-24m64 0a24 24 0 1 1 24 24 24 24 0 0 1-24-24"/></svg>',
+            '<svg fill="currentcolor" width="800" height="800" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><circle cx="9" cy="4" r="2"/><path d="M16.98 14.804A1 1 0 0 0 16 14h-4.133l-.429-3H16V9h-4.847l-.163-1.142A1 1 0 0 0 10 7H9a1.003 1.003 0 0 0-.99 1.142l.877 6.142A2.01 2.01 0 0 0 10.867 16h4.313l.839 4.196c.094.467.504.804.981.804h3v-2h-2.181z"/><path d="M12.51 17.5c-.739 1.476-2.25 2.5-4.01 2.5A4.505 4.505 0 0 1 4 15.5a4.5 4.5 0 0 1 2.817-4.167l-.289-2.025C3.905 10.145 2 12.604 2 15.5 2 19.084 4.916 22 8.5 22a6.5 6.5 0 0 0 5.545-3.126l-.274-1.374z"/></svg>'
     ],
     iconTexts: [
-      "6 bäddar",
-      ""
+      "4 vuxna & 2 barn",
+      "Djurvänlig",
+      "Handikappsvänlig"
     ],
     images: ["", "", "", ""],
     cta1Text: "Vägbeskrivning",
@@ -1405,15 +1416,17 @@ const sektion73Pins = [
   ui: { bubbleBg: "#7A936B" },
   modal: {
     imgSrc: "https://res.cloudinary.com/dmgmoisae/image/upload/v1769800477/jpeg-optimizer_ApelvikStrand_0356_1_llpb1s.jpg",
-    h: "Strandhus 16 | 6x",
+    h: "Strandhus 16  ",
     p: "Bo precis vid havet i Apelviken, i ett av våra strandhus. Här bor du med stranden alldeles intill och med plats att vara på under hela dagen. Egen dörr, egen uteplats och ett boende som fungerar lika bra mellan strandpassen som på kvällen.",
     icons: [
-      '<svg width="24" height="24" viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentcolor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"><circle cx="8" cy="6" r="3.25"/><path d="M2.75 14.25c0-2.5 2-5 5.25-5s5.25 2.5 5.25 5"/></svg>',
-      ""
+           '<svg width="24" height="24" viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentcolor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"><circle cx="8" cy="6" r="3.25"/><path d="M2.75 14.25c0-2.5 2-5 5.25-5s5.25 2.5 5.25 5"/></svg>',
+     '<svg fill="currentcolor" width="800" height="800" viewBox="0 0 256 256" xmlns="http://www.w3.org/2000/svg"><path d="M189.02 145.34a31.35 31.35 0 0 1-14.928-18.734 47.998 47.998 0 0 0-92.183-.006 31.35 31.35 0 0 1-14.93 18.74 44.007 44.007 0 0 0 38.118 79.21 60.16 60.16 0 0 1 45.806 0 44.007 44.007 0 0 0 38.118-79.21M168 204a19.9 19.9 0 0 1-7.8-1.576l-.135-.056a84.03 84.03 0 0 0-64.13 0l-.134.056a20.007 20.007 0 0 1-17.315-36.022l.107-.06a55.2 55.2 0 0 0 26.364-33.047 24 24 0 0 1 46.089.005 55.2 55.2 0 0 0 26.361 33.043l.107.059A20.004 20.004 0 0 1 168 204m64-100a24 24 0 1 1-24-24 24 24 0 0 1 24 24M48 128a24 24 0 1 1 24-24 24 24 0 0 1-24 24m24-72a24 24 0 1 1 24 24 24 24 0 0 1-24-24m64 0a24 24 0 1 1 24 24 24 24 0 0 1-24-24"/></svg>',
+            '<svg fill="currentcolor" width="800" height="800" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><circle cx="9" cy="4" r="2"/><path d="M16.98 14.804A1 1 0 0 0 16 14h-4.133l-.429-3H16V9h-4.847l-.163-1.142A1 1 0 0 0 10 7H9a1.003 1.003 0 0 0-.99 1.142l.877 6.142A2.01 2.01 0 0 0 10.867 16h4.313l.839 4.196c.094.467.504.804.981.804h3v-2h-2.181z"/><path d="M12.51 17.5c-.739 1.476-2.25 2.5-4.01 2.5A4.505 4.505 0 0 1 4 15.5a4.5 4.5 0 0 1 2.817-4.167l-.289-2.025C3.905 10.145 2 12.604 2 15.5 2 19.084 4.916 22 8.5 22a6.5 6.5 0 0 0 5.545-3.126l-.274-1.374z"/></svg>'
     ],
     iconTexts: [
-      "6 bäddar",
-      ""
+      "4 vuxna & 2 barn",
+      "Djurvänlig",
+      "Handikappsvänlig"
     ],
     images: ["", "", "", ""],
     cta1Text: "Vägbeskrivning",
@@ -1432,15 +1445,15 @@ const sektion73Pins = [
   ui: { bubbleBg: "#A88867" },
   modal: {
     imgSrc: "https://res.cloudinary.com/dmgmoisae/image/upload/v1769800477/jpeg-optimizer_ApelvikStrand_0356_1_llpb1s.jpg",
-    h: "Strandhus 17 | 6x",
+    h: "Strandhus 17  ",
     p: "Bo precis vid havet i Apelviken, i ett av våra strandhus. Här bor du med stranden alldeles intill och med plats att vara på under hela dagen. Egen dörr, egen uteplats och ett boende som fungerar lika bra mellan strandpassen som på kvällen.",
     icons: [
       '<svg width="24" height="24" viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentcolor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"><circle cx="8" cy="6" r="3.25"/><path d="M2.75 14.25c0-2.5 2-5 5.25-5s5.25 2.5 5.25 5"/></svg>',
       '<svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M12 10V3m0 0L9 6m3-3 3 3m-9 6-1-1m13 1 1-1M3 18h18M5 21h14M7 18a5 5 0 0 1 10 0" stroke="currentcolor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>'
     ],
     iconTexts: [
-      "6 bäddar",
-      "Incheckning i app"
+      "4 vuxna & 2 barn",
+      "Morgonsol"
     ],
     images: ["", "", "", ""],
     cta1Text: "Vägbeskrivning",
@@ -1459,15 +1472,15 @@ const sektion73Pins = [
   ui: { bubbleBg: "#A88867" },
   modal: {
     imgSrc: "https://res.cloudinary.com/dmgmoisae/image/upload/v1769800477/jpeg-optimizer_ApelvikStrand_0356_1_llpb1s.jpg",
-    h: "Strandhus 18 | 6x",
+    h: "Strandhus 18  ",
     p: "Bo precis vid havet i Apelviken, i ett av våra strandhus. Här bor du med stranden alldeles intill och med plats att vara på under hela dagen. Egen dörr, egen uteplats och ett boende som fungerar lika bra mellan strandpassen som på kvällen.",
     icons: [
       '<svg width="24" height="24" viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentcolor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"><circle cx="8" cy="6" r="3.25"/><path d="M2.75 14.25c0-2.5 2-5 5.25-5s5.25 2.5 5.25 5"/></svg>',
       '<svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M12 10V3m0 0L9 6m3-3 3 3m-9 6-1-1m13 1 1-1M3 18h18M5 21h14M7 18a5 5 0 0 1 10 0" stroke="currentcolor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>'
     ],
     iconTexts: [
-      "6 bäddar",
-      "Incheckning i app"
+      "4 vuxna & 2 barn",
+      "Morgonsol"
     ],
     images: ["", "", "", ""],
     cta1Text: "Vägbeskrivning",
@@ -1486,15 +1499,15 @@ const sektion73Pins = [
   ui: { bubbleBg: "#A88867" },
   modal: {
     imgSrc: "https://res.cloudinary.com/dmgmoisae/image/upload/v1769800477/jpeg-optimizer_ApelvikStrand_0356_1_llpb1s.jpg",
-    h: "Strandhus 19 | 6x",
+    h: "Strandhus 19  ",
     p: "Bo precis vid havet i Apelviken, i ett av våra strandhus. Här bor du med stranden alldeles intill och med plats att vara på under hela dagen. Egen dörr, egen uteplats och ett boende som fungerar lika bra mellan strandpassen som på kvällen.",
     icons: [
       '<svg width="24" height="24" viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentcolor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"><circle cx="8" cy="6" r="3.25"/><path d="M2.75 14.25c0-2.5 2-5 5.25-5s5.25 2.5 5.25 5"/></svg>',
       '<svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M12 10V3m0 0L9 6m3-3 3 3m-9 6-1-1m13 1 1-1M3 18h18M5 21h14M7 18a5 5 0 0 1 10 0" stroke="currentcolor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>'
     ],
     iconTexts: [
-      "6 bäddar",
-      "Incheckning i app"
+      "4 vuxna & 2 barn",
+      "Morgonsol"
     ],
     images: ["", "", "", ""],
     cta1Text: "Vägbeskrivning",
@@ -1513,15 +1526,15 @@ const sektion73Pins = [
   ui: { bubbleBg: "#A88867" },
   modal: {
     imgSrc: "https://res.cloudinary.com/dmgmoisae/image/upload/v1769800477/jpeg-optimizer_ApelvikStrand_0356_1_llpb1s.jpg",
-    h: "Strandhus 20 | 6x",
+    h: "Strandhus 20  ",
     p: "Bo precis vid havet i Apelviken, i ett av våra strandhus. Här bor du med stranden alldeles intill och med plats att vara på under hela dagen. Egen dörr, egen uteplats och ett boende som fungerar lika bra mellan strandpassen som på kvällen.",
     icons: [
       '<svg width="24" height="24" viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentcolor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"><circle cx="8" cy="6" r="3.25"/><path d="M2.75 14.25c0-2.5 2-5 5.25-5s5.25 2.5 5.25 5"/></svg>',
       '<svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M12 10V3m0 0L9 6m3-3 3 3m-9 6-1-1m13 1 1-1M3 18h18M5 21h14M7 18a5 5 0 0 1 10 0" stroke="currentcolor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>'
     ],
     iconTexts: [
-      "6 bäddar",
-      "Incheckning i app"
+      "4 vuxna & 2 barn",
+      "Morgonsol"
     ],
     images: ["", "", "", ""],
     cta1Text: "Vägbeskrivning",
@@ -1540,15 +1553,15 @@ const sektion73Pins = [
   ui: { bubbleBg: "#A88867" },
   modal: {
     imgSrc: "https://res.cloudinary.com/dmgmoisae/image/upload/v1769800477/jpeg-optimizer_ApelvikStrand_0356_1_llpb1s.jpg",
-    h: "Strandhus 21 | 6x",
+    h: "Strandhus 21  ",
     p: "Bo precis vid havet i Apelviken, i ett av våra strandhus. Här bor du med stranden alldeles intill och med plats att vara på under hela dagen. Egen dörr, egen uteplats och ett boende som fungerar lika bra mellan strandpassen som på kvällen.",
     icons: [
       '<svg width="24" height="24" viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentcolor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"><circle cx="8" cy="6" r="3.25"/><path d="M2.75 14.25c0-2.5 2-5 5.25-5s5.25 2.5 5.25 5"/></svg>',
       '<svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M12 10V3m0 0L9 6m3-3 3 3m-9 6-1-1m13 1 1-1M3 18h18M5 21h14M7 18a5 5 0 0 1 10 0" stroke="currentcolor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>'
     ],
     iconTexts: [
-      "6 bäddar",
-      "Incheckning i app"
+      "4 vuxna & 2 barn",
+      "Morgonsol"
     ],
     images: ["", "", "", ""],
     cta1Text: "Vägbeskrivning",
@@ -1567,15 +1580,15 @@ const sektion73Pins = [
   ui: { bubbleBg: "#A88867" },
   modal: {
     imgSrc: "https://res.cloudinary.com/dmgmoisae/image/upload/v1769800477/jpeg-optimizer_ApelvikStrand_0356_1_llpb1s.jpg",
-    h: "Strandhus 22 | 6x",
+    h: "Strandhus 22  ",
     p: "Bo precis vid havet i Apelviken, i ett av våra strandhus. Här bor du med stranden alldeles intill och med plats att vara på under hela dagen. Egen dörr, egen uteplats och ett boende som fungerar lika bra mellan strandpassen som på kvällen.",
     icons: [
       '<svg width="24" height="24" viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentcolor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"><circle cx="8" cy="6" r="3.25"/><path d="M2.75 14.25c0-2.5 2-5 5.25-5s5.25 2.5 5.25 5"/></svg>',
       '<svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M12 10V3m0 0L9 6m3-3 3 3m-9 6-1-1m13 1 1-1M3 18h18M5 21h14M7 18a5 5 0 0 1 10 0" stroke="currentcolor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>'
     ],
     iconTexts: [
-      "6 bäddar",
-      "Incheckning i app"
+      "4 vuxna & 2 barn",
+      "Morgonsol"
     ],
     images: ["", "", "", ""],
     cta1Text: "Vägbeskrivning",
@@ -1594,15 +1607,17 @@ const sektion73Pins = [
   ui: { bubbleBg: "#7A936B" },
   modal: {
     imgSrc: "https://res.cloudinary.com/dmgmoisae/image/upload/v1769800477/jpeg-optimizer_ApelvikStrand_0356_1_llpb1s.jpg",
-    h: "Strandhus 23 | 6x",
+    h: "Strandhus 23  ",
     p: "Bo precis vid havet i Apelviken, i ett av våra strandhus. Här bor du med stranden alldeles intill och med plats att vara på under hela dagen. Egen dörr, egen uteplats och ett boende som fungerar lika bra mellan strandpassen som på kvällen.",
     icons: [
-      '<svg width="24" height="24" viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentcolor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"><circle cx="8" cy="6" r="3.25"/><path d="M2.75 14.25c0-2.5 2-5 5.25-5s5.25 2.5 5.25 5"/></svg>',
-      ""
+           '<svg width="24" height="24" viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentcolor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"><circle cx="8" cy="6" r="3.25"/><path d="M2.75 14.25c0-2.5 2-5 5.25-5s5.25 2.5 5.25 5"/></svg>',
+     '<svg fill="currentcolor" width="800" height="800" viewBox="0 0 256 256" xmlns="http://www.w3.org/2000/svg"><path d="M189.02 145.34a31.35 31.35 0 0 1-14.928-18.734 47.998 47.998 0 0 0-92.183-.006 31.35 31.35 0 0 1-14.93 18.74 44.007 44.007 0 0 0 38.118 79.21 60.16 60.16 0 0 1 45.806 0 44.007 44.007 0 0 0 38.118-79.21M168 204a19.9 19.9 0 0 1-7.8-1.576l-.135-.056a84.03 84.03 0 0 0-64.13 0l-.134.056a20.007 20.007 0 0 1-17.315-36.022l.107-.06a55.2 55.2 0 0 0 26.364-33.047 24 24 0 0 1 46.089.005 55.2 55.2 0 0 0 26.361 33.043l.107.059A20.004 20.004 0 0 1 168 204m64-100a24 24 0 1 1-24-24 24 24 0 0 1 24 24M48 128a24 24 0 1 1 24-24 24 24 0 0 1-24 24m24-72a24 24 0 1 1 24 24 24 24 0 0 1-24-24m64 0a24 24 0 1 1 24 24 24 24 0 0 1-24-24"/></svg>',
+            '<svg fill="currentcolor" width="800" height="800" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><circle cx="9" cy="4" r="2"/><path d="M16.98 14.804A1 1 0 0 0 16 14h-4.133l-.429-3H16V9h-4.847l-.163-1.142A1 1 0 0 0 10 7H9a1.003 1.003 0 0 0-.99 1.142l.877 6.142A2.01 2.01 0 0 0 10.867 16h4.313l.839 4.196c.094.467.504.804.981.804h3v-2h-2.181z"/><path d="M12.51 17.5c-.739 1.476-2.25 2.5-4.01 2.5A4.505 4.505 0 0 1 4 15.5a4.5 4.5 0 0 1 2.817-4.167l-.289-2.025C3.905 10.145 2 12.604 2 15.5 2 19.084 4.916 22 8.5 22a6.5 6.5 0 0 0 5.545-3.126l-.274-1.374z"/></svg>'
     ],
     iconTexts: [
-      "6 bäddar",
-      ""
+      "4 vuxna & 2 barn",
+      "Djurvänlig",
+      "Handikappsvänlig"
     ],
     images: ["", "", "", ""],
     cta1Text: "Vägbeskrivning",
@@ -1621,15 +1636,17 @@ const sektion73Pins = [
   ui: { bubbleBg: "#7A936B" },
   modal: {
     imgSrc: "https://res.cloudinary.com/dmgmoisae/image/upload/v1769800477/jpeg-optimizer_ApelvikStrand_0356_1_llpb1s.jpg",
-    h: "Strandhus 24 | 6x",
+    h: "Strandhus 24  ",
     p: "Bo precis vid havet i Apelviken, i ett av våra strandhus. Här bor du med stranden alldeles intill och med plats att vara på under hela dagen. Egen dörr, egen uteplats och ett boende som fungerar lika bra mellan strandpassen som på kvällen.",
     icons: [
-      '<svg width="24" height="24" viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentcolor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"><circle cx="8" cy="6" r="3.25"/><path d="M2.75 14.25c0-2.5 2-5 5.25-5s5.25 2.5 5.25 5"/></svg>',
-      ""
+           '<svg width="24" height="24" viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentcolor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"><circle cx="8" cy="6" r="3.25"/><path d="M2.75 14.25c0-2.5 2-5 5.25-5s5.25 2.5 5.25 5"/></svg>',
+     '<svg fill="currentcolor" width="800" height="800" viewBox="0 0 256 256" xmlns="http://www.w3.org/2000/svg"><path d="M189.02 145.34a31.35 31.35 0 0 1-14.928-18.734 47.998 47.998 0 0 0-92.183-.006 31.35 31.35 0 0 1-14.93 18.74 44.007 44.007 0 0 0 38.118 79.21 60.16 60.16 0 0 1 45.806 0 44.007 44.007 0 0 0 38.118-79.21M168 204a19.9 19.9 0 0 1-7.8-1.576l-.135-.056a84.03 84.03 0 0 0-64.13 0l-.134.056a20.007 20.007 0 0 1-17.315-36.022l.107-.06a55.2 55.2 0 0 0 26.364-33.047 24 24 0 0 1 46.089.005 55.2 55.2 0 0 0 26.361 33.043l.107.059A20.004 20.004 0 0 1 168 204m64-100a24 24 0 1 1-24-24 24 24 0 0 1 24 24M48 128a24 24 0 1 1 24-24 24 24 0 0 1-24 24m24-72a24 24 0 1 1 24 24 24 24 0 0 1-24-24m64 0a24 24 0 1 1 24 24 24 24 0 0 1-24-24"/></svg>',
+            '<svg fill="currentcolor" width="800" height="800" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><circle cx="9" cy="4" r="2"/><path d="M16.98 14.804A1 1 0 0 0 16 14h-4.133l-.429-3H16V9h-4.847l-.163-1.142A1 1 0 0 0 10 7H9a1.003 1.003 0 0 0-.99 1.142l.877 6.142A2.01 2.01 0 0 0 10.867 16h4.313l.839 4.196c.094.467.504.804.981.804h3v-2h-2.181z"/><path d="M12.51 17.5c-.739 1.476-2.25 2.5-4.01 2.5A4.505 4.505 0 0 1 4 15.5a4.5 4.5 0 0 1 2.817-4.167l-.289-2.025C3.905 10.145 2 12.604 2 15.5 2 19.084 4.916 22 8.5 22a6.5 6.5 0 0 0 5.545-3.126l-.274-1.374z"/></svg>'
     ],
     iconTexts: [
-      "6 bäddar",
-      ""
+      "4 vuxna & 2 barn",
+      "Djurvänlig",
+      "Handikappsvänlig"
     ],
     images: ["", "", "", ""],
     cta1Text: "Vägbeskrivning",
@@ -1648,15 +1665,15 @@ const sektion73Pins = [
   ui: { bubbleBg: "#446D74" },
   modal: {
     imgSrc: "https://res.cloudinary.com/dmgmoisae/image/upload/v1769800477/jpeg-optimizer_ApelvikStrand_0356_1_llpb1s.jpg",
-    h: "Strandhus 25 | 6x",
+    h: "Strandhus 25  ",
     p: "Bo precis vid havet i Apelviken, i ett av våra strandhus. Här bor du med stranden alldeles intill och med plats att vara på under hela dagen. Egen dörr, egen uteplats och ett boende som fungerar lika bra mellan strandpassen som på kvällen.",
     icons: [
       '<svg width="24" height="24" viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentcolor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"><circle cx="8" cy="6" r="3.25"/><path d="M2.75 14.25c0-2.5 2-5 5.25-5s5.25 2.5 5.25 5"/></svg>',
       '<svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="m6 12-1-1m13 1 1-1M3 18h18M5 21h14M7 18a5 5 0 0 1 10 0M12 3v7m0 0 3-3m-3 3L9 7" stroke="currentcolor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>'
     ],
     iconTexts: [
-      "6 bäddar",
-      "Incheckning i app"
+       "4 vuxna & 2 barn",
+      "Kvällssol"
     ],
     images: ["", "", "", ""],
     cta1Text: "Vägbeskrivning",
@@ -1675,15 +1692,15 @@ const sektion73Pins = [
   ui: { bubbleBg: "#446D74" },
   modal: {
     imgSrc: "https://res.cloudinary.com/dmgmoisae/image/upload/v1769800477/jpeg-optimizer_ApelvikStrand_0356_1_llpb1s.jpg",
-    h: "Strandhus 26 | 6x",
+    h: "Strandhus 26  ",
     p: "Bo precis vid havet i Apelviken, i ett av våra strandhus. Här bor du med stranden alldeles intill och med plats att vara på under hela dagen. Egen dörr, egen uteplats och ett boende som fungerar lika bra mellan strandpassen som på kvällen.",
     icons: [
       '<svg width="24" height="24" viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentcolor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"><circle cx="8" cy="6" r="3.25"/><path d="M2.75 14.25c0-2.5 2-5 5.25-5s5.25 2.5 5.25 5"/></svg>',
       '<svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="m6 12-1-1m13 1 1-1M3 18h18M5 21h14M7 18a5 5 0 0 1 10 0M12 3v7m0 0 3-3m-3 3L9 7" stroke="currentcolor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>'
     ],
     iconTexts: [
-      "6 bäddar",
-      "Incheckning i app"
+       "4 vuxna & 2 barn",
+      "Kvällssol"
     ],
     images: ["", "", "", ""],
     cta1Text: "Vägbeskrivning",
@@ -1702,15 +1719,15 @@ const sektion73Pins = [
   ui: { bubbleBg: "#446D74" },
   modal: {
     imgSrc: "https://res.cloudinary.com/dmgmoisae/image/upload/v1769800477/jpeg-optimizer_ApelvikStrand_0356_1_llpb1s.jpg",
-    h: "Strandhus 27 | 6x",
+    h: "Strandhus 27  ",
     p: "Bo precis vid havet i Apelviken, i ett av våra strandhus. Här bor du med stranden alldeles intill och med plats att vara på under hela dagen. Egen dörr, egen uteplats och ett boende som fungerar lika bra mellan strandpassen som på kvällen.",
     icons: [
       '<svg width="24" height="24" viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentcolor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"><circle cx="8" cy="6" r="3.25"/><path d="M2.75 14.25c0-2.5 2-5 5.25-5s5.25 2.5 5.25 5"/></svg>',
       '<svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="m6 12-1-1m13 1 1-1M3 18h18M5 21h14M7 18a5 5 0 0 1 10 0M12 3v7m0 0 3-3m-3 3L9 7" stroke="currentcolor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>'
     ],
     iconTexts: [
-      "6 bäddar",
-      "Incheckning i app"
+       "4 vuxna & 2 barn",
+      "Kvällssol"
     ],
     images: ["", "", "", ""],
     cta1Text: "Vägbeskrivning",
@@ -1729,15 +1746,15 @@ const sektion73Pins = [
   ui: { bubbleBg: "#446D74" },
   modal: {
     imgSrc: "https://res.cloudinary.com/dmgmoisae/image/upload/v1769800477/jpeg-optimizer_ApelvikStrand_0356_1_llpb1s.jpg",
-    h: "Strandhus 28 | 6x",
+    h: "Strandhus 28  ",
     p: "Bo precis vid havet i Apelviken, i ett av våra strandhus. Här bor du med stranden alldeles intill och med plats att vara på under hela dagen. Egen dörr, egen uteplats och ett boende som fungerar lika bra mellan strandpassen som på kvällen.",
     icons: [
       '<svg width="24" height="24" viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentcolor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"><circle cx="8" cy="6" r="3.25"/><path d="M2.75 14.25c0-2.5 2-5 5.25-5s5.25 2.5 5.25 5"/></svg>',
       '<svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="m6 12-1-1m13 1 1-1M3 18h18M5 21h14M7 18a5 5 0 0 1 10 0M12 3v7m0 0 3-3m-3 3L9 7" stroke="currentcolor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>'
     ],
     iconTexts: [
-      "6 bäddar",
-      "Incheckning i app"
+       "4 vuxna & 2 barn",
+      "Kvällssol"
     ],
     images: ["", "", "", ""],
     cta1Text: "Vägbeskrivning",
@@ -1756,15 +1773,15 @@ const sektion73Pins = [
   ui: { bubbleBg: "#446D74" },
   modal: {
     imgSrc: "https://res.cloudinary.com/dmgmoisae/image/upload/v1769800477/jpeg-optimizer_ApelvikStrand_0356_1_llpb1s.jpg",
-    h: "Strandhus 29 | 6x",
+    h: "Strandhus 29  ",
     p: "Bo precis vid havet i Apelviken, i ett av våra strandhus. Här bor du med stranden alldeles intill och med plats att vara på under hela dagen. Egen dörr, egen uteplats och ett boende som fungerar lika bra mellan strandpassen som på kvällen.",
     icons: [
       '<svg width="24" height="24" viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentcolor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"><circle cx="8" cy="6" r="3.25"/><path d="M2.75 14.25c0-2.5 2-5 5.25-5s5.25 2.5 5.25 5"/></svg>',
       '<svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="m6 12-1-1m13 1 1-1M3 18h18M5 21h14M7 18a5 5 0 0 1 10 0M12 3v7m0 0 3-3m-3 3L9 7" stroke="currentcolor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>'
     ],
     iconTexts: [
-      "6 bäddar",
-      "Incheckning i app"
+       "4 vuxna & 2 barn",
+      "Kvällssol"
     ],
     images: ["", "", "", ""],
     cta1Text: "Vägbeskrivning",
@@ -1783,15 +1800,15 @@ const sektion73Pins = [
   ui: { bubbleBg: "#446D74" },
   modal: {
     imgSrc: "https://res.cloudinary.com/dmgmoisae/image/upload/v1769800477/jpeg-optimizer_ApelvikStrand_0356_1_llpb1s.jpg",
-    h: "Strandhus 30 | 6x",
+    h: "Strandhus 30  ",
     p: "Bo precis vid havet i Apelviken, i ett av våra strandhus. Här bor du med stranden alldeles intill och med plats att vara på under hela dagen. Egen dörr, egen uteplats och ett boende som fungerar lika bra mellan strandpassen som på kvällen.",
     icons: [
       '<svg width="24" height="24" viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentcolor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"><circle cx="8" cy="6" r="3.25"/><path d="M2.75 14.25c0-2.5 2-5 5.25-5s5.25 2.5 5.25 5"/></svg>',
       '<svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="m6 12-1-1m13 1 1-1M3 18h18M5 21h14M7 18a5 5 0 0 1 10 0M12 3v7m0 0 3-3m-3 3L9 7" stroke="currentcolor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>'
     ],
     iconTexts: [
-      "6 bäddar",
-      "Incheckning i app"
+       "4 vuxna & 2 barn",
+      "Kvällssol"
     ],
     images: ["", "", "", ""],
     cta1Text: "Vägbeskrivning",
@@ -1810,15 +1827,17 @@ const sektion73Pins = [
   ui: { bubbleBg: "#A88867" },
   modal: {
     imgSrc: "https://res.cloudinary.com/dmgmoisae/image/upload/v1769800477/jpeg-optimizer_ApelvikStrand_0356_1_llpb1s.jpg",
-    h: "Strandhus 31 | 6x",
+    h: "Strandhus 31  ",
     p: "Bo precis vid havet i Apelviken, i ett av våra strandhus. Här bor du med stranden alldeles intill och med plats att vara på under hela dagen. Egen dörr, egen uteplats och ett boende som fungerar lika bra mellan strandpassen som på kvällen.",
     icons: [
-      '<svg width="24" height="24" viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentcolor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"><circle cx="8" cy="6" r="3.25"/><path d="M2.75 14.25c0-2.5 2-5 5.25-5s5.25 2.5 5.25 5"/></svg>',
-      ""
+           '<svg width="24" height="24" viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentcolor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"><circle cx="8" cy="6" r="3.25"/><path d="M2.75 14.25c0-2.5 2-5 5.25-5s5.25 2.5 5.25 5"/></svg>',
+     '<svg fill="currentcolor" width="800" height="800" viewBox="0 0 256 256" xmlns="http://www.w3.org/2000/svg"><path d="M189.02 145.34a31.35 31.35 0 0 1-14.928-18.734 47.998 47.998 0 0 0-92.183-.006 31.35 31.35 0 0 1-14.93 18.74 44.007 44.007 0 0 0 38.118 79.21 60.16 60.16 0 0 1 45.806 0 44.007 44.007 0 0 0 38.118-79.21M168 204a19.9 19.9 0 0 1-7.8-1.576l-.135-.056a84.03 84.03 0 0 0-64.13 0l-.134.056a20.007 20.007 0 0 1-17.315-36.022l.107-.06a55.2 55.2 0 0 0 26.364-33.047 24 24 0 0 1 46.089.005 55.2 55.2 0 0 0 26.361 33.043l.107.059A20.004 20.004 0 0 1 168 204m64-100a24 24 0 1 1-24-24 24 24 0 0 1 24 24M48 128a24 24 0 1 1 24-24 24 24 0 0 1-24 24m24-72a24 24 0 1 1 24 24 24 24 0 0 1-24-24m64 0a24 24 0 1 1 24 24 24 24 0 0 1-24-24"/></svg>',
+            '<svg fill="currentcolor" width="800" height="800" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><circle cx="9" cy="4" r="2"/><path d="M16.98 14.804A1 1 0 0 0 16 14h-4.133l-.429-3H16V9h-4.847l-.163-1.142A1 1 0 0 0 10 7H9a1.003 1.003 0 0 0-.99 1.142l.877 6.142A2.01 2.01 0 0 0 10.867 16h4.313l.839 4.196c.094.467.504.804.981.804h3v-2h-2.181z"/><path d="M12.51 17.5c-.739 1.476-2.25 2.5-4.01 2.5A4.505 4.505 0 0 1 4 15.5a4.5 4.5 0 0 1 2.817-4.167l-.289-2.025C3.905 10.145 2 12.604 2 15.5 2 19.084 4.916 22 8.5 22a6.5 6.5 0 0 0 5.545-3.126l-.274-1.374z"/></svg>'
     ],
     iconTexts: [
-      "6 bäddar",
-      ""
+      "4 vuxna & 2 barn",
+      "Djurvänlig",
+      "Handikappsvänlig"
     ],
     images: ["", "", "", ""],
     cta1Text: "Vägbeskrivning",
@@ -1837,15 +1856,17 @@ const sektion73Pins = [
   ui: { bubbleBg: "#A88867" },
   modal: {
     imgSrc: "https://res.cloudinary.com/dmgmoisae/image/upload/v1769800477/jpeg-optimizer_ApelvikStrand_0356_1_llpb1s.jpg",
-    h: "Strandhus 32 | 6x",
+    h: "Strandhus 32  ",
     p: "Bo precis vid havet i Apelviken, i ett av våra strandhus. Här bor du med stranden alldeles intill och med plats att vara på under hela dagen. Egen dörr, egen uteplats och ett boende som fungerar lika bra mellan strandpassen som på kvällen.",
     icons: [
-      '<svg width="24" height="24" viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentcolor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"><circle cx="8" cy="6" r="3.25"/><path d="M2.75 14.25c0-2.5 2-5 5.25-5s5.25 2.5 5.25 5"/></svg>',
-      ""
+           '<svg width="24" height="24" viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentcolor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"><circle cx="8" cy="6" r="3.25"/><path d="M2.75 14.25c0-2.5 2-5 5.25-5s5.25 2.5 5.25 5"/></svg>',
+     '<svg fill="currentcolor" width="800" height="800" viewBox="0 0 256 256" xmlns="http://www.w3.org/2000/svg"><path d="M189.02 145.34a31.35 31.35 0 0 1-14.928-18.734 47.998 47.998 0 0 0-92.183-.006 31.35 31.35 0 0 1-14.93 18.74 44.007 44.007 0 0 0 38.118 79.21 60.16 60.16 0 0 1 45.806 0 44.007 44.007 0 0 0 38.118-79.21M168 204a19.9 19.9 0 0 1-7.8-1.576l-.135-.056a84.03 84.03 0 0 0-64.13 0l-.134.056a20.007 20.007 0 0 1-17.315-36.022l.107-.06a55.2 55.2 0 0 0 26.364-33.047 24 24 0 0 1 46.089.005 55.2 55.2 0 0 0 26.361 33.043l.107.059A20.004 20.004 0 0 1 168 204m64-100a24 24 0 1 1-24-24 24 24 0 0 1 24 24M48 128a24 24 0 1 1 24-24 24 24 0 0 1-24 24m24-72a24 24 0 1 1 24 24 24 24 0 0 1-24-24m64 0a24 24 0 1 1 24 24 24 24 0 0 1-24-24"/></svg>',
+            '<svg fill="currentcolor" width="800" height="800" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><circle cx="9" cy="4" r="2"/><path d="M16.98 14.804A1 1 0 0 0 16 14h-4.133l-.429-3H16V9h-4.847l-.163-1.142A1 1 0 0 0 10 7H9a1.003 1.003 0 0 0-.99 1.142l.877 6.142A2.01 2.01 0 0 0 10.867 16h4.313l.839 4.196c.094.467.504.804.981.804h3v-2h-2.181z"/><path d="M12.51 17.5c-.739 1.476-2.25 2.5-4.01 2.5A4.505 4.505 0 0 1 4 15.5a4.5 4.5 0 0 1 2.817-4.167l-.289-2.025C3.905 10.145 2 12.604 2 15.5 2 19.084 4.916 22 8.5 22a6.5 6.5 0 0 0 5.545-3.126l-.274-1.374z"/></svg>'
     ],
     iconTexts: [
-      "6 bäddar",
-      ""
+      "4 vuxna & 2 barn",
+      "Djurvänlig",
+      "Handikappsvänlig"
     ],
     images: ["", "", "", ""],
     cta1Text: "Vägbeskrivning",
