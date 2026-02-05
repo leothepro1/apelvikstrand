@@ -63,7 +63,7 @@ const sektion73Home = {
     };
 const sektion73InitialCenter = {
   title: "",
-  lngLat: [12.262932, 57.081171]
+  lngLat: [12.262932, 57.081171] // [lng, lat]
 };
                    const sektion73destinationapelviken = {
       title: "",
@@ -106,7 +106,7 @@ const sektion73InitialCenter = {
 
 const sektion73Bounds = [
   [12.250810786071327, 57.076066029216946], // SW
-  [12.261478877075945, 57.085065343790404]  // NE
+  [12.265200000000000, 57.085065343790404]  // NE (ökad maxLng)
 ];
 
 const sektion73MinZoom = 16.4;
