@@ -436,13 +436,12 @@ function sektion73InjectModalCSS() {
   object-fit: cover;
 }
 
-
 .sektion73ModalLeftImgWrap {
     width: 100%;
     border-radius: 0px;
     overflow: hidden;
     background: #f2f4f5;
-    aspect-ratio: 1 / 1.1;
+    height: 100%;
 }
 
     .sektion73ModalLeftImg{
@@ -599,24 +598,31 @@ function sektion73InjectModalCSS() {
 
     @media (max-width: 768px){
   .sektion73ModalLayout{
-    flex-direction:column;
+    flex-direction:row;
     min-height:unset;
   }
-  .sektion73ModalLeft{
-    width:100%;
-    flex: 0 0 auto;
-    min-width:unset;
-    border-right:none;
-    border-bottom:1px solid rgba(14,19,24,.10);
-    padding:16px;
-  }
-  .sektion73ModalRight{
-    width:100%;
-    flex: 0 0 auto;
-    padding:18px 18px 22px;
-  }
+    .sektion73ModalLeft {
+        width: 100%;
+        flex: 0 0 35%;
+        min-width: unset;
+        border-right: none;
+        border-bottom: none;
+        padding: 0px;
+        height: 100%;
+    }
+    #sektion73MapModal {
+    height: min(28vh, 720px);
+}
+    .sektion73ModalRight {
+        width: auto;
+        flex: auto;
+        padding: 18px 18px 22px;
+        overflow: hidden;
+        flex-direction: column;
+        flex-wrap: nowrap;
+    }
 
-      .sektion73ModalBodyH{ font-size:30px; }
+      .sektion73ModalBodyH{ font-size:21px; }
       .sektion73ModalBodyP{ font-size:15px; }
     }
 
