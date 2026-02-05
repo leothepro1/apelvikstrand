@@ -391,241 +391,58 @@ function sektion73InjectModalCSS() {
     }
 
     /* bottom-sheet (glider upp nerifrån) */
-    #sektion73MapModal{
-      position:fixed;
-      left:50%;
-      height: 367px;
-      bottom:18px;
-      transform:translateX(-50%) translateY(115%);
-      width:min(920px, calc(100vw - 24px));
-      max-height:min(78vh, 720px);
-      background:var(--sektion73-modal-bg);
-      color:var(--sektion73-modal-text);
-      border:none;
-      transition:transform var(--sektion73-modal-dur) var(--sektion73-modal-ease);
-      z-index:2147483001;
-      display:block;
-      overscroll-behavior:contain;
-      border-radius:20px;
-      overflow:hidden;
-      box-shadow:var(--sektion73-modal-shadow);
-    }
-    #sektion73MapModal.is-open{
-      transform:translateX(-50%) translateY(0);
-    }
+  #sektion73MapModal{
+    position:fixed;
+    left:50%;
+    height: 367px;
+    bottom:18px;
+    transform:translateX(-50%) translateY(115%);
+    width:min(920px, calc(100vw - 24px));
+    max-height:min(78vh, 720px);
+    background:var(--sektion73-modal-bg);
+    color:var(--sektion73-modal-text);
+    border:none;
+    transition:transform var(--sektion73-modal-dur) var(--sektion73-modal-ease);
+    z-index:2147483001;
+    display:block;
+    overscroll-behavior:contain;
+    border-radius:20px;
+    overflow:hidden;
+    box-shadow:var(--sektion73-modal-shadow);
+  }
 
- .sektion73ModalLayout{
-  display:flex;
-  flex-direction:row;
-  width:100%;
-  height:100%;
-  min-height:auto;
-}
+  .sektion73ModalLayout{
+    display:flex;
+    flex-direction:row;
+    width:100%;
+    height:100%;
+    min-height:auto;
+  }
 
-.sektion73ModalLeft {
-  width: 40%;
-  min-width: 240px;
-  position: relative;
-  display: flex;
-  flex-direction: column;
-  gap: 12px;
-  padding: 0px;
-  border-right: none;
-  background: var(--sektion73-modal-bg);
-  height: 100%;
-  min-height: 100%;
-  object-fit: cover;
-}
+  .sektion73ModalLeft {
+    width: 40%;
+    min-width: 240px;
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    padding: 0px;
+    border-right: none;
+    background: var(--sektion73-modal-bg);
+    height: 100%;
+    min-height: 100%;
+    object-fit: cover;
+  }
 
-.sektion73ModalLeftImgWrap {
+  .sektion73ModalLeftImgWrap {
     width: 100%;
     border-radius: 0px;
     overflow: hidden;
     background: #f2f4f5;
     height: 100%;
-}
-
-    .sektion73ModalLeftImg{
-      width:100%;
-      height:100%;
-      object-fit:cover;
-      display:block;
-    }
-
-.sektion73ModalClose {
-    width: 36px;
-    height: 36px;
-    border-radius: 888px;
-    border: none;
-    background: rgba(255, 255, 255, .92);
-    cursor: pointer;
-    display: grid;
-    place-items: center;
-    color: var(--sektion73-modal-text);
-    background: rgba(250, 250, 250, 0.72);
-    cursor: pointer;
-    display: flex;
-    place-content: center;
-    flex: 0 0 18px;
-    position: absolute;
-    top: 18px;
-    right: 18px;
-    backdrop-filter: blur(24px) saturate(1.6);
-    -webkit-backdrop-filter: blur(24px) saturate(1.6);
-    box-shadow: rgba(0, 0, 0, 0.14) 0px 3px 8px;
-    flex-wrap: wrap;
-}
-    .sektion73ModalClose:hover{ background:rgba(255,255,255,.98); }
-    .sektion73ModalClose:active{ transform:translateY(1px); }
-
-    .sektion73ModalCloseAbs{
-      position:absolute;
-      top:12px;
-      left:12px;
-      z-index:5;
-    }
-
-.sektion73ModalImgSrc {
-    margin: 0;
-    font-family: 'Inter Variablefont Opsz Wght';
-    font-size: 13px;
-    line-height: 1.3em;
-    color: rgba(14, 19, 24, .62);
-    word-break: break-word;
-    display: none;
-}
-
-.sektion73ModalRight {
-    width: auto;
-    flex: 3 1 0;
-    min-width: 0;
-    display: flex;
-    flex-direction: column;
-    padding: 40px;
-    gap: 0px;
-    overflow: auto;
-    place-content: center;
-    flex-wrap: wrap;
-}
-
-    .sektion73ModalRightTop{
-      display:flex;
-      flex-direction:column;
-      gap:14px;
-    }
-
-  .sektion73ModalTitleRow{
-      display:flex;
-      align-items:center;
-      gap:12px;
-    }
-
-#sektion73MapModal #sektion73ModalTitleIcons {
-    margin-top: 24px;
-    border-top: 1px solid #e6e6e6;
-    padding-top: 24px;
-}
-
-#sektion73MapModal .sektion73ModalIconRow{
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  padding: 6px 0;
-}
-
-#sektion73MapModal .sektion73ModalTitleIcon{
-  width: 24px;
-  height: 24px;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  color: #646463;
-  flex: 0 0 18px;
-}
-
-#sektion73MapModal .sektion73ModalTitleIcon svg {
-    width: 18px;
-    height: 18px;
-    display: block;
-    stroke: currentColor;
-    fill: none;
-}
-
-#sektion73MapModal .sektion73ModalTitleIconTxt {
-    font-family: 'Inter Variablefont Opsz Wght';
-    font-size: 14px;
-    font-weight: 500;
-    color: #646463;
-    line-height: 1.25em;
-}
-.sektion73ModalBodyH {
-    font-family: "Manrope", Inter, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, sans-serif;
-    margin: 0;
-    line-height: 1.25em;
-    font-weight: 700;
-    font-size: 31px;
-}
-
-    .sektion73ModalBodyPWrap{
-      position:relative;
-      padding-right:90px;
-    }
-
-    .sektion73ModalBodyP{
-      color: rgb(64, 61, 59);
-      margin:0;
-      font-family: 'Inter Variablefont Opsz Wght';
-      font-weight:400;
-      font-size:16px;
-      line-height:1.55em;
-
-      display:-webkit-box;
-      -webkit-line-clamp:2;
-      -webkit-box-orient:vertical;
-      overflow:hidden;
-    }
-
-    .sektion73ModalBodyPWrap.is-expanded .sektion73ModalBodyP{
-      display:block;
-      -webkit-line-clamp:unset;
-      overflow:visible;
-    }
-
-    .sektion73ModalReadMore{
-      position:absolute;
-      right:0;
-      bottom:0;
-      border:none;
-      background:transparent;
-      padding:0;
-      cursor:pointer;
-      font-family:'Inter Variablefont Opsz Wght';
-      font-size:15px;
-      font-weight:600;
-      color:var(--sektion73-accent);
-      line-height:1.55em;
-    }
-    .sektion73ModalReadMore:hover{ text-decoration:underline; }
-    .sektion73ModalReadMore:active{ transform:translateY(1px); }
-
-    @media (max-width: 768px){
-  .sektion73ModalLayout{
-    flex-direction:row;
-    min-height:unset;
   }
-    .sektion73ModalLeft {
-        width: 100%;
-        flex: 0 0 35%;
-        min-width: unset;
-        border-right: none;
-        border-bottom: none;
-        padding: 0px;
-        height: 100%;
-    }
-    #sektion73MapModal {
-    height: min(28vh, 720px);
-}
-.sektion73ModalRight {
+
+  .sektion73ModalRight {
     width: auto;
     flex: 3 1 0;
     min-width: 0;
@@ -635,11 +452,52 @@ function sektion73InjectModalCSS() {
     gap: 0px;
     overflow: auto;
     place-content: center;
-    flex-wrap: nowrap;
-}
-      .sektion73ModalBodyH{ font-size:21px; }
-      .sektion73ModalBodyP{ font-size:15px; }
+    flex-wrap: wrap;
+  }
+
+  @media (max-width: 768px){
+
+    /* 1) Mobil: vänster + höger staplas vertikalt */
+    .sektion73ModalLayout{
+      flex-direction:column;
+      height:auto;
+      min-height:unset;
     }
+
+    /* 2) Mobil: modal blir “vanlig” scrollbar container */
+    #sektion73MapModal{
+      height:auto;
+      max-height: min(78vh, 720px);
+      overflow:auto;                 /* hela modalen scrollar */
+      -webkit-overflow-scrolling: touch;
+    }
+
+    /* 3) Bilddelen får fast, rimlig höjd överst */
+    .sektion73ModalLeft{
+      width:100%;
+      flex: 0 0 auto;
+      min-width:unset;
+      height:auto;
+      min-height:unset;
+    }
+
+    .sektion73ModalLeftImgWrap{
+      height: 220px;                 /* justera vid behov */
+    }
+
+    /* 4) Innehållsdelen ska INTE ha egen scroll på mobil (för att undvika nested scroll) */
+    .sektion73ModalRight{
+      width:100%;
+      flex: 0 0 auto;
+      padding: 22px;                 /* mobilvänligare än 40px */
+      overflow: visible;             /* låt #sektion73MapModal sköta scroll */
+      place-content: initial;
+      flex-wrap: nowrap;
+    }
+
+    .sektion73ModalBodyH{ font-size:21px; }
+    .sektion73ModalBodyP{ font-size:15px; }
+  }
 
     body.sektion73-modal-open {
       overflow: hidden;
