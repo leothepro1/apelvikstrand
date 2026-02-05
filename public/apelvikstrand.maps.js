@@ -120,7 +120,12 @@ const sektion73SecondaryPinsMinZoom = 15.8;
 
     // Zoom vid pin-klick
     const sektion73PinZoom = 18.3;
+
+    // Bas-duration (normal zoom-delta)
     const sektion73PinZoomDur = 1100;
+
+    // Extra “premium smooth” om zoom-deltat är stort
+    const sektion73PinZoomDurExtraMax = 140;
 
     // Mol animation
     const sektion73ModalDurMs = 420;
@@ -2126,15 +2131,26 @@ requestAnimationFrame(() => {
 
   const sektion73EaseInOutCubic_00035 = (t) => (t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2);
 
+  // Dynamisk duration: bara lite längre när hoppet är stort
+  const sektion73TargetZoom_00036 = Math.min(sektion73PinZoom, sektion73MaxZoom);
+  const sektion73CurrentZoom_00037 = sektion73Map.getZoom();
+  const sektion73ZoomDelta_00038 = Math.abs(sektion73TargetZoom_00036 - sektion73CurrentZoom_00037);
+
+  // 0..1 där 0 = litet hopp, 1 = stort hopp (tuned för din karta)
+  const sektion73ZoomDeltaNorm_00039 = Math.min(1, sektion73ZoomDelta_00038 / 4.2);
+
+  // Lägg till max +140ms vid riktigt stora hopp
+  const sektion73DynamicDur_00040 =
+    sektion73PinZoomDur + Math.round(sektion73ZoomDeltaNorm_00039 * sektion73PinZoomDurExtraMax);
+
   sektion73Map.easeTo({
     center: pin.lngLat,
-    zoom: Math.min(sektion73PinZoom, sektion73MaxZoom),
+    zoom: sektion73TargetZoom_00036,
     pitch: sektion73Pitch,
     bearing: sektion73Bearing,
-    duration: sektion73PinZoomDur,
+    duration: sektion73DynamicDur_00040,
     easing: sektion73EaseInOutCubic_00035 // mjuk ease-in + mjuk inbromsning
   });
-}
 
 
 
