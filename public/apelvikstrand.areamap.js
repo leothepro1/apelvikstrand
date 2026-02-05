@@ -376,15 +376,15 @@ function sektion73InjectModalCSS() {
   transform: scale(1) !important;
 }
 
-    #sektion73MapOverlay{
-      position:fixed;
-      inset:0;
-      background:rgba(0,0,0,.55);
-      opacity:0;
-      pointer-events:none;
-      transition:opacity var(--sektion73-modal-dur) var(--sektion73-modal-ease);
-      z-index:2147483000;
-    }
+#sektion73MapOverlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, .25);
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity var(--sektion73-modal-dur) var(--sektion73-modal-ease);
+    z-index: 2147483000;
+}
     #sektion73MapOverlay.is-open{
       opacity:1;
       pointer-events:auto;
@@ -595,16 +595,16 @@ function sektion73InjectModalCSS() {
 
     @media (max-width: 768px){
       .sektion73ModalLayout{
-        flex-direction:column;
+        flex-direction:row;
         min-height:unset;
       }
-      .sektion73ModalLeft{
-        width:100%;
-        min-width:unset;
-        border-right:none;
-        border-bottom:1px solid rgba(14,19,24,.10);
-        padding:16px;
-      }
+.sektion73ModalLeft {
+        width: 100%;
+        min-width: unset;
+        border-right: none;
+        border-bottom: none;
+        padding: 0px;
+    }
       .sektion73ModalRight{
         width:100%;
         padding:18px 18px 22px;
