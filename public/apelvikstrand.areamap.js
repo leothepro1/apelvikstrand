@@ -413,28 +413,29 @@ function sektion73InjectModalCSS() {
       transform:translateX(-50%) translateY(0);
     }
 
-    .sektion73ModalLayout{
-      display:flex;
-      flex-direction:row;
-      width:100%;
-      height:100%;
-      min-height:auto;
-    }
+ .sektion73ModalLayout{
+  display:flex;
+  flex-direction:row;
+  width:100%;
+  height:100%;
+  min-height:auto;
+}
 
 .sektion73ModalLeft {
-    width: 40%;
-    min-width: 240px;
-    position: relative;
-    display: flex;
-    flex-direction: column;
-    gap: 12px;
-    padding: 0px;
-    border-right: none;
-    background: var(--sektion73-modal-bg);
-    height: 100%;
-    min-height: 100%;
-    object-fit: cover;
+  width: 40%;
+  min-width: 240px;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  padding: 0px;
+  border-right: none;
+  background: var(--sektion73-modal-bg);
+  height: 100%;
+  min-height: 100%;
+  object-fit: cover;
 }
+
 
 .sektion73ModalLeftImgWrap {
     width: 100%;
@@ -494,15 +495,18 @@ function sektion73InjectModalCSS() {
     display: none;
 }
 
-.sektion73ModalRight {
-    width: 70%;
-    display: flex;
-    flex-direction: column;
-    padding: 22px 26px;
-    gap: 0px;
-    overflow: auto;
-    place-content: center;
-    flex-wrap: wrap;
+.sektion73ModalRight{
+  width: auto;       /* ersätter width:70% */
+  flex: 3 1 0;       /* flex-styrd kolumn */
+  min-width: 0;      /* viktigt för overflow i flex */
+
+  display: flex;
+  flex-direction: column;
+  padding: 22px 26px;
+  gap: 0px;
+  overflow: auto;
+  place-content: center;
+  flex-wrap: wrap;
 }
 
     .sektion73ModalRightTop{
@@ -594,21 +598,24 @@ function sektion73InjectModalCSS() {
     .sektion73ModalReadMore:active{ transform:translateY(1px); }
 
     @media (max-width: 768px){
-      .sektion73ModalLayout{
-        flex-direction:row;
-        min-height:unset;
-      }
-.sektion73ModalLeft {
-        width: 100%;
-        min-width: unset;
-        border-right: none;
-        border-bottom: none;
-        padding: 0px;
-    }
-      .sektion73ModalRight{
-        width:100%;
-        padding:18px 18px 22px;
-      }
+  .sektion73ModalLayout{
+    flex-direction:column;
+    min-height:unset;
+  }
+  .sektion73ModalLeft{
+    width:100%;
+    flex: 0 0 auto;
+    min-width:unset;
+    border-right:none;
+    border-bottom:1px solid rgba(14,19,24,.10);
+    padding:16px;
+  }
+  .sektion73ModalRight{
+    width:100%;
+    flex: 0 0 auto;
+    padding:18px 18px 22px;
+  }
+
       .sektion73ModalBodyH{ font-size:30px; }
       .sektion73ModalBodyP{ font-size:15px; }
     }
