@@ -610,7 +610,7 @@ function sektion73InjectModalCSS() {
 
     @media (max-width: 768px){
   .sektion73ModalLayout{
-    flex-direction:row;
+    flex-direction:column;
     min-height:unset;
   }
     .sektion73ModalLeft {
@@ -632,19 +632,22 @@ function sektion73InjectModalCSS() {
         top: auto !important;
         border-radius: 20px 20px 0px 0px !important;
     }
-.sektion73ModalRight {
-    width: auto;
-    flex: 3 1 0;
-    min-width: 0;
-    display: flex;
-    flex-direction: column;
-    padding: 40px;
-    gap: 0px;
-    overflow: auto;
-    place-content: center;
-    flex-wrap: nowrap;
+width: auto;
+        flex: 3 1 0;
+        min-width: 0;
+        display: flex;
+        flex-direction: column;
+        padding: 24px;
+        gap: 0px;
+        overflow: auto;
+        place-content: center;
+        flex-wrap: nowrap;
+        overflow: visible !important;
+        place-content: initial !important;
+        flex-wrap: nowrap !important;
+    
 }
-      .sektion73ModalBodyH{ font-size:21px; }
+      .sektion73ModalBodyH{ font-size:26px; }
       .sektion73ModalBodyP{ font-size:15px; }
     }
 
@@ -655,7 +658,9 @@ function sektion73InjectModalCSS() {
       height: 100%;
       touch-action: none;
     }
-
+#sektion73MapModal #sektion73ModalCtaPrimary {
+    width: 100%;
+}
     /* NYTT: klassisk kart-pin (cirkel + pekare), med text i cirkeln */
     .sektion73PinWrap{
       display:inline-flex;
