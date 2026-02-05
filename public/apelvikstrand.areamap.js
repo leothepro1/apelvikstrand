@@ -371,7 +371,7 @@ function sektion73InjectModalCSS() {
       pointer-events:auto;
     }
 
-    /* NYTT: bottom-sheet (glider upp nerifrån, som gamla filter railen) */
+    /* bottom-sheet (glider upp nerifrån) */
     #sektion73MapModal{
       position:fixed;
       left:50%;
@@ -384,191 +384,187 @@ function sektion73InjectModalCSS() {
       border:none;
       transition:transform var(--sektion73-modal-dur) var(--sektion73-modal-ease);
       z-index:2147483001;
-      display:flex;
-      flex-direction:column;
-      padding-bottom:32px;
-      gap:0px;
+      display:block;
       overscroll-behavior:contain;
       border-radius:20px;
-      overflow:auto;
+      overflow:hidden;
       box-shadow:var(--sektion73-modal-shadow);
     }
     #sektion73MapModal.is-open{
       transform:translateX(-50%) translateY(0);
     }
 
-@media (max-width: 768px){
-.sektion73ModalGallery {
-        display: flex !important;
-        flex-direction: row;
-        padding: 0px;
-        overflow-x: auto;
-        overflow-y: hidden;
-        -webkit-overflow-scrolling: touch;
-        overscroll-behavior-x: contain;
-        scrollbar-width: none;
-        touch-action: pan-x;
-        scroll-snap-type: none !important;
-        scroll-behavior: auto !important;
-    }
-    .sektion73ModalBodyP {
-    font-size: 15px !important;
-}
-.sektion73ModalBodyH {
-    font-size: 31px !important;
-}
-    .sektion73ModalMeta {
-    padding: 26px 26px 0px !important;
-    border-radius: 20px !important;
-    margin-top: 0px !important;
-    background: #fff !important;
-            z-index: 4;
-}
-.sektion73ModalActions {
-    margin-top: 25px !important;
-    padding: 0px 26px !important;
-}
-  .sektion73ModalGallery::-webkit-scrollbar{ display:none; }
-#sektion73MapModal.is-open{
-    transform:translateX(-50%) translateY(0);
-}
-}
-    .sektion73ModalTop{
+    .sektion73ModalLayout{
       display:flex;
-      align-items:center;
-      justify-content:space-between;
-      padding: 0px;
-      border-bottom:none;
-      position:sticky;
-      top:0;
-      background:var(--sektion73-modal-bg);
-      z-index:2;
+      flex-direction:row;
+      width:100%;
+      height:100%;
+      min-height:420px;
     }
+
+    .sektion73ModalLeft{
+      width:30%;
+      min-width:240px;
+      position:relative;
+      display:flex;
+      flex-direction:column;
+      gap:12px;
+      padding:18px;
+      border-right:1px solid rgba(14,19,24,.10);
+      background:var(--sektion73-modal-bg);
+    }
+
+    .sektion73ModalLeftImgWrap{
+      width:100%;
+      border-radius:14px;
+      overflow:hidden;
+      background:#f1f3f4;
+      aspect-ratio: 1 / 1.1;
+    }
+
+    .sektion73ModalLeftImg{
+      width:100%;
+      height:100%;
+      object-fit:cover;
+      display:block;
+    }
+
     .sektion73ModalClose{
-      width:52px;
-      height:52px;
+      width:44px;
+      height:44px;
       border-radius:12px;
       border:none;
-      background:transparent;
+      background:rgba(255,255,255,.92);
       cursor:pointer;
       display:grid;
       place-items:center;
       color:var(--sektion73-modal-text);
+      box-shadow:0 10px 26px rgba(0,0,0,.14);
     }
-    .sektion73ModalClose:hover{ background:rgba(0,0,0,.05); }
-    .sektion73ModalClose:active{ background:rgba(0,0,0,.09); }
+    .sektion73ModalClose:hover{ background:rgba(255,255,255,.98); }
+    .sektion73ModalClose:active{ transform:translateY(1px); }
 
-    .sektion73ModalGallery{
-      padding:0px;
-      display:grid;
+    .sektion73ModalCloseAbs{
+      position:absolute;
+      top:12px;
+      left:12px;
+      z-index:5;
+    }
+
+    .sektion73ModalImgSrc{
+      margin:0;
+      font-family: 'Inter Variablefont Opsz Wght';
+      font-size:13px;
+      line-height:1.3em;
+      color:rgba(14,19,24,.62);
+      word-break:break-word;
+    }
+
+    .sektion73ModalRight{
+      width:70%;
+      display:flex;
+      flex-direction:column;
+      padding:22px 26px;
       gap:0px;
+      overflow:auto;
     }
-    .sektion73ModalGalleryTop{
-      border-radius: 0px;
+
+    .sektion73ModalRightTop{
+      display:flex;
+      flex-direction:column;
+      gap:14px;
+    }
+
+    .sektion73ModalTitleRow{
+      display:flex;
+      align-items:flex-start;
+      gap:12px;
+    }
+
+    .sektion73ModalTitleIcons{
+      display:inline-flex;
+      align-items:center;
+      gap:8px;
+      margin-top:6px;
+      color:rgba(14,19,24,.70);
+    }
+
+    .sektion73ModalTitleIcon{
+      width:20px;
+      height:20px;
+      display:grid;
+      place-items:center;
+    }
+
+    .sektion73ModalBodyH{
+      font-family: "Manrope", Inter, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, sans-serif;
+      margin:0;
+      line-height:1.25em;
+      font-weight:700;
+      font-size:34px;
+    }
+
+    .sektion73ModalBodyPWrap{
+      position:relative;
+      padding-right:90px;
+    }
+
+    .sektion73ModalBodyP{
+      color: rgb(64, 61, 59);
+      margin:0;
+      font-family: 'Inter Variablefont Opsz Wght';
+      font-weight:400;
+      font-size:16px;
+      line-height:1.55em;
+
+      display:-webkit-box;
+      -webkit-line-clamp:2;
+      -webkit-box-orient:vertical;
       overflow:hidden;
-      border:0px solid rgba(0,0,0,.10);
-      aspect-ratio: 1.39778 / 1;
-      background:#f1f3f4;
     }
-    .sektion73ModalGalleryTop img{
-      width:100%;
-      height:100%;
-      object-fit:cover;
+
+    .sektion73ModalBodyPWrap.is-expanded .sektion73ModalBodyP{
       display:block;
-    }
-.sektion73ModalGalleryRow {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 2px;
-}
-.sektion73ModalThumb {
-    aspect-ratio: 1.39778 / 1;
-    border-radius: 0px;
-    overflow: hidden;
-    border: none;
-    object-fit: cover;
-}
-    .sektion73ModalThumb img{
-      width:100%;
-      height:100%;
-      object-fit:cover;
-      display:block;
+      -webkit-line-clamp:unset;
+      overflow:visible;
     }
 
-.sektion73ModalMeta {
-    display: flex;
-    flex-direction: column;
-    gap: 0px;
-    padding: 32px 40px 0px;
-}
-.sektion73ModalImgSrc {
-    display: none;
-}
-.sektion73ModalBodyH {
-    font-family: "Manrope", Inter, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, sans-serif;
-    margin: 0;
-    line-height: 1.25em;
-    font-weight: 700;
-    font-size: 35px;
-}
-.sektion73ModalBodyP {
-    color: rgb(64, 61, 59);
-    margin: 0;
-    font-family: 'Inter Variablefont Opsz Wght';
-    font-weight: 400;
-    font-size: 16px;
-    line-height: 1.55em;
-    margin-top: 13px;
-}
-
-.sektion73ModalActions {
-    margin-top: 27px;
-    display: flex;
-    padding: 0px 40px;
-    flex-direction: row;
-    gap: 16px;
-}
-.sektion73ModalBtn {
-    width: 100%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 12px;
-    padding: 11px 13px;
-    border-radius: 8px;
-    border: none;
-    transition: 0.15s ease-in-out;
-    cursor: pointer;
-    font-family: "Manrope", Inter, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, sans-serif;
-    color: var(--sektion73-modal-text);
-    font-size: 15px;
-    font-weight: 700;
-}
-    .sektion73ModalBtnPrimary{
-      background:var(--sektion73-accent);
+    .sektion73ModalReadMore{
+      position:absolute;
+      right:0;
+      bottom:0;
+      border:none;
+      background:transparent;
+      padding:0;
+      cursor:pointer;
+      font-family:'Inter Variablefont Opsz Wght';
+      font-size:15px;
+      font-weight:600;
+      color:var(--sektion73-accent);
+      line-height:1.55em;
     }
-         .sektion73ModalBtnPrimary:hover{
-      background:#d89f00;
-    }
-                 .sektion73ModalBtnPrimary:active{
-      background:#a67b02;
-    }
-            [id="sektion73ModalCtaSecondary"] {
-background: #FFE6A3;
-color: #5A3C00;
-border: none;
-}
+    .sektion73ModalReadMore:hover{ text-decoration:underline; }
+    .sektion73ModalReadMore:active{ transform:translateY(1px); }
 
-[id="sektion73ModalCtaSecondary"]:hover {
-background: #FFD870;
-}
-
-[id="sektion73ModalCtaSecondary"]:active {
-background: #FFD157;
-}
-.sektion73ModalBtn svg {
-display: none;
-}
+    @media (max-width: 768px){
+      .sektion73ModalLayout{
+        flex-direction:column;
+        min-height:unset;
+      }
+      .sektion73ModalLeft{
+        width:100%;
+        min-width:unset;
+        border-right:none;
+        border-bottom:1px solid rgba(14,19,24,.10);
+        padding:16px;
+      }
+      .sektion73ModalRight{
+        width:100%;
+        padding:18px 18px 22px;
+      }
+      .sektion73ModalBodyH{ font-size:30px; }
+      .sektion73ModalBodyP{ font-size:15px; }
+    }
 
     body.sektion73-modal-open {
       overflow: hidden;
@@ -609,17 +605,7 @@ display: none;
     }
 
     .sektion73PinBubble::after{
-      content:"";
-      position:absolute;
-      left:50%;
-      top:100%;
-      transform:translateX(-50%);
-      width:0;
-      height:0;
-      border-left:9px solid transparent;
-      border-right:9px solid transparent;
-      border-top:12px solid var(--sektion73-pin-bubble-bg, var(--sektion73-accent));
-      filter:drop-shadow(0 8px 10px rgba(0,0,0,.18));
+display: none !important;
     }
 
 .sektion73PinBtn {
@@ -661,7 +647,7 @@ display: none;
 }
 
 
-    function sektion73EnsureModalDOM() {
+ function sektion73EnsureModalDOM() {
       sektion73InjectModalCSS();
 
       let overlay = document.getElementById("sektion73MapOverlay");
@@ -682,44 +668,59 @@ display: none;
 
 
         modal.innerHTML = `
-          <div class="sektion73ModalTop">
-            <div></div>
-            <button class="sektion73ModalClose" type="button" id="sektion73ModalCloseBtn" aria-label="Stäng">
- <svg fill="currentcolor" height="21" viewBox="0 0 1000 1000" width="21" xmlns="http://www.w3.org/2000/svg"><path d="M159 204l55-54 659 659-55 55-659-660m709 5L205 877l-55-59 664-664"></path></svg>
-            </button>
-          </div>
+          <div class="sektion73ModalLayout" role="document">
+            <div class="sektion73ModalLeft">
+              <button class="sektion73ModalClose sektion73ModalCloseAbs" type="button" id="sektion73ModalCloseBtn" aria-label="Stäng">
+                <svg fill="currentcolor" height="21" viewBox="0 0 1000 1000" width="21" xmlns="http://www.w3.org/2000/svg"><path d="M159 204l55-54 659 659-55 55-659-660m709 5L205 877l-55-59 664-664"></path></svg>
+              </button>
 
-        <div class="sektion73ModalGallery">
-    <div class="sektion73ModalGalleryTop">
-        <img id="sektion73ModalImg0" alt="" loading="lazy" class="skeleton-loader">
-    </div>
-    <div class="sektion73ModalGalleryRow">
-        <div class="sektion73ModalThumb"><img id="sektion73ModalImg1" alt="" loading="lazy" class="skeleton-loader"></div>
-        <div class="sektion73ModalThumb"><img id="sektion73ModalImg2" alt="" loading="lazy" class="skeleton-loader"></div>
-        <div class="sektion73ModalThumb"><img id="sektion73ModalImg3" alt="" loading="lazy" class="skeleton-loader"></div>
-    </div>
-</div>
+              <div class="sektion73ModalLeftImgWrap">
+                <img id="sektion73ModalImg0" alt="" loading="lazy" class="sektion73ModalLeftImg skeleton-loader">
+                <img id="sektion73ModalImg1" alt="" loading="lazy" class="skeleton-loader" style="display:none">
+                <img id="sektion73ModalImg2" alt="" loading="lazy" class="skeleton-loader" style="display:none">
+                <img id="sektion73ModalImg3" alt="" loading="lazy" class="skeleton-loader" style="display:none">
+              </div>
 
-          <div class="sektion73ModalMeta">
-            <p class="sektion73ModalImgSrc" id="sektion73ModalImgSrc">Bildkälla: —</p>
-            <h3 class="sektion73ModalBodyH" id="sektion73ModalBodyH">Rubrik</h3>
-            <p class="sektion73ModalBodyP" id="sektion73ModalBodyP">Brödtext…</p>
-          </div>
+              <p class="sektion73ModalImgSrc" id="sektion73ModalImgSrc">Bildkälla: —</p>
+            </div>
 
-          <div class="sektion73ModalActions">
-            <button class="sektion73ModalBtn sektion73ModalBtnPrimary" type="button" id="sektion73ModalCtaPrimary">
-              <span id="sektion73ModalCtaPrimaryTxt">Primär CTA</span>
-              <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
-                <path d="M9 6l6 6-6 6" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/>
-              </svg>
-            </button>
+            <div class="sektion73ModalRight">
+              <div class="sektion73ModalRightTop">
+                <div class="sektion73ModalTitleRow">
+                  <span class="sektion73ModalTitleIcons" aria-hidden="true">
+                    <span class="sektion73ModalTitleIcon">
+                      <svg viewBox="0 0 24 24" width="18" height="18" fill="none"><path d="M12 2l3 6 7 1-5 4 1 7-6-3-6 3 1-7-5-4 7-1 3-6z" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/></svg>
+                    </span>
+                    <span class="sektion73ModalTitleIcon">
+                      <svg viewBox="0 0 24 24" width="18" height="18" fill="none"><path d="M12 21s-7-4.4-7-11a4 4 0 0 1 7-2 4 4 0 0 1 7 2c0 6.6-7 11-7 11z" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/></svg>
+                    </span>
+                  </span>
 
-            <button class="sektion73ModalBtn" type="button" id="sektion73ModalCtaSecondary">
-              <span id="sektion73ModalCtaSecondaryTxt">Sekundär CTA</span>
-              <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
-                <path d="M9 6l6 6-6 6" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/>
-              </svg>
-            </button>
+                  <h3 class="sektion73ModalBodyH" id="sektion73ModalBodyH">Rubrik</h3>
+                </div>
+
+                <div class="sektion73ModalBodyPWrap" id="sektion73ModalBodyPWrap">
+                  <p class="sektion73ModalBodyP" id="sektion73ModalBodyP">Brödtext…</p>
+                  <button type="button" class="sektion73ModalReadMore" id="sektion73ModalReadMoreBtn">Läs mer</button>
+                </div>
+              </div>
+
+              <div class="sektion73ModalActions" style="display:none">
+                <button class="sektion73ModalBtn sektion73ModalBtnPrimary" type="button" id="sektion73ModalCtaPrimary">
+                  <span id="sektion73ModalCtaPrimaryTxt">Primär CTA</span>
+                  <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                    <path d="M9 6l6 6-6 6" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/>
+                  </svg>
+                </button>
+
+                <button class="sektion73ModalBtn" type="button" id="sektion73ModalCtaSecondary">
+                  <span id="sektion73ModalCtaSecondaryTxt">Sekundär CTA</span>
+                  <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                    <path d="M9 6l6 6-6 6" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/>
+                  </svg>
+                </button>
+              </div>
+            </div>
           </div>
         `;
 
@@ -728,6 +729,16 @@ display: none;
 
         const closeBtn = document.getElementById("sektion73ModalCloseBtn");
         if (closeBtn) closeBtn.addEventListener("click", sektion73CloseModal);
+
+        const rmBtn = document.getElementById("sektion73ModalReadMoreBtn");
+        if (rmBtn) {
+          rmBtn.addEventListener("click", () => {
+            const wrap = document.getElementById("sektion73ModalBodyPWrap");
+            if (!wrap) return;
+            const isExpanded = wrap.classList.toggle("is-expanded");
+            rmBtn.textContent = isExpanded ? "Visa mindre" : "Läs mer";
+          });
+        }
 
         document.addEventListener("keydown", (e) => {
           if (e.key === "Escape") sektion73CloseModal();
@@ -755,6 +766,11 @@ function sektion73OpenModal(payload) {
   document.getElementById("sektion73ModalImgSrc").textContent = payload.imgSrc || "";
   document.getElementById("sektion73ModalBodyH").textContent = payload.h || "";
   document.getElementById("sektion73ModalBodyP").textContent = payload.p || "";
+
+  const pWrap = document.getElementById("sektion73ModalBodyPWrap");
+  const rmBtn = document.getElementById("sektion73ModalReadMoreBtn");
+  if (pWrap) pWrap.classList.remove("is-expanded");
+  if (rmBtn) rmBtn.textContent = "Läs mer";
 
   const imgs = payload.images || [];
   const img0 = document.getElementById("sektion73ModalImg0");
