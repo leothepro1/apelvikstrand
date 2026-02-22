@@ -396,8 +396,9 @@ function asGetLangFromPath_61724() {
   return "sv";
 }
 
-const asLang_61724 = (window.AS_LANG || asGetLangFromPath_61724());
-
+function asLangLive_61724() {
+  return window.AS_LANG || asGetLangFromPath_61724();
+}
 function asGetNested_61724(obj, key) {
   return String(key || "")
     .split(".")
@@ -411,7 +412,8 @@ function asFormat_61724(s, vars) {
 
 function asT_61724(key, vars) {
   const all = window.AS_I18N || {};
-  const dict = all[asLang_61724] || all.sv || {};
+  const lang = asLangLive_61724();
+  const dict = all[lang] || all.sv || {};
   const sv = all.sv || {};
   const raw = asGetNested_61724(dict, key);
   const fallback = asGetNested_61724(sv, key);
