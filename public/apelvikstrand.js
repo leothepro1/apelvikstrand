@@ -385,6 +385,76 @@ const asSlideGap_61724 = 22;
     /* =========================
        HELPERS
        ========================= */
+
+     /* =========================
+   I18N (shared with frontend)
+   ========================= */
+function asGetLangFromPath_61724() {
+  const p = String(window.location.pathname || "").toLowerCase();
+  if (p.startsWith("/en")) return "en";
+  if (p.startsWith("/de")) return "de";
+  return "sv";
+}
+
+function asLangLive_61724() {
+  return window.AS_LANG || asGetLangFromPath_61724();
+}
+function asGetNested_61724(obj, key) {
+  return String(key || "")
+    .split(".")
+    .reduce((o, k) => (o && o[k] != null ? o[k] : null), obj);
+}
+
+function asFormat_61724(s, vars) {
+  const v = vars || {};
+  return String(s).replace(/\{(\w+)\}/g, (_, k) => (v[k] != null ? String(v[k]) : ""));
+}
+
+function asT_61724(key, vars) {
+  const all = window.AS_I18N || {};
+  const lang = asLangLive_61724();
+  const dict = all[lang] || all.sv || {};
+  const sv = all.sv || {};
+  const raw = asGetNested_61724(dict, key);
+  const fallback = asGetNested_61724(sv, key);
+  const out = (raw != null ? raw : fallback);
+  return asFormat_61724(out != null ? out : key, vars);
+}
+
+// Map Swedish family names (data) -> internal family key
+function asFamilyKey_61724(familyName) {
+  const f = String(familyName || "").toLowerCase();
+  if (f === "interiör" || f === "interior") return "interior";
+  if (f === "exteriör" || f === "exterior") return "exterior";
+  if (f === "närområdet" || f === "naromradet" || f === "nearby") return "nearby";
+  if (f === "video") return "video";
+  return null;
+}
+
+// Display label for a Swedish family name
+function asFamilyLabel_61724(familyName) {
+  const k = asFamilyKey_61724(familyName);
+  if (!k) return String(familyName || "");
+  return asT_61724("family." + k);
+}
+
+// Localize alt text (covers "Interiör 1", "Exteriör 2", "Närområdet 1", "Video 3", etc)
+function asLocalizedAlt_61724(data, fallbackNumber) {
+  const rawAlt = data && data.alt ? String(data.alt).trim() : "";
+  if (!rawAlt) {
+    return asT_61724("ui.image_fallback") + " " + String(fallbackNumber);
+  }
+
+  // Try split "FamilyName N"
+  const m = rawAlt.match(/^(.+?)\s*(\d+)\s*$/);
+  if (!m) return rawAlt;
+
+  const fam = m[1].trim();
+  const num = m[2].trim();
+
+  const famLabel = asFamilyLabel_61724(fam);
+  return famLabel + " " + num;
+}
    function asLockBody_61724(lock) {
   document.body.classList.toggle("as-body-lock", !!lock);
 }
@@ -689,7 +759,7 @@ function asInitFrontGrid_61724() {
       ? "(min-width: 900px) 25vw, 25vw"
       : "25vw";
 
-    el.img.alt = data.alt || "Bild " + (i + 1);
+   el.img.alt = asLocalizedAlt_61724(data, i + 1);
 
     // Viktigt: dataset + onclick ska peka på GLOBALT index i asImages_61724
     el.btn.dataset.asIndex = String(globalIdx);
@@ -705,39 +775,53 @@ function asInitFrontGrid_61724() {
     /* =========================
        FILTERS
        ========================= */
-    function asMakeChip_61724(name, count, id) {
-      const btn = document.createElement("button");
-      btn.type = "button";
-      btn.className = "as-filter-chip";
-      btn.id = id;
-      btn.dataset.asFamily = name;
-      btn.setAttribute("aria-pressed", "false");
-      btn.innerHTML =
-        "<span>" +
-        asEscapeHtml_61724(name) +
-        "</span>" +
-        "<span class='as-filter-count'>(" +
-        count +
-        ")</span>";
-      btn.addEventListener("click", () => asApplyFilter_61724(name));
-      return btn;
-    }
+ function asMakeChip_61724(internalName, label, count, id) {
+  const btn = document.createElement("button");
+  btn.type = "button";
+  btn.className = "as-filter-chip";
+  btn.id = id;
 
-    function asBuildFilters_61724() {
-      asFilterRow_91827.innerHTML = "";
+  // Viktigt: intern filterlogik ska fortsätta använda exakta familynamn i din data
+  btn.dataset.asFamily = internalName;
 
-      const families = asUniqueFamilies_61724();
+  btn.setAttribute("aria-pressed", "false");
+  btn.innerHTML =
+    "<span>" +
+    asEscapeHtml_61724(label) +
+    "</span>" +
+    "<span class='as-filter-count'>(" +
+    count +
+    ")</span>";
 
-      const allChip = asMakeChip_61724("Alla", asImages_61724.length, "asprChip_all_91827");
-      asFilterRow_91827.appendChild(allChip);
+  btn.addEventListener("click", () => asApplyFilter_61724(internalName));
+  return btn;
+}
 
-      for (const f of families) {
-        const id = "asprChip_" + f.name.replace(/\s+/g, "_") + "_91827";
-        asFilterRow_91827.appendChild(asMakeChip_61724(f.name, f.count, id));
-      }
+function asBuildFilters_61724() {
+  asFilterRow_91827.innerHTML = "";
 
-      asSyncChipStates_61724();
-    }
+  const families = asUniqueFamilies_61724();
+
+  // Intern = "Alla" (som idag), label = översatt
+  const allChip = asMakeChip_61724(
+    "Alla",
+    asT_61724("ui.all"),
+    asImages_61724.length,
+    "asprChip_all_91827"
+  );
+  asFilterRow_91827.appendChild(allChip);
+
+  for (const f of families) {
+    const id = "asprChip_" + f.name.replace(/\s+/g, "_") + "_91827";
+
+    // Intern = f.name (svenska strängen i data), label = översatt familjelabel
+    asFilterRow_91827.appendChild(
+      asMakeChip_61724(f.name, asFamilyLabel_61724(f.name), f.count, id)
+    );
+  }
+
+  asSyncChipStates_61724();
+}
 
     function asSyncChipStates_61724() {
       const chips = asFilterRow_91827.querySelectorAll(".as-filter-chip");
@@ -1462,11 +1546,14 @@ function asEnsureThumbWindowBuilt_61724() {
     btn.type = "button";
     btn.className = "as-thumb-btn";
     btn.id = "asprThumbBtn_91827_" + String(globalIdx).padStart(4, "0");
-    btn.setAttribute("aria-label", "Välj bild: " + ((data && data.alt) || "Bild " + (i + 1)));
+  btn.setAttribute(
+  "aria-label",
+  asT_61724("ui.select_image_prefix") + " " + asLocalizedAlt_61724(data, i + 1)
+);
 
-    const img = document.createElement("img");
-    img.className = "as-thumb-img";
-    img.alt = (data && data.alt) || "";
+const img = document.createElement("img");
+img.className = "as-thumb-img";
+img.alt = asLocalizedAlt_61724(data, i + 1);
     img.loading = "lazy";
     img.decoding = "async";
 
