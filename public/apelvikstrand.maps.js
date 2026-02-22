@@ -31,7 +31,15 @@
       if (path === "/de" || path.indexOf("/de/") === 0) return "de";
       return "sv";
     }
-
+function sektion73Pick(val, fallback) {
+  // Stöd: string, {sv,en,de}, null/undefined
+  if (typeof val === "string") return val;
+  if (val && typeof val === "object") {
+    const v = val[sektion73Lang] ?? val.sv ?? val.en ?? val.de;
+    if (typeof v === "string") return v;
+  }
+  return (typeof fallback === "string") ? fallback : "";
+}
     const sektion73Lang = sektion73GetLang();
 
     const sektion73I18N = {
@@ -960,17 +968,28 @@ let sektion73ReturnView = null;
 function sektion73OpenModal(payload) {
   const { overlay, modal } = sektion73EnsureModalDOM();
 
+  // --- Modal top texts (kicker/title) om du använder dem i DOM (om inte: ignorera)
+  // Om du har element-id för dessa, koppla här (exempel):
+  const kickerEl = document.getElementById("sektion73ModalKicker");
+  const titleEl = document.getElementById("sektion73ModalTitle");
+  if (kickerEl) kickerEl.textContent = sektion73Pick(payload.kicker, "");
+  if (titleEl) titleEl.textContent = sektion73Pick(payload.title, "");
+
+  // --- Bildkälla
   const imgSrcEl = document.getElementById("sektion73ModalImgSrc");
   const imgSrcLabel = sektion73T("modal.imgSrcLabel", "Image source");
   if (imgSrcEl) {
-    const raw = String(payload.imgSrc || "").trim();
-    if (raw) imgSrcEl.textContent = raw;
-    else imgSrcEl.textContent = `${imgSrcLabel}: —`;
+    const raw = String(sektion73Pick(payload.imgSrc, "") || "").trim();
+    imgSrcEl.textContent = raw ? raw : `${imgSrcLabel}: —`;
   }
 
-  document.getElementById("sektion73ModalBodyH").textContent = payload.h || "";
-  document.getElementById("sektion73ModalBodyP").textContent = payload.p || "";
+  // --- H + P (huvudtext)
+  const hEl = document.getElementById("sektion73ModalBodyH");
+  const pEl = document.getElementById("sektion73ModalBodyP");
+  if (hEl) hEl.textContent = sektion73Pick(payload.h, "");
+  if (pEl) pEl.textContent = sektion73Pick(payload.p, "");
 
+  // --- Bilder (behåll som idag)
   const imgs = payload.images || [];
   const img0 = document.getElementById("sektion73ModalImg0");
   const img1 = document.getElementById("sektion73ModalImg1");
@@ -982,32 +1001,31 @@ function sektion73OpenModal(payload) {
   if (img2) img2.src = imgs[2] || "https://picsum.photos/seed/sektion73_2/600/450";
   if (img3) img3.src = imgs[3] || "https://picsum.photos/seed/sektion73_3/600/450";
 
+  // --- CTA-texter (NU flerspråkiga)
   const cta1 = document.getElementById("sektion73ModalCtaPrimary");
   const cta2 = document.getElementById("sektion73ModalCtaSecondary");
   const cta1t = document.getElementById("sektion73ModalCtaPrimaryTxt");
   const cta2t = document.getElementById("sektion73ModalCtaSecondaryTxt");
 
-  if (cta1t) cta1t.textContent = payload.cta1Text || sektion73T("modal.fallbackCta1", "Book");
-  if (cta2t) cta2t.textContent = payload.cta2Text || sektion73T("modal.fallbackCta2", "Get directions");
+  if (cta1t) cta1t.textContent = sektion73Pick(payload.cta1Text, sektion73T("modal.fallbackCta1", "Book"));
+  if (cta2t) cta2t.textContent = sektion73Pick(payload.cta2Text, sektion73T("modal.fallbackCta2", "Get directions"));
 
   if (cta1) {
     cta1.onclick = function () {
-      if (payload.cta1Href) window.open(payload.cta1Href, "_blank", "noopener,noreferrer");
+      const href = sektion73Pick(payload.cta1Href, payload.cta1Href);
+      if (href) window.open(href, "_blank", "noopener,noreferrer");
     };
   }
 
   if (cta2) {
     cta2.onclick = function () {
-      if (payload.cta2Href) window.open(payload.cta2Href, "_blank", "noopener,noreferrer");
+      const href = sektion73Pick(payload.cta2Href, payload.cta2Href);
+      if (href) window.open(href, "_blank", "noopener,noreferrer");
     };
   }
 
-  // NYTT: säkerställ att första öppningen alltid får transition
-  // (speciellt när DOM + CSS kan ha skapats precis innan).
   overlay.classList.remove("is-open");
   modal.classList.remove("is-open");
-
-  // Force layout så browsern “registrerar” stängt-läget innan vi öppnar.
   void modal.offsetWidth;
 
   document.body.classList.add("sektion73-modal-open");
@@ -1122,28 +1140,32 @@ const sektion73Pins = [
       pointerTop: "#FFC33E"
     },
     lngLat: sektion73Home.lngLat,
-    modal: {
-      kicker: "HOME",
-      title: "Surbrunnsvägen 2–8",
+   modal: {
+      kicker: { sv: "HOME", en: "HOME", de: "HOME" },
+      title: { sv: "Surbrunnsvägen 2–8", en: "Surbrunnsvägen 2–8", de: "Surbrunnsvägen 2–8" },
       images: [
         "https://res.cloudinary.com/dmgmoisae/image/upload/v1769872360/jpeg-optimizer_ApelvikStrand_0356_2_jvgrhe.jpg",
         "https://res.cloudinary.com/dmgmoisae/image/upload/v1769872059/jpeg-optimizer_ApelvikStrand_0010_3_rzzlat.jpg",
         "https://res.cloudinary.com/dmgmoisae/image/upload/v1769872058/jpeg-optimizer_ApelvikStrand_1153_1_mi0wzz.jpg",
         "https://res.cloudinary.com/dmgmoisae/image/upload/v1769875471/strandhuse21q_hh50lb.png"
       ],
-      imgSrc: "Bildkälla: —",
-      h: "Apelvikstrand",
-      p: "Apelvikstrand är platsen att bo på när man vill vara nära havet och nära vardagen i viken. Här bor man i strandhus och lägenheter med egen dörr, eget tempo och kort väg ner till stranden, maten och livet runtomkring. Det är enkelt att komma och gå, lätt att stanna inne eller vara ute hela dagen. Ett boende som följer platsen, snarare än tvärtom.",
-      cta1Text: "Boka",
+      imgSrc: { sv: "Bildkälla: —", en: "Image source: —", de: "Bildquelle: —" },
+      h: { sv: "Apelvikstrand", en: "Apelvikstrand", de: "Apelvikstrand" },
+      p: {
+        sv: "Apelvikstrand är platsen att bo på när man vill vara nära havet och nära vardagen i viken. Här bor man i strandhus och lägenheter med egen dörr, eget tempo och kort väg ner till stranden, maten och livet runtomkring. Det är enkelt att komma och gå, lätt att stanna inne eller vara ute hela dagen. Ett boende som följer platsen, snarare än tvärtom.",
+        en: "Apelvikstrand is the place to stay when you want to be close to the sea and to everyday life in the bay. Here you stay in beach houses and apartments with your own entrance, your own pace, and a short walk to the beach, the food, and everything around you. It’s easy to come and go, easy to stay in or spend the whole day outside. Accommodation that follows the place—rather than the other way around.",
+        de: "Apelvikstrand ist der richtige Ort zum Übernachten, wenn man nah am Meer und am Alltag in der Bucht sein möchte. Hier wohnt man in Strandhäusern und Apartments mit eigenem Eingang, eigenem Tempo und kurzen Wegen zum Strand, zum Essen und zum Leben drumherum. Man kommt und geht unkompliziert, bleibt leicht drinnen oder ist den ganzen Tag draußen. Eine Unterkunft, die sich dem Ort anpasst – nicht umgekehrt."
+      },
+      cta1Text: { sv: "Boka", en: "Book", de: "Buchen" },
       cta1Href: "https://booking.apelvikstrand.se/accommodation?channelId=667aaf79-f2db-462b-9ede-6dc07f5cc457&_gl=1*s0zgnu*_gcl_au*NTkyMjkzOTgyLjE3Njc2MTk1Nzg.*_ga*NzQwNzE1ODIyLjE3Njc2MTk1Nzg.*_ga_6GS1LST6VV*czE3Njk3ODk1MzMkbzI1JGcxJHQxNzY5NzkwNTA5JGoyNiRsMCRoMA..",
-      cta2Text: "Visa boenden",
+      cta2Text: { sv: "Visa boenden", en: "View accommodation", de: "Unterkünfte ansehen" },
       cta2Href:
         "https://apelvikstrand.webflow.io/strandhusen"
     }
   },
 {
     id: "sektion73Pin_home_0000321f",
-    label: "Golf",
+    label: { sv: "Golf", en: "Golf", de: "Golf" },
     filter: "Att göra",
    priority: "secondary",
     iconKey: "golf",
@@ -1153,20 +1175,24 @@ const sektion73Pins = [
     },
     lngLat: sektion73Golf.lngLat,
     modal: {
-      kicker: "HOME",
-      title: "Surbrunnsvägen 2–8",
+      kicker: { sv: "HOME", en: "HOME", de: "HOME" },
+      title: { sv: "Surbrunnsvägen 2–8", en: "Surbrunnsvägen 2–8", de: "Surbrunnsvägen 2–8" },
       images: [
         "https://res.cloudinary.com/dmgmoisae/image/upload/v1770065021/minigolf_pcvo14.webp",
         "https://res.cloudinary.com/dmgmoisae/image/upload/v1770064998/Boomers-Livermore-CA-34-1024x683_xbq4xu.jpg",
         "https://res.cloudinary.com/dmgmoisae/image/upload/v1770064993/Campark-Mini-Golf-for-Beginners_-Tips-and-Tricks-to-Improve-Your-Game-_i8tp9c.jpg",
         "https://res.cloudinary.com/dmgmoisae/image/upload/v1770064953/8332c8_a351401d52c94b51a645eab0008c74cf_mv2_jz7zhb.jpg"
       ],
-      imgSrc: "Bildkälla: —",
-      h: "Apelvikens minigolf",
-      p: "En klassiker på alla campingar. En bana med 18 hål som är lagom klurig för både barn och vuxna, där spelet får ta den tid det tar. Passar lika bra för familjer som för kompisgäng som vill göra något enkelt tillsammans mellan strand och middag.",
-      cta1Text: "Läs mer",
+      imgSrc: { sv: "Bildkälla: —", en: "Image source: —", de: "Bildquelle: —" },
+      h: { sv: "Apelvikens minigolf", en: "Apelviken mini golf", de: "Minigolf in Apelviken" },
+      p: {
+        sv: "En klassiker på alla campingar. En bana med 18 hål som är lagom klurig för både barn och vuxna, där spelet får ta den tid det tar. Passar lika bra för familjer som för kompisgäng som vill göra något enkelt tillsammans mellan strand och middag.",
+        en: "A camping classic. An 18-hole course that’s just tricky enough for both kids and adults, where the game can take the time it takes. Just as good for families as for friends who want something easy to do together between the beach and dinner.",
+        de: "Ein Camping-Klassiker. Ein 18-Loch-Platz, der genau knifflig genug für Kinder und Erwachsene ist – und bei dem das Spiel die Zeit bekommt, die es braucht. Passt genauso gut für Familien wie für Freundesgruppen, die zwischen Strand und Abendessen etwas Einfaches zusammen machen wollen."
+      },
+      cta1Text: { sv: "Läs mer", en: "Learn more", de: "Mehr erfahren" },
       cta1Href: "https://www.apelviken.se/aktivitet-2",
-      cta2Text: "Vägbeskrivning",
+      cta2Text: { sv: "Vägbeskrivning", en: "Directions", de: "Route" },
       cta2Href:
         "https://www.google.com/maps/dir/57.502272,12.087438/apelvikens+minigolf/data=!4m2!4m1!3e0?sa=X&ved=1t:196274&ictx=111"
     }
@@ -1174,7 +1200,7 @@ const sektion73Pins = [
   // Tångkörarvägen 1
    {
     id: "sektion73Pin_home_fdbvc",
-    label: "Golf",
+    label: { sv: "Golf", en: "Golf", de: "Golf" },
     filter: "Butiker",
       priority: "secondary",
     iconKey: "surfers",
@@ -1184,27 +1210,31 @@ const sektion73Pins = [
     },
     lngLat: sektion73Surfcenter.lngLat,
     modal: {
-      kicker: "HOME",
-      title: "Surbrunnsvägen 2–8",
+      kicker: { sv: "HOME", en: "HOME", de: "HOME" },
+      title: { sv: "Surbrunnsvägen 2–8", en: "Surbrunnsvägen 2–8", de: "Surbrunnsvägen 2–8" },
       images: [
                  "https://res.cloudinary.com/dmgmoisae/image/upload/v1770065244/putte_mac_m5ldez.jpg",
         "https://res.cloudinary.com/dmgmoisae/image/upload/v1770065250/4ciljfr6wiku47ehvc9gb0uqzob7mfxq_sifrmd.jpg",
         "https://res.cloudinary.com/dmgmoisae/image/upload/v1770065236/jason_naishkites_l1xlxu.avif",
         "https://res.cloudinary.com/dmgmoisae/image/upload/v1770065254/center_20_12_ooxsx0.jpg"
       ],
-      imgSrc: "Bildkälla: —",
-      h: "Surfers Paradise",
-      p: "Här är surf en självklar del av dagen. När vinden tar i och vågorna rullar samlas både nybörjare och erfarna surfare för kurser och uthyrning i en avslappnad miljö hos Surfers Paradise Varberg. Med rätt utrustning och erfarna instruktörer formas varje pass efter dagens förhållanden och havets tempo.",
-      cta1Text: "Läs mer",
+      imgSrc: { sv: "Bildkälla: —", en: "Image source: —", de: "Bildquelle: —" },
+      h: { sv: "Surfers Paradise", en: "Surfers Paradise", de: "Surfers Paradise" },
+      p: {
+        sv: "Här är surf en självklar del av dagen. När vinden tar i och vågorna rullar samlas både nybörjare och erfarna surfare för kurser och uthyrning i en avslappnad miljö hos Surfers Paradise Varberg. Med rätt utrustning och erfarna instruktörer formas varje pass efter dagens förhållanden och havets tempo.",
+        en: "Here, surfing is simply part of the day. When the wind picks up and the waves roll in, both beginners and experienced surfers gather for lessons and rentals in a relaxed setting at Surfers Paradise Varberg. With the right gear and experienced instructors, each session is shaped by the day’s conditions and the sea’s rhythm.",
+        de: "Hier gehört Surfen ganz selbstverständlich zum Tag. Wenn der Wind auffrischt und die Wellen laufen, treffen sich Anfänger und erfahrene Surfer zu Kursen und zum Verleih – in entspannter Atmosphäre bei Surfers Paradise Varberg. Mit der richtigen Ausrüstung und erfahrenen Coaches wird jede Session an die Bedingungen des Tages und den Takt des Meeres angepasst."
+      },
+      cta1Text: { sv: "Läs mer", en: "Learn more", de: "Mehr erfahren" },
       cta1Href: "https://surfers.se/",
-      cta2Text: "Vägbeskrivning",
+      cta2Text: { sv: "Vägbeskrivning", en: "Directions", de: "Route" },
       cta2Href:
         "https://www.google.com/maps/dir/57.502272,12.087438/Surfers+Paradise+Varberg,+S%C3%B6dergatan,+Varberg/@57.2960503,11.8313413,78628m/data=!3m1!1e3!4m9!4m8!1m1!4e1!1m5!1m1!1s0x46502a4510f9c69b:0x1ec01eb952e25b7b!2m2!1d12.251716!2d57.10345?entry=ttu&g_ep=EgoyMDI2MDEyOC4wIKXMDSoASAFQAw%3D%3D"
     }
   },
     {
     id: "sektion73Pin_home_tyyfdg",
-    label: "Golf",
+    label: { sv: "Golf", en: "Golf", de: "Golf" },
     filter: "Mat & dryck",
        priority: "secondary",
     iconKey: "majas",
@@ -1214,27 +1244,31 @@ const sektion73Pins = [
     },
     lngLat: sektion73Majas.lngLat,
     modal: {
-      kicker: "HOME",
-      title: "Surbrunnsvägen 2–8",
+      kicker: { sv: "HOME", en: "HOME", de: "HOME" },
+      title: { sv: "Surbrunnsvägen 2–8", en: "Surbrunnsvägen 2–8", de: "Surbrunnsvägen 2–8" },
       images: [
         "https://res.cloudinary.com/dmgmoisae/image/upload/v1770064870/2gcsnMedobtKa21oZpB2t52MkU1Q-REGULAR_ek5ygq.jpg",
         "https://res.cloudinary.com/dmgmoisae/image/upload/v1770064841/majas_20kvall_202_pdfc8k.jpg",
         "https://res.cloudinary.com/dmgmoisae/image/upload/v1770064846/Ska_CC_88rmavbild_202024-03-23_20kl._2009.27.41_m6fu1v.png",
         "https://res.cloudinary.com/dmgmoisae/image/upload/v1770064873/c05bb3a27b4bd93c4b8438c6e3fe8b74_edzrgk.jpg"
       ],
-      imgSrc: "Bildkälla: —",
-      h: "Majas vid havet",
-      p: "Majas vid havet är ett litet hak mitt i Apelviken, öppet från maj, där god mat, en full bar och en avslappnad atmosfär lockar både campinggäster och kvällsflanörer till rundpingis, boule och konserter. Här serveras både enkla luncher och festligare middagar, med strandkänsla och gemenskap som sätter stämningen.",
-      cta1Text: "Läs mer",
+      imgSrc: { sv: "Bildkälla: —", en: "Image source: —", de: "Bildquelle: —" },
+      h: { sv: "Majas vid havet", en: "Majas by the sea", de: "Majas am Meer" },
+      p: {
+        sv: "Majas vid havet är ett litet hak mitt i Apelviken, öppet från maj, där god mat, en full bar och en avslappnad atmosfär lockar både campinggäster och kvällsflanörer till rundpingis, boule och konserter. Här serveras både enkla luncher och festligare middagar, med strandkänsla och gemenskap som sätter stämningen.",
+        en: "Majas by the sea is a small spot in the heart of Apelviken, open from May, where good food, a full bar, and a relaxed atmosphere draw both campers and evening strollers for table tennis, boules, and concerts. They serve everything from simple lunches to more festive dinners, with beach vibes and a sense of togetherness setting the tone.",
+        de: "Majas am Meer ist ein kleiner Treffpunkt mitten in Apelviken, ab Mai geöffnet. Gutes Essen, eine volle Bar und eine entspannte Atmosphäre ziehen sowohl Campinggäste als auch Abendspaziergänger an – für Rundlauf, Boule und Konzerte. Es gibt einfache Mittagessen ebenso wie etwas festlichere Abendessen, mit Strandgefühl und Gemeinschaft, die die Stimmung prägen."
+      },
+      cta1Text: { sv: "Läs mer", en: "Learn more", de: "Mehr erfahren" },
       cta1Href: "https://majas.nu/",
-      cta2Text: "Vägbeskrivning",
+      cta2Text: { sv: "Vägbeskrivning", en: "Directions", de: "Route" },
       cta2Href:
         "https://www.google.com/maps/dir/57.502272,12.087438/Majas+vid+Havet,+T%C3%A5ngk%C3%B6rarv%C3%A4gen+15,+432+54+Varberg/@57.2960503,11.8313413,78628m/data=!3m2!1e3!4b1!4m9!4m8!1m1!4e1!1m5!1m1!1s0x465f741e8c9656d7:0x1d2f38bfc65d4d29!2m2!1d12.2632092!2d57.0800381?entry=ttu&g_ep=EgoyMDI2MDEyOC4wIKXMDSoASAFQAw%3D%3D"
     }
   },
   {
     id: "sektion73Pin_tangkorar1_90999",
-    label: "Tångkörarvägen 1",
+    label: { sv: "Tångkörarvägen 1", en: "Tångkörarvägen 1", de: "Tångkörarvägen 1" },
     filter: "Mat & dryck",
     iconKey: "solviken",
     ui: {
@@ -1243,20 +1277,24 @@ const sektion73Pins = [
     },
     lngLat: sektion73Tangkorar.lngLat,
     modal: {
-      kicker: "PUNKT",
-      title: "Tångkörarvägen 1",
+      kicker: { sv: "PUNKT", en: "STOP", de: "STOPP" },
+      title: { sv: "Tångkörarvägen 1", en: "Tångkörarvägen 1", de: "Tångkörarvägen 1" },
       images: [
         "https://res.cloudinary.com/dmgmoisae/image/upload/v1769971921/solviken321_myphpm.png",
         "https://res.cloudinary.com/dmgmoisae/image/upload/v1769971923/bubbel_vvavwe.png",
         "https://res.cloudinary.com/dmgmoisae/image/upload/v1769971923/sol_qx8kjy.png",
         "https://res.cloudinary.com/dmgmoisae/image/upload/v1769971923/solviken_pt1mdu.png"
       ],
-      imgSrc: "Bildkälla: —",
-      h: "Restaurang Solviken",
-      p: "Allra närmast stranden och med en bedårande utsikt över Kattegatt och folklivet i viken. På Solviken samlas campinggäster och varbergsbor, flanörer längs strandpromenaden och de som tagit en cykeltur från Läjet. Sommaren fylls av god mat, dofter från grillen, quiz och trubadurer. Höstkvällar med värme och gemyt och en svart vattenyta så långt man ser.Som utomlands hemma. För den stora festen och för den som bara har vägen förbi. För dig som släpar med dig en hel hög goda kamrater och för dig som träffar dem här.",
-      cta1Text: "Visa meny",
+      imgSrc: { sv: "Bildkälla: —", en: "Image source: —", de: "Bildquelle: —" },
+      h: { sv: "Restaurang Solviken", en: "Restaurant Solviken", de: "Restaurant Solviken" },
+      p: {
+        sv: "Allra närmast stranden och med en bedårande utsikt över Kattegatt och folklivet i viken. På Solviken samlas campinggäster och varbergsbor, flanörer längs strandpromenaden och de som tagit en cykeltur från Läjet. Sommaren fylls av god mat, dofter från grillen, quiz och trubadurer. Höstkvällar med värme och gemyt och en svart vattenyta så långt man ser.Som utomlands hemma. För den stora festen och för den som bara har vägen förbi. För dig som släpar med dig en hel hög goda kamrater och för dig som träffar dem här.",
+        en: "Right by the beach, with a beautiful view over the Kattegat and the life in the bay. At Solviken you’ll find campers and locals from Varberg, people strolling the promenade, and those who cycled in from Läjet. Summer is filled with good food, the smell of the grill, quizzes, and troubadours. Autumn evenings bring warmth and a cosy atmosphere, with dark water stretching as far as you can see. Like being abroad—at home. For the big celebration and for those just passing by. For you who arrive with a whole bunch of friends, and for you who end up meeting them here.",
+        de: "Direkt am Strand – mit einem bezaubernden Blick über das Kattegat und das Treiben in der Bucht. Bei Solviken treffen sich Campinggäste und Varberger, Spaziergänger an der Strandpromenade und alle, die mit dem Rad aus Läjet herüberkommen. Im Sommer gibt es gutes Essen, Grillduft, Quizabende und Troubadoure. Im Herbst sind es warme, gemütliche Abende – und eine dunkle Wasserfläche, so weit das Auge reicht. Wie im Urlaub – zuhause. Für das große Fest und für alle, die einfach nur vorbeikommen. Für dich, der mit einer ganzen Truppe guter Freunde auftaucht – und für dich, der sie hier trifft."
+      },
+      cta1Text: { sv: "Visa meny", en: "View menu", de: "Speisekarte" },
       cta1Href: "https://www.apelviken.se/solviken-meny",
-      cta2Text: "Vägbeskrivning",
+      cta2Text: { sv: "Vägbeskrivning", en: "Directions", de: "Route" },
       cta2Href:
         "https://www.google.com/maps/dir/57.502272,12.087438/Solviken,+T%C3%A5ngk%C3%B6rarv%C3%A4gen+1,+432+54+Varberg/@57.2950696,11.8317533,75989m/data=!3m1!1e3!4m9!4m8!1m1!4e1!1m5!1m1!1s0x46502af989b79f2d:0xfb2919c395412c94!2m2!1d12.2488569!2d57.084622?entry=ttu&g_ep=EgoyMDI2MDEyOC4wIKXMDSoASAFQAw%3D%3D"
     }
@@ -1264,7 +1302,7 @@ const sektion73Pins = [
     // Tångkörarvägen 1
   {
     id: "sektion73Pin_tangkorar1_hgfwea1",
-    label: "Tångkörarvägen 1",
+    label: { sv: "Tångkörarvägen 1", en: "Tångkörarvägen 1", de: "Tångkörarvägen 1" },
          filter: "Mat & dryck",
     iconKey: "kusthotellet",
     ui: {
@@ -1273,27 +1311,31 @@ const sektion73Pins = [
     },
     lngLat: sektion73Kusthotellet.lngLat,
     modal: {
-      kicker: "PUNKT",
-      title: "Tångkörarvägen 1",
+      kicker: { sv: "PUNKT", en: "STOP", de: "STOPP" },
+      title: { sv: "Tångkörarvägen 1", en: "Tångkörarvägen 1", de: "Tångkörarvägen 1" },
       images: [
         "https://res.cloudinary.com/dmgmoisae/image/upload/v1770067411/havet_hotell_varberg_o2yaxp.jpg",
         "https://res.cloudinary.com/dmgmoisae/image/upload/v1770067408/severins_middag_matsal_snor86.jpg",
         "https://res.cloudinary.com/dmgmoisae/image/upload/v1770067380/GZ1A2134_hj7igz.jpg",
         "https://res.cloudinary.com/dmgmoisae/image/upload/v1770067364/frukost_severins_kaffe_snlmtd.jpg"
       ],
-      imgSrc: "Bildkälla: —",
-      h: "Varbergs kusthotell",
-      p: "Varbergs Kusthotell ligger precis vid havet, och i huset finns restaurang Severins som många söker sig till för maten i sig. Här står fisk, skaldjur och säsongens råvaror i centrum, ofta med nordiska smaker och ett lugnt, genomarbetat uttryck. Restaurangen serverar frukost, lunch, middag och brunch, liksom vin och drinkar som passar både vardag och helg, oavsett om man bor på hotellet eller bara kommer hit för att äta.",
-      cta1Text: "Visa meny",
+      imgSrc: { sv: "Bildkälla: —", en: "Image source: —", de: "Bildquelle: —" },
+      h: { sv: "Varbergs kusthotell", en: "Varberg Coastal Hotel", de: "Varbergs Küstenhotel" },
+      p: {
+        sv: "Varbergs Kusthotell ligger precis vid havet, och i huset finns restaurang Severins som många söker sig till för maten i sig. Här står fisk, skaldjur och säsongens råvaror i centrum, ofta med nordiska smaker och ett lugnt, genomarbetat uttryck. Restaurangen serverar frukost, lunch, middag och brunch, liksom vin och drinkar som passar både vardag och helg, oavsett om man bor på hotellet eller bara kommer hit för att äta.",
+        en: "Varberg Coastal Hotel sits right by the sea, and inside you’ll find Restaurant Severins—many come here for the food in its own right. Fish, seafood, and seasonal ingredients take centre stage, often with Nordic flavours and a calm, well-crafted style. The restaurant serves breakfast, lunch, dinner, and brunch, along with wine and drinks that suit both weekdays and weekends—whether you’re staying at the hotel or simply coming by to eat.",
+        de: "Varbergs Kusthotell liegt direkt am Meer, und im Haus befindet sich das Restaurant Severins – viele kommen allein wegen des Essens. Im Mittelpunkt stehen Fisch, Meeresfrüchte und Zutaten der Saison, oft mit nordischen Aromen und einem ruhigen, durchdachten Ausdruck. Das Restaurant serviert Frühstück, Mittagessen, Abendessen und Brunch sowie Wein und Drinks für Alltag und Wochenende – egal, ob man im Hotel wohnt oder nur zum Essen herkommt."
+      },
+      cta1Text: { sv: "Visa meny", en: "View menu", de: "Speisekarte" },
       cta1Href: "https://www.apelviken.se/solviken-meny",
-      cta2Text: "Vägbeskrivning",
+      cta2Text: { sv: "Vägbeskrivning", en: "Directions", de: "Route" },
       cta2Href:
         "https://www.google.com/maps/dir/57.502272,12.087438/Solviken,+T%C3%A5ngk%C3%B6rarv%C3%A4gen+1,+432+54+Varberg/@57.2950696,11.8317533,75989m/data=!3m1!1e3!4m9!4m8!1m1!4e1!1m5!1m1!1s0x46502af989b79f2d:0xfb2919c395412c94!2m2!1d12.2488569!2d57.084622?entry=ttu&g_ep=EgoyMDI2MDEyOC4wIKXMDSoASAFQAw%3D%3D"
     }
   },
  {
     id: "sektion73Pin_321gfdfgdfghgkgjyytr",
-    label: "Apelviken Livs",
+    label: { sv: "Apelviken Livs", en: "Apelviken Grocery", de: "Apelviken Laden" },
         filter: "Butiker",
     iconKey: "livs", // använd en befintlig iconKey som finns i sektion73PinIcons
     ui: {
@@ -1302,25 +1344,29 @@ const sektion73Pins = [
     },
     lngLat: sektion73livs.lngLat,
     modal: {
-      kicker: "BUTIK",
-      title: "Apelviken Livs",
+      kicker: { sv: "BUTIK", en: "SHOP", de: "LADEN" },
+      title: { sv: "Apelviken Livs", en: "Apelviken Grocery", de: "Apelviken Laden" },
       images: [
         "https://res.cloudinary.com/dmgmoisae/image/upload/v1769981777/jpeg-optimizer__olles_lvfrdd.png",
         "https://res.cloudinary.com/dmgmoisae/image/upload/v1769981778/jpeg-optimizer__olles66_t5wk9r.png",
         "https://res.cloudinary.com/dmgmoisae/image/upload/v1769981778/jpeg-optimizer__olles11_zlhlgw.png",
         "https://res.cloudinary.com/dmgmoisae/image/upload/v1769981815/68b2a7_de72b5f91dc54bcdbcfc8714b514e253_mv2_kfel0e.jpg"
       ],
-      h: "Apelviken Livs & Strandcafé ",
-      p: "Vikens lokala butik som de flesta bara kallar affär’n. Här finns det man behöver för dagen vid stranden eller på campingen. Nybakade frallor tidigt på morgonen, kaffe som går att ta med, enklare mat, glass och ett brett sortiment för vardag och semester. Öppet under säsong och i ständig rörelse från morgon till kväll.",
-      cta1Text: "Läs mer",
+      h: { sv: "Apelviken Livs & Strandcafé ", en: "Apelviken Grocery & Beach Café", de: "Apelviken Laden & Strandcafé" },
+      p: {
+        sv: "Vikens lokala butik som de flesta bara kallar affär’n. Här finns det man behöver för dagen vid stranden eller på campingen. Nybakade frallor tidigt på morgonen, kaffe som går att ta med, enklare mat, glass och ett brett sortiment för vardag och semester. Öppet under säsong och i ständig rörelse från morgon till kväll.",
+        en: "The bay’s local shop—most people just call it “the store.” You’ll find what you need for a day at the beach or on the campsite: freshly baked rolls early in the morning, takeaway coffee, simple food, ice cream, and a wide selection for everyday life and holidays. Open in season and busy from morning to evening.",
+        de: "Der lokale Laden in der Bucht – die meisten nennen ihn einfach „den Laden“. Hier gibt es alles, was man für den Tag am Strand oder auf dem Campingplatz braucht: frisch gebackene Brötchen am frühen Morgen, Kaffee zum Mitnehmen, einfache Mahlzeiten, Eis und ein breites Sortiment für Alltag und Urlaub. In der Saison geöffnet und von morgens bis abends in Bewegung."
+      },
+      cta1Text: { sv: "Läs mer", en: "Learn more", de: "Mehr erfahren" },
       cta1Href: "https://www.apelviken.se/apelvikenlivs",
-      cta2Text: "Vägbeskrivning",
+      cta2Text: { sv: "Vägbeskrivning", en: "Directions", de: "Route" },
       cta2Href: "https://www.google.com/maps/dir/57.502272,12.087438/Apelviken+Livs,+T%C3%A5ngk%C3%B6rarv%C3%A4gen+3,+432+54+Varberg/@57.2983075,11.831503,75983m/data=!3m2!1e3!4b1!4m9!4m8!1m1!4e1!1m5!1m1!1s0x46502af983cea49f:0xa786b4e1dbc71398!2m2!1d12.250155!2d57.0848547?entry=ttu&g_ep=EgoyMDI2MDEyOC4wIKXMDSoASAFQAw%3D%3D"
     }
   },
    {
     id: "sektion73Pin_321ggdfgvbnf",
-    label: "Apelviken Livs",
+    label: { sv: "Apelviken Livs", en: "Apelviken Grocery", de: "Apelviken Laden" },
         filter: "Boenden",
     iconKey: "apelviken", // använd en befintlig iconKey som finns i sektion73PinIcons
     ui: {
@@ -1329,26 +1375,30 @@ const sektion73Pins = [
     },
     lngLat: sektion73destinationapelviken.lngLat,
     modal: {
-      kicker: "BUTIK",
-      title: "Apelviken Livs",
+      kicker: { sv: "BUTIK", en: "SHOP", de: "LADEN" },
+      title: { sv: "Apelviken Livs", en: "Apelviken Grocery", de: "Apelviken Laden" },
       images: [
         "https://res.cloudinary.com/dmgmoisae/image/upload/v1769983439/68b2a7_72f6713a71b74fb7b0a4e7a412f16c5e_mv2_jhyvcq.jpg",
         "https://res.cloudinary.com/dmgmoisae/image/upload/v1769983428/68b2a7_52e3c49890434442b80a60c563124fb5_mv2_uvj50b.jpg",
         "https://res.cloudinary.com/dmgmoisae/image/upload/v1769983458/68b2a7_e7a978bcdd3e4995a4a2a48c87669705_mv2_ahpjmo.jpg",
         "https://res.cloudinary.com/dmgmoisae/image/upload/v1769983462/68b2a7_e5363328ffb14dedb976e83ffc1abaa5_mv2_vrzs29.jpg"
       ],
-      h: "Destination Apelviken",
-      p: "Beläget strax söder om Varbergs stadskärna, med gång- och cykelavstånd till både strand och centrum. Platsen har vuxit fram över tid, från enkel tältplats till ett sammanhållet område med camping, hotell, mycket att göra och flertalet restauranger. Ett vardagsliv som pågår året runt, med mycket nära och utan behov av att ta bilen.",
-      cta1Text: "Läs mer",
+      h: { sv: "Destination Apelviken", en: "Destination Apelviken", de: "Destination Apelviken" },
+      p: {
+        sv: "Beläget strax söder om Varbergs stadskärna, med gång- och cykelavstånd till både strand och centrum. Platsen har vuxit fram över tid, från enkel tältplats till ett sammanhållet område med camping, hotell, mycket att göra och flertalet restauranger. Ett vardagsliv som pågår året runt, med mycket nära och utan behov av att ta bilen.",
+        en: "Located just south of Varberg’s city centre, within walking and cycling distance of both the beach and downtown. The area has grown over time—from a simple tent site to a cohesive destination with camping, a hotel, plenty to do, and several restaurants. Everyday life goes on here year-round, with everything close by and no real need for a car.",
+        de: "Etwas südlich vom Stadtzentrum Varbergs gelegen, mit kurzer Fuß- und Radentfernung sowohl zum Strand als auch in die Innenstadt. Der Ort ist über die Jahre gewachsen – von einem einfachen Zeltplatz zu einem zusammenhängenden Gebiet mit Camping, Hotel, viel zu tun und mehreren Restaurants. Ein Alltag, der das ganze Jahr über läuft: vieles in der Nähe und ohne dass man unbedingt das Auto braucht."
+      },
+      cta1Text: { sv: "Läs mer", en: "Learn more", de: "Mehr erfahren" },
       cta1Href: "https://www.apelviken.se/",
-      cta2Text: "Vägbeskrivning",
+      cta2Text: { sv: "Vägbeskrivning", en: "Directions", de: "Route" },
       cta2Href: "https://www.google.com/maps/dir/57.502272,12.087438/Destination+Apelviken+AB,+Sanatoriev%C3%A4gen+4,+432+53+Varberg/@57.2999731,11.8313388,76144m/data=!3m2!1e3!4b1!4m9!4m8!1m1!4e1!1m5!1m1!1s0x46502af829613979:0x5e859dbc3c4cea18!2m2!1d12.2478642!2d57.0879688?entry=ttu&g_ep=EgoyMDI2MDEyOC4wIKXMDSoASAFQAw%3D%3D"
     }
   },
   // Tångkörarvägen 1
   {
     id: "sektion73Pin_surfcenter_0000",
-    label: "Tångkörarvägen 1",
+    label: { sv: "Tångkörarvägen 1", en: "Tångkörarvägen 1", de: "Tångkörarvägen 1" },
          filter: "Att göra",
      priority: "secondary",
     iconKey: "surfcenter",
@@ -1358,19 +1408,23 @@ const sektion73Pins = [
     },
     lngLat: sektion73surfcenter.lngLat,
     modal: {
-      kicker: "PUNKT",
-      title: "Tångkörarvägen 1",
+      kicker: { sv: "PUNKT", en: "STOP", de: "STOPP" },
+      title: { sv: "Tångkörarvägen 1", en: "Tångkörarvägen 1", de: "Tångkörarvägen 1" },
       images: [
         "https://res.cloudinary.com/dmgmoisae/image/upload/v1769981780/jpeg-optimizer_surfcenter_uyq6xc.png",
         "https://static.wixstatic.com/media/68b2a7_380cfcd94afd4081b7cd08ef993064fc~mv2.jpg/v1/fill/w_1905,h_953,al_b,q_85,usm_0.66_1.00_0.01,enc_avif,quality_auto/68b2a7_380cfcd94afd4081b7cd08ef993064fc~mv2.jpg",
         "https://static.wixstatic.com/media/8332c8_9ed66fba3e3f463bb2082b68f28ecae6~mv2_d_1900_1495_s_2.jpg/v1/fill/w_381,h_459,al_c,q_80,usm_0.66_1.00_0.01,enc_avif,quality_auto/8332c8_9ed66fba3e3f463bb2082b68f28ecae6~mv2_d_1900_1495_s_2.jpg",
         "https://static.wixstatic.com/media/68b2a7_877bd500f095424698cc8359e7289382~mv2.jpg/v1/fill/w_571,h_401,al_c,q_80,usm_0.66_1.00_0.01,enc_avif,quality_auto/68b2a7_877bd500f095424698cc8359e7289382~mv2.jpg"
       ],
-      h: "Apelvikens surfcenter",
-      p: "Platsen där surfkulturen i viken tar form. Här har människor lärt sig stå på brädan i decennier, med havet precis intill och vädret som medspelare. Kurser och uthyrning anpassas efter dagens förhållanden, ibland vindsurf, ibland vågsurf, ibland SUP. Oavsett nivå handlar det om att komma ut på vattnet, läsa vinden och ta med sig ett nytt minne hem.",
-      cta1Text: "Läs mer",
+      h: { sv: "Apelvikens surfcenter", en: "Apelviken Surf Center", de: "Surfcenter Apelviken" },
+      p: {
+        sv: "Platsen där surfkulturen i viken tar form. Här har människor lärt sig stå på brädan i decennier, med havet precis intill och vädret som medspelare. Kurser och uthyrning anpassas efter dagens förhållanden, ibland vindsurf, ibland vågsurf, ibland SUP. Oavsett nivå handlar det om att komma ut på vattnet, läsa vinden och ta med sig ett nytt minne hem.",
+        en: "The place where the bay’s surf culture takes shape. People have been learning to stand on the board here for decades, with the sea right next to you and the weather as a partner. Lessons and rentals adapt to the day’s conditions—sometimes windsurfing, sometimes surfing, sometimes SUP. Whatever your level, it’s about getting out on the water, reading the wind, and taking a new memory home.",
+        de: "Der Ort, an dem die Surfkultur in der Bucht Form annimmt. Seit Jahrzehnten lernen Menschen hier aufs Brett zu kommen – mit dem Meer direkt daneben und dem Wetter als Mitspieler. Kurse und Verleih richten sich nach den Bedingungen des Tages: mal Windsurfen, mal Wellenreiten, mal SUP. Unabhängig vom Niveau geht es darum, aufs Wasser zu kommen, den Wind zu lesen und eine neue Erinnerung mit nach Hause zu nehmen."
+      },
+      cta1Text: { sv: "Läs mer", en: "Learn more", de: "Mehr erfahren" },
       cta1Href: "https://www.apelviken.se/surfcenter",
-      cta2Text: "Vägbeskrivning",
+      cta2Text: { sv: "Vägbeskrivning", en: "Directions", de: "Route" },
       cta2Href:
         "https://www.google.com/maps/dir/57.502272,12.087438/Apelviken+Livs,+T%C3%A5ngk%C3%B6rarv%C3%A4gen+3,+432+54+Varberg/@57.2983075,11.831503,75983m/data=!3m2!1e3!4b1!4m9!4m8!1m1!4e1!1m5!1m1!1s0x46502af983cea49f:0xa786b4e1dbc71398!2m2!1d12.250155!2d57.0848547?entry=ttu&g_ep=EgoyMDI2MDEyOC4wIKXMDSoASAFQAw%3D%3D"
     }
@@ -1379,132 +1433,152 @@ const sektion73Pins = [
   // Dina befintliga pins (oförändrade)
   {
     id: "sektion73Pin_tangkorar_231fds1",
-    label: "Punkt 1",
+    label: { sv: "Punkt 1", en: "Stop 1", de: "Stopp 1" },
          filter: "Mat & dryck",
     iconKey: "johns",
     ui: { bubbleBg: "#20212B", pointerTop: "#20212B" },
     lngLat: sektion73Tangkorar_4.lngLat,
     modal: {
-      kicker: "PUNKT 1",
-      title: "Tångkörarvägen 4",
+      kicker: { sv: "PUNKT 1", en: "STOP 1", de: "STOPP 1" },
+      title: { sv: "Tångkörarvägen 4", en: "Tångkörarvägen 4", de: "Tångkörarvägen 4" },
       images: [
         "https://res.cloudinary.com/dmgmoisae/image/upload/v1769971995/64be59cd-56ce-4fc7-8c64-6094ec83203e_xlrtd5.jpg",
         "https://res.cloudinary.com/dmgmoisae/image/upload/v1769972003/2f763ab2-4f67-49ad-b759-7926fcc74c78_bzgnuc.jpg",
         "https://res.cloudinary.com/dmgmoisae/image/upload/v1769972008/253f9f0f-e31b-4654-bc1a-7d8190b84ae6_l2gxmv.jpg",
         "https://res.cloudinary.com/dmgmoisae/image/upload/v1769972018/DSF0505_k8gcge.jpg"
       ],
-      imgSrc: "Bildkälla: —",
-      h: "John’s Place",
-      p: "John’s Place ligger i ett lågt trähus mitt på Apelvikens strand. Maten lagas över öppen eld med råvaror som följer säsong, och rummen är varma även när vädret är ruffigt. Hit kommer man för att äta nära havet, i en miljö som vuxit fram långsamt och känns mer som ett hem än en restaurang.",
-      cta1Text: "Visa meny",
+      imgSrc: { sv: "Bildkälla: —", en: "Image source: —", de: "Bildquelle: —" },
+      h: { sv: "John’s Place", en: "John’s Place", de: "John’s Place" },
+      p: {
+        sv: "John’s Place ligger i ett lågt trähus mitt på Apelvikens strand. Maten lagas över öppen eld med råvaror som följer säsong, och rummen är varma även när vädret är ruffigt. Hit kommer man för att äta nära havet, i en miljö som vuxit fram långsamt och känns mer som ett hem än en restaurang.",
+        en: "John’s Place sits in a low wooden house right on Apelviken beach. Food is cooked over open fire with seasonal ingredients, and the rooms feel warm even when the weather turns rough. You come here to eat close to the sea, in a place that has grown slowly and feels more like a home than a restaurant.",
+        de: "John’s Place liegt in einem niedrigen Holzhaus direkt am Strand von Apelviken. Gekocht wird über offenem Feuer mit Zutaten der Saison, und die Räume sind auch bei rauem Wetter angenehm warm. Man kommt her, um nah am Meer zu essen – an einem Ort, der langsam gewachsen ist und sich eher wie ein Zuhause als wie ein Restaurant anfühlt."
+      },
+      cta1Text: { sv: "Visa meny", en: "View menu", de: "Speisekarte" },
       cta1Href: "https://johnsplace.nu/meny/",
-      cta2Text: "Vägbeskrivning",
+      cta2Text: { sv: "Vägbeskrivning", en: "Directions", de: "Route" },
       cta2Href: "https://www.google.com/maps/dir/57.502272,12.087438/John's+Place,+T%C3%A5ngk%C3%B6rarv%C3%A4gen+4,+432+54+Varberg/@57.2969173,11.831503,75986m/data=!3m2!1e3!4b1!4m9!4m8!1m1!4e1!1m5!1m1!1s0x46502afeb21e2233:0x56c03d695b7db20b!2m2!1d12.2580971!2d57.083388?entry=ttu&g_ep=EgoyMDI2MDEyOC4wIKXMDSoASAFQAw%3D%3D"
     }
   },
   {
     id: "sektion73Pin_sanatorie_0002",
-    label: "Punkt 2",
+    label: { sv: "Punkt 2", en: "Stop 2", de: "Stopp 2" },
               filter: "",
     iconKey: "nisses",
     ui: { bubbleBg: "#FFC33E", pointerTop: "#FFC33E" },
     lngLat: sektion73Sanatorie_4.lngLat,
     modal: {
-      kicker: "PUNKT 2",
-      title: "Sanatorievägen 4",
+      kicker: { sv: "PUNKT 2", en: "STOP 2", de: "STOPP 2" },
+      title: { sv: "Sanatorievägen 4", en: "Sanatorievägen 4", de: "Sanatorievägen 4" },
       images: [
         "https://res.cloudinary.com/dmgmoisae/image/upload/v1770067031/original_ao0xjw.png",
         "https://res.cloudinary.com/dmgmoisae/image/upload/v1770067059/original_nr7ywh.png",
         "https://res.cloudinary.com/dmgmoisae/image/upload/v1770067091/original_dfyggl.png",
         "https://res.cloudinary.com/dmgmoisae/image/upload/v1770067072/apelvik13-e1530700582723_oszkhm.jpg"
       ],
-      imgSrc: "Bildkälla: —",
-      h: "Vår reception",
-      p: "Receptionen finns här om något dyker upp under vistelsen. Frågor, funderingar eller bara ett behov av att få lite hjälp på vägen. Här får man tips om området, praktiska svar och hjälp med det som behövs.Aktuella öppettider hittar du via länken nedan.",
-      cta1Text: "Se öppetider",
+      imgSrc: { sv: "Bildkälla: —", en: "Image source: —", de: "Bildquelle: —" },
+      h: { sv: "Vår reception", en: "Our reception", de: "Unsere Rezeption" },
+      p: {
+        sv: "Receptionen finns här om något dyker upp under vistelsen. Frågor, funderingar eller bara ett behov av att få lite hjälp på vägen. Här får man tips om området, praktiska svar och hjälp med det som behövs.Aktuella öppettider hittar du via länken nedan.",
+        en: "Reception is here if anything comes up during your stay—questions, thoughts, or simply a need for a bit of help along the way. You’ll get local tips, practical answers, and assistance with what you need. Current opening hours can be found via the link below.",
+        de: "Die Rezeption ist da, wenn während des Aufenthalts etwas auftaucht – Fragen, Anliegen oder einfach der Bedarf an ein wenig Hilfe. Hier gibt es Tipps zur Umgebung, praktische Antworten und Unterstützung bei dem, was man braucht. Die aktuellen Öffnungszeiten findest du über den Link unten."
+      },
+      cta1Text: { sv: "Se öppetider", en: "See opening hours", de: "Öffnungszeiten" },
       cta1Href: "/kundButiker",
-      cta2Text: "Visa vägen",
+      cta2Text: { sv: "Visa vägen", en: "Get directions", de: "Route anzeigen" },
       cta2Href: "https://www.google.com/maps/dir/57.502272,12.087438/Destination+Apelviken+AB,+Sanatoriev%C3%A4gen+4,+432+53+Varberg/@57.2985223,11.831482,75982m/data=!3m1!1e3!4m9!4m8!1m1!4e1!1m5!1m1!1s0x46502af829613979:0x5e859dbc3c4cea18!2m2!1d12.2478642!2d57.0879688?entry=ttu&g_ep=EgoyMDI2MDEyOC4wIKXMDSoASAFQAw%3D%3D"
     }
   },
   {
     id: "sektion73Pin_tangkorar_0003",
-    label: "Punkt 3",
+    label: { sv: "Punkt 3", en: "Stop 3", de: "Stopp 3" },
               filter: "Mat & dryck",     
     iconKey: "brittas",
     ui: { bubbleBg: "#1D252C", pointerTop: "#1D252C" },
     lngLat: sektion73Tangkorar_2.lngLat,
     modal: {
-      kicker: "PUNKT 3",
-      title: "Tångkörarvägen 2",
+      kicker: { sv: "PUNKT 3", en: "STOP 3", de: "STOPP 3" },
+      title: { sv: "Tångkörarvägen 2", en: "Tångkörarvägen 2", de: "Tångkörarvägen 2" },
       images: [
         "https://res.cloudinary.com/dmgmoisae/image/upload/v1769972155/brittas_mayy5x.png",
         "https://res.cloudinary.com/dmgmoisae/image/upload/v1769972152/jh_riqe6e.png",
         "https://res.cloudinary.com/dmgmoisae/image/upload/v1769972154/78_emx1je.png",
         "https://res.cloudinary.com/dmgmoisae/image/upload/v1769972157/832_nhwoaf.png"
       ],
-      imgSrc: "Bildkälla: —",
-      h: "Brittas Strandveranda",
-      p: "Vikens ställe för enkla, rejäla rätter och fruktiga drinkar, ofta med sand kvar mellan tårna. Hit droppar man in utan planer, sitter nära andra och låter musik, utsikt och umgänge ta plats. Kvällarna blir sällan korta och stämningen formas av dem som råkar vara där just då.",
-      cta1Text: "Läs mer",
+      imgSrc: { sv: "Bildkälla: —", en: "Image source: —", de: "Bildquelle: —" },
+      h: { sv: "Brittas Strandveranda", en: "Brittas Beach Veranda", de: "Brittas Strandveranda" },
+      p: {
+        sv: "Vikens ställe för enkla, rejäla rätter och fruktiga drinkar, ofta med sand kvar mellan tårna. Hit droppar man in utan planer, sitter nära andra och låter musik, utsikt och umgänge ta plats. Kvällarna blir sällan korta och stämningen formas av dem som råkar vara där just då.",
+        en: "The bay’s spot for simple, hearty dishes and fruity drinks—often with sand still between your toes. You drop in without plans, sit close to others, and let the music, the view, and the company take over. Evenings are rarely short, and the vibe is shaped by whoever happens to be there.",
+        de: "Der Ort in der Bucht für einfache, kräftige Gerichte und fruchtige Drinks – oft noch mit Sand zwischen den Zehen. Man kommt ohne Plan vorbei, sitzt nah bei anderen und lässt Musik, Aussicht und Gesellschaft Raum bekommen. Die Abende werden selten kurz, und die Stimmung entsteht aus denen, die gerade da sind."
+      },
+      cta1Text: { sv: "Läs mer", en: "Learn more", de: "Mehr erfahren" },
       cta1Href: "https://brittas.se/",
-      cta2Text: "Vägbeskrivning",
+      cta2Text: { sv: "Vägbeskrivning", en: "Directions", de: "Route" },
       cta2Href: "https://www.google.com/maps/dir/57.502272,12.087438/Brittas+Strandveranda,+T%C3%A5ngk%C3%B6rarv%C3%A4gen+2,+432+54+Varberg/@57.1433862,12.1356372,21761m/data=!3m1!1e3!4m9!4m8!1m1!4e1!1m5!1m1!1s0x46502afeb21e2233:0x2d47a8d67dec7ee4!2m2!1d12.2552089!2d57.084749?entry=ttu&g_ep=EgoyMDI2MDEyOC4wIKXMDSoASAFQAw%3D%3D"
     }
   },
   {
     id: "sektion73Pin_tangkorar_0004",
-    label: "Punkt 4",
+    label: { sv: "Punkt 4", en: "Stop 4", de: "Stopp 4" },
               filter: "Mat & dryck",     
     iconKey: "olles",
     ui: { bubbleBg: "#fff", pointerTop: "#fff" },
     lngLat: sektion73Tangkorar_10.lngLat,
     modal: {
-      kicker: "PUNKT 4",
-      title: "Tångkörarvägen 10",
+      kicker: { sv: "PUNKT 4", en: "STOP 4", de: "STOPP 4" },
+      title: { sv: "Tångkörarvägen 10", en: "Tångkörarvägen 10", de: "Tångkörarvägen 10" },
       images: [
         "https://res.cloudinary.com/dmgmoisae/image/upload/v1769972291/olles321_agkca3.png",
         "https://res.cloudinary.com/dmgmoisae/image/upload/v1769972289/olles2_oudzkl.png",
         "https://res.cloudinary.com/dmgmoisae/image/upload/v1769972289/olles5_wst8fl.png",
         "https://res.cloudinary.com/dmgmoisae/image/upload/v1769972288/olles3_nj8cgt.png"
       ],
-      imgSrc: "Bildkälla: —",
-      h: "&Olles",
-      p: "&Olles ligger längst ner i viken, nära sanden och med gott om plats runtomkring. Det är ett ställe som fungerar bäst när det är folk i rörelse. Drop in är vanligt, borden delas och stämningen byggs av gästerna själva. Mat, dryck och musik samsas under samma tak och dagarna glider ofta över i kväll utan tydlig gräns.",
-      cta1Text: "Visa meny",
+      imgSrc: { sv: "Bildkälla: —", en: "Image source: —", de: "Bildquelle: —" },
+      h: { sv: "&Olles", en: "&Olles", de: "&Olles" },
+      p: {
+        sv: "&Olles ligger längst ner i viken, nära sanden och med gott om plats runtomkring. Det är ett ställe som fungerar bäst när det är folk i rörelse. Drop in är vanligt, borden delas och stämningen byggs av gästerna själva. Mat, dryck och musik samsas under samma tak och dagarna glider ofta över i kväll utan tydlig gräns.",
+        en: "&Olles sits at the far end of the bay, close to the sand with plenty of space around. It’s a place that works best when people are on the move. Drop-ins are common, tables are shared, and the atmosphere is built by the guests themselves. Food, drinks, and music live under the same roof, and days often slide into evening without a clear line between them.",
+        de: "&Olles liegt ganz unten in der Bucht, nah am Sand und mit viel Platz drumherum. Am besten funktioniert es, wenn Menschen in Bewegung sind. Spontanes Vorbeikommen ist üblich, Tische werden geteilt und die Stimmung entsteht durch die Gäste selbst. Essen, Drinks und Musik unter einem Dach – und der Tag gleitet oft ohne klare Grenze in den Abend über."
+      },
+      cta1Text: { sv: "Visa meny", en: "View menu", de: "Speisekarte" },
       cta1Href: "https://www.olles.nu/meny/",
-      cta2Text: "Vägbeskrivning",
+      cta2Text: { sv: "Vägbeskrivning", en: "Directions", de: "Route" },
       cta2Href: "https://www.google.com/maps/dir/57.502272,12.087438/%26Olles,+T%C3%A5ngk%C3%B6rarv%C3%A4gen+10,+432+54+Varberg/@57.297359,11.8315835,75985m/data=!3m1!1e3!4m9!4m8!1m1!4e1!1m5!1m1!1s0x46502b1d2d80b947:0x4bd0492009aae2ae!2m2!1d12.2632701!2d57.0773842?entry=ttu&g_ep=EgoyMDI2MDEyOC4wIKXMDSoASAFQAw%3D%3D"
     }
   },
   {
     id: "sektion73Pin_tangkorar_0005",
-    label: "Punkt 5",
+    label: { sv: "Punkt 5", en: "Stop 5", de: "Stopp 5" },
                    filter: "Mat & dryck",
     iconKey: "strandkollektivet",
     ui: { bubbleBg: "#A5B99A", pointerTop: "#A5B99A" },
     lngLat: sektion73Tangkorar_17.lngLat,
     modal: {
-      kicker: "PUNKT 5",
-      title: "Tångkörarvägen 17",
+      kicker: { sv: "PUNKT 5", en: "STOP 5", de: "STOPP 5" },
+      title: { sv: "Tångkörarvägen 17", en: "Tångkörarvägen 17", de: "Tångkörarvägen 17" },
       images: [
         "https://res.cloudinary.com/dmgmoisae/image/upload/v1769982595/jpeg-optimizer_vcbcvb_swupbf.png",
         "https://res.cloudinary.com/dmgmoisae/image/upload/v1769982593/jpeg-optimizer_hus_pwiwnt.png", 
         "https://res.cloudinary.com/dmgmoisae/image/upload/v1769982592/jpeg-optimizer_vbccvb_ezbwed.png",
         "https://res.cloudinary.com/dmgmoisae/image/upload/v1769982596/jpeg-optimizer_dddfgs_a5obtp.png"
       ],
-      imgSrc: "Bildkälla: —",
-      h: "Monique",
-      p: "Med inspiration från otaliga resor och intryck från kulturer, människor, mat och dryck har Monique vuxit fram. En plats vid stranden där all den inspiration världen gett får ta form. En plats där möten sker, stunder njuts och minnen skapas.",
-      cta1Text: "Läs mer",
+      imgSrc: { sv: "Bildkälla: —", en: "Image source: —", de: "Bildquelle: —" },
+      h: { sv: "Monique", en: "Monique", de: "Monique" },
+      p: {
+        sv: "Med inspiration från otaliga resor och intryck från kulturer, människor, mat och dryck har Monique vuxit fram. En plats vid stranden där all den inspiration världen gett får ta form. En plats där möten sker, stunder njuts och minnen skapas.",
+        en: "Inspired by countless journeys and impressions from cultures, people, food, and drink, Monique has taken shape. A place by the beach where all that inspiration can come to life. A place for meetings, for enjoying the moment, and for making memories.",
+        de: "Inspiriert von unzähligen Reisen und Eindrücken aus Kulturen, Menschen, Essen und Trinken ist Monique entstanden. Ein Ort am Strand, an dem all die Inspiration, die die Welt gegeben hat, Form annehmen darf. Ein Ort für Begegnungen, für genossene Momente und für Erinnerungen."
+      },
+      cta1Text: { sv: "Läs mer", en: "Learn more", de: "Mehr erfahren" },
       cta1Href: "https://strandkollektivet.se",
-      cta2Text: "Visa vägen",
+      cta2Text: { sv: "Visa vägen", en: "Get directions", de: "Route anzeigen" },
       cta2Href: "https://www.google.com/maps/search/?api=1&query=T%C3%A5ngk%C3%B6rarv%C3%A4gen%2017%2C%20432%2054%20Varberg"
     }
 },
   {
     id: "sektion73Pin_ny_plats_0006",
-    label: "Ny Plats",
+    label: { sv: "Ny Plats", en: "New place", de: "Neuer Ort" },
      filter: "Mat & dryck",
     iconKey: "da", 
     ui: { 
@@ -1513,20 +1587,24 @@ const sektion73Pins = [
     },
     lngLat: [12.247731, 57.085570], // Koordinater som du angav
     modal: {
-      kicker: "NY DESTINATION",
-      title: "Okänd Plats",
+      kicker: { sv: "NY DESTINATION", en: "NEW DESTINATION", de: "NEUES ZIEL" },
+      title: { sv: "Okänd Plats", en: "Unknown place", de: "Unbekannter Ort" },
       images: [
         "https://res.cloudinary.com/dmgmoisae/image/upload/v1769971746/nisses_axsb1p.png",
         "https://res.cloudinary.com/dmgmoisae/image/upload/v1769971689/68b2a7_3cf511320cef420e9b792866ff63be9b_mv2_y3gzxq.jpg",
         "https://res.cloudinary.com/dmgmoisae/image/upload/v1769971684/68b2a7_1a49d240ef664fcd9020bd989aa99175_mv2_ecjt6f.jpg",
         "https://res.cloudinary.com/dmgmoisae/image/upload/v1769971668/original_hz62hj.jpg"
       ],
-      imgSrc: "Bildkälla: —",
-        h: "Nisses Bodega",
-      p: "Kort sagt, en okomplicerad restaurang vid poolkanten. För alla, lika mycket för campinggäster och för dig som bor i Varberg, som kvällsflanörer utmed strandpromenaden. För dig som söker svalka i en välhumlad pilsner eller härlig sangria och när du tröttnat på poolplask långt före barnen. Och för frukost, hemlagad, rejäl streetfood. Du slinker in lite som du är; badtofflor, shorts och håret fortfarande vått efter badet eller kostym om du föredrar det. En samlingsplats i hjärtat av campingplatsen där du tar en kaffe, läser tidningen eller bara kollar folk en stund.",
-      cta1Text: "Visa meny",
+      imgSrc: { sv: "Bildkälla: —", en: "Image source: —", de: "Bildquelle: —" },
+        h: { sv: "Nisses Bodega", en: "Nisse’s Bodega", de: "Nisses Bodega" },
+      p: {
+        sv: "Kort sagt, en okomplicerad restaurang vid poolkanten. För alla, lika mycket för campinggäster och för dig som bor i Varberg, som kvällsflanörer utmed strandpromenaden. För dig som söker svalka i en välhumlad pilsner eller härlig sangria och när du tröttnat på poolplask långt före barnen. Och för frukost, hemlagad, rejäl streetfood. Du slinker in lite som du är; badtofflor, shorts och håret fortfarande vått efter badet eller kostym om du föredrar det. En samlingsplats i hjärtat av campingplatsen där du tar en kaffe, läser tidningen eller bara kollar folk en stund.",
+        en: "In short: an uncomplicated restaurant by the pool. For everyone—campers and Varberg locals alike, as well as evening strollers along the promenade. For you who want to cool off with a well-hopped pilsner or a great sangria, especially when you’re tired of pool splashing long before the kids are. And for breakfast: homemade, hearty street food. You drop in as you are—flip-flops, shorts, hair still wet from a swim, or a suit if that’s your thing. A meeting point in the heart of the campsite where you grab a coffee, read the paper, or just watch the world for a while.",
+        de: "Kurz gesagt: ein unkompliziertes Restaurant direkt am Pool. Für alle – für Campinggäste genauso wie für Varberger und für Abendspaziergänger an der Promenade. Für dich, der sich mit einem gut gehopften Pils oder einer schönen Sangria abkühlen will – besonders wenn du vom Poolgeplansche schon lange vor den Kindern genug hast. Und zum Frühstück: hausgemachtes, kräftiges Streetfood. Du kommst einfach so rein, wie du bist – Badelatschen, Shorts, Haare noch nass vom Schwimmen, oder Anzug, wenn du das lieber magst. Ein Treffpunkt im Herzen des Campingplatzes: Kaffee holen, Zeitung lesen oder einfach kurz Leute schauen."
+      },
+      cta1Text: { sv: "Visa meny", en: "View menu", de: "Speisekarte" },
       cta1Href: "https://www.apelviken.se/nisses-bodega",
-      cta2Text: "Visa vägen",
+      cta2Text: { sv: "Visa vägen", en: "Get directions", de: "Route anzeigen" },
       cta2Href: "https://www.google.com/maps/dir/57.502272,12.087438/Nisses+Bodega,+Sanatoriev%C3%A4gen+4,+432+53+Varberg/@57.2983075,11.831503,75983m/data=!3m2!1e3!4b1!4m9!4m8!1m1!4e1!1m5!1m1!1s0x4653ede147d2886f:0xfee8375fc04e0d5f!2m2!1d12.2478293!2d57.0854771?entry=ttu&g_ep=EgoyMDI2MDEyOC4wIKXMDSoASAFQAw%3D%3D"
     }
   }
