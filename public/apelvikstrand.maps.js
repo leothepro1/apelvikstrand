@@ -1,4 +1,3 @@
-
 (function () {
   function sektion73Ready(fn) {
     if (document.readyState === "loading") {
@@ -13,9 +12,124 @@
     if (!sektion73Canvas) return;
 
     if (!window.mapboxgl) {
-      console.error("Mapbox GL JS saknas. Kontrollera att mapbox-gl.js laddas före apelvikstrand.maps");
+      console.error("Mapbox GL JS missing. Ensure mapbox-gl.js loads before apelvikstrand.maps");
       return;
-    } 
+    }
+
+    /* =========================
+       i18n (sv / en / de)
+       - follows <html lang> if present
+       - fallback to /en /de path
+       ========================= */
+
+    function sektion73GetLang() {
+      const htmlLang = String((document.documentElement && document.documentElement.lang) || "").trim().toLowerCase();
+      if (htmlLang === "en" || htmlLang === "de" || htmlLang === "sv") return htmlLang;
+
+      const path = String((location && location.pathname) || "/");
+      if (path === "/en" || path.indexOf("/en/") === 0) return "en";
+      if (path === "/de" || path.indexOf("/de/") === 0) return "de";
+      return "sv";
+    }
+
+    const sektion73Lang = sektion73GetLang();
+
+    const sektion73I18N = {
+      sv: {
+        map: { ariaLabel: "Interaktiv karta över Apelviken" },
+        modal: {
+          ariaLabel: "Information",
+          closeAria: "Stäng",
+          imgSrcLabel: "Bildkälla",
+          placeholderH: "Rubrik",
+          placeholderP: "Brödtext…",
+          placeholderCta1: "Primär CTA",
+          placeholderCta2: "Sekundär CTA",
+          fallbackCta1: "Boka",
+          fallbackCta2: "Visa vägen"
+        },
+        filter: {
+          ariaPrefix: "Filter",
+          labelsByLegacy: {
+            "Mat & dryck": "Mat & dryck",
+            "Boenden": "Boenden",
+            "Att göra": "Att göra",
+            "Butiker": "Butiker"
+          }
+        }
+      },
+      en: {
+        map: { ariaLabel: "Interactive map of Apelviken" },
+        modal: {
+          ariaLabel: "Information",
+          closeAria: "Close",
+          imgSrcLabel: "Image source",
+          placeholderH: "Heading",
+          placeholderP: "Body text…",
+          placeholderCta1: "Primary CTA",
+          placeholderCta2: "Secondary CTA",
+          fallbackCta1: "Book",
+          fallbackCta2: "Get directions"
+        },
+        filter: {
+          ariaPrefix: "Filter",
+          labelsByLegacy: {
+            "Mat & dryck": "Food & drink",
+            "Boenden": "Stay",
+            "Att göra": "Things to do",
+            "Butiker": "Shops"
+          }
+        }
+      },
+      de: {
+        map: { ariaLabel: "Interaktive Karte von Apelviken" },
+        modal: {
+          ariaLabel: "Information",
+          closeAria: "Schließen",
+          imgSrcLabel: "Bildquelle",
+          placeholderH: "Überschrift",
+          placeholderP: "Text…",
+          placeholderCta1: "Primäre CTA",
+          placeholderCta2: "Sekundäre CTA",
+          fallbackCta1: "Buchen",
+          fallbackCta2: "Route anzeigen"
+        },
+        filter: {
+          ariaPrefix: "Filter",
+          labelsByLegacy: {
+            "Mat & dryck": "Essen & Trinken",
+            "Boenden": "Unterkünfte",
+            "Att göra": "Aktivitäten",
+            "Butiker": "Geschäfte"
+          }
+        }
+      }
+    };
+
+    function sektion73T(path, fallback) {
+      const parts = String(path || "").split(".");
+      let cur = (sektion73I18N[sektion73Lang] || sektion73I18N.sv);
+      for (let i = 0; i < parts.length; i++) {
+        if (!cur || typeof cur !== "object" || !(parts[i] in cur)) {
+          cur = null;
+          break;
+        }
+        cur = cur[parts[i]];
+      }
+      if (typeof cur === "string") return cur;
+
+      cur = sektion73I18N.sv;
+      for (let j = 0; j < parts.length; j++) {
+        if (!cur || typeof cur !== "object" || !(parts[j] in cur)) {
+          cur = null;
+          break;
+        }
+        cur = cur[parts[j]];
+      }
+      if (typeof cur === "string") return cur;
+
+      return (typeof fallback === "string") ? fallback : "";
+    }
 
     /* =========================
        CONFIG
@@ -772,13 +886,13 @@ gap:10px;
         modal.id = "sektion73MapModal";
         modal.setAttribute("role", "dialog");
         modal.setAttribute("aria-modal", "true");
-        modal.setAttribute("aria-label", "Information");
+        modal.setAttribute("aria-label", sektion73T("modal.ariaLabel", "Information"));
 
 
         modal.innerHTML = `
           <div class="sektion73ModalTop">
             <div></div>
-            <button class="sektion73ModalClose" type="button" id="sektion73ModalCloseBtn" aria-label="Stäng">
+            <button class="sektion73ModalClose" type="button" id="sektion73ModalCloseBtn" aria-label="${sektion73T("modal.closeAria", "Close")}">
  <svg fill="currentcolor" height="21" viewBox="0 0 1000 1000" width="21" xmlns="http://www.w3.org/2000/svg"><path d="M159 204l55-54 659 659-55 55-659-660m709 5L205 877l-55-59 664-664"></path></svg>
             </button>
           </div>
@@ -795,9 +909,9 @@ gap:10px;
 </div>
 
           <div class="sektion73ModalMeta">
-            <p class="sektion73ModalImgSrc" id="sektion73ModalImgSrc">Bildkälla: —</p>
-            <h3 class="sektion73ModalBodyH" id="sektion73ModalBodyH">Rubrik</h3>
-            <p class="sektion73ModalBodyP" id="sektion73ModalBodyP">Brödtext…</p>
+            <p class="sektion73ModalImgSrc" id="sektion73ModalImgSrc">${sektion73T("modal.imgSrcLabel", "Image source")}: —</p>
+            <h3 class="sektion73ModalBodyH" id="sektion73ModalBodyH">${sektion73T("modal.placeholderH", "Heading")}</h3>
+            <p class="sektion73ModalBodyP" id="sektion73ModalBodyP">${sektion73T("modal.placeholderP", "Body text…")}</p>
           </div>
 
           <div class="sektion73ModalActions">
@@ -846,7 +960,14 @@ let sektion73ReturnView = null;
 function sektion73OpenModal(payload) {
   const { overlay, modal } = sektion73EnsureModalDOM();
 
-  document.getElementById("sektion73ModalImgSrc").textContent = payload.imgSrc || "Bildkälla: —";
+  const imgSrcEl = document.getElementById("sektion73ModalImgSrc");
+  const imgSrcLabel = sektion73T("modal.imgSrcLabel", "Image source");
+  if (imgSrcEl) {
+    const raw = String(payload.imgSrc || "").trim();
+    if (raw) imgSrcEl.textContent = raw;
+    else imgSrcEl.textContent = `${imgSrcLabel}: —`;
+  }
+
   document.getElementById("sektion73ModalBodyH").textContent = payload.h || "";
   document.getElementById("sektion73ModalBodyP").textContent = payload.p || "";
 
@@ -866,8 +987,8 @@ function sektion73OpenModal(payload) {
   const cta1t = document.getElementById("sektion73ModalCtaPrimaryTxt");
   const cta2t = document.getElementById("sektion73ModalCtaSecondaryTxt");
 
-  if (cta1t) cta1t.textContent = payload.cta1Text || "Boka";
-  if (cta2t) cta2t.textContent = payload.cta2Text || "Visa vägen";
+  if (cta1t) cta1t.textContent = payload.cta1Text || sektion73T("modal.fallbackCta1", "Book");
+  if (cta2t) cta2t.textContent = payload.cta2Text || sektion73T("modal.fallbackCta2", "Get directions");
 
   if (cta1) {
     cta1.onclick = function () {
@@ -2037,22 +2158,30 @@ close.addEventListener("click", (e) => {
     icon: `<svg width="800" height="800" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" fill="currentcolor"><path d="M19.8 5.4c-.2-.2-.5-.4-.8-.4 0-1.7-1.3-3-3-3H8C6.3 2 5 3.3 5 5c-.3 0-.6.2-.8.4L2.9 7.3c-.6.9-.8 2-.5 3S3.2 12 4 12.4V17c0 2.2 1.8 4 4 4h8c2.2 0 4-1.8 4-4v-4.6c.8-.5 1.3-1.2 1.6-2.1.3-1 .1-2.2-.5-3zM8 4h8c.6 0 1 .4 1 1H7c0-.6.4-1 1-1m6 3v2c0 1.1-.9 2-2 2s-2-.9-2-2V7zm-8.3 4c-.1 0-.3-.1-.4-.1s-.2-.1-.2-.1c-.4-.2-.6-.5-.7-.9-.1-.5 0-1 .2-1.4l1-1.4H8v1.8c0 .9-.6 1.8-1.4 2h-.8c0 .1 0 .1-.1.1m7.3 8h-2v-2c0-.6.4-1 1-1s1 .4 1 1zm5-2c0 1.1-.9 2-2 2h-1v-2c0-1.7-1.3-3-3-3s-3 1.3-3 3v2H8c-1.1 0-2-.9-2-2v-4h.4c.1 0 .2 0 .3-.1.1 0 .2 0 .3-.1.1 0 .2-.1.4-.1.2-.1.3-.1.4-.2q.75-.3 1.2-.9l.1.1.3.3c.1.1.2.1.3.2s.3.2.4.3.2.1.3.2c.2.1.3.1.5.2.1 0 .2.1.3.1h.8c.3 0 .6 0 .8-.1.1 0 .2-.1.3-.1.2-.1.4-.1.5-.2.1 0 .2-.1.3-.2s.3-.2.4-.3.2-.1.3-.2l.3-.3s.1 0 .1-.1c.3.4.7.7 1.1.9.1.1.3.1.4.2.1 0 .2.1.4.1.1 0 .2 0 .3.1.1 0 .2 0 .3.1h.4V17zm1.6-7.2c-.1.4-.4.8-.7.9-.1 0-.2.1-.3.1s-.2.1-.4.1h-.9c-.8-.3-1.4-1.1-1.4-2V7h2.5l1 1.4c.3.4.4 1 .2 1.4"></path></svg>`
   }
 ];
-
-// Rewrite the filter rendering logic
 filterConfig.forEach((filterItem) => {
+  const legacyLabel = String(filterItem.label || "").trim();
+  const translatedLabel = (
+    (sektion73I18N[sektion73Lang] && sektion73I18N[sektion73Lang].filter && sektion73I18N[sektion73Lang].filter.labelsByLegacy && sektion73I18N[sektion73Lang].filter.labelsByLegacy[legacyLabel]) ||
+    (sektion73I18N.sv && sektion73I18N.sv.filter && sektion73I18N.sv.filter.labelsByLegacy && sektion73I18N.sv.filter.labelsByLegacy[legacyLabel]) ||
+    legacyLabel
+  );
+
   const btn = document.createElement("button");
   btn.type = "button";
   btn.className = "sektion73FilterBtn";
-  btn.setAttribute("data-filter", String(filterItem.label));
+
+  // Viktigt: behåll data-filter som svenska legacy-label (matchar pins/filterlogik)
+  btn.setAttribute("data-filter", legacyLabel);
+
   btn.setAttribute("aria-pressed", "false");
-  btn.setAttribute("aria-label", `Filter: ${filterItem.label}`);
+  btn.setAttribute("aria-label", `${sektion73T("filter.ariaPrefix", "Filter")}: ${translatedLabel}`);
 
   const ico = document.createElement("span");
   ico.className = "sektion73FilterIco";
   ico.innerHTML = filterItem.icon;
 
   const txt = document.createElement("span");
-  txt.textContent = String(filterItem.label);
+  txt.textContent = String(translatedLabel);
 
   btn.appendChild(ico);
   btn.appendChild(txt);
