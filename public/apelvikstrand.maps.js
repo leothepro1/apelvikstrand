@@ -1136,8 +1136,8 @@ const sektion73Pins = [
     filter: "Boenden",
     iconKey: "as",
     ui: {
-      bubbleBg: "#FFC33E",
-      pointerTop: "#FFC33E"
+      bubbleBg: "#fff",
+      pointerTop: "#fff"
     },
     lngLat: sektion73Home.lngLat,
    modal: {
