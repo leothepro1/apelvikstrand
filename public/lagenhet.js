@@ -139,7 +139,7 @@ function asBuildSrcsetUpload_55219(uploadUrl, widths, aspectW, aspectH) {
        ========================= */
 
 const asFamilyCountOverrides_61724 = {
-  Video: 3,
+  Video: 4,
 };
 
 const asImages_61724 = [
@@ -177,6 +177,8 @@ const asImages_61724 = [
     front: "number1",
     alt: "Exteriör 7",
     src: "https://res.cloudinary.com/dmgmoisae/image/upload/v1771931935/jpeg-optimizer_IMG_1406_qo03oc.jpg",
+  },
+
   // Restaurang
   {
     id: "asprImgData_0200",
