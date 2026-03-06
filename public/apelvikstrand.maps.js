@@ -1548,11 +1548,11 @@ const sektion73Pins = [
     }
   },
   {
-   "id: "sektion73Pin_tangkorar_0005",
+   id: "sektion73Pin_tangkorar_0005",
     label: { sv: "Punkt 5", en: "Stop 5", de: "Stopp 5" },
     filter: "Mat & dryck",
     iconKey: "strandkollektivet",
-    ui: { bubbleBg: "#A5B99A", pointerTop: "#A5B99A" },
+    ui: { bubbleBg: "#fff", pointerTop: "#fff" },
     lngLat: sektion73Tangkorar_17.lngLat,
     modal: {
       kicker: { sv: "PUNKT 5", en: "STOP 5", de: "STOPP 5" },
