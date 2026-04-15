@@ -609,46 +609,68 @@ function sektion73InjectModalCSS() {
     .sektion73ModalReadMore:active{ transform:translateY(1px); }
 
     @media (max-width: 768px){
-  .sektion73ModalLayout{
-    flex-direction:column;
-    min-height:unset;
-  }
-    .sektion73ModalLeft {
-        width: 100%;
-        flex: 0 0 35%;
-        min-width: unset;
-        border-right: none;
-        border-bottom: none;
-        padding: 0px;
-        height: 100%;
-    }
-#sektion73MapModal {
+      #sektion73MapModal {
         height: auto !important;
-        max-height: 93% !important;
+        max-height: 92vh !important;
+        width: 100% !important;
+        bottom: 0 !important;
+        top: auto !important;
+        left: 0 !important;
+        border-radius: 20px 20px 0 0 !important;
+        transform: translateX(0) translateY(115%) !important;
         overflow: auto !important;
         -webkit-overflow-scrolling: touch;
-        width: 100% !important;
-        bottom: 0% !important;
-        top: auto !important;
-        border-radius: 20px 20px 0px 0px !important;
-    }
-width: auto;
-        flex: 3 1 0;
+      }
+      #sektion73MapModal.is-open {
+        transform: translateX(0) translateY(0) !important;
+      }
+
+      .sektion73ModalLayout {
+        flex-direction: column;
+        min-height: unset;
+      }
+
+      .sektion73ModalLeft {
+        width: 100%;
+        flex: 0 0 auto;
+        min-width: unset;
+        max-height: 220px;
+        border-right: none;
+        border-bottom: none;
+        padding: 0;
+        height: auto;
+        min-height: auto;
+      }
+
+      .sektion73ModalLeftImgWrap {
+        max-height: 220px;
+      }
+
+      .sektion73ModalRight {
+        width: auto;
+        flex: 1 1 auto;
         min-width: 0;
         display: flex;
         flex-direction: column;
         padding: 24px;
-        gap: 0px;
-        overflow: auto;
-        place-content: center;
-        flex-wrap: nowrap;
+        gap: 0;
         overflow: visible !important;
         place-content: initial !important;
         flex-wrap: nowrap !important;
-    
-}
-      .sektion73ModalBodyH{ font-size:26px; }
-      .sektion73ModalBodyP{ font-size:15px; }
+      }
+
+      .sektion73ModalBodyPWrap {
+        padding-right: 0 !important;
+      }
+
+      .sektion73ModalBodyH { font-size: 24px; }
+      .sektion73ModalBodyP { font-size: 15px; }
+
+      .sektion73ModalClose.sektion73ModalCloseAbs {
+        top: 12px;
+        right: 12px;
+        left: auto;
+      }
     }
 
     body.sektion73-modal-open {
@@ -723,6 +745,14 @@ display: none !important;
     font-family: 'Inter Variablefont Opsz Wght';
     font-size: 12px;
     font-weight: 500;
+}
+.sektion73PinText.material-symbols-outlined {
+    font-family: 'Material Symbols Outlined' !important;
+    font-weight: 400;
+    font-style: normal;
+    font-size: 18px;
+    -webkit-font-feature-settings: 'liga';
+    font-feature-settings: 'liga';
 }
 
     /* Ikon-only pins (ingen bubbla, bara ikonen) */
@@ -2435,7 +2465,7 @@ sektion73Map.once("load", function () {
           opacity: 1
         },
         anim: {
-          durationMs: 6000,
+          durationMs: 4000,
           overviewPause: 800,
           arriveZoom: 17.2,
           arriveDur: 1400,
@@ -2693,9 +2723,10 @@ sektion73Map.once("load", function () {
               duration: a.arriveDur || 1400
             });
 
-            // Pulse the dot at arrival
+            // Pulse the dot at arrival, then remove
             const dotEl = dot.getElement();
             if (dotEl) dotEl.classList.add("is-arrived");
+            setTimeout(() => { dot.remove(); }, 600);
           }
         }
 
