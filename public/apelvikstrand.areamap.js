@@ -121,7 +121,7 @@ const sektion73Bounds = [
 // Mindre inzoomad start (justera vid behov)
 const sektion73MinZoom = 12.5;
 const sektion73MaxZoom = 18.6;
-const sektion73StartZoom = 17.6;
+const sektion73StartZoom = (window.innerWidth <= 768) ? 16.4 : 17.6;
 
 // Ovanifrån + norr upp
 const sektion73Pitch = 0;
@@ -365,7 +365,9 @@ function sektion73InjectModalCSS() {
     font-family: "Manrope", Inter, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, sans-serif;
     font-size: 15px;
     font-weight: 700;
-    margin-top: 22px;
+    margin-top: 0;
+    border: none;
+    text-align: center;
 }
 
 #sektion73MapModal #sektion73ModalCtaPrimary:hover{
@@ -403,7 +405,8 @@ function sektion73InjectModalCSS() {
     #sektion73MapModal{
       position:fixed;
       left:50%;
-      height: 380px;
+      height: auto;
+      max-height: min(78vh, 720px);
       bottom:18px;
       transform:translateX(-50%) translateY(115%);
       width:min(920px, calc(100vw - 24px));
@@ -415,8 +418,12 @@ function sektion73InjectModalCSS() {
       display:block;
       overscroll-behavior:contain;
       border-radius:20px;
-      overflow:hidden;
+      overflow:visible;
       box-shadow:var(--sektion73-modal-shadow);
+    }
+    .sektion73ModalLayout {
+      overflow:hidden;
+      border-radius:20px;
     }
     #sektion73MapModal.is-open{
       transform:translateX(-50%) translateY(0);
@@ -487,8 +494,9 @@ function sektion73InjectModalCSS() {
 
     .sektion73ModalCloseAbs{
       position:absolute;
-      top:12px;
-      left:12px;
+      top: 0;
+      right: -48px;
+      left: auto;
       z-index:5;
     }
 
@@ -643,21 +651,22 @@ function sektion73InjectModalCSS() {
       .sektion73ModalLeft {
         position: relative;
         width: 100%;
-        flex: 0 0 auto;
+        flex: 0 0 267px;
         min-width: unset;
-        max-height: 220px;
+        max-height: 267px;
         border-right: none;
         border-bottom: none;
         padding: 0;
-        height: auto;
-        min-height: auto;
+        height: 267px;
+        min-height: 267px;
         top: auto;
         left: auto;
         bottom: auto;
       }
 
       .sektion73ModalLeftImgWrap {
-        max-height: 220px;
+        height: 100%;
+        max-height: 267px;
       }
 
       .sektion73ModalRight {
@@ -678,7 +687,7 @@ function sektion73InjectModalCSS() {
         padding-right: 0 !important;
       }
 
-      .sektion73ModalBodyH { font-size: 24px; }
+      .sektion73ModalBodyH { font-size: 26px; }
       .sektion73ModalBodyP { font-size: 15px; }
 
       .sektion73ModalClose.sektion73ModalCloseAbs {
@@ -696,7 +705,35 @@ function sektion73InjectModalCSS() {
       touch-action: none;
     }
 #sektion73MapModal #sektion73ModalCtaPrimary {
-    width: 100%;
+    width: auto;
+    flex: 1;
+}
+#sektion73MapModal #sektion73ModalCtaSecondary {
+    background: #FFE6A3;
+    padding: 10px 19px;
+    color: #5A3C00;
+    transition: 0.15s ease-in-out;
+    cursor: pointer;
+    border-radius: 8px;
+    font-family: "Manrope", Inter, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, sans-serif;
+    font-size: 15px;
+    font-weight: 700;
+    border: none;
+    flex: 1;
+    text-align: center;
+}
+#sektion73MapModal #sektion73ModalCtaSecondary:hover {
+    background: #FFD870;
+}
+#sektion73MapModal #sektion73ModalCtaSecondary:active {
+    background: #F2CC5A;
+}
+#sektion73MapModal #sektion73ModalCtaSecondary svg {
+    display: none;
+}
+#sektion73MapModal .sektion73ModalActions {
+    gap: 10px;
+    margin-top: 22px;
 }
     /* NYTT: klassisk kart-pin (cirkel + pekare), med text i cirkeln */
     .sektion73PinWrap{
@@ -848,12 +885,11 @@ function sektion73EnsureModalDOM() {
     modal.setAttribute("aria-label", "Information");
 
     modal.innerHTML = `
+      <button class="sektion73ModalClose sektion73ModalCloseAbs" type="button" id="sektion73ModalCloseBtn" aria-label="Stäng">
+        <svg fill="currentcolor" height="21" viewBox="0 0 1000 1000" width="21" xmlns="http://www.w3.org/2000/svg"><path d="M159 204l55-54 659 659-55 55-659-660m709 5L205 877l-55-59 664-664"></path></svg>
+      </button>
       <div class="sektion73ModalLayout" role="document">
         <div class="sektion73ModalLeft">
-          <button class="sektion73ModalClose sektion73ModalCloseAbs" type="button" id="sektion73ModalCloseBtn" aria-label="Stäng">
-            <svg fill="currentcolor" height="21" viewBox="0 0 1000 1000" width="21" xmlns="http://www.w3.org/2000/svg"><path d="M159 204l55-54 659 659-55 55-659-660m709 5L205 877l-55-59 664-664"></path></svg>
-          </button>
-
           <div class="sektion73ModalLeftImgWrap">
             <img id="sektion73ModalImg0" alt="" loading="lazy" class="sektion73ModalLeftImg skeleton-loader">
             <img id="sektion73ModalImg1" alt="" loading="lazy" class="skeleton-loader" style="display:none">
@@ -985,13 +1021,8 @@ function sektion73OpenModal(payload) {
 
   const pWrap = document.getElementById("sektion73ModalBodyPWrap");
   const rmBtn = document.getElementById("sektion73ModalReadMoreBtn");
-  if (payload && payload.noReadMore) {
-    if (pWrap) pWrap.classList.add("is-expanded");
-    if (rmBtn) rmBtn.style.display = "none";
-  } else {
-    if (pWrap) pWrap.classList.remove("is-expanded");
-    if (rmBtn) { rmBtn.textContent = "Läs mer"; rmBtn.style.display = ""; }
-  }
+  if (pWrap) pWrap.classList.add("is-expanded");
+  if (rmBtn) rmBtn.style.display = "none";
 
   const imgs = payload.images || [];
   const img0 = document.getElementById("sektion73ModalImg0");
@@ -1051,6 +1082,7 @@ function sektion73OpenModal(payload) {
   sektion73ModalOpen = true;
 }
 
+var sektion73ModalOpenedWithoutZoom = false;
 
 function sektion73CloseModal() {
   const overlay = document.getElementById("sektion73MapOverlay");
@@ -1071,6 +1103,11 @@ function sektion73CloseModal() {
   }
 
  const view = sektion73ReturnView || sektion73StartView;
+
+if (sektion73ModalOpenedWithoutZoom) {
+  sektion73ModalOpenedWithoutZoom = false;
+  return;
+}
 
 /* NYTT: håll filterbaren nere medan vi återgår */
 
@@ -2253,8 +2290,20 @@ const sektion73Pins = [
   lngLat: [12.247868, 57.087934],
   filter: "",
   priority: "priority",
-  ui: { bubbleBg: "#222", tooltip: true },
-  modal: null
+  ui: { bubbleBg: "#222", tooltip: true, noZoom: true },
+  modal: {
+    imgSrc: "https://res.cloudinary.com/dmgmoisae/image/upload/v1770067031/original_ao0xjw.png",
+    h: "Vår reception",
+    p: "Receptionen finns här om något dyker upp under vistelsen. Frågor, funderingar eller bara ett behov av att få lite hjälp på vägen. Här får man tips om området, praktiska svar och hjälp med det som behövs. Aktuella öppettider hittar du via länken nedan.",
+    noReadMore: true,
+    icons: [],
+    iconTexts: [],
+    images: ["", "", "", ""],
+    cta1Text: "Ring oss",
+    cta1Href: "tel:034086828",
+    cta2Text: "Se öppettider",
+    cta2Href: "/kundservice"
+  }
 }
 ];
 
@@ -2610,7 +2659,13 @@ function sektion73ZoomToPinThenOpenModal(pin) {
     // används av filter för att kunna stänga modal om pin filtreras bort
     window.__sektion73LastOpenedPinId = pin.id;
 
-    sektion73ZoomToPinThenOpenModal(pin);
+    if (pin.ui && pin.ui.noZoom) {
+      sektion73ModalOpenedWithoutZoom = true;
+      sektion73OpenModal(pin.modal);
+    } else {
+      sektion73ModalOpenedWithoutZoom = false;
+      sektion73ZoomToPinThenOpenModal(pin);
+    }
   });
 
   const marker = new mapboxgl.Marker({
@@ -2700,13 +2755,25 @@ sektion73Map.once("load", function () {
         profile: "walking",
         line: {
           color: "#F0A500",
-          casingColor: "rgba(240,165,0,.25)",
-          width: 5,
-          casingWidth: 12,
+          casingColor: "rgba(240,165,0,.18)",
+          width: 4.5,
+          casingWidth: 11,
           opacity: 1
         },
+        driving: {
+          profile: "driving",
+          line: {
+            color: "#336aea",
+            casingColor: "rgba(51,106,234,.14)",
+            width: 4,
+            casingWidth: 10,
+            opacity: 1,
+            dasharray: [2, 3]
+          },
+          divergeThresholdM: 50
+        },
         anim: {
-          durationMs: 4000,
+          durationMs: 5000,
           overviewPause: 800,
           arriveZoom: 17.2,
           arriveDur: 1400,
@@ -2788,6 +2855,65 @@ sektion73Map.once("load", function () {
 
     function sektion73Lerp(a, b, t) { return a + (b - a) * t; }
 
+    // Find where two routes diverge (returns index on walkCoords)
+    // Strategy: first find where routes become close (shared segment start),
+    // then find where they stop being close (diverge point).
+    // This handles Mapbox snapping walking/driving to different start points.
+    function sektion73FindDivergeIndex(walkCoords, driveCoords, thresholdM) {
+      const threshold = thresholdM || 30;
+
+      function closestDist(pt) {
+        let min = Infinity;
+        for (let j = 0; j < driveCoords.length; j++) {
+          const d = sektion73Haversine(pt, driveCoords[j]);
+          if (d < min) min = d;
+        }
+        return min;
+      }
+
+      // Phase 1: find where routes first become close (shared segment begins)
+      let sharedStart = -1;
+      for (let i = 0; i < walkCoords.length; i++) {
+        if (closestDist(walkCoords[i]) <= threshold) {
+          sharedStart = i;
+          break;
+        }
+      }
+      // Routes never get close — show driving from very start
+      if (sharedStart === -1) return 0;
+
+      // Phase 2: from shared start, find where they stop being close (diverge)
+      let lastClose = sharedStart;
+      for (let i = sharedStart; i < walkCoords.length; i++) {
+        if (closestDist(walkCoords[i]) <= threshold) {
+          lastClose = i;
+        } else {
+          // Require 3+ consecutive far points to confirm real diverge
+          let farCount = 0;
+          for (let k = i; k < Math.min(i + 3, walkCoords.length); k++) {
+            if (closestDist(walkCoords[k]) > threshold) farCount++;
+          }
+          if (farCount >= 3) return lastClose;
+        }
+      }
+      return walkCoords.length - 1; // never diverge
+    }
+
+    // Extract driving-only segment (from diverge point to destination)
+    function sektion73GetDrivingBranch(driveCoords, divergePoint, thresholdM) {
+      const threshold = thresholdM || 30;
+      // Find the closest point on the driving route to the diverge point
+      let bestIdx = 0;
+      let bestDist = Infinity;
+      for (let i = 0; i < driveCoords.length; i++) {
+        const d = sektion73Haversine(divergePoint, driveCoords[i]);
+        if (d < bestDist) { bestDist = d; bestIdx = i; }
+      }
+      // Return from diverge point onwards (prepend the exact diverge point for seamless join)
+      const branch = [divergePoint].concat(driveCoords.slice(bestIdx));
+      return branch;
+    }
+
     function sektion73FormatDist(m) {
       return m >= 1000
         ? (m / 1000).toFixed(1).replace(".", ",") + " km"
@@ -2820,9 +2946,9 @@ sektion73Map.once("load", function () {
 
     /* --- Pulsing head dot (Mapbox marker) --- */
 
-    function sektion73CreateHeadDot() {
+    function sektion73CreateHeadDot(colorClass) {
       const el = document.createElement("div");
-      el.className = "sektion73RouteHeadDot";
+      el.className = "sektion73RouteHeadDot" + (colorClass ? " " + colorClass : "");
       return new mapboxgl.Marker({ element: el, anchor: "center" });
     }
 
@@ -2830,7 +2956,7 @@ sektion73Map.once("load", function () {
 
     const sektion73RouteState = {};
 
-    function sektion73AnimateRoute(routeCfg, routeData, onPhaseChange) {
+    function sektion73AnimateRoute(routeCfg, routeData, onPhaseChange, drivingData) {
       const id = routeCfg.id;
       const srcLine = "sektion73_rsrc_" + id;
       const layerCasing = "sektion73_rcas_" + id;
@@ -2839,10 +2965,19 @@ sektion73Map.once("load", function () {
       const l = routeCfg.line;
       const coords = routeData.coords;
 
+      // Driving branch setup
+      const drv = routeCfg.driving;
+      let drvBranch = null, drvDists = null, drvTotalDist = 0;
+      let drvDivergeDistOnWalk = 0; // distance along walking route where diverge happens
+      const srcDrv = "sektion73_rsrc_drv_" + id;
+      const layerDrvCasing = "sektion73_rcas_drv_" + id;
+      const layerDrvLine = "sektion73_rlin_drv_" + id;
+
       // Avbryt pågående
       if (sektion73RouteState[id]) {
         if (sektion73RouteState[id].rafId) cancelAnimationFrame(sektion73RouteState[id].rafId);
         if (sektion73RouteState[id].dot) sektion73RouteState[id].dot.remove();
+        if (sektion73RouteState[id].drvDot) sektion73RouteState[id].drvDot.remove();
         sektion73RouteState[id].running = false;
       }
 
@@ -2884,18 +3019,37 @@ sektion73Map.once("load", function () {
         });
       }
 
-      // Head dot
+      // Driving branch: compute diverge point + branch coords (layers created lazily in tick)
+      let drvDot = null;
+      let drvLayersCreated = false;
+      if (drv && drivingData) {
+        const walkDists = sektion73MeasureRoute(coords);
+        const divergeIdx = sektion73FindDivergeIndex(coords, drivingData.coords, drv.divergeThresholdM);
+        const divergePoint = coords[divergeIdx];
+        drvDivergeDistOnWalk = walkDists[divergeIdx];
+
+        drvBranch = sektion73GetDrivingBranch(drivingData.coords, divergePoint, drv.divergeThresholdM);
+        drvDists = sektion73MeasureRoute(drvBranch);
+        drvTotalDist = drvDists[drvDists.length - 1];
+
+        console.log("[Route] Diverge at walking index", divergeIdx,
+          "dist on walk:", Math.round(drvDivergeDistOnWalk) + "m",
+          "driving branch length:", Math.round(drvTotalDist) + "m");
+      }
+
+      // Head dot (walking)
       const dot = sektion73CreateHeadDot();
       dot.setLngLat(coords[0]).addTo(sektion73Map);
 
-      const state = { rafId: null, running: true, dot: dot };
+      const state = { rafId: null, running: true, dot: dot, drvDot: drvDot };
       sektion73RouteState[id] = state;
 
       /* --- Phase 1: Overview (fly out to see the whole route) --- */
       if (onPhaseChange) onPhaseChange("overview");
 
-      const lngs = coords.map(c => c[0]);
-      const lats = coords.map(c => c[1]);
+      const allCoords = drvBranch ? coords.concat(drvBranch) : coords;
+      const lngs = allCoords.map(c => c[0]);
+      const lats = allCoords.map(c => c[1]);
       const bounds = [
         [Math.min(...lngs), Math.min(...lats)],
         [Math.max(...lngs), Math.max(...lats)]
@@ -2938,13 +3092,77 @@ sektion73Map.once("load", function () {
           const head = slice[slice.length - 1];
           dot.setLngLat(head);
 
-          // Only pan camera after zoom-out is done (don't interrupt fitBounds)
+          // Driving branch: create layers + animate ONLY after walking passes diverge
+          if (drvBranch && drvDists && dist >= drvDivergeDistOnWalk) {
+            // Lazy-create source, layers, and dot the FIRST time we pass diverge
+            if (!drvLayersCreated) {
+              drvLayersCreated = true;
+
+              const startGJ = { type: "Feature", geometry: { type: "LineString", coordinates: [drvBranch[0]] } };
+              sektion73Map.addSource(srcDrv, { type: "geojson", data: startGJ });
+
+              // Start with opacity 0, fade in via Mapbox transition
+              sektion73Map.addLayer({
+                id: layerDrvCasing, type: "line", source: srcDrv,
+                paint: {
+                  "line-color": drv.line.casingColor || "rgba(51,106,234,.14)",
+                  "line-width": drv.line.casingWidth || 10,
+                  "line-opacity": 0,
+                  "line-opacity-transition": { duration: 500 }
+                },
+                layout: { "line-cap": "round", "line-join": "round" }
+              });
+
+              sektion73Map.addLayer({
+                id: layerDrvLine, type: "line", source: srcDrv,
+                paint: {
+                  "line-color": drv.line.color || "#336aea",
+                  "line-width": drv.line.width || 4,
+                  "line-opacity": 0,
+                  "line-opacity-transition": { duration: 500 }
+                },
+                layout: { "line-cap": "round", "line-join": "round" }
+              });
+
+              if (drv.line.dasharray) {
+                sektion73Map.setPaintProperty(layerDrvLine, "line-dasharray", drv.line.dasharray);
+              }
+
+              // Trigger fade-in
+              requestAnimationFrame(() => {
+                sektion73Map.setPaintProperty(layerDrvCasing, "line-opacity", 1);
+                sektion73Map.setPaintProperty(layerDrvLine, "line-opacity", drv.line.opacity || 1);
+              });
+
+              drvDot = sektion73CreateHeadDot("sektion73RouteHeadDotDrv");
+              drvDot.setLngLat(drvBranch[0]).addTo(sektion73Map);
+              state.drvDot = drvDot;
+            }
+
+            const drvElapsed = dist - drvDivergeDistOnWalk;
+            const walkRemaining = totalDist - drvDivergeDistOnWalk;
+            const drvProgress = walkRemaining > 0 ? Math.min(drvElapsed / walkRemaining, 1) : 1;
+            const drvDist = drvProgress * drvTotalDist;
+
+            const drvSlice = sektion73SliceRoute(drvBranch, drvDists, drvDist);
+            sektion73Map.getSource(srcDrv).setData({
+              type: "Feature",
+              geometry: { type: "LineString", coordinates: drvSlice }
+            });
+
+            if (drvDot) {
+              const drvHead = drvSlice[drvSlice.length - 1];
+              drvDot.setLngLat(drvHead);
+            }
+          }
+
+          // Smooth camera pan — only after zoom-out completes
           if (elapsed > zoomOutDur) {
             sektion73Map.easeTo({
               center: head,
               pitch: 35,
-              duration: 120,
-              easing: (t) => t
+              duration: 300,
+              easing: (t) => t < 0.5 ? 2*t*t : -1+(4-2*t)*t
             });
           }
 
@@ -2964,14 +3182,63 @@ sektion73Map.once("load", function () {
               duration: a.arriveDur || 1400
             });
 
-            // Pulse the dot at arrival, then remove
+            // Pulse dots at arrival, fade out smoothly
             const dotEl = dot.getElement();
             if (dotEl) dotEl.classList.add("is-arrived");
-            setTimeout(() => { dot.remove(); }, 600);
+            setTimeout(() => { if (dotEl) dotEl.style.opacity = "0"; }, 800);
+            setTimeout(() => { dot.remove(); }, 1200);
+
+            if (drvDot) {
+              const drvDotEl = drvDot.getElement();
+              if (drvDotEl) drvDotEl.classList.add("is-arrived");
+              setTimeout(() => { if (drvDotEl) drvDotEl.style.opacity = "0"; }, 800);
+              setTimeout(() => { drvDot.remove(); }, 1200);
+            }
+
+            // Draw complete driving branch
+            if (drvBranch && drvDists) {
+              sektion73Map.getSource(srcDrv).setData({
+                type: "Feature",
+                geometry: { type: "LineString", coordinates: drvBranch }
+              });
+            }
+
+            // Legend is built into the route card — no separate legend needed
           }
         }
 
         state.rafId = requestAnimationFrame(tick);
+      }
+    }
+
+    /* --- Route legend --- */
+
+    function sektion73ShowRouteLegend(routeId) {
+      const root = document.getElementById("sektion73MapRoot") || document.body;
+      let el = document.getElementById("sektion73RouteLegend_" + routeId);
+      if (!el) {
+        el = document.createElement("div");
+        el.id = "sektion73RouteLegend_" + routeId;
+        el.className = "sektion73RouteLegend";
+        el.innerHTML =
+          '<div class="sektion73RouteLegendItem">' +
+            '<span class="sektion73RouteLegendLine" style="background:#F0A500"></span>' +
+            '<span>Gångväg</span>' +
+          '</div>' +
+          '<div class="sektion73RouteLegendItem">' +
+            '<span class="sektion73RouteLegendLine sektion73RouteLegendDash"></span>' +
+            '<span>Bilväg</span>' +
+          '</div>';
+        root.appendChild(el);
+      }
+      requestAnimationFrame(() => { el.classList.add("is-visible"); });
+    }
+
+    function sektion73RemoveRouteLegend(routeId) {
+      const el = document.getElementById("sektion73RouteLegend_" + routeId);
+      if (el) {
+        el.classList.remove("is-visible");
+        setTimeout(() => { el.remove(); }, 500);
       }
     }
 
@@ -2983,8 +3250,10 @@ sektion73Map.once("load", function () {
         if (state.rafId) cancelAnimationFrame(state.rafId);
         state.running = false;
         if (state.dot) state.dot.remove();
+        if (state.drvDot) state.drvDot.remove();
       }
 
+      // Walking layers
       const srcLine = "sektion73_rsrc_" + routeId;
       const layerCasing = "sektion73_rcas_" + routeId;
       const layerLine = "sektion73_rlin_" + routeId;
@@ -2992,6 +3261,18 @@ sektion73Map.once("load", function () {
       if (sektion73Map.getLayer(layerLine)) sektion73Map.removeLayer(layerLine);
       if (sektion73Map.getLayer(layerCasing)) sektion73Map.removeLayer(layerCasing);
       if (sektion73Map.getSource(srcLine)) sektion73Map.removeSource(srcLine);
+
+      // Driving layers
+      const srcDrv = "sektion73_rsrc_drv_" + routeId;
+      const layerDrvCasing = "sektion73_rcas_drv_" + routeId;
+      const layerDrvLine = "sektion73_rlin_drv_" + routeId;
+
+      if (sektion73Map.getLayer(layerDrvLine)) sektion73Map.removeLayer(layerDrvLine);
+      if (sektion73Map.getLayer(layerDrvCasing)) sektion73Map.removeLayer(layerDrvCasing);
+      if (sektion73Map.getSource(srcDrv)) sektion73Map.removeSource(srcDrv);
+
+      // Legend
+      sektion73RemoveRouteLegend(routeId);
     }
 
     /* --- Route UI CSS --- */
@@ -3004,25 +3285,76 @@ sektion73Map.once("load", function () {
       style.textContent = `
         /* Pulsing head dot */
         .sektion73RouteHeadDot {
-          width: 16px; height: 16px;
+          width: 14px; height: 14px;
           border-radius: 50%;
           background: #F0A500;
-          border: 3px solid #fff;
-          box-shadow: 0 0 0 0 rgba(240,165,0,.5), 0 2px 8px rgba(0,0,0,.3);
-          animation: sektion73DotPulse 1.6s ease-in-out infinite;
+          border: 2.5px solid #fff;
+          box-shadow: 0 0 0 0 rgba(240,165,0,.4), 0 1px 6px rgba(0,0,0,.25);
+          animation: sektion73DotPulse 2s ease-in-out infinite;
           pointer-events: none;
+          transition: opacity .3s ease;
         }
         .sektion73RouteHeadDot.is-arrived {
-          animation: sektion73DotArrive .5s ease forwards;
+          animation: sektion73DotArrive .4s ease forwards;
         }
         @keyframes sektion73DotPulse {
-          0%,100% { box-shadow: 0 0 0 0 rgba(240,165,0,.45), 0 2px 8px rgba(0,0,0,.3); }
-          50%     { box-shadow: 0 0 0 10px rgba(240,165,0,0), 0 2px 8px rgba(0,0,0,.3); }
+          0%,100% { box-shadow: 0 0 0 0 rgba(240,165,0,.35), 0 1px 6px rgba(0,0,0,.25); }
+          50%     { box-shadow: 0 0 0 8px rgba(240,165,0,0), 0 1px 6px rgba(0,0,0,.25); }
         }
         @keyframes sektion73DotArrive {
           0%   { transform: scale(1); }
-          40%  { transform: scale(1.5); }
+          50%  { transform: scale(1.4); }
           100% { transform: scale(1); }
+        }
+
+        /* Driving head dot (blue) */
+        .sektion73RouteHeadDotDrv {
+          background: #336aea;
+          box-shadow: 0 0 0 0 rgba(51,106,234,.4), 0 1px 6px rgba(0,0,0,.25);
+          animation: sektion73DotPulseDrv 2s ease-in-out infinite;
+        }
+        @keyframes sektion73DotPulseDrv {
+          0%,100% { box-shadow: 0 0 0 0 rgba(51,106,234,.35), 0 1px 6px rgba(0,0,0,.25); }
+          50%     { box-shadow: 0 0 0 8px rgba(51,106,234,0), 0 1px 6px rgba(0,0,0,.25); }
+        }
+
+        /* Route legend (appears at arrival) */
+        .sektion73RouteLegend {
+          position: absolute;
+          top: 16px;
+          right: 16px;
+          z-index: 10;
+          background: rgba(255,255,255,.95);
+          border-radius: 10px;
+          padding: 10px 14px;
+          box-shadow: 0 1px 4px rgba(0,0,0,.12);
+          display: flex;
+          flex-direction: column;
+          gap: 6px;
+          font: 500 12px/1.2 'Inter', 'Manrope', system-ui, sans-serif;
+          color: #1a1a1a;
+          opacity: 0;
+          transform: translateY(-8px);
+          transition: opacity .4s ease, transform .4s ease;
+          pointer-events: none;
+        }
+        .sektion73RouteLegend.is-visible {
+          opacity: 1;
+          transform: translateY(0);
+        }
+        .sektion73RouteLegendItem {
+          display: flex;
+          align-items: center;
+          gap: 8px;
+        }
+        .sektion73RouteLegendLine {
+          width: 20px;
+          height: 3px;
+          border-radius: 2px;
+          flex-shrink: 0;
+        }
+        .sektion73RouteLegendDash {
+          background: repeating-linear-gradient(90deg, #336aea 0, #336aea 5px, transparent 5px, transparent 9px);
         }
 
         /* Toast container */
@@ -3107,30 +3439,129 @@ sektion73Map.once("load", function () {
           font-weight: 500;
           color: #5f6368;
           line-height: 1.15;
+          text-align: left;
         }
 
-        /* Active / close state */
+        /* ===== Active state: route info card ===== */
         .sektion73RouteBtn.is-active {
-          background: #303030;
+          padding: 0;
+          gap: 0;
+          flex-direction: column;
+          border-radius: 16px;
+          box-shadow: 0 4px 20px rgba(0,0,0,.12), 0 0 0 1px rgba(0,0,0,.04);
+          white-space: normal;
+          width: 210px;
+          cursor: default;
+          overflow: hidden;
+          animation: sektion73CardIn .35s cubic-bezier(.2,.8,.2,1) both;
         }
-        .sektion73RouteBtn.is-active .sektion73RouteBtnIcon {
-          background: #555;
-          color: #f0f0f0;
+        @keyframes sektion73CardIn {
+          from { opacity: 0; transform: translateY(12px) scale(.96); }
+          to   { opacity: 1; transform: translateY(0) scale(1); }
         }
-        .sektion73RouteBtn.is-active .sektion73RouteBtnLabel {
-          color: #fff;
+        .sektion73RouteBtn.is-active:hover { transform: none; }
+
+        .sektion73RouteBtn.is-active .sektion73RouteBtnIcon,
+        .sektion73RouteBtn.is-active .sektion73RouteBtnBody { display: none; }
+
+        /* Card container */
+        .sektion73RouteCard { display: none; width: 100%; }
+        .sektion73RouteBtn.is-active .sektion73RouteCard {
+          display: flex;
+          flex-direction: column;
         }
-        .sektion73RouteBtn.is-active .sektion73RouteBtnMeta {
-          color: rgba(255,255,255,.65);
+
+        /* Route rows */
+        .sektion73RouteCardRoutes {
+          padding: 14px 16px 12px;
+          display: flex;
+          flex-direction: column;
+          gap: 12px;
+        }
+        .sektion73RouteCardRow {
+          display: flex;
+          align-items: center;
+          gap: 12px;
+        }
+        .sektion73RouteCardDot {
+          width: 10px; height: 10px;
+          border-radius: 50%;
+          flex-shrink: 0;
+          box-shadow: 0 0 0 3px rgba(0,0,0,.06);
+        }
+        .sektion73RouteCardDotDash {
+          width: 10px; height: 10px;
+          border-radius: 50%;
+          flex-shrink: 0;
+          border: 2px solid #336aea;
+          background: #fff;
+          box-sizing: border-box;
+        }
+        .sektion73RouteCardInfo {
+          display: flex;
+          flex-direction: column;
+          gap: 1px;
+          min-width: 0;
+        }
+        .sektion73RouteCardType {
+          font: 500 11.5px/1.2 'Inter','Manrope',system-ui,sans-serif;
+          color: #80868b;
+          letter-spacing: .01em;
+          text-transform: uppercase;
+        }
+        .sektion73RouteCardTime {
+          font: 600 15px/1.2 'Inter','Manrope',system-ui,sans-serif;
+          color: #1a1a1a;
+        }
+        .sektion73RouteCardDist {
+          font: 400 12px/1.2 'Inter','Manrope',system-ui,sans-serif;
+          color: #80868b;
+          margin-left: auto;
+          white-space: nowrap;
+          flex-shrink: 0;
+        }
+        .sektion73RouteCardSep {
+          height: 1px;
+          background: rgba(0,0,0,.06);
+          margin: 0 16px;
+        }
+
+        /* Back button */
+        .sektion73RouteCardBack {
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          gap: 6px;
+          padding: 11px 16px;
+          font: 500 13px/1 'Inter','Manrope',system-ui,sans-serif;
+          color: #1a73e8;
+          cursor: pointer;
+          transition: background .15s ease;
+          width: 100%;
+          background: none;
+          border: none;
+          border-radius: 0 0 16px 16px;
+          -webkit-appearance: none;
+        }
+        .sektion73RouteCardBack:hover {
+          background: rgba(26,115,232,.06);
+        }
+        .sektion73RouteCardBack:active {
+          background: rgba(26,115,232,.12);
+        }
+        .sektion73RouteCardBackIcon {
+          font-family: 'Material Symbols Outlined';
+          font-size: 18px;
+          font-weight: 400;
         }
 
         /* Loading shimmer */
         .sektion73RouteBtn.is-loading .sektion73RouteBtnLabel {
-          background: linear-gradient(90deg, #ccc 25%, #eee 50%, #ccc 75%);
+          background: linear-gradient(90deg, #ddd 25%, #f0f0f0 50%, #ddd 75%);
           background-size: 200% 100%;
           -webkit-background-clip: text;
           -webkit-text-fill-color: transparent;
-          animation: sektion73Shimmer 1.5s ease infinite;
+          animation: sektion73Shimmer 1.8s ease infinite;
         }
         @keyframes sektion73Shimmer {
           0%   { background-position: 200% 0; }
@@ -3155,73 +3586,113 @@ sektion73Map.once("load", function () {
       }
 
       sektion73Routes.forEach((route) => {
-        const btn = document.createElement("button");
-        btn.type = "button";
+        const btn = document.createElement("div");
         btn.className = "sektion73RouteBtn";
         btn.id = "sektion73RouteBtn_" + route.id;
 
+        // Default state (CTA pill)
         btn.innerHTML =
           '<span class="sektion73RouteBtnIcon">' + (route.btnIcon || "route") + '</span>' +
           '<span class="sektion73RouteBtnBody">' +
             '<span class="sektion73RouteBtnLabel">' + (route.btnText || "Visa rutt") + '</span>' +
             '<span class="sektion73RouteBtnMeta"></span>' +
-          '</span>';
+          '</span>' +
+          '<div class="sektion73RouteCard">' +
+            '<div class="sektion73RouteCardRoutes">' +
+              '<div class="sektion73RouteCardRow">' +
+                '<span class="sektion73RouteCardDot" style="background:#F0A500"></span>' +
+                '<span class="sektion73RouteCardInfo">' +
+                  '<span class="sektion73RouteCardType">Gångväg</span>' +
+                  '<span class="sektion73RouteCardTime" id="sektion73WalkTime_' + route.id + '"></span>' +
+                '</span>' +
+                '<span class="sektion73RouteCardDist" id="sektion73WalkDist_' + route.id + '"></span>' +
+              '</div>' +
+              '<div class="sektion73RouteCardRow">' +
+                '<span class="sektion73RouteCardDotDash"></span>' +
+                '<span class="sektion73RouteCardInfo">' +
+                  '<span class="sektion73RouteCardType">Bilväg</span>' +
+                  '<span class="sektion73RouteCardTime" id="sektion73DriveTime_' + route.id + '"></span>' +
+                '</span>' +
+                '<span class="sektion73RouteCardDist" id="sektion73DriveDist_' + route.id + '"></span>' +
+              '</div>' +
+            '</div>' +
+            '<div class="sektion73RouteCardSep"></div>' +
+            '<button type="button" class="sektion73RouteCardBack" id="sektion73BackBtn_' + route.id + '">' +
+              '<span class="sektion73RouteCardBackIcon">arrow_back</span>' +
+              '<span>Tillbaka till kartan</span>' +
+            '</button>' +
+          '</div>';
 
         const labelEl = btn.querySelector(".sektion73RouteBtnLabel");
         const metaEl = btn.querySelector(".sektion73RouteBtnMeta");
         const iconEl = btn.querySelector(".sektion73RouteBtnIcon");
+        const walkTimeEl = btn.querySelector("#sektion73WalkTime_" + route.id);
+        const walkDistEl = btn.querySelector("#sektion73WalkDist_" + route.id);
+        const driveTimeEl = btn.querySelector("#sektion73DriveTime_" + route.id);
+        const driveDistEl = btn.querySelector("#sektion73DriveDist_" + route.id);
+        const backBtn = btn.querySelector("#sektion73BackBtn_" + route.id);
 
         let active = false;
         let cachedRoute = null;
+        let cachedDriving = null;
 
-        btn.addEventListener("click", async () => {
-          if (active) {
-            active = false;
-            btn.classList.remove("is-active");
-            labelEl.textContent = route.btnText || "Visa rutt";
-            metaEl.textContent = "";
-            iconEl.textContent = route.btnIcon || "route";
-            sektion73ClearRoute(route.id);
-            sektion73Map.easeTo({
-              center: sektion73InitialCenter.lngLat,
-              zoom: sektion73StartZoom,
-              pitch: sektion73Pitch,
-              bearing: 0,
-              duration: 1400,
-              easing: (t) => 1 - Math.pow(1 - t, 3)
-            });
-            return;
-          }
+        function closeRoute() {
+          active = false;
+          btn.classList.remove("is-active", "is-loading");
+          labelEl.textContent = route.btnText || "Visa rutt";
+          iconEl.textContent = route.btnIcon || "route";
+          sektion73ClearRoute(route.id);
+          sektion73Map.easeTo({
+            center: sektion73InitialCenter.lngLat,
+            zoom: sektion73StartZoom,
+            pitch: sektion73Pitch,
+            bearing: 0,
+            duration: 1400,
+            easing: (t) => 1 - Math.pow(1 - t, 3)
+          });
+        }
+
+        // Back button inside the card
+        backBtn.addEventListener("click", (e) => {
+          e.stopPropagation();
+          closeRoute();
+        });
+
+        // Main button click — open route
+        btn.addEventListener("click", async (e) => {
+          if (active) return; // card is open, use back button
+          if (e.target.closest(".sektion73RouteCardBack")) return;
 
           btn.classList.add("is-loading");
           labelEl.textContent = "Hämtar rutt…";
           iconEl.textContent = "sync";
 
           try {
-            if (!cachedRoute) {
-              cachedRoute = await sektion73FetchRoute(route.from, route.to, route.profile);
-            }
+            const fetches = [];
+            if (!cachedRoute) fetches.push(sektion73FetchRoute(route.from, route.to, route.profile).then(r => { cachedRoute = r; }));
+            if (route.driving && !cachedDriving) fetches.push(sektion73FetchRoute(route.from, route.to, route.driving.profile).then(r => { cachedDriving = r; }));
+            if (fetches.length) await Promise.all(fetches);
+
             active = true;
             btn.classList.remove("is-loading");
             btn.classList.add("is-active");
-            iconEl.textContent = "close";
-            labelEl.textContent = "Stäng rutt";
-            metaEl.textContent =
-              sektion73FormatDist(cachedRoute.distanceM) + "  ·  " +
-              sektion73FormatTime(cachedRoute.durationS);
+
+            // Populate route card — time prominent, distance secondary
+            walkTimeEl.textContent = sektion73FormatTime(cachedRoute.durationS);
+            walkDistEl.textContent = sektion73FormatDist(cachedRoute.distanceM);
+            if (cachedDriving) {
+              driveTimeEl.textContent = sektion73FormatTime(cachedDriving.durationS);
+              driveDistEl.textContent = sektion73FormatDist(cachedDriving.distanceM);
+            }
 
             sektion73AnimateRoute(route, cachedRoute, (phase) => {
-              if (phase === "arrived") {
-                labelEl.textContent = "Tillbaka";
-                iconEl.textContent = "arrow_back";
-              }
-            });
+              // phases handled by card UI
+            }, cachedDriving);
           } catch (err) {
             console.error("Route error:", err);
             btn.classList.remove("is-loading");
             labelEl.textContent = route.btnText || "Visa rutt";
             iconEl.textContent = route.btnIcon || "route";
-            metaEl.textContent = "";
           }
         });
 
