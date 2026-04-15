@@ -3484,16 +3484,16 @@ sektion73Map.once("load", function () {
           gap: 12px;
         }
         .sektion73RouteCardDot {
-          width: 10px; height: 10px;
+          width: 15px; height: 15px;
           border-radius: 50%;
           flex-shrink: 0;
           box-shadow: 0 0 0 3px rgba(0,0,0,.06);
         }
         .sektion73RouteCardDotDash {
-          width: 10px; height: 10px;
+          width: 15px; height: 15px;
           border-radius: 50%;
           flex-shrink: 0;
-          border: 2px solid #336aea;
+          border: 3px solid #336aea;
           background: #fff;
           box-sizing: border-box;
         }
@@ -3504,7 +3504,7 @@ sektion73Map.once("load", function () {
           min-width: 0;
         }
         .sektion73RouteCardType {
-          font: 500 11.5px/1.2 'Inter','Manrope',system-ui,sans-serif;
+          font: 600 11.5px/1.2 'Inter','Manrope',system-ui,sans-serif;
           color: #80868b;
           letter-spacing: .01em;
           text-transform: uppercase;
@@ -3514,7 +3514,7 @@ sektion73Map.once("load", function () {
           color: #1a1a1a;
         }
         .sektion73RouteCardDist {
-          font: 400 12px/1.2 'Inter','Manrope',system-ui,sans-serif;
+          font: 600 11.5px/1.2 'Inter','Manrope',system-ui,sans-serif;
           color: #80868b;
           margin-left: auto;
           white-space: nowrap;
@@ -3531,10 +3531,10 @@ sektion73Map.once("load", function () {
           display: flex;
           align-items: center;
           justify-content: center;
-          gap: 6px;
+          gap: 3px;
           padding: 11px 16px;
-          font: 500 13px/1 'Inter','Manrope',system-ui,sans-serif;
-          color: #1a73e8;
+          font: 600 13px/1 'Inter','Manrope',system-ui,sans-serif;
+          color: #1a1a1a;
           cursor: pointer;
           transition: background .15s ease;
           width: 100%;
