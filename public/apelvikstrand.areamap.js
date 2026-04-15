@@ -579,7 +579,6 @@ function sektion73InjectModalCSS() {
 
     .sektion73ModalBodyPWrap{
       position:relative;
-      padding-right:90px;
     }
 
     .sektion73ModalBodyP{
@@ -603,12 +602,11 @@ function sektion73InjectModalCSS() {
     }
 
     .sektion73ModalReadMore{
-      position:absolute;
-      right:0;
-      bottom:0;
+      display:inline;
       border:none;
       background:transparent;
       padding:0;
+      margin-top:4px;
       cursor:pointer;
       font-family:'Inter Variablefont Opsz Wght';
       font-size:15px;
