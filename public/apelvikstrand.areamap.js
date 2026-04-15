@@ -3056,8 +3056,8 @@ sektion73Map.once("load", function () {
       ];
 
       sektion73Map.fitBounds(bounds, {
-        padding: { top: 120, bottom: 160, left: 100, right: 100 },
-        maxZoom: 15.4,
+        padding: { top: 80, bottom: 120, left: 60, right: 60 },
+        maxZoom: 15.8,
         pitch: 35,
         bearing: sektion73Bearing,
         duration: 1400,
