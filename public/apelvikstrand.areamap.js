@@ -2695,7 +2695,7 @@ sektion73Map.once("load", function () {
         id: "route_to_reception",
         from: sektion73Home.lngLat,
         to: [12.247868, 57.087934],
-        btnText: "Visa reception",
+        btnText: "Hitta receptionen",
         btnIcon: "route",
         profile: "walking",
         line: {
