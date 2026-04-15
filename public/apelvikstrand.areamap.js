@@ -105,12 +105,12 @@ const sektion73InitialCenter = {
     };
 
 const sektion73Bounds = [
-  [12.255800, 57.077900], // SW
-  [12.271000, 57.084800]  // NE
+  [12.245000, 57.077900], // SW
+  [12.271000, 57.090000]  // NE
 ];
 
 // Mindre inzoomad start (justera vid behov)
-const sektion73MinZoom = 14.8;
+const sektion73MinZoom = 12.5;
 const sektion73MaxZoom = 18.6;
 const sektion73StartZoom = 17.6;
 
@@ -724,6 +724,54 @@ display: none !important;
     font-size: 12px;
     font-weight: 500;
 }
+
+    /* Ikon-only pins (ingen bubbla, bara ikonen) */
+    .sektion73PinIconOnly .sektion73PinBtn {
+      background: none !important;
+      border: none !important;
+      box-shadow: none !important;
+      padding: 0 !important;
+      color: #222 !important;
+    }
+    .sektion73PinIconOnly .sektion73PinBubble {
+      background: none !important;
+      border: none !important;
+      box-shadow: none !important;
+    }
+    .sektion73PinIconOnly .sektion73PinText {
+      color: #222 !important;
+    }
+
+    /* Tooltip-pin */
+    .sektion73PinTooltip .sektion73PinBtn {
+      border-radius: 8px;
+      padding: 3px 7px;
+      width: auto;
+      height: auto;
+      aspect-ratio: auto;
+      font-size: 13px;
+      font-weight: 600;
+      white-space: nowrap;
+    }
+    .sektion73PinTooltip .sektion73PinBubble {
+      border-radius: 8px;
+      width: auto;
+      height: auto;
+      border: none;
+    }
+    .sektion73PinTooltip .sektion73PinBubble::after {
+      display: block !important;
+      content: "";
+      position: absolute;
+      bottom: -6px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 0;
+      height: 0;
+      border-left: 6px solid transparent;
+      border-right: 6px solid transparent;
+      border-top: 6px solid var(--sektion73-pin-bubble-bg, #222);
+    }
 
     /* Behåll (kompat) så äldre DOM inte kraschar om något refererar */
     .sektion73PinPointer{ display:none; }
@@ -1887,6 +1935,56 @@ const sektion73Pins = [
     cta2Text: "",
     cta2Href: ""
   }
+},
+{
+  id: "sektion73Pin_parking_01",
+  label: "Parkering",
+  labelText: "P",
+  lngLat: [12.263736, 57.081588],
+  filter: "",
+  priority: "priority",
+  ui: { bubbleBg: "#303030", fontWeight: "700", fontSize: "15px" },
+  modal: null
+},
+{
+  id: "sektion73Pin_parking_02",
+  label: "Parkering",
+  labelText: "P",
+  lngLat: [12.264089, 57.080993],
+  filter: "",
+  priority: "priority",
+  ui: { bubbleBg: "#303030", fontWeight: "700", fontSize: "15px" },
+  modal: null
+},
+{
+  id: "sektion73Pin_heat_01",
+  label: "Värme",
+  labelText: "mode_heat",
+  lngLat: [12.263460, 57.081340],
+  filter: "",
+  priority: "priority",
+  ui: { bubbleBg: "#303030", iconFont: true },
+  modal: null
+},
+{
+  id: "sektion73Pin_playground_01",
+  label: "Lekplats",
+  labelText: "playground",
+  lngLat: [12.264341, 57.081031],
+  filter: "",
+  priority: "priority",
+  ui: { bubbleBg: "#303030", iconFont: true },
+  modal: null
+},
+{
+  id: "sektion73Pin_reception_01",
+  label: "Reception",
+  labelText: "Reception",
+  lngLat: [12.247868, 57.087934],
+  filter: "",
+  priority: "priority",
+  ui: { bubbleBg: "#222", tooltip: true },
+  modal: null
 }
 ];
 
@@ -1902,6 +2000,9 @@ function sektion73CreatePinEl(pin) {
   const bubbleBg = (pin.ui && pin.ui.bubbleBg) ? String(pin.ui.bubbleBg) : "var(--sektion73-accent)";
   wrap.style.setProperty("--sektion73-pin-bubble-bg", bubbleBg);
 
+  // Tooltip-stil
+  if (pin.ui && pin.ui.tooltip) wrap.classList.add("sektion73PinTooltip");
+
   const btn = document.createElement("button");
   btn.type = "button";
   btn.className = "sektion73PinBubble sektion73PinBtn";
@@ -1909,6 +2010,15 @@ function sektion73CreatePinEl(pin) {
 
   const txt = document.createElement("span");
   txt.className = "sektion73PinText";
+  if (pin.ui && pin.ui.iconFont) {
+    txt.classList.add("material-symbols-outlined");
+    txt.style.fontFamily = "'Material Symbols Outlined'";
+    txt.style.fontSize = "26px";
+    if (pin.ui.iconOnly !== false) wrap.classList.add("sektion73PinIconOnly");
+    if (pin.ui.iconColor) txt.style.color = pin.ui.iconColor;
+  }
+  if (pin.ui && pin.ui.fontSize) txt.style.fontSize = pin.ui.fontSize;
+  if (pin.ui && pin.ui.fontWeight) txt.style.fontWeight = pin.ui.fontWeight;
   txt.textContent = String(pin.labelText || "");
   txt.setAttribute("aria-hidden", "true");
 
@@ -2225,6 +2335,7 @@ function sektion73ZoomToPinThenOpenModal(pin) {
   const { wrap, btn } = sektion73CreatePinEl(pin);
 
   btn.addEventListener("click", () => {
+    if (!pin.modal) return;           // inget modal-data → bara markör
     // används av filter för att kunna stänga modal om pin filtreras bort
     window.__sektion73LastOpenedPinId = pin.id;
 
@@ -2297,6 +2408,556 @@ sektion73Map.once("load", function () {
 
 
 
+
+    /* =========================
+       ROUTE ANIMATION ENGINE v2
+       Google Maps-level animated route navigation.
+       - Real road via Mapbox Directions API (with distance + duration)
+       - Camera follows with dynamic bearing (look-ahead), pitch ramp, zoom transitions
+       - Line with casing + pulsing head dot
+       - 3-phase flow: overview → animate → arrive
+       - Scalable: add routes to sektion73Routes[]
+       ========================= */
+
+    const sektion73Routes = [
+      {
+        id: "route_to_reception",
+        from: sektion73Home.lngLat,
+        to: [12.247868, 57.087934],
+        btnText: "Visa reception",
+        btnIcon: "route",
+        profile: "walking",
+        line: {
+          color: "#F0A500",
+          casingColor: "rgba(240,165,0,.25)",
+          width: 5,
+          casingWidth: 12,
+          opacity: 1
+        },
+        anim: {
+          durationMs: 6000,
+          overviewPause: 800,
+          arriveZoom: 17.2,
+          arriveDur: 1400,
+          pitchStart: 40,
+          pitchCruise: 58,
+          pitchArrive: 50,
+          zoomCruise: 16.8,
+          lookAheadMeters: 60
+        }
+      }
+    ];
+
+    /* --- Geo helpers --- */
+
+    function sektion73Haversine(a, b) {
+      const R = 6371e3;
+      const toR = (d) => d * Math.PI / 180;
+      const dLat = toR(b[1] - a[1]);
+      const dLng = toR(b[0] - a[0]);
+      const s = Math.sin(dLat / 2) ** 2 +
+        Math.cos(toR(a[1])) * Math.cos(toR(b[1])) * Math.sin(dLng / 2) ** 2;
+      return R * 2 * Math.atan2(Math.sqrt(s), Math.sqrt(1 - s));
+    }
+
+    function sektion73MeasureRoute(coords) {
+      const d = [0];
+      for (let i = 1; i < coords.length; i++)
+        d.push(d[i - 1] + sektion73Haversine(coords[i - 1], coords[i]));
+      return d;
+    }
+
+    function sektion73PointAt(coords, dists, m) {
+      if (m <= 0) return coords[0];
+      if (m >= dists[dists.length - 1]) return coords[coords.length - 1];
+      for (let i = 1; i < dists.length; i++) {
+        if (dists[i] >= m) {
+          const seg = dists[i] - dists[i - 1];
+          const t = seg > 0 ? (m - dists[i - 1]) / seg : 0;
+          return [
+            coords[i - 1][0] + (coords[i][0] - coords[i - 1][0]) * t,
+            coords[i - 1][1] + (coords[i][1] - coords[i - 1][1]) * t
+          ];
+        }
+      }
+      return coords[coords.length - 1];
+    }
+
+    function sektion73SliceRoute(coords, dists, m) {
+      const r = [];
+      for (let i = 0; i < coords.length; i++) {
+        if (dists[i] <= m) { r.push(coords[i]); }
+        else { r.push(sektion73PointAt(coords, dists, m)); break; }
+      }
+      return r;
+    }
+
+    function sektion73CalcBearing(a, b) {
+      const toR = (d) => d * Math.PI / 180;
+      const dLng = toR(b[0] - a[0]);
+      const y = Math.sin(dLng) * Math.cos(toR(b[1]));
+      const x = Math.cos(toR(a[1])) * Math.sin(toR(b[1])) -
+        Math.sin(toR(a[1])) * Math.cos(toR(b[1])) * Math.cos(dLng);
+      return ((Math.atan2(y, x) * 180 / Math.PI) + 360) % 360;
+    }
+
+    // Smooth ease: slow start (15%), cruise (55%), slow end (30%)
+    function sektion73RouteEase(t) {
+      if (t < 0.15) {
+        const s = t / 0.15;
+        return 0.15 * (s * s * s);
+      } else if (t < 0.70) {
+        return 0.15 + (t - 0.15) * (0.70 / 0.55);
+      } else {
+        const s = (t - 0.70) / 0.30;
+        const inv = 1 - s;
+        return 0.85 + 0.15 * (1 - inv * inv * inv);
+      }
+    }
+
+    function sektion73Lerp(a, b, t) { return a + (b - a) * t; }
+
+    function sektion73FormatDist(m) {
+      return m >= 1000
+        ? (m / 1000).toFixed(1).replace(".", ",") + " km"
+        : Math.round(m) + " m";
+    }
+
+    function sektion73FormatTime(sec) {
+      const m = Math.ceil(sec / 60);
+      return m + " min";
+    }
+
+    /* --- Directions API --- */
+
+    async function sektion73FetchRoute(from, to, profile) {
+      const url =
+        "https://api.mapbox.com/directions/v5/mapbox/" + (profile || "walking") + "/" +
+        from[0] + "," + from[1] + ";" + to[0] + "," + to[1] +
+        "?geometries=geojson&overview=full&access_token=" + mapboxgl.accessToken;
+      const res = await fetch(url);
+      if (!res.ok) throw new Error("Directions API " + res.status);
+      const json = await res.json();
+      if (!json.routes || !json.routes.length) throw new Error("Ingen rutt hittad");
+      const route = json.routes[0];
+      return {
+        coords: route.geometry.coordinates,
+        distanceM: route.distance,
+        durationS: route.duration
+      };
+    }
+
+    /* --- Pulsing head dot (Mapbox marker) --- */
+
+    function sektion73CreateHeadDot() {
+      const el = document.createElement("div");
+      el.className = "sektion73RouteHeadDot";
+      return new mapboxgl.Marker({ element: el, anchor: "center" });
+    }
+
+    /* --- Animationsmotor v2 --- */
+
+    const sektion73RouteState = {};
+
+    function sektion73AnimateRoute(routeCfg, routeData, onPhaseChange) {
+      const id = routeCfg.id;
+      const srcLine = "sektion73_rsrc_" + id;
+      const layerCasing = "sektion73_rcas_" + id;
+      const layerLine = "sektion73_rlin_" + id;
+      const a = routeCfg.anim;
+      const l = routeCfg.line;
+      const coords = routeData.coords;
+
+      // Avbryt pågående
+      if (sektion73RouteState[id]) {
+        if (sektion73RouteState[id].rafId) cancelAnimationFrame(sektion73RouteState[id].rafId);
+        if (sektion73RouteState[id].dot) sektion73RouteState[id].dot.remove();
+        sektion73RouteState[id].running = false;
+      }
+
+      const dists = sektion73MeasureRoute(coords);
+      const totalDist = dists[dists.length - 1];
+
+      // GeoJSON source
+      const emptyGJ = { type: "Feature", geometry: { type: "LineString", coordinates: [coords[0]] } };
+
+      if (sektion73Map.getSource(srcLine)) {
+        sektion73Map.getSource(srcLine).setData(emptyGJ);
+      } else {
+        sektion73Map.addSource(srcLine, { type: "geojson", data: emptyGJ });
+      }
+
+      // Casing layer (wide, semi-transparent)
+      if (!sektion73Map.getLayer(layerCasing)) {
+        sektion73Map.addLayer({
+          id: layerCasing, type: "line", source: srcLine,
+          paint: {
+            "line-color": l.casingColor || "rgba(240,165,0,.2)",
+            "line-width": l.casingWidth || 12,
+            "line-opacity": 1,
+          },
+          layout: { "line-cap": "round", "line-join": "round" }
+        });
+      }
+
+      // Main line layer
+      if (!sektion73Map.getLayer(layerLine)) {
+        sektion73Map.addLayer({
+          id: layerLine, type: "line", source: srcLine,
+          paint: {
+            "line-color": l.color || "#F0A500",
+            "line-width": l.width || 5,
+            "line-opacity": l.opacity || 1,
+          },
+          layout: { "line-cap": "round", "line-join": "round" }
+        });
+      }
+
+      // Head dot
+      const dot = sektion73CreateHeadDot();
+      dot.setLngLat(coords[0]).addTo(sektion73Map);
+
+      const state = { rafId: null, running: true, dot: dot };
+      sektion73RouteState[id] = state;
+
+      /* --- Phase 1: Overview (fly out to see the whole route) --- */
+      if (onPhaseChange) onPhaseChange("overview");
+
+      const lngs = coords.map(c => c[0]);
+      const lats = coords.map(c => c[1]);
+      const bounds = [
+        [Math.min(...lngs), Math.min(...lats)],
+        [Math.max(...lngs), Math.max(...lats)]
+      ];
+
+      sektion73Map.fitBounds(bounds, {
+        padding: { top: 120, bottom: 160, left: 100, right: 100 },
+        maxZoom: 15.4,
+        pitch: 35,
+        bearing: sektion73Bearing,
+        duration: 1400,
+        essential: true
+      });
+
+      /* --- Phase 2: Animate line draw (starts immediately, camera pan after zoom-out) --- */
+      const duration = a.durationMs || 6000;
+      const zoomOutDur = 1400;
+
+      {
+        if (onPhaseChange) onPhaseChange("animating");
+
+        const t0 = performance.now();
+
+        function tick(now) {
+          if (!state.running) return;
+
+          const elapsed = now - t0;
+          const rawT = Math.min(elapsed / duration, 1);
+          const eased = sektion73RouteEase(rawT);
+          const dist = eased * totalDist;
+
+          // Slice line
+          const slice = sektion73SliceRoute(coords, dists, dist);
+          sektion73Map.getSource(srcLine).setData({
+            type: "Feature",
+            geometry: { type: "LineString", coordinates: slice }
+          });
+
+          // Head position — move dot
+          const head = slice[slice.length - 1];
+          dot.setLngLat(head);
+
+          // Only pan camera after zoom-out is done (don't interrupt fitBounds)
+          if (elapsed > zoomOutDur) {
+            sektion73Map.easeTo({
+              center: head,
+              pitch: 35,
+              duration: 120,
+              easing: (t) => t
+            });
+          }
+
+          if (rawT < 1) {
+            state.rafId = requestAnimationFrame(tick);
+          } else {
+            /* --- Phase 3: Arrive --- */
+            if (onPhaseChange) onPhaseChange("arrived");
+            state.running = false;
+
+            // Zoom out to show full route (start + destination visible)
+            sektion73Map.fitBounds(bounds, {
+              padding: { top: 120, bottom: 160, left: 100, right: 100 },
+              maxZoom: 15.4,
+              pitch: 35,
+              bearing: sektion73Bearing,
+              duration: a.arriveDur || 1400
+            });
+
+            // Pulse the dot at arrival
+            const dotEl = dot.getElement();
+            if (dotEl) dotEl.classList.add("is-arrived");
+          }
+        }
+
+        state.rafId = requestAnimationFrame(tick);
+      }
+    }
+
+    /* --- Clear route --- */
+
+    function sektion73ClearRoute(routeId) {
+      const state = sektion73RouteState[routeId];
+      if (state) {
+        if (state.rafId) cancelAnimationFrame(state.rafId);
+        state.running = false;
+        if (state.dot) state.dot.remove();
+      }
+
+      const srcLine = "sektion73_rsrc_" + routeId;
+      const layerCasing = "sektion73_rcas_" + routeId;
+      const layerLine = "sektion73_rlin_" + routeId;
+
+      if (sektion73Map.getLayer(layerLine)) sektion73Map.removeLayer(layerLine);
+      if (sektion73Map.getLayer(layerCasing)) sektion73Map.removeLayer(layerCasing);
+      if (sektion73Map.getSource(srcLine)) sektion73Map.removeSource(srcLine);
+    }
+
+    /* --- Route UI CSS --- */
+
+    function sektion73InjectRouteCSS() {
+      const cssId = "sektion73RouteCSSv2";
+      if (document.getElementById(cssId)) return;
+      const style = document.createElement("style");
+      style.id = cssId;
+      style.textContent = `
+        /* Pulsing head dot */
+        .sektion73RouteHeadDot {
+          width: 16px; height: 16px;
+          border-radius: 50%;
+          background: #F0A500;
+          border: 3px solid #fff;
+          box-shadow: 0 0 0 0 rgba(240,165,0,.5), 0 2px 8px rgba(0,0,0,.3);
+          animation: sektion73DotPulse 1.6s ease-in-out infinite;
+          pointer-events: none;
+        }
+        .sektion73RouteHeadDot.is-arrived {
+          animation: sektion73DotArrive .5s ease forwards;
+        }
+        @keyframes sektion73DotPulse {
+          0%,100% { box-shadow: 0 0 0 0 rgba(240,165,0,.45), 0 2px 8px rgba(0,0,0,.3); }
+          50%     { box-shadow: 0 0 0 10px rgba(240,165,0,0), 0 2px 8px rgba(0,0,0,.3); }
+        }
+        @keyframes sektion73DotArrive {
+          0%   { transform: scale(1); }
+          40%  { transform: scale(1.5); }
+          100% { transform: scale(1); }
+        }
+
+        /* Toast container */
+        .sektion73Toast {
+          position: absolute;
+          bottom: 24px;
+          left: 50%;
+          transform: translateX(-50%);
+          z-index: 10;
+          display: inline-flex;
+          flex-direction: column;
+          align-items: center;
+          gap: 8px;
+          pointer-events: none;
+        }
+        .sektion73Toast > * {
+          pointer-events: auto;
+        }
+
+        /* Route button */
+        .sektion73RouteBtn {
+          position: relative;
+          bottom: auto;
+          left: auto;
+          transform: none;
+          z-index: 10;
+          -webkit-appearance: none;
+          appearance: none;
+          border: none;
+          background: #fff;
+          color: #1a1a1a;
+          font: 600 14px/1 'Inter', 'Manrope', system-ui, -apple-system, sans-serif;
+          padding: 0.25rem 0.75rem 0.25rem 0.25rem;
+          border-radius: 50px;
+          cursor: pointer;
+          box-shadow: rgba(99, 99, 99, 0.2) 0px 2px 8px 0px;
+          transition: transform 200ms cubic-bezier(.2,.8,.2,1),
+                      box-shadow 200ms ease,
+                      background 150ms ease;
+          white-space: nowrap;
+          display: inline-flex;
+          align-items: center;
+          gap: 7px;
+          overflow: hidden;
+          user-select: none;
+        }
+        .sektion73RouteBtn:hover {
+          transform: translateY(-1px);
+        }
+        .sektion73RouteBtn:active {
+          transform: translateY(0px);
+        }
+
+        .sektion73RouteBtnIcon {
+          display: inline-flex;
+          align-items: center;
+          justify-content: center;
+          width: 2rem; height: 2rem;
+          background: #FFE6A3;
+          color: #5A3C00;
+          font-family: 'Material Symbols Outlined';
+          font-size: 20px;
+          font-weight: 400;
+          flex-shrink: 0;
+          border-radius: 50px;
+        }
+        .sektion73RouteBtnBody {
+          display: inline-flex;
+          flex-direction: column;
+          padding: 0;
+          gap: 2px;
+        }
+        .sektion73RouteBtnLabel {
+          font-size: 14px;
+          font-weight: 500;
+          color: #1a1a1a;
+          line-height: 1.15;
+          text-align: left;
+        }
+        .sektion73RouteBtnMeta {
+          font-size: 11.5px;
+          font-weight: 500;
+          color: #5f6368;
+          line-height: 1.15;
+        }
+
+        /* Active / close state */
+        .sektion73RouteBtn.is-active {
+          background: #303030;
+        }
+        .sektion73RouteBtn.is-active .sektion73RouteBtnIcon {
+          background: #555;
+          color: #f0f0f0;
+        }
+        .sektion73RouteBtn.is-active .sektion73RouteBtnLabel {
+          color: #fff;
+        }
+        .sektion73RouteBtn.is-active .sektion73RouteBtnMeta {
+          color: rgba(255,255,255,.65);
+        }
+
+        /* Loading shimmer */
+        .sektion73RouteBtn.is-loading .sektion73RouteBtnLabel {
+          background: linear-gradient(90deg, #ccc 25%, #eee 50%, #ccc 75%);
+          background-size: 200% 100%;
+          -webkit-background-clip: text;
+          -webkit-text-fill-color: transparent;
+          animation: sektion73Shimmer 1.5s ease infinite;
+        }
+        @keyframes sektion73Shimmer {
+          0%   { background-position: 200% 0; }
+          100% { background-position: -200% 0; }
+        }
+      `;
+      document.head.appendChild(style);
+    }
+
+    /* --- Build route buttons --- */
+
+    function sektion73BuildRouteButtons() {
+      sektion73InjectRouteCSS();
+      const root = document.getElementById("sektion73MapRoot") || sektion73Canvas.parentElement;
+
+      // Toast container
+      let toast = root.querySelector(".sektion73Toast");
+      if (!toast) {
+        toast = document.createElement("div");
+        toast.className = "sektion73Toast";
+        root.appendChild(toast);
+      }
+
+      sektion73Routes.forEach((route) => {
+        const btn = document.createElement("button");
+        btn.type = "button";
+        btn.className = "sektion73RouteBtn";
+        btn.id = "sektion73RouteBtn_" + route.id;
+
+        btn.innerHTML =
+          '<span class="sektion73RouteBtnIcon">' + (route.btnIcon || "route") + '</span>' +
+          '<span class="sektion73RouteBtnBody">' +
+            '<span class="sektion73RouteBtnLabel">' + (route.btnText || "Visa rutt") + '</span>' +
+            '<span class="sektion73RouteBtnMeta"></span>' +
+          '</span>';
+
+        const labelEl = btn.querySelector(".sektion73RouteBtnLabel");
+        const metaEl = btn.querySelector(".sektion73RouteBtnMeta");
+        const iconEl = btn.querySelector(".sektion73RouteBtnIcon");
+
+        let active = false;
+        let cachedRoute = null;
+
+        btn.addEventListener("click", async () => {
+          if (active) {
+            active = false;
+            btn.classList.remove("is-active");
+            labelEl.textContent = route.btnText || "Visa rutt";
+            metaEl.textContent = "";
+            iconEl.textContent = route.btnIcon || "route";
+            sektion73ClearRoute(route.id);
+            sektion73Map.easeTo({
+              center: sektion73InitialCenter.lngLat,
+              zoom: sektion73StartZoom,
+              pitch: sektion73Pitch,
+              bearing: 0,
+              duration: 1400,
+              easing: (t) => 1 - Math.pow(1 - t, 3)
+            });
+            return;
+          }
+
+          btn.classList.add("is-loading");
+          labelEl.textContent = "Hämtar rutt…";
+          iconEl.textContent = "sync";
+
+          try {
+            if (!cachedRoute) {
+              cachedRoute = await sektion73FetchRoute(route.from, route.to, route.profile);
+            }
+            active = true;
+            btn.classList.remove("is-loading");
+            btn.classList.add("is-active");
+            iconEl.textContent = "close";
+            labelEl.textContent = "Stäng rutt";
+            metaEl.textContent =
+              sektion73FormatDist(cachedRoute.distanceM) + "  ·  " +
+              sektion73FormatTime(cachedRoute.durationS);
+
+            sektion73AnimateRoute(route, cachedRoute, (phase) => {
+              if (phase === "arrived") {
+                labelEl.textContent = "Tillbaka";
+                iconEl.textContent = "arrow_back";
+              }
+            });
+          } catch (err) {
+            console.error("Route error:", err);
+            btn.classList.remove("is-loading");
+            labelEl.textContent = route.btnText || "Visa rutt";
+            iconEl.textContent = route.btnIcon || "route";
+            metaEl.textContent = "";
+          }
+        });
+
+        toast.appendChild(btn);
+      });
+    }
+
+    sektion73Map.once("idle", sektion73BuildRouteButtons);
 
     /* =========================
        Debug helpers
