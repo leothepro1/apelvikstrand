@@ -1,5 +1,14 @@
 
 (function () {
+  // Auto-load Material Symbols font (avoids Webflow line-break issues in href)
+  if (!document.getElementById("sektion73MaterialSymbols")) {
+    var link = document.createElement("link");
+    link.id = "sektion73MaterialSymbols";
+    link.rel = "stylesheet";
+    link.href = "https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200";
+    document.head.appendChild(link);
+  }
+
   function sektion73Ready(fn) {
     if (document.readyState === "loading") {
       document.addEventListener("DOMContentLoaded", fn);
@@ -394,7 +403,8 @@ function sektion73InjectModalCSS() {
     #sektion73MapModal{
       position:fixed;
       left:50%;
-      height: 367px;
+      height: auto;
+      min-height: 367px;
       bottom:18px;
       transform:translateX(-50%) translateY(115%);
       width:min(920px, calc(100vw - 24px));
@@ -418,23 +428,23 @@ function sektion73InjectModalCSS() {
   display:flex;
   flex-direction:row;
   width:100%;
-  height:100%;
-  min-height:auto;
+  min-height:100%;
+  position:relative;
 }
 
 .sektion73ModalLeft {
   width: 40%;
   min-width: 240px;
-  position: relative;
+  position: absolute;
+  top: 0;
+  left: 0;
+  bottom: 0;
   display: flex;
   flex-direction: column;
-  gap: 12px;
   padding: 0px;
   border-right: none;
   background: var(--sektion73-modal-bg);
-  height: 100%;
-  min-height: 100%;
-  object-fit: cover;
+  overflow: hidden;
 }
 
 .sektion73ModalLeftImgWrap {
@@ -499,13 +509,14 @@ function sektion73InjectModalCSS() {
     width: auto;
     flex: 3 1 0;
     min-width: 0;
+    margin-left: 40%;
     display: flex;
     flex-direction: column;
     padding: 40px;
     gap: 0px;
     overflow: auto;
     place-content: center;
-    flex-wrap: wrap;
+    flex-wrap: nowrap;
 }
 
     .sektion73ModalRightTop{
@@ -631,6 +642,7 @@ function sektion73InjectModalCSS() {
       }
 
       .sektion73ModalLeft {
+        position: relative;
         width: 100%;
         flex: 0 0 auto;
         min-width: unset;
@@ -640,6 +652,9 @@ function sektion73InjectModalCSS() {
         padding: 0;
         height: auto;
         min-height: auto;
+        top: auto;
+        left: auto;
+        bottom: auto;
       }
 
       .sektion73ModalLeftImgWrap {
@@ -650,6 +665,7 @@ function sektion73InjectModalCSS() {
         width: auto;
         flex: 1 1 auto;
         min-width: 0;
+        margin-left: 0;
         display: flex;
         flex-direction: column;
         padding: 24px;
@@ -1973,7 +1989,7 @@ const sektion73Pins = [
   lngLat: [12.263736, 57.081588],
   filter: "",
   priority: "priority",
-  ui: { bubbleBg: "#303030", fontWeight: "700", fontSize: "15px" },
+  ui: { bubbleBg: "#303030", fontWeight: "700", fontSize: "15px", padding: "4px" },
   modal: null
 },
 {
@@ -1983,7 +1999,7 @@ const sektion73Pins = [
   lngLat: [12.264089, 57.080993],
   filter: "",
   priority: "priority",
-  ui: { bubbleBg: "#303030", fontWeight: "700", fontSize: "15px" },
+  ui: { bubbleBg: "#303030", fontWeight: "700", fontSize: "15px", padding: "4px" },
   modal: null
 },
 {
@@ -2049,6 +2065,7 @@ function sektion73CreatePinEl(pin) {
   }
   if (pin.ui && pin.ui.fontSize) txt.style.fontSize = pin.ui.fontSize;
   if (pin.ui && pin.ui.fontWeight) txt.style.fontWeight = pin.ui.fontWeight;
+  if (pin.ui && pin.ui.padding) btn.style.padding = pin.ui.padding;
   txt.textContent = String(pin.labelText || "");
   txt.setAttribute("aria-hidden", "true");
 
