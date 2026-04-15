@@ -403,12 +403,10 @@ function sektion73InjectModalCSS() {
     #sektion73MapModal{
       position:fixed;
       left:50%;
-      height: auto;
-      min-height: 367px;
+      height: 380px;
       bottom:18px;
       transform:translateX(-50%) translateY(115%);
       width:min(920px, calc(100vw - 24px));
-      max-height:min(78vh, 720px);
       background:var(--sektion73-modal-bg);
       color:var(--sektion73-modal-text);
       border:none;
@@ -428,6 +426,7 @@ function sektion73InjectModalCSS() {
   display:flex;
   flex-direction:row;
   width:100%;
+  height:100%;
   min-height:100%;
   position:relative;
 }
@@ -449,10 +448,12 @@ function sektion73InjectModalCSS() {
 
 .sektion73ModalLeftImgWrap {
     width: 100%;
+    height: 100%;
     border-radius: 0px;
     overflow: hidden;
     background: #f2f4f5;
-    height: 100%;
+    flex: 1 1 0;
+    min-height: 0;
 }
 
     .sektion73ModalLeftImg{
@@ -467,23 +468,19 @@ function sektion73InjectModalCSS() {
     height: 36px;
     border-radius: 888px;
     border: none;
-    background: rgba(255, 255, 255, .92);
-    cursor: pointer;
-    display: grid;
-    place-items: center;
-    color: var(--sektion73-modal-text);
     background: rgba(250, 250, 250, 0.72);
     cursor: pointer;
     display: flex;
-    place-content: center;
-    flex: 0 0 18px;
+    align-items: center;
+    justify-content: center;
+    color: var(--sektion73-modal-text);
     position: absolute;
     top: 18px;
     right: 18px;
+    z-index: 5;
     backdrop-filter: blur(24px) saturate(1.6);
     -webkit-backdrop-filter: blur(24px) saturate(1.6);
     box-shadow: rgba(0, 0, 0, 0.14) 0px 3px 8px;
-    flex-wrap: wrap;
 }
     .sektion73ModalClose:hover{ background:rgba(255,255,255,.98); }
     .sektion73ModalClose:active{ transform:translateY(1px); }
@@ -629,6 +626,10 @@ function sektion73InjectModalCSS() {
         transform: translateX(0) translateY(115%) !important;
         overflow: auto !important;
         -webkit-overflow-scrolling: touch;
+      }
+
+      .sektion73ModalLayout {
+        height: auto !important;
       }
       #sektion73MapModal.is-open {
         transform: translateX(0) translateY(0) !important;
@@ -984,8 +985,13 @@ function sektion73OpenModal(payload) {
 
   const pWrap = document.getElementById("sektion73ModalBodyPWrap");
   const rmBtn = document.getElementById("sektion73ModalReadMoreBtn");
-  if (pWrap) pWrap.classList.remove("is-expanded");
-  if (rmBtn) rmBtn.textContent = "Läs mer";
+  if (payload && payload.noReadMore) {
+    if (pWrap) pWrap.classList.add("is-expanded");
+    if (rmBtn) rmBtn.style.display = "none";
+  } else {
+    if (pWrap) pWrap.classList.remove("is-expanded");
+    if (rmBtn) { rmBtn.textContent = "Läs mer"; rmBtn.style.display = ""; }
+  }
 
   const imgs = payload.images || [];
   const img0 = document.getElementById("sektion73ModalImg0");
@@ -1976,6 +1982,226 @@ const sektion73Pins = [
     images: ["", "", "", ""],
     cta1Text: "Vägbeskrivning",
     cta1Href: "https://www.google.com/maps/dir/?api=1&destination=ApelvikStrand,+Surbrunnsv%C3%A4gen+2-8,+432+53+Varberg",
+    cta2Text: "",
+    cta2Href: ""
+  }
+},
+{
+  id: "sektion73Pin_00033",
+  label: "Pin 33",
+  labelText: "1",
+  lngLat: [12.263996, 57.08116],
+  filter: "",
+  priority: "priority",
+  ui: { bubbleBg: "#88706A" },
+  modal: {
+    imgSrc: "https://res.cloudinary.com/dmgmoisae/image/upload/f_auto,q_auto,dpr_auto,c_limit,w_1440/v1771931935/jpeg-optimizer_IMG_1406_qo03oc.jpg",
+    h: "Strandlägenhet 1",
+    p: "Varje strandlägenhet är 21 m² och utformad som compact living, där allt ryms på en sammanhållen yta. Här finns kombinerat vardagsrum, sovalkov och kokvrå samt eget badrum. Planlösningen är gjord för att fungera under dagen – inte bara för natten. Du har egen dörr och egen uteplats, med stranden på nära avstånd. Ett boende att använda mellan strandbesök, måltider och vila.",
+    noReadMore: true,
+    icons: [],
+    iconTexts: [],
+    images: ["", "", "", ""],
+    cta1Text: "",
+    cta1Href: "",
+    cta2Text: "",
+    cta2Href: ""
+  }
+},
+{
+  id: "sektion73Pin_00034",
+  label: "Pin 34",
+  labelText: "2",
+  lngLat: [12.264066, 57.081179],
+  filter: "",
+  priority: "priority",
+  ui: { bubbleBg: "#88706A" },
+  modal: {
+    imgSrc: "https://res.cloudinary.com/dmgmoisae/image/upload/f_auto,q_auto,dpr_auto,c_limit,w_1440/v1771931935/jpeg-optimizer_IMG_1406_qo03oc.jpg",
+    h: "Strandlägenhet 2",
+    p: "Varje strandlägenhet är 21 m² och utformad som compact living, där allt ryms på en sammanhållen yta. Här finns kombinerat vardagsrum, sovalkov och kokvrå samt eget badrum. Planlösningen är gjord för att fungera under dagen – inte bara för natten. Du har egen dörr och egen uteplats, med stranden på nära avstånd. Ett boende att använda mellan strandbesök, måltider och vila.",
+    noReadMore: true,
+    icons: [],
+    iconTexts: [],
+    images: ["", "", "", ""],
+    cta1Text: "",
+    cta1Href: "",
+    cta2Text: "",
+    cta2Href: ""
+  }
+},
+{
+  id: "sektion73Pin_00035",
+  label: "Pin 35",
+  labelText: "3",
+  lngLat: [12.264135, 57.081198],
+  filter: "",
+  priority: "priority",
+  ui: { bubbleBg: "#88706A" },
+  modal: {
+    imgSrc: "https://res.cloudinary.com/dmgmoisae/image/upload/f_auto,q_auto,dpr_auto,c_limit,w_1440/v1771931935/jpeg-optimizer_IMG_1406_qo03oc.jpg",
+    h: "Strandlägenhet 3",
+    p: "Varje strandlägenhet är 21 m² och utformad som compact living, där allt ryms på en sammanhållen yta. Här finns kombinerat vardagsrum, sovalkov och kokvrå samt eget badrum. Planlösningen är gjord för att fungera under dagen – inte bara för natten. Du har egen dörr och egen uteplats, med stranden på nära avstånd. Ett boende att använda mellan strandbesök, måltider och vila.",
+    noReadMore: true,
+    icons: [],
+    iconTexts: [],
+    images: ["", "", "", ""],
+    cta1Text: "",
+    cta1Href: "",
+    cta2Text: "",
+    cta2Href: ""
+  }
+},
+{
+  id: "sektion73Pin_00036",
+  label: "Pin 36",
+  labelText: "4",
+  lngLat: [12.264205, 57.081217],
+  filter: "",
+  priority: "priority",
+  ui: { bubbleBg: "#88706A" },
+  modal: {
+    imgSrc: "https://res.cloudinary.com/dmgmoisae/image/upload/f_auto,q_auto,dpr_auto,c_limit,w_1440/v1771931935/jpeg-optimizer_IMG_1406_qo03oc.jpg",
+    h: "Strandlägenhet 4",
+    p: "Varje strandlägenhet är 21 m² och utformad som compact living, där allt ryms på en sammanhållen yta. Här finns kombinerat vardagsrum, sovalkov och kokvrå samt eget badrum. Planlösningen är gjord för att fungera under dagen – inte bara för natten. Du har egen dörr och egen uteplats, med stranden på nära avstånd. Ett boende att använda mellan strandbesök, måltider och vila.",
+    noReadMore: true,
+    icons: [],
+    iconTexts: [],
+    images: ["", "", "", ""],
+    cta1Text: "",
+    cta1Href: "",
+    cta2Text: "",
+    cta2Href: ""
+  }
+},
+{
+  id: "sektion73Pin_00037",
+  label: "Pin 37",
+  labelText: "5",
+  lngLat: [12.264309, 57.081139],
+  filter: "",
+  priority: "priority",
+  ui: { bubbleBg: "#88706A" },
+  modal: {
+    imgSrc: "https://res.cloudinary.com/dmgmoisae/image/upload/f_auto,q_auto,dpr_auto,c_limit,w_1440/v1771931935/jpeg-optimizer_IMG_1406_qo03oc.jpg",
+    h: "Strandlägenhet 5",
+    p: "Varje strandlägenhet är 21 m² och utformad som compact living, där allt ryms på en sammanhållen yta. Här finns kombinerat vardagsrum, sovalkov och kokvrå samt eget badrum. Planlösningen är gjord för att fungera under dagen – inte bara för natten. Du har egen dörr och egen uteplats, med stranden på nära avstånd. Ett boende att använda mellan strandbesök, måltider och vila.",
+    noReadMore: true,
+    icons: [],
+    iconTexts: [],
+    images: ["", "", "", ""],
+    cta1Text: "",
+    cta1Href: "",
+    cta2Text: "",
+    cta2Href: ""
+  }
+},
+{
+  id: "sektion73Pin_00038",
+  label: "Pin 38",
+  labelText: "6",
+  lngLat: [12.264345, 57.081149],
+  filter: "",
+  priority: "priority",
+  ui: { bubbleBg: "#88706A" },
+  modal: {
+    imgSrc: "https://res.cloudinary.com/dmgmoisae/image/upload/f_auto,q_auto,dpr_auto,c_limit,w_1440/v1771931935/jpeg-optimizer_IMG_1406_qo03oc.jpg",
+    h: "Strandlägenhet 6",
+    p: "Varje strandlägenhet är 21 m² och utformad som compact living, där allt ryms på en sammanhållen yta. Här finns kombinerat vardagsrum, sovalkov och kokvrå samt eget badrum. Planlösningen är gjord för att fungera under dagen – inte bara för natten. Du har egen dörr och egen uteplats, med stranden på nära avstånd. Ett boende att använda mellan strandbesök, måltider och vila.",
+    noReadMore: true,
+    icons: [],
+    iconTexts: [],
+    images: ["", "", "", ""],
+    cta1Text: "",
+    cta1Href: "",
+    cta2Text: "",
+    cta2Href: ""
+  }
+},
+{
+  id: "sektion73Pin_00039",
+  label: "Pin 39",
+  labelText: "7",
+  lngLat: [12.264380, 57.081158],
+  filter: "",
+  priority: "priority",
+  ui: { bubbleBg: "#88706A" },
+  modal: {
+    imgSrc: "https://res.cloudinary.com/dmgmoisae/image/upload/f_auto,q_auto,dpr_auto,c_limit,w_1440/v1771931935/jpeg-optimizer_IMG_1406_qo03oc.jpg",
+    h: "Strandlägenhet 7",
+    p: "Varje strandlägenhet är 21 m² och utformad som compact living, där allt ryms på en sammanhållen yta. Här finns kombinerat vardagsrum, sovalkov och kokvrå samt eget badrum. Planlösningen är gjord för att fungera under dagen – inte bara för natten. Du har egen dörr och egen uteplats, med stranden på nära avstånd. Ett boende att använda mellan strandbesök, måltider och vila.",
+    noReadMore: true,
+    icons: [],
+    iconTexts: [],
+    images: ["", "", "", ""],
+    cta1Text: "",
+    cta1Href: "",
+    cta2Text: "",
+    cta2Href: ""
+  }
+},
+{
+  id: "sektion73Pin_00040",
+  label: "Pin 40",
+  labelText: "8",
+  lngLat: [12.264461, 57.081179],
+  filter: "",
+  priority: "priority",
+  ui: { bubbleBg: "#9E8CA0" },
+  modal: {
+    imgSrc: "https://res.cloudinary.com/dmgmoisae/image/upload/f_auto,q_auto,dpr_auto,c_limit,w_1440/v1771931935/jpeg-optimizer_IMG_1406_qo03oc.jpg",
+    h: "Strandlägenhet 8",
+    p: "Varje strandlägenhet är 21 m² och utformad som compact living, där allt ryms på en sammanhållen yta. Här finns kombinerat vardagsrum, sovalkov och kokvrå samt eget badrum. Planlösningen är gjord för att fungera under dagen – inte bara för natten. Du har egen dörr och egen uteplats, med stranden på nära avstånd. Ett boende att använda mellan strandbesök, måltider och vila.",
+    noReadMore: true,
+    icons: [],
+    iconTexts: [],
+    images: ["", "", "", ""],
+    cta1Text: "",
+    cta1Href: "",
+    cta2Text: "",
+    cta2Href: ""
+  }
+},
+{
+  id: "sektion73Pin_00041",
+  label: "Pin 41",
+  labelText: "9",
+  lngLat: [12.264536, 57.081196],
+  filter: "",
+  priority: "priority",
+  ui: { bubbleBg: "#9E8CA0" },
+  modal: {
+    imgSrc: "https://res.cloudinary.com/dmgmoisae/image/upload/f_auto,q_auto,dpr_auto,c_limit,w_1440/v1771931935/jpeg-optimizer_IMG_1406_qo03oc.jpg",
+    h: "Strandlägenhet 9",
+    p: "Varje strandlägenhet är 21 m² och utformad som compact living, där allt ryms på en sammanhållen yta. Här finns kombinerat vardagsrum, sovalkov och kokvrå samt eget badrum. Planlösningen är gjord för att fungera under dagen – inte bara för natten. Du har egen dörr och egen uteplats, med stranden på nära avstånd. Ett boende att använda mellan strandbesök, måltider och vila.",
+    noReadMore: true,
+    icons: [],
+    iconTexts: [],
+    images: ["", "", "", ""],
+    cta1Text: "",
+    cta1Href: "",
+    cta2Text: "",
+    cta2Href: ""
+  }
+},
+{
+  id: "sektion73Pin_00042",
+  label: "Pin 42",
+  labelText: "10",
+  lngLat: [12.264281, 57.080851],
+  filter: "",
+  priority: "priority",
+  ui: { bubbleBg: "#9E8CA0" },
+  modal: {
+    imgSrc: "https://res.cloudinary.com/dmgmoisae/image/upload/f_auto,q_auto,dpr_auto,c_limit,w_1440/v1771931935/jpeg-optimizer_IMG_1406_qo03oc.jpg",
+    h: "Strandlägenhet 10",
+    p: "Varje strandlägenhet är 21 m² och utformad som compact living, där allt ryms på en sammanhållen yta. Här finns kombinerat vardagsrum, sovalkov och kokvrå samt eget badrum. Planlösningen är gjord för att fungera under dagen – inte bara för natten. Du har egen dörr och egen uteplats, med stranden på nära avstånd. Ett boende att använda mellan strandbesök, måltider och vila.",
+    noReadMore: true,
+    icons: [],
+    iconTexts: [],
+    images: ["", "", "", ""],
+    cta1Text: "",
+    cta1Href: "",
     cta2Text: "",
     cta2Href: ""
   }
