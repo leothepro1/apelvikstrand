@@ -3047,9 +3047,9 @@ sektion73Map.once("load", function () {
       /* --- Phase 1: Overview (fly out to see the whole route) --- */
       if (onPhaseChange) onPhaseChange("overview");
 
-      const allCoords = drvBranch ? coords.concat(drvBranch) : coords;
-      const lngs = allCoords.map(c => c[0]);
-      const lats = allCoords.map(c => c[1]);
+      // Camera follows walking route only — driving doesn't affect bounds
+      const lngs = coords.map(c => c[0]);
+      const lats = coords.map(c => c[1]);
       const bounds = [
         [Math.min(...lngs), Math.min(...lats)],
         [Math.max(...lngs), Math.max(...lats)]
