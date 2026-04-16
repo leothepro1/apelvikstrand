@@ -807,6 +807,16 @@ display: none !important;
     font-feature-settings: 'liga';
 }
 
+    /* Numbered pins only — smaller size */
+    .sektion73PinWrap:not(.sektion73PinIconOnly):not(.sektion73PinTooltip) .sektion73PinBtn {
+      width: 19px;
+      height: 19px;
+    }
+    .sektion73PinWrap:not(.sektion73PinIconOnly):not(.sektion73PinTooltip) .sektion73PinBubble {
+      width: 19px;
+      height: 19px;
+    }
+
     /* Ikon-only pins (ingen bubbla, bara ikonen) */
     .sektion73PinIconOnly .sektion73PinBtn {
       background: none !important;
@@ -859,6 +869,76 @@ display: none !important;
     .sektion73PinPointer{ display:none; }
     .sektion73PinIco{ display:none; }
     .sektion73PinDot{ display:none; }
+
+    /* Pin click-tooltip */
+    .sektion73PinClickTooltip {
+      position: absolute;
+      bottom: calc(100% + 10px);
+      left: 50%;
+      transform: translateX(-50%) translateY(6px);
+      background: #fff;
+      border-radius: 10px;
+      padding: 8px 14px;
+      box-shadow: 0 2px 12px rgba(0,0,0,.15);
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      white-space: nowrap;
+      pointer-events: auto;
+      opacity: 0;
+      transition: opacity .25s ease, transform .25s ease;
+      z-index: 10;
+    }
+    .sektion73PinClickTooltip.is-visible {
+      opacity: 1;
+      transform: translateX(-50%) translateY(0);
+    }
+    .sektion73PinClickTooltip::after {
+      content: "";
+      position: absolute;
+      top: 100%;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 0;
+      height: 0;
+      border-left: 7px solid transparent;
+      border-right: 7px solid transparent;
+      border-top: 7px solid #fff;
+    }
+    .sektion73PinClickTooltipIcon {
+      font-family: 'Material Symbols Outlined';
+      font-size: 22px !important;
+      font-weight: 400;
+      color: #333;
+      line-height: 1;
+      width: 22px;
+      height: 22px;
+    }
+    .sektion73PinClickTooltipText {
+      font: 500 14px/1.2 'Inter','Manrope',system-ui,sans-serif;
+      color: #1a1a1a;
+    }
+    .sektion73PinClickTooltipClose {
+      position: absolute;
+      top: -4px;
+      right: -32px;
+      width: 24px;
+      height: 24px;
+      border-radius: 888px;
+      border: none;
+      background: rgba(0,0,0,.65);
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #fff;
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      box-shadow: rgba(0,0,0,.14) 0px 2px 6px;
+      padding: 0;
+    }
+    .sektion73PinClickTooltipClose:hover { background: rgba(0,0,0,.8); }
+    .sektion73PinClickTooltipClose:active { transform: translateY(1px); }
   `;
   document.head.appendChild(style);
 }
@@ -935,6 +1015,11 @@ function sektion73EnsureModalDOM() {
               <span class="sektion73ModalTitleIcon" id="sektion73ModalIcon2"></span>
               <span class="sektion73ModalTitleIconTxt" id="sektion73ModalIconTxt2"></span>
             </div>
+
+            <div class="sektion73ModalIconRow" id="sektion73ModalIconRow3" style="display:none">
+              <span class="sektion73ModalTitleIcon" id="sektion73ModalIcon3"></span>
+              <span class="sektion73ModalTitleIconTxt" id="sektion73ModalIconTxt3"></span>
+            </div>
           </div>
         </div>
       </div>
@@ -985,12 +1070,15 @@ function sektion73OpenModal(payload) {
 
   const row1 = document.getElementById("sektion73ModalIconRow1");
   const row2 = document.getElementById("sektion73ModalIconRow2");
+  const row3 = document.getElementById("sektion73ModalIconRow3");
 
   const icon1 = document.getElementById("sektion73ModalIcon1");
   const icon2 = document.getElementById("sektion73ModalIcon2");
+  const icon3 = document.getElementById("sektion73ModalIcon3");
 
   const txt1 = document.getElementById("sektion73ModalIconTxt1");
   const txt2 = document.getElementById("sektion73ModalIconTxt2");
+  const txt3 = document.getElementById("sektion73ModalIconTxt3");
 
   const iconItems = (payload && payload.iconItems && Array.isArray(payload.iconItems)) ? payload.iconItems : [];
   const legacyIcons = (payload && payload.icons && Array.isArray(payload.icons)) ? payload.icons : [];
@@ -998,25 +1086,32 @@ function sektion73OpenModal(payload) {
 
   const i1 = iconItems[0] || null;
   const i2 = iconItems[1] || null;
+  const i3 = iconItems[2] || null;
 
   const svg1 = (i1 && i1.svg != null) ? i1.svg : (legacyIcons[0] || "");
   const svg2 = (i2 && i2.svg != null) ? i2.svg : (legacyIcons[1] || "");
+  const svg3 = (i3 && i3.svg != null) ? i3.svg : (legacyIcons[2] || "");
 
   const t1 = (i1 && i1.text != null) ? i1.text : (legacyTexts[0] || "");
   const t2 = (i2 && i2.text != null) ? i2.text : (legacyTexts[1] || "");
+  const t3 = (i3 && i3.text != null) ? i3.text : (legacyTexts[2] || "");
 
   if (icon1) icon1.innerHTML = svg1 || "";
   if (icon2) icon2.innerHTML = svg2 || "";
+  if (icon3) icon3.innerHTML = svg3 || "";
 
   if (txt1) txt1.textContent = t1 || "";
   if (txt2) txt2.textContent = t2 || "";
+  if (txt3) txt3.textContent = t3 || "";
 
   const hasRow1 = Boolean((svg1 && String(svg1).trim()) || (t1 && String(t1).trim()));
   const hasRow2 = Boolean((svg2 && String(svg2).trim()) || (t2 && String(t2).trim()));
-  const hasAny = Boolean(hasRow1 || hasRow2);
+  const hasRow3 = Boolean((svg3 && String(svg3).trim()) || (t3 && String(t3).trim()));
+  const hasAny = Boolean(hasRow1 || hasRow2 || hasRow3);
 
   if (row1) row1.style.display = hasRow1 ? "flex" : "none";
   if (row2) row2.style.display = hasRow2 ? "flex" : "none";
+  if (row3) row3.style.display = hasRow3 ? "flex" : "none";
   if (iconWrap) iconWrap.style.display = hasAny ? "" : "none";
 
   const pWrap = document.getElementById("sektion73ModalBodyPWrap");
@@ -1155,11 +1250,11 @@ const sektion73Pins = [
     p: "Bo precis vid havet i Apelviken, i ett av våra strandhus. Här bor du med stranden alldeles intill och med plats att vara på under hela dagen. Egen dörr, egen uteplats och ett boende som fungerar lika bra mellan strandpassen som på kvällen.",
     iconItems: [
       {
-        svg: '<svg width="24" height="24" viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentcolor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"><circle cx="8" cy="6" r="3.25"/><path d="M2.75 14.25c0-2.5 2-5 5.25-5s5.25 2.5 5.25 5"/></svg>',
+        svg: '<span class="material-symbols-outlined" style="font-size:22px">group</span>',
         text: "4 vuxna & 2 barn"
       },
       {
-        svg: '<svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M12 10V3m0 0L9 6m3-3 3 3m-9 6-1-1m13 1 1-1M3 18h18M5 21h14M7 18a5 5 0 0 1 10 0" stroke="currentcolor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>',
+        svg: '<span class="material-symbols-outlined" style="font-size:22px">sunny</span>',
         text: "Morgonsol"
       }
     ],
@@ -1183,8 +1278,8 @@ const sektion73Pins = [
     h: "Strandhus 2  ",
     p: "Bo precis vid havet i Apelviken, i ett av våra strandhus. Här bor du med stranden alldeles intill och med plats att vara på under hela dagen. Egen dörr, egen uteplats och ett boende som fungerar lika bra mellan strandpassen som på kvällen.",
     icons: [
-      '<svg width="24" height="24" viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentcolor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"><circle cx="8" cy="6" r="3.25"/><path d="M2.75 14.25c0-2.5 2-5 5.25-5s5.25 2.5 5.25 5"/></svg>',
-      '<svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M12 10V3m0 0L9 6m3-3 3 3m-9 6-1-1m13 1 1-1M3 18h18M5 21h14M7 18a5 5 0 0 1 10 0" stroke="currentcolor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>'
+      '<span class="material-symbols-outlined" style="font-size:22px">group</span>',
+      '<span class="material-symbols-outlined" style="font-size:22px">sunny</span>'
     ],
     iconTexts: [
       "4 vuxna & 2 barn",
@@ -1210,8 +1305,8 @@ const sektion73Pins = [
     h: "Strandhus 3  ",
     p: "Bo precis vid havet i Apelviken, i ett av våra strandhus. Här bor du med stranden alldeles intill och med plats att vara på under hela dagen. Egen dörr, egen uteplats och ett boende som fungerar lika bra mellan strandpassen som på kvällen.",
     icons: [
-      '<svg width="24" height="24" viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentcolor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"><circle cx="8" cy="6" r="3.25"/><path d="M2.75 14.25c0-2.5 2-5 5.25-5s5.25 2.5 5.25 5"/></svg>',
-      '<svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M12 10V3m0 0L9 6m3-3 3 3m-9 6-1-1m13 1 1-1M3 18h18M5 21h14M7 18a5 5 0 0 1 10 0" stroke="currentcolor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>'
+      '<span class="material-symbols-outlined" style="font-size:22px">group</span>',
+      '<span class="material-symbols-outlined" style="font-size:22px">sunny</span>'
     ],
     iconTexts: [
       "4 vuxna & 2 barn",
@@ -1237,8 +1332,8 @@ const sektion73Pins = [
     h: "Strandhus 4  ",
     p: "Bo precis vid havet i Apelviken, i ett av våra strandhus. Här bor du med stranden alldeles intill och med plats att vara på under hela dagen. Egen dörr, egen uteplats och ett boende som fungerar lika bra mellan strandpassen som på kvällen.",
     icons: [
-      '<svg width="24" height="24" viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentcolor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"><circle cx="8" cy="6" r="3.25"/><path d="M2.75 14.25c0-2.5 2-5 5.25-5s5.25 2.5 5.25 5"/></svg>',
-      '<svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M12 10V3m0 0L9 6m3-3 3 3m-9 6-1-1m13 1 1-1M3 18h18M5 21h14M7 18a5 5 0 0 1 10 0" stroke="currentcolor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>'
+      '<span class="material-symbols-outlined" style="font-size:22px">group</span>',
+      '<span class="material-symbols-outlined" style="font-size:22px">sunny</span>'
     ],
     iconTexts: [
       "4 vuxna & 2 barn",
@@ -1264,8 +1359,8 @@ const sektion73Pins = [
     h: "Strandhus 5  ",
     p: "Bo precis vid havet i Apelviken, i ett av våra strandhus. Här bor du med stranden alldeles intill och med plats att vara på under hela dagen. Egen dörr, egen uteplats och ett boende som fungerar lika bra mellan strandpassen som på kvällen.",
     icons: [
-      '<svg width="24" height="24" viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentcolor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"><circle cx="8" cy="6" r="3.25"/><path d="M2.75 14.25c0-2.5 2-5 5.25-5s5.25 2.5 5.25 5"/></svg>',
-      '<svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M12 10V3m0 0L9 6m3-3 3 3m-9 6-1-1m13 1 1-1M3 18h18M5 21h14M7 18a5 5 0 0 1 10 0" stroke="currentcolor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>'
+      '<span class="material-symbols-outlined" style="font-size:22px">group</span>',
+      '<span class="material-symbols-outlined" style="font-size:22px">sunny</span>'
     ],
     iconTexts: [
       "4 vuxna & 2 barn",
@@ -1291,8 +1386,8 @@ const sektion73Pins = [
     h: "Strandhus 6  ",
     p: "Bo precis vid havet i Apelviken, i ett av våra strandhus. Här bor du med stranden alldeles intill och med plats att vara på under hela dagen. Egen dörr, egen uteplats och ett boende som fungerar lika bra mellan strandpassen som på kvällen.",
     icons: [
-      '<svg width="24" height="24" viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentcolor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"><circle cx="8" cy="6" r="3.25"/><path d="M2.75 14.25c0-2.5 2-5 5.25-5s5.25 2.5 5.25 5"/></svg>',
-      '<svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M12 10V3m0 0L9 6m3-3 3 3m-9 6-1-1m13 1 1-1M3 18h18M5 21h14M7 18a5 5 0 0 1 10 0" stroke="currentcolor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>'
+      '<span class="material-symbols-outlined" style="font-size:22px">group</span>',
+      '<span class="material-symbols-outlined" style="font-size:22px">sunny</span>'
     ],
     iconTexts: [
       "4 vuxna & 2 barn",
@@ -1318,14 +1413,14 @@ const sektion73Pins = [
     h: "Strandhus 7  ",
     p: "Bo precis vid havet i Apelviken, i ett av våra strandhus. Här bor du med stranden alldeles intill och med plats att vara på under hela dagen. Egen dörr, egen uteplats och ett boende som fungerar lika bra mellan strandpassen som på kvällen.",
     icons: [
-      '<svg width="24" height="24" viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentcolor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"><circle cx="8" cy="6" r="3.25"/><path d="M2.75 14.25c0-2.5 2-5 5.25-5s5.25 2.5 5.25 5"/></svg>',
-     '<svg width="800" height="800" viewBox="0 0 512 512" xmlns="http://www.w3.org/2000/svg"><title>ionicons-v5-n</title><path d="M457.74 170.1a30.3 30.3 0 0 0-11.16-2.1h-.4c-20.17.3-42.79 19.19-54.66 47.76-14.23 34.18-7.68 69.15 14.74 78.14a30.2 30.2 0 0 0 11.15 2.1c20.27 0 43.2-19 55.17-47.76 14.13-34.18 7.48-69.15-14.84-78.14ZM327.6 303.48C299.8 257.35 287.8 240 256 240s-43.9 17.46-71.7 63.48c-23.8 39.36-71.9 42.64-83.9 76.07a50.9 50.9 0 0 0-3.6 19.25c0 27.19 20.8 49.2 46.4 49.2 31.8 0 75.1-25.39 112.9-25.39S337 448 368.8 448c25.6 0 46.3-22 46.3-49.2a51 51 0 0 0-3.7-19.25c-12-33.55-60-36.71-83.8-76.07ZM192.51 196a26.5 26.5 0 0 0 4-.3c23.21-3.37 37.7-35.53 32.44-71.85C224 89.61 203.22 64 181.49 64a26.5 26.5 0 0 0-4 .3c-23.21 3.37-37.7 35.53-32.44 71.85C150 170.29 170.78 196 192.51 196Zm174.41-59.85c5.26-36.32-9.23-68.48-32.44-71.85a26.5 26.5 0 0 0-4-.3c-21.73 0-42.47 25.61-47.43 59.85-5.26 36.32 9.23 68.48 32.44 71.85a26.5 26.5 0 0 0 4 .3c21.73 0 42.51-25.71 47.43-59.85ZM105.77 293.9c22.39-9 28.93-44 14.72-78.14C108.53 187 85.62 168 65.38 168a30.2 30.2 0 0 0-11.15 2.1c-22.39 9-28.93 44-14.72 78.14C51.47 277 74.38 296 94.62 296a30.2 30.2 0 0 0 11.15-2.1Z" style="fill:none;stroke:currentcolor;stroke-miterlimit:10;stroke-width:32px"/></svg>',
-            '<svg fill="currentcolor" width="800" height="800" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><circle cx="9" cy="4" r="2"/><path d="M16.98 14.804A1 1 0 0 0 16 14h-4.133l-.429-3H16V9h-4.847l-.163-1.142A1 1 0 0 0 10 7H9a1.003 1.003 0 0 0-.99 1.142l.877 6.142A2.01 2.01 0 0 0 10.867 16h4.313l.839 4.196c.094.467.504.804.981.804h3v-2h-2.181z"/><path d="M12.51 17.5c-.739 1.476-2.25 2.5-4.01 2.5A4.505 4.505 0 0 1 4 15.5a4.5 4.5 0 0 1 2.817-4.167l-.289-2.025C3.905 10.145 2 12.604 2 15.5 2 19.084 4.916 22 8.5 22a6.5 6.5 0 0 0 5.545-3.126l-.274-1.374z"/></svg>'
+      '<span class="material-symbols-outlined" style="font-size:22px">group</span>',
+     '<span class="material-symbols-outlined" style="font-size:22px">pet_supplies</span>',
+            '<span class="material-symbols-outlined" style="font-size:22px">accessible</span>'
     ],
     iconTexts: [
       "4 vuxna & 2 barn",
       "Djurvänlig",
-      "Handikappsvänlig"     
+      "Funktionsanpassade"     
     ],
     images: ["", "", "", ""],
     cta1Text: "Vägbeskrivning",
@@ -1347,14 +1442,14 @@ const sektion73Pins = [
     h: "Strandhus 8  ",
     p: "Bo precis vid havet i Apelviken, i ett av våra strandhus. Här bor du med stranden alldeles intill och med plats att vara på under hela dagen. Egen dörr, egen uteplats och ett boende som fungerar lika bra mellan strandpassen som på kvällen.",
     icons: [
-           '<svg width="24" height="24" viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentcolor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"><circle cx="8" cy="6" r="3.25"/><path d="M2.75 14.25c0-2.5 2-5 5.25-5s5.25 2.5 5.25 5"/></svg>',
-     '<svg width="800" height="800" viewBox="0 0 512 512" xmlns="http://www.w3.org/2000/svg"><title>ionicons-v5-n</title><path d="M457.74 170.1a30.3 30.3 0 0 0-11.16-2.1h-.4c-20.17.3-42.79 19.19-54.66 47.76-14.23 34.18-7.68 69.15 14.74 78.14a30.2 30.2 0 0 0 11.15 2.1c20.27 0 43.2-19 55.17-47.76 14.13-34.18 7.48-69.15-14.84-78.14ZM327.6 303.48C299.8 257.35 287.8 240 256 240s-43.9 17.46-71.7 63.48c-23.8 39.36-71.9 42.64-83.9 76.07a50.9 50.9 0 0 0-3.6 19.25c0 27.19 20.8 49.2 46.4 49.2 31.8 0 75.1-25.39 112.9-25.39S337 448 368.8 448c25.6 0 46.3-22 46.3-49.2a51 51 0 0 0-3.7-19.25c-12-33.55-60-36.71-83.8-76.07ZM192.51 196a26.5 26.5 0 0 0 4-.3c23.21-3.37 37.7-35.53 32.44-71.85C224 89.61 203.22 64 181.49 64a26.5 26.5 0 0 0-4 .3c-23.21 3.37-37.7 35.53-32.44 71.85C150 170.29 170.78 196 192.51 196Zm174.41-59.85c5.26-36.32-9.23-68.48-32.44-71.85a26.5 26.5 0 0 0-4-.3c-21.73 0-42.47 25.61-47.43 59.85-5.26 36.32 9.23 68.48 32.44 71.85a26.5 26.5 0 0 0 4 .3c21.73 0 42.51-25.71 47.43-59.85ZM105.77 293.9c22.39-9 28.93-44 14.72-78.14C108.53 187 85.62 168 65.38 168a30.2 30.2 0 0 0-11.15 2.1c-22.39 9-28.93 44-14.72 78.14C51.47 277 74.38 296 94.62 296a30.2 30.2 0 0 0 11.15-2.1Z" style="fill:none;stroke:currentcolor;stroke-miterlimit:10;stroke-width:32px"/></svg>',
-            '<svg fill="currentcolor" width="800" height="800" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><circle cx="9" cy="4" r="2"/><path d="M16.98 14.804A1 1 0 0 0 16 14h-4.133l-.429-3H16V9h-4.847l-.163-1.142A1 1 0 0 0 10 7H9a1.003 1.003 0 0 0-.99 1.142l.877 6.142A2.01 2.01 0 0 0 10.867 16h4.313l.839 4.196c.094.467.504.804.981.804h3v-2h-2.181z"/><path d="M12.51 17.5c-.739 1.476-2.25 2.5-4.01 2.5A4.505 4.505 0 0 1 4 15.5a4.5 4.5 0 0 1 2.817-4.167l-.289-2.025C3.905 10.145 2 12.604 2 15.5 2 19.084 4.916 22 8.5 22a6.5 6.5 0 0 0 5.545-3.126l-.274-1.374z"/></svg>'
+           '<span class="material-symbols-outlined" style="font-size:22px">group</span>',
+     '<span class="material-symbols-outlined" style="font-size:22px">pet_supplies</span>',
+            '<span class="material-symbols-outlined" style="font-size:22px">accessible</span>'
     ],
     iconTexts: [
       "4 vuxna & 2 barn",
       "Djurvänlig",
-      "Handikappsvänlig"
+      "Funktionsanpassade"
     ],
     images: ["", "", "", ""],
     cta1Text: "Vägbeskrivning",
@@ -1376,8 +1471,8 @@ const sektion73Pins = [
     h: "Strandhus 9  ",
     p: "Bo precis vid havet i Apelviken, i ett av våra strandhus. Här bor du med stranden alldeles intill och med plats att vara på under hela dagen. Egen dörr, egen uteplats och ett boende som fungerar lika bra mellan strandpassen som på kvällen.",
     icons: [
-      '<svg width="24" height="24" viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentcolor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"><circle cx="8" cy="6" r="3.25"/><path d="M2.75 14.25c0-2.5 2-5 5.25-5s5.25 2.5 5.25 5"/></svg>',
-      '<svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="m6 12-1-1m13 1 1-1M3 18h18M5 21h14M7 18a5 5 0 0 1 10 0M12 3v7m0 0 3-3m-3 3L9 7" stroke="currentcolor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>'
+      '<span class="material-symbols-outlined" style="font-size:22px">group</span>',
+      '<span class="material-symbols-outlined" style="font-size:22px">sunny</span>'
     ],
     iconTexts: [
       "4 vuxna & 2 barn",
@@ -1403,8 +1498,8 @@ const sektion73Pins = [
     h: "Strandhus 10  ",
     p: "Bo precis vid havet i Apelviken, i ett av våra strandhus. Här bor du med stranden alldeles intill och med plats att vara på under hela dagen. Egen dörr, egen uteplats och ett boende som fungerar lika bra mellan strandpassen som på kvällen.",
     icons: [
-      '<svg width="24" height="24" viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentcolor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"><circle cx="8" cy="6" r="3.25"/><path d="M2.75 14.25c0-2.5 2-5 5.25-5s5.25 2.5 5.25 5"/></svg>',
-      '<svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="m6 12-1-1m13 1 1-1M3 18h18M5 21h14M7 18a5 5 0 0 1 10 0M12 3v7m0 0 3-3m-3 3L9 7" stroke="currentcolor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>'
+      '<span class="material-symbols-outlined" style="font-size:22px">group</span>',
+      '<span class="material-symbols-outlined" style="font-size:22px">sunny</span>'
     ],
     iconTexts: [
       "4 vuxna & 2 barn",
@@ -1430,8 +1525,8 @@ const sektion73Pins = [
     h: "Strandhus 11  ",
     p: "Bo precis vid havet i Apelviken, i ett av våra strandhus. Här bor du med stranden alldeles intill och med plats att vara på under hela dagen. Egen dörr, egen uteplats och ett boende som fungerar lika bra mellan strandpassen som på kvällen.",
     icons: [
-      '<svg width="24" height="24" viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentcolor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"><circle cx="8" cy="6" r="3.25"/><path d="M2.75 14.25c0-2.5 2-5 5.25-5s5.25 2.5 5.25 5"/></svg>',
-      '<svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="m6 12-1-1m13 1 1-1M3 18h18M5 21h14M7 18a5 5 0 0 1 10 0M12 3v7m0 0 3-3m-3 3L9 7" stroke="currentcolor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>'
+      '<span class="material-symbols-outlined" style="font-size:22px">group</span>',
+      '<span class="material-symbols-outlined" style="font-size:22px">sunny</span>'
     ],
     iconTexts: [
       "4 vuxna & 2 barn",
@@ -1457,8 +1552,8 @@ const sektion73Pins = [
     h: "Strandhus 12  ",
     p: "Bo precis vid havet i Apelviken, i ett av våra strandhus. Här bor du med stranden alldeles intill och med plats att vara på under hela dagen. Egen dörr, egen uteplats och ett boende som fungerar lika bra mellan strandpassen som på kvällen.",
     icons: [
-      '<svg width="24" height="24" viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentcolor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"><circle cx="8" cy="6" r="3.25"/><path d="M2.75 14.25c0-2.5 2-5 5.25-5s5.25 2.5 5.25 5"/></svg>',
-      '<svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="m6 12-1-1m13 1 1-1M3 18h18M5 21h14M7 18a5 5 0 0 1 10 0M12 3v7m0 0 3-3m-3 3L9 7" stroke="currentcolor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>'
+      '<span class="material-symbols-outlined" style="font-size:22px">group</span>',
+      '<span class="material-symbols-outlined" style="font-size:22px">sunny</span>'
     ],
     iconTexts: [
        "4 vuxna & 2 barn",
@@ -1484,8 +1579,8 @@ const sektion73Pins = [
     h: "Strandhus 13  ",
     p: "Bo precis vid havet i Apelviken, i ett av våra strandhus. Här bor du med stranden alldeles intill och med plats att vara på under hela dagen. Egen dörr, egen uteplats och ett boende som fungerar lika bra mellan strandpassen som på kvällen.",
     icons: [
-      '<svg width="24" height="24" viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentcolor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"><circle cx="8" cy="6" r="3.25"/><path d="M2.75 14.25c0-2.5 2-5 5.25-5s5.25 2.5 5.25 5"/></svg>',
-      '<svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="m6 12-1-1m13 1 1-1M3 18h18M5 21h14M7 18a5 5 0 0 1 10 0M12 3v7m0 0 3-3m-3 3L9 7" stroke="currentcolor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>'
+      '<span class="material-symbols-outlined" style="font-size:22px">group</span>',
+      '<span class="material-symbols-outlined" style="font-size:22px">sunny</span>'
     ],
     iconTexts: [
       "4 vuxna & 2 barn",
@@ -1511,8 +1606,8 @@ const sektion73Pins = [
     h: "Strandhus 14  ",
     p: "Bo precis vid havet i Apelviken, i ett av våra strandhus. Här bor du med stranden alldeles intill och med plats att vara på under hela dagen. Egen dörr, egen uteplats och ett boende som fungerar lika bra mellan strandpassen som på kvällen.",
     icons: [
-      '<svg width="24" height="24" viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentcolor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"><circle cx="8" cy="6" r="3.25"/><path d="M2.75 14.25c0-2.5 2-5 5.25-5s5.25 2.5 5.25 5"/></svg>',
-      '<svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="m6 12-1-1m13 1 1-1M3 18h18M5 21h14M7 18a5 5 0 0 1 10 0M12 3v7m0 0 3-3m-3 3L9 7" stroke="currentcolor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>'
+      '<span class="material-symbols-outlined" style="font-size:22px">group</span>',
+      '<span class="material-symbols-outlined" style="font-size:22px">sunny</span>'
     ],
     iconTexts: [
       "4 vuxna & 2 barn",
@@ -1538,14 +1633,14 @@ const sektion73Pins = [
     h: "Strandhus 15  ",
     p: "Bo precis vid havet i Apelviken, i ett av våra strandhus. Här bor du med stranden alldeles intill och med plats att vara på under hela dagen. Egen dörr, egen uteplats och ett boende som fungerar lika bra mellan strandpassen som på kvällen.",
     icons: [
-           '<svg width="24" height="24" viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentcolor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"><circle cx="8" cy="6" r="3.25"/><path d="M2.75 14.25c0-2.5 2-5 5.25-5s5.25 2.5 5.25 5"/></svg>',
-     '<svg width="800" height="800" viewBox="0 0 512 512" xmlns="http://www.w3.org/2000/svg"><title>ionicons-v5-n</title><path d="M457.74 170.1a30.3 30.3 0 0 0-11.16-2.1h-.4c-20.17.3-42.79 19.19-54.66 47.76-14.23 34.18-7.68 69.15 14.74 78.14a30.2 30.2 0 0 0 11.15 2.1c20.27 0 43.2-19 55.17-47.76 14.13-34.18 7.48-69.15-14.84-78.14ZM327.6 303.48C299.8 257.35 287.8 240 256 240s-43.9 17.46-71.7 63.48c-23.8 39.36-71.9 42.64-83.9 76.07a50.9 50.9 0 0 0-3.6 19.25c0 27.19 20.8 49.2 46.4 49.2 31.8 0 75.1-25.39 112.9-25.39S337 448 368.8 448c25.6 0 46.3-22 46.3-49.2a51 51 0 0 0-3.7-19.25c-12-33.55-60-36.71-83.8-76.07ZM192.51 196a26.5 26.5 0 0 0 4-.3c23.21-3.37 37.7-35.53 32.44-71.85C224 89.61 203.22 64 181.49 64a26.5 26.5 0 0 0-4 .3c-23.21 3.37-37.7 35.53-32.44 71.85C150 170.29 170.78 196 192.51 196Zm174.41-59.85c5.26-36.32-9.23-68.48-32.44-71.85a26.5 26.5 0 0 0-4-.3c-21.73 0-42.47 25.61-47.43 59.85-5.26 36.32 9.23 68.48 32.44 71.85a26.5 26.5 0 0 0 4 .3c21.73 0 42.51-25.71 47.43-59.85ZM105.77 293.9c22.39-9 28.93-44 14.72-78.14C108.53 187 85.62 168 65.38 168a30.2 30.2 0 0 0-11.15 2.1c-22.39 9-28.93 44-14.72 78.14C51.47 277 74.38 296 94.62 296a30.2 30.2 0 0 0 11.15-2.1Z" style="fill:none;stroke:currentcolor;stroke-miterlimit:10;stroke-width:32px"/></svg>',
-            '<svg fill="currentcolor" width="800" height="800" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><circle cx="9" cy="4" r="2"/><path d="M16.98 14.804A1 1 0 0 0 16 14h-4.133l-.429-3H16V9h-4.847l-.163-1.142A1 1 0 0 0 10 7H9a1.003 1.003 0 0 0-.99 1.142l.877 6.142A2.01 2.01 0 0 0 10.867 16h4.313l.839 4.196c.094.467.504.804.981.804h3v-2h-2.181z"/><path d="M12.51 17.5c-.739 1.476-2.25 2.5-4.01 2.5A4.505 4.505 0 0 1 4 15.5a4.5 4.5 0 0 1 2.817-4.167l-.289-2.025C3.905 10.145 2 12.604 2 15.5 2 19.084 4.916 22 8.5 22a6.5 6.5 0 0 0 5.545-3.126l-.274-1.374z"/></svg>'
+           '<span class="material-symbols-outlined" style="font-size:22px">group</span>',
+     '<span class="material-symbols-outlined" style="font-size:22px">pet_supplies</span>',
+            '<span class="material-symbols-outlined" style="font-size:22px">accessible</span>'
     ],
     iconTexts: [
       "4 vuxna & 2 barn",
       "Djurvänlig",
-      "Handikappsvänlig"
+      "Funktionsanpassade"
     ],
     images: ["", "", "", ""],
     cta1Text: "Vägbeskrivning",
@@ -1567,14 +1662,14 @@ const sektion73Pins = [
     h: "Strandhus 16  ",
     p: "Bo precis vid havet i Apelviken, i ett av våra strandhus. Här bor du med stranden alldeles intill och med plats att vara på under hela dagen. Egen dörr, egen uteplats och ett boende som fungerar lika bra mellan strandpassen som på kvällen.",
     icons: [
-           '<svg width="24" height="24" viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentcolor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"><circle cx="8" cy="6" r="3.25"/><path d="M2.75 14.25c0-2.5 2-5 5.25-5s5.25 2.5 5.25 5"/></svg>',
-     '<svg width="800" height="800" viewBox="0 0 512 512" xmlns="http://www.w3.org/2000/svg"><title>ionicons-v5-n</title><path d="M457.74 170.1a30.3 30.3 0 0 0-11.16-2.1h-.4c-20.17.3-42.79 19.19-54.66 47.76-14.23 34.18-7.68 69.15 14.74 78.14a30.2 30.2 0 0 0 11.15 2.1c20.27 0 43.2-19 55.17-47.76 14.13-34.18 7.48-69.15-14.84-78.14ZM327.6 303.48C299.8 257.35 287.8 240 256 240s-43.9 17.46-71.7 63.48c-23.8 39.36-71.9 42.64-83.9 76.07a50.9 50.9 0 0 0-3.6 19.25c0 27.19 20.8 49.2 46.4 49.2 31.8 0 75.1-25.39 112.9-25.39S337 448 368.8 448c25.6 0 46.3-22 46.3-49.2a51 51 0 0 0-3.7-19.25c-12-33.55-60-36.71-83.8-76.07ZM192.51 196a26.5 26.5 0 0 0 4-.3c23.21-3.37 37.7-35.53 32.44-71.85C224 89.61 203.22 64 181.49 64a26.5 26.5 0 0 0-4 .3c-23.21 3.37-37.7 35.53-32.44 71.85C150 170.29 170.78 196 192.51 196Zm174.41-59.85c5.26-36.32-9.23-68.48-32.44-71.85a26.5 26.5 0 0 0-4-.3c-21.73 0-42.47 25.61-47.43 59.85-5.26 36.32 9.23 68.48 32.44 71.85a26.5 26.5 0 0 0 4 .3c21.73 0 42.51-25.71 47.43-59.85ZM105.77 293.9c22.39-9 28.93-44 14.72-78.14C108.53 187 85.62 168 65.38 168a30.2 30.2 0 0 0-11.15 2.1c-22.39 9-28.93 44-14.72 78.14C51.47 277 74.38 296 94.62 296a30.2 30.2 0 0 0 11.15-2.1Z" style="fill:none;stroke:currentcolor;stroke-miterlimit:10;stroke-width:32px"/></svg>',
-            '<svg fill="currentcolor" width="800" height="800" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><circle cx="9" cy="4" r="2"/><path d="M16.98 14.804A1 1 0 0 0 16 14h-4.133l-.429-3H16V9h-4.847l-.163-1.142A1 1 0 0 0 10 7H9a1.003 1.003 0 0 0-.99 1.142l.877 6.142A2.01 2.01 0 0 0 10.867 16h4.313l.839 4.196c.094.467.504.804.981.804h3v-2h-2.181z"/><path d="M12.51 17.5c-.739 1.476-2.25 2.5-4.01 2.5A4.505 4.505 0 0 1 4 15.5a4.5 4.5 0 0 1 2.817-4.167l-.289-2.025C3.905 10.145 2 12.604 2 15.5 2 19.084 4.916 22 8.5 22a6.5 6.5 0 0 0 5.545-3.126l-.274-1.374z"/></svg>'
+           '<span class="material-symbols-outlined" style="font-size:22px">group</span>',
+     '<span class="material-symbols-outlined" style="font-size:22px">pet_supplies</span>',
+            '<span class="material-symbols-outlined" style="font-size:22px">accessible</span>'
     ],
     iconTexts: [
       "4 vuxna & 2 barn",
       "Djurvänlig",
-      "Handikappsvänlig"
+      "Funktionsanpassade"
     ],
     images: ["", "", "", ""],
     cta1Text: "Vägbeskrivning",
@@ -1596,8 +1691,8 @@ const sektion73Pins = [
     h: "Strandhus 17  ",
     p: "Bo precis vid havet i Apelviken, i ett av våra strandhus. Här bor du med stranden alldeles intill och med plats att vara på under hela dagen. Egen dörr, egen uteplats och ett boende som fungerar lika bra mellan strandpassen som på kvällen.",
     icons: [
-      '<svg width="24" height="24" viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentcolor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"><circle cx="8" cy="6" r="3.25"/><path d="M2.75 14.25c0-2.5 2-5 5.25-5s5.25 2.5 5.25 5"/></svg>',
-      '<svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M12 10V3m0 0L9 6m3-3 3 3m-9 6-1-1m13 1 1-1M3 18h18M5 21h14M7 18a5 5 0 0 1 10 0" stroke="currentcolor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>'
+      '<span class="material-symbols-outlined" style="font-size:22px">group</span>',
+      '<span class="material-symbols-outlined" style="font-size:22px">sunny</span>'
     ],
     iconTexts: [
       "4 vuxna & 2 barn",
@@ -1623,8 +1718,8 @@ const sektion73Pins = [
     h: "Strandhus 18  ",
     p: "Bo precis vid havet i Apelviken, i ett av våra strandhus. Här bor du med stranden alldeles intill och med plats att vara på under hela dagen. Egen dörr, egen uteplats och ett boende som fungerar lika bra mellan strandpassen som på kvällen.",
     icons: [
-      '<svg width="24" height="24" viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentcolor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"><circle cx="8" cy="6" r="3.25"/><path d="M2.75 14.25c0-2.5 2-5 5.25-5s5.25 2.5 5.25 5"/></svg>',
-      '<svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M12 10V3m0 0L9 6m3-3 3 3m-9 6-1-1m13 1 1-1M3 18h18M5 21h14M7 18a5 5 0 0 1 10 0" stroke="currentcolor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>'
+      '<span class="material-symbols-outlined" style="font-size:22px">group</span>',
+      '<span class="material-symbols-outlined" style="font-size:22px">sunny</span>'
     ],
     iconTexts: [
       "4 vuxna & 2 barn",
@@ -1650,8 +1745,8 @@ const sektion73Pins = [
     h: "Strandhus 19  ",
     p: "Bo precis vid havet i Apelviken, i ett av våra strandhus. Här bor du med stranden alldeles intill och med plats att vara på under hela dagen. Egen dörr, egen uteplats och ett boende som fungerar lika bra mellan strandpassen som på kvällen.",
     icons: [
-      '<svg width="24" height="24" viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentcolor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"><circle cx="8" cy="6" r="3.25"/><path d="M2.75 14.25c0-2.5 2-5 5.25-5s5.25 2.5 5.25 5"/></svg>',
-      '<svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M12 10V3m0 0L9 6m3-3 3 3m-9 6-1-1m13 1 1-1M3 18h18M5 21h14M7 18a5 5 0 0 1 10 0" stroke="currentcolor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>'
+      '<span class="material-symbols-outlined" style="font-size:22px">group</span>',
+      '<span class="material-symbols-outlined" style="font-size:22px">sunny</span>'
     ],
     iconTexts: [
       "4 vuxna & 2 barn",
@@ -1677,8 +1772,8 @@ const sektion73Pins = [
     h: "Strandhus 20  ",
     p: "Bo precis vid havet i Apelviken, i ett av våra strandhus. Här bor du med stranden alldeles intill och med plats att vara på under hela dagen. Egen dörr, egen uteplats och ett boende som fungerar lika bra mellan strandpassen som på kvällen.",
     icons: [
-      '<svg width="24" height="24" viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentcolor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"><circle cx="8" cy="6" r="3.25"/><path d="M2.75 14.25c0-2.5 2-5 5.25-5s5.25 2.5 5.25 5"/></svg>',
-      '<svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M12 10V3m0 0L9 6m3-3 3 3m-9 6-1-1m13 1 1-1M3 18h18M5 21h14M7 18a5 5 0 0 1 10 0" stroke="currentcolor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>'
+      '<span class="material-symbols-outlined" style="font-size:22px">group</span>',
+      '<span class="material-symbols-outlined" style="font-size:22px">sunny</span>'
     ],
     iconTexts: [
       "4 vuxna & 2 barn",
@@ -1704,8 +1799,8 @@ const sektion73Pins = [
     h: "Strandhus 21  ",
     p: "Bo precis vid havet i Apelviken, i ett av våra strandhus. Här bor du med stranden alldeles intill och med plats att vara på under hela dagen. Egen dörr, egen uteplats och ett boende som fungerar lika bra mellan strandpassen som på kvällen.",
     icons: [
-      '<svg width="24" height="24" viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentcolor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"><circle cx="8" cy="6" r="3.25"/><path d="M2.75 14.25c0-2.5 2-5 5.25-5s5.25 2.5 5.25 5"/></svg>',
-      '<svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M12 10V3m0 0L9 6m3-3 3 3m-9 6-1-1m13 1 1-1M3 18h18M5 21h14M7 18a5 5 0 0 1 10 0" stroke="currentcolor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>'
+      '<span class="material-symbols-outlined" style="font-size:22px">group</span>',
+      '<span class="material-symbols-outlined" style="font-size:22px">sunny</span>'
     ],
     iconTexts: [
       "4 vuxna & 2 barn",
@@ -1731,8 +1826,8 @@ const sektion73Pins = [
     h: "Strandhus 22  ",
     p: "Bo precis vid havet i Apelviken, i ett av våra strandhus. Här bor du med stranden alldeles intill och med plats att vara på under hela dagen. Egen dörr, egen uteplats och ett boende som fungerar lika bra mellan strandpassen som på kvällen.",
     icons: [
-      '<svg width="24" height="24" viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentcolor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"><circle cx="8" cy="6" r="3.25"/><path d="M2.75 14.25c0-2.5 2-5 5.25-5s5.25 2.5 5.25 5"/></svg>',
-      '<svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M12 10V3m0 0L9 6m3-3 3 3m-9 6-1-1m13 1 1-1M3 18h18M5 21h14M7 18a5 5 0 0 1 10 0" stroke="currentcolor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>'
+      '<span class="material-symbols-outlined" style="font-size:22px">group</span>',
+      '<span class="material-symbols-outlined" style="font-size:22px">sunny</span>'
     ],
     iconTexts: [
       "4 vuxna & 2 barn",
@@ -1758,14 +1853,14 @@ const sektion73Pins = [
     h: "Strandhus 23  ",
     p: "Bo precis vid havet i Apelviken, i ett av våra strandhus. Här bor du med stranden alldeles intill och med plats att vara på under hela dagen. Egen dörr, egen uteplats och ett boende som fungerar lika bra mellan strandpassen som på kvällen.",
     icons: [
-           '<svg width="24" height="24" viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentcolor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"><circle cx="8" cy="6" r="3.25"/><path d="M2.75 14.25c0-2.5 2-5 5.25-5s5.25 2.5 5.25 5"/></svg>',
-     '<svg width="800" height="800" viewBox="0 0 512 512" xmlns="http://www.w3.org/2000/svg"><title>ionicons-v5-n</title><path d="M457.74 170.1a30.3 30.3 0 0 0-11.16-2.1h-.4c-20.17.3-42.79 19.19-54.66 47.76-14.23 34.18-7.68 69.15 14.74 78.14a30.2 30.2 0 0 0 11.15 2.1c20.27 0 43.2-19 55.17-47.76 14.13-34.18 7.48-69.15-14.84-78.14ZM327.6 303.48C299.8 257.35 287.8 240 256 240s-43.9 17.46-71.7 63.48c-23.8 39.36-71.9 42.64-83.9 76.07a50.9 50.9 0 0 0-3.6 19.25c0 27.19 20.8 49.2 46.4 49.2 31.8 0 75.1-25.39 112.9-25.39S337 448 368.8 448c25.6 0 46.3-22 46.3-49.2a51 51 0 0 0-3.7-19.25c-12-33.55-60-36.71-83.8-76.07ZM192.51 196a26.5 26.5 0 0 0 4-.3c23.21-3.37 37.7-35.53 32.44-71.85C224 89.61 203.22 64 181.49 64a26.5 26.5 0 0 0-4 .3c-23.21 3.37-37.7 35.53-32.44 71.85C150 170.29 170.78 196 192.51 196Zm174.41-59.85c5.26-36.32-9.23-68.48-32.44-71.85a26.5 26.5 0 0 0-4-.3c-21.73 0-42.47 25.61-47.43 59.85-5.26 36.32 9.23 68.48 32.44 71.85a26.5 26.5 0 0 0 4 .3c21.73 0 42.51-25.71 47.43-59.85ZM105.77 293.9c22.39-9 28.93-44 14.72-78.14C108.53 187 85.62 168 65.38 168a30.2 30.2 0 0 0-11.15 2.1c-22.39 9-28.93 44-14.72 78.14C51.47 277 74.38 296 94.62 296a30.2 30.2 0 0 0 11.15-2.1Z" style="fill:none;stroke:currentcolor;stroke-miterlimit:10;stroke-width:32px"/></svg>',
-            '<svg fill="currentcolor" width="800" height="800" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><circle cx="9" cy="4" r="2"/><path d="M16.98 14.804A1 1 0 0 0 16 14h-4.133l-.429-3H16V9h-4.847l-.163-1.142A1 1 0 0 0 10 7H9a1.003 1.003 0 0 0-.99 1.142l.877 6.142A2.01 2.01 0 0 0 10.867 16h4.313l.839 4.196c.094.467.504.804.981.804h3v-2h-2.181z"/><path d="M12.51 17.5c-.739 1.476-2.25 2.5-4.01 2.5A4.505 4.505 0 0 1 4 15.5a4.5 4.5 0 0 1 2.817-4.167l-.289-2.025C3.905 10.145 2 12.604 2 15.5 2 19.084 4.916 22 8.5 22a6.5 6.5 0 0 0 5.545-3.126l-.274-1.374z"/></svg>'
+           '<span class="material-symbols-outlined" style="font-size:22px">group</span>',
+     '<span class="material-symbols-outlined" style="font-size:22px">pet_supplies</span>',
+            '<span class="material-symbols-outlined" style="font-size:22px">accessible</span>'
     ],
     iconTexts: [
       "4 vuxna & 2 barn",
       "Djurvänlig",
-      "Handikappsvänlig"
+      "Funktionsanpassade"
     ],
     images: ["", "", "", ""],
     cta1Text: "Vägbeskrivning",
@@ -1787,14 +1882,14 @@ const sektion73Pins = [
     h: "Strandhus 24  ",
     p: "Bo precis vid havet i Apelviken, i ett av våra strandhus. Här bor du med stranden alldeles intill och med plats att vara på under hela dagen. Egen dörr, egen uteplats och ett boende som fungerar lika bra mellan strandpassen som på kvällen.",
     icons: [
-           '<svg width="24" height="24" viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentcolor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"><circle cx="8" cy="6" r="3.25"/><path d="M2.75 14.25c0-2.5 2-5 5.25-5s5.25 2.5 5.25 5"/></svg>',
-     '<svg width="800" height="800" viewBox="0 0 512 512" xmlns="http://www.w3.org/2000/svg"><title>ionicons-v5-n</title><path d="M457.74 170.1a30.3 30.3 0 0 0-11.16-2.1h-.4c-20.17.3-42.79 19.19-54.66 47.76-14.23 34.18-7.68 69.15 14.74 78.14a30.2 30.2 0 0 0 11.15 2.1c20.27 0 43.2-19 55.17-47.76 14.13-34.18 7.48-69.15-14.84-78.14ZM327.6 303.48C299.8 257.35 287.8 240 256 240s-43.9 17.46-71.7 63.48c-23.8 39.36-71.9 42.64-83.9 76.07a50.9 50.9 0 0 0-3.6 19.25c0 27.19 20.8 49.2 46.4 49.2 31.8 0 75.1-25.39 112.9-25.39S337 448 368.8 448c25.6 0 46.3-22 46.3-49.2a51 51 0 0 0-3.7-19.25c-12-33.55-60-36.71-83.8-76.07ZM192.51 196a26.5 26.5 0 0 0 4-.3c23.21-3.37 37.7-35.53 32.44-71.85C224 89.61 203.22 64 181.49 64a26.5 26.5 0 0 0-4 .3c-23.21 3.37-37.7 35.53-32.44 71.85C150 170.29 170.78 196 192.51 196Zm174.41-59.85c5.26-36.32-9.23-68.48-32.44-71.85a26.5 26.5 0 0 0-4-.3c-21.73 0-42.47 25.61-47.43 59.85-5.26 36.32 9.23 68.48 32.44 71.85a26.5 26.5 0 0 0 4 .3c21.73 0 42.51-25.71 47.43-59.85ZM105.77 293.9c22.39-9 28.93-44 14.72-78.14C108.53 187 85.62 168 65.38 168a30.2 30.2 0 0 0-11.15 2.1c-22.39 9-28.93 44-14.72 78.14C51.47 277 74.38 296 94.62 296a30.2 30.2 0 0 0 11.15-2.1Z" style="fill:none;stroke:currentcolor;stroke-miterlimit:10;stroke-width:32px"/></svg>',
-            '<svg fill="currentcolor" width="800" height="800" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><circle cx="9" cy="4" r="2"/><path d="M16.98 14.804A1 1 0 0 0 16 14h-4.133l-.429-3H16V9h-4.847l-.163-1.142A1 1 0 0 0 10 7H9a1.003 1.003 0 0 0-.99 1.142l.877 6.142A2.01 2.01 0 0 0 10.867 16h4.313l.839 4.196c.094.467.504.804.981.804h3v-2h-2.181z"/><path d="M12.51 17.5c-.739 1.476-2.25 2.5-4.01 2.5A4.505 4.505 0 0 1 4 15.5a4.5 4.5 0 0 1 2.817-4.167l-.289-2.025C3.905 10.145 2 12.604 2 15.5 2 19.084 4.916 22 8.5 22a6.5 6.5 0 0 0 5.545-3.126l-.274-1.374z"/></svg>'
+           '<span class="material-symbols-outlined" style="font-size:22px">group</span>',
+     '<span class="material-symbols-outlined" style="font-size:22px">pet_supplies</span>',
+            '<span class="material-symbols-outlined" style="font-size:22px">accessible</span>'
     ],
     iconTexts: [
       "4 vuxna & 2 barn",
       "Djurvänlig",
-      "Handikappsvänlig"
+      "Funktionsanpassade"
     ],
     images: ["", "", "", ""],
     cta1Text: "Vägbeskrivning",
@@ -1816,8 +1911,8 @@ const sektion73Pins = [
     h: "Strandhus 25  ",
     p: "Bo precis vid havet i Apelviken, i ett av våra strandhus. Här bor du med stranden alldeles intill och med plats att vara på under hela dagen. Egen dörr, egen uteplats och ett boende som fungerar lika bra mellan strandpassen som på kvällen.",
     icons: [
-      '<svg width="24" height="24" viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentcolor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"><circle cx="8" cy="6" r="3.25"/><path d="M2.75 14.25c0-2.5 2-5 5.25-5s5.25 2.5 5.25 5"/></svg>',
-      '<svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="m6 12-1-1m13 1 1-1M3 18h18M5 21h14M7 18a5 5 0 0 1 10 0M12 3v7m0 0 3-3m-3 3L9 7" stroke="currentcolor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>'
+      '<span class="material-symbols-outlined" style="font-size:22px">group</span>',
+      '<span class="material-symbols-outlined" style="font-size:22px">sunny</span>'
     ],
     iconTexts: [
        "4 vuxna & 2 barn",
@@ -1843,8 +1938,8 @@ const sektion73Pins = [
     h: "Strandhus 26  ",
     p: "Bo precis vid havet i Apelviken, i ett av våra strandhus. Här bor du med stranden alldeles intill och med plats att vara på under hela dagen. Egen dörr, egen uteplats och ett boende som fungerar lika bra mellan strandpassen som på kvällen.",
     icons: [
-      '<svg width="24" height="24" viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentcolor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"><circle cx="8" cy="6" r="3.25"/><path d="M2.75 14.25c0-2.5 2-5 5.25-5s5.25 2.5 5.25 5"/></svg>',
-      '<svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="m6 12-1-1m13 1 1-1M3 18h18M5 21h14M7 18a5 5 0 0 1 10 0M12 3v7m0 0 3-3m-3 3L9 7" stroke="currentcolor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>'
+      '<span class="material-symbols-outlined" style="font-size:22px">group</span>',
+      '<span class="material-symbols-outlined" style="font-size:22px">sunny</span>'
     ],
     iconTexts: [
        "4 vuxna & 2 barn",
@@ -1870,8 +1965,8 @@ const sektion73Pins = [
     h: "Strandhus 27  ",
     p: "Bo precis vid havet i Apelviken, i ett av våra strandhus. Här bor du med stranden alldeles intill och med plats att vara på under hela dagen. Egen dörr, egen uteplats och ett boende som fungerar lika bra mellan strandpassen som på kvällen.",
     icons: [
-      '<svg width="24" height="24" viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentcolor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"><circle cx="8" cy="6" r="3.25"/><path d="M2.75 14.25c0-2.5 2-5 5.25-5s5.25 2.5 5.25 5"/></svg>',
-      '<svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="m6 12-1-1m13 1 1-1M3 18h18M5 21h14M7 18a5 5 0 0 1 10 0M12 3v7m0 0 3-3m-3 3L9 7" stroke="currentcolor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>'
+      '<span class="material-symbols-outlined" style="font-size:22px">group</span>',
+      '<span class="material-symbols-outlined" style="font-size:22px">sunny</span>'
     ],
     iconTexts: [
        "4 vuxna & 2 barn",
@@ -1897,8 +1992,8 @@ const sektion73Pins = [
     h: "Strandhus 28  ",
     p: "Bo precis vid havet i Apelviken, i ett av våra strandhus. Här bor du med stranden alldeles intill och med plats att vara på under hela dagen. Egen dörr, egen uteplats och ett boende som fungerar lika bra mellan strandpassen som på kvällen.",
     icons: [
-      '<svg width="24" height="24" viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentcolor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"><circle cx="8" cy="6" r="3.25"/><path d="M2.75 14.25c0-2.5 2-5 5.25-5s5.25 2.5 5.25 5"/></svg>',
-      '<svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="m6 12-1-1m13 1 1-1M3 18h18M5 21h14M7 18a5 5 0 0 1 10 0M12 3v7m0 0 3-3m-3 3L9 7" stroke="currentcolor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>'
+      '<span class="material-symbols-outlined" style="font-size:22px">group</span>',
+      '<span class="material-symbols-outlined" style="font-size:22px">sunny</span>'
     ],
     iconTexts: [
        "4 vuxna & 2 barn",
@@ -1924,8 +2019,8 @@ const sektion73Pins = [
     h: "Strandhus 29  ",
     p: "Bo precis vid havet i Apelviken, i ett av våra strandhus. Här bor du med stranden alldeles intill och med plats att vara på under hela dagen. Egen dörr, egen uteplats och ett boende som fungerar lika bra mellan strandpassen som på kvällen.",
     icons: [
-      '<svg width="24" height="24" viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentcolor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"><circle cx="8" cy="6" r="3.25"/><path d="M2.75 14.25c0-2.5 2-5 5.25-5s5.25 2.5 5.25 5"/></svg>',
-      '<svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="m6 12-1-1m13 1 1-1M3 18h18M5 21h14M7 18a5 5 0 0 1 10 0M12 3v7m0 0 3-3m-3 3L9 7" stroke="currentcolor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>'
+      '<span class="material-symbols-outlined" style="font-size:22px">group</span>',
+      '<span class="material-symbols-outlined" style="font-size:22px">sunny</span>'
     ],
     iconTexts: [
        "4 vuxna & 2 barn",
@@ -1951,8 +2046,8 @@ const sektion73Pins = [
     h: "Strandhus 30  ",
     p: "Bo precis vid havet i Apelviken, i ett av våra strandhus. Här bor du med stranden alldeles intill och med plats att vara på under hela dagen. Egen dörr, egen uteplats och ett boende som fungerar lika bra mellan strandpassen som på kvällen.",
     icons: [
-      '<svg width="24" height="24" viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentcolor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"><circle cx="8" cy="6" r="3.25"/><path d="M2.75 14.25c0-2.5 2-5 5.25-5s5.25 2.5 5.25 5"/></svg>',
-      '<svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="m6 12-1-1m13 1 1-1M3 18h18M5 21h14M7 18a5 5 0 0 1 10 0M12 3v7m0 0 3-3m-3 3L9 7" stroke="currentcolor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>'
+      '<span class="material-symbols-outlined" style="font-size:22px">group</span>',
+      '<span class="material-symbols-outlined" style="font-size:22px">sunny</span>'
     ],
     iconTexts: [
        "4 vuxna & 2 barn",
@@ -1972,20 +2067,20 @@ const sektion73Pins = [
   lngLat: [12.263694426079951, 57.08078208926068],
   filter: "",
   priority: "priority",
-  ui: { bubbleBg: "#A88867" },
+  ui: { bubbleBg: "#7A936B" },
   modal: {
     imgSrc: "https://res.cloudinary.com/dmgmoisae/image/upload/v1769800477/jpeg-optimizer_ApelvikStrand_0356_1_llpb1s.jpg",
     h: "Strandhus 31  ",
     p: "Bo precis vid havet i Apelviken, i ett av våra strandhus. Här bor du med stranden alldeles intill och med plats att vara på under hela dagen. Egen dörr, egen uteplats och ett boende som fungerar lika bra mellan strandpassen som på kvällen.",
     icons: [
-           '<svg width="24" height="24" viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentcolor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"><circle cx="8" cy="6" r="3.25"/><path d="M2.75 14.25c0-2.5 2-5 5.25-5s5.25 2.5 5.25 5"/></svg>',
-     '<svg width="800" height="800" viewBox="0 0 512 512" xmlns="http://www.w3.org/2000/svg"><title>ionicons-v5-n</title><path d="M457.74 170.1a30.3 30.3 0 0 0-11.16-2.1h-.4c-20.17.3-42.79 19.19-54.66 47.76-14.23 34.18-7.68 69.15 14.74 78.14a30.2 30.2 0 0 0 11.15 2.1c20.27 0 43.2-19 55.17-47.76 14.13-34.18 7.48-69.15-14.84-78.14ZM327.6 303.48C299.8 257.35 287.8 240 256 240s-43.9 17.46-71.7 63.48c-23.8 39.36-71.9 42.64-83.9 76.07a50.9 50.9 0 0 0-3.6 19.25c0 27.19 20.8 49.2 46.4 49.2 31.8 0 75.1-25.39 112.9-25.39S337 448 368.8 448c25.6 0 46.3-22 46.3-49.2a51 51 0 0 0-3.7-19.25c-12-33.55-60-36.71-83.8-76.07ZM192.51 196a26.5 26.5 0 0 0 4-.3c23.21-3.37 37.7-35.53 32.44-71.85C224 89.61 203.22 64 181.49 64a26.5 26.5 0 0 0-4 .3c-23.21 3.37-37.7 35.53-32.44 71.85C150 170.29 170.78 196 192.51 196Zm174.41-59.85c5.26-36.32-9.23-68.48-32.44-71.85a26.5 26.5 0 0 0-4-.3c-21.73 0-42.47 25.61-47.43 59.85-5.26 36.32 9.23 68.48 32.44 71.85a26.5 26.5 0 0 0 4 .3c21.73 0 42.51-25.71 47.43-59.85ZM105.77 293.9c22.39-9 28.93-44 14.72-78.14C108.53 187 85.62 168 65.38 168a30.2 30.2 0 0 0-11.15 2.1c-22.39 9-28.93 44-14.72 78.14C51.47 277 74.38 296 94.62 296a30.2 30.2 0 0 0 11.15-2.1Z" style="fill:none;stroke:currentcolor;stroke-miterlimit:10;stroke-width:32px"/></svg>',
-            '<svg fill="currentcolor" width="800" height="800" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><circle cx="9" cy="4" r="2"/><path d="M16.98 14.804A1 1 0 0 0 16 14h-4.133l-.429-3H16V9h-4.847l-.163-1.142A1 1 0 0 0 10 7H9a1.003 1.003 0 0 0-.99 1.142l.877 6.142A2.01 2.01 0 0 0 10.867 16h4.313l.839 4.196c.094.467.504.804.981.804h3v-2h-2.181z"/><path d="M12.51 17.5c-.739 1.476-2.25 2.5-4.01 2.5A4.505 4.505 0 0 1 4 15.5a4.5 4.5 0 0 1 2.817-4.167l-.289-2.025C3.905 10.145 2 12.604 2 15.5 2 19.084 4.916 22 8.5 22a6.5 6.5 0 0 0 5.545-3.126l-.274-1.374z"/></svg>'
+           '<span class="material-symbols-outlined" style="font-size:22px">group</span>',
+     '<span class="material-symbols-outlined" style="font-size:22px">pet_supplies</span>',
+            '<span class="material-symbols-outlined" style="font-size:22px">accessible</span>'
     ],
     iconTexts: [
       "4 vuxna & 2 barn",
       "Djurvänlig",
-      "Handikappsvänlig"
+      "Funktionsanpassade"
     ],
     images: ["", "", "", ""],
     cta1Text: "Vägbeskrivning",
@@ -2001,20 +2096,20 @@ const sektion73Pins = [
   lngLat: [12.263763823459442, 57.080838548618544],
   filter: "",
   priority: "priority",
-  ui: { bubbleBg: "#A88867" },
+  ui: { bubbleBg: "#7A936B" },
   modal: {
     imgSrc: "https://res.cloudinary.com/dmgmoisae/image/upload/v1769800477/jpeg-optimizer_ApelvikStrand_0356_1_llpb1s.jpg",
     h: "Strandhus 32  ",
     p: "Bo precis vid havet i Apelviken, i ett av våra strandhus. Här bor du med stranden alldeles intill och med plats att vara på under hela dagen. Egen dörr, egen uteplats och ett boende som fungerar lika bra mellan strandpassen som på kvällen.",
     icons: [
-           '<svg width="24" height="24" viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentcolor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"><circle cx="8" cy="6" r="3.25"/><path d="M2.75 14.25c0-2.5 2-5 5.25-5s5.25 2.5 5.25 5"/></svg>',
-     '<svg width="800" height="800" viewBox="0 0 512 512" xmlns="http://www.w3.org/2000/svg"><title>ionicons-v5-n</title><path d="M457.74 170.1a30.3 30.3 0 0 0-11.16-2.1h-.4c-20.17.3-42.79 19.19-54.66 47.76-14.23 34.18-7.68 69.15 14.74 78.14a30.2 30.2 0 0 0 11.15 2.1c20.27 0 43.2-19 55.17-47.76 14.13-34.18 7.48-69.15-14.84-78.14ZM327.6 303.48C299.8 257.35 287.8 240 256 240s-43.9 17.46-71.7 63.48c-23.8 39.36-71.9 42.64-83.9 76.07a50.9 50.9 0 0 0-3.6 19.25c0 27.19 20.8 49.2 46.4 49.2 31.8 0 75.1-25.39 112.9-25.39S337 448 368.8 448c25.6 0 46.3-22 46.3-49.2a51 51 0 0 0-3.7-19.25c-12-33.55-60-36.71-83.8-76.07ZM192.51 196a26.5 26.5 0 0 0 4-.3c23.21-3.37 37.7-35.53 32.44-71.85C224 89.61 203.22 64 181.49 64a26.5 26.5 0 0 0-4 .3c-23.21 3.37-37.7 35.53-32.44 71.85C150 170.29 170.78 196 192.51 196Zm174.41-59.85c5.26-36.32-9.23-68.48-32.44-71.85a26.5 26.5 0 0 0-4-.3c-21.73 0-42.47 25.61-47.43 59.85-5.26 36.32 9.23 68.48 32.44 71.85a26.5 26.5 0 0 0 4 .3c21.73 0 42.51-25.71 47.43-59.85ZM105.77 293.9c22.39-9 28.93-44 14.72-78.14C108.53 187 85.62 168 65.38 168a30.2 30.2 0 0 0-11.15 2.1c-22.39 9-28.93 44-14.72 78.14C51.47 277 74.38 296 94.62 296a30.2 30.2 0 0 0 11.15-2.1Z" style="fill:none;stroke:currentcolor;stroke-miterlimit:10;stroke-width:32px"/></svg>',
-            '<svg fill="currentcolor" width="800" height="800" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><circle cx="9" cy="4" r="2"/><path d="M16.98 14.804A1 1 0 0 0 16 14h-4.133l-.429-3H16V9h-4.847l-.163-1.142A1 1 0 0 0 10 7H9a1.003 1.003 0 0 0-.99 1.142l.877 6.142A2.01 2.01 0 0 0 10.867 16h4.313l.839 4.196c.094.467.504.804.981.804h3v-2h-2.181z"/><path d="M12.51 17.5c-.739 1.476-2.25 2.5-4.01 2.5A4.505 4.505 0 0 1 4 15.5a4.5 4.5 0 0 1 2.817-4.167l-.289-2.025C3.905 10.145 2 12.604 2 15.5 2 19.084 4.916 22 8.5 22a6.5 6.5 0 0 0 5.545-3.126l-.274-1.374z"/></svg>'
+           '<span class="material-symbols-outlined" style="font-size:22px">group</span>',
+     '<span class="material-symbols-outlined" style="font-size:22px">pet_supplies</span>',
+            '<span class="material-symbols-outlined" style="font-size:22px">accessible</span>'
     ],
     iconTexts: [
       "4 vuxna & 2 barn",
       "Djurvänlig",
-      "Handikappsvänlig"
+      "Funktionsanpassade"
     ],
     images: ["", "", "", ""],
     cta1Text: "Vägbeskrivning",
@@ -2251,7 +2346,8 @@ const sektion73Pins = [
   filter: "",
   priority: "priority",
   ui: { bubbleBg: "#303030", fontWeight: "700", fontSize: "15px", padding: "4px" },
-  modal: null
+  modal: null,
+  tooltip: { icon: "parking_sign", text: "Parkering" }
 },
 {
   id: "sektion73Pin_parking_02",
@@ -2261,7 +2357,8 @@ const sektion73Pins = [
   filter: "",
   priority: "priority",
   ui: { bubbleBg: "#303030", fontWeight: "700", fontSize: "15px", padding: "4px" },
-  modal: null
+  modal: null,
+  tooltip: { icon: "parking_sign", text: "Parkering" }
 },
 {
   id: "sektion73Pin_heat_01",
@@ -2270,8 +2367,9 @@ const sektion73Pins = [
   lngLat: [12.263460, 57.081340],
   filter: "",
   priority: "priority",
-  ui: { bubbleBg: "#303030", iconFont: true },
-  modal: null
+  ui: { bubbleBg: "#303030", iconFont: true, iconFill: true },
+  modal: null,
+  tooltip: { icon: "outdoor_grill", text: "Grillplats" }
 },
 {
   id: "sektion73Pin_playground_01",
@@ -2280,8 +2378,20 @@ const sektion73Pins = [
   lngLat: [12.264341, 57.081031],
   filter: "",
   priority: "priority",
-  ui: { bubbleBg: "#303030", iconFont: true },
-  modal: null
+  ui: { bubbleBg: "#303030", iconFont: true, iconFill: true },
+  modal: null,
+  tooltip: { icon: "playground_2", text: "Lekplats" }
+},
+{
+  id: "sektion73Pin_recycling_01",
+  label: "Återvinning",
+  labelText: "recycling",
+  lngLat: [12.26438, 57.081438],
+  filter: "",
+  priority: "priority",
+  ui: { bubbleBg: "#303030", iconFont: true, iconFill: true },
+  modal: null,
+  tooltip: { icon: "delete", text: "Soprum" }
 },
 {
   id: "sektion73Pin_reception_01",
@@ -2335,6 +2445,7 @@ function sektion73CreatePinEl(pin) {
     txt.style.fontSize = "26px";
     if (pin.ui.iconOnly !== false) wrap.classList.add("sektion73PinIconOnly");
     if (pin.ui.iconColor) txt.style.color = pin.ui.iconColor;
+    if (pin.ui.iconFill) txt.style.fontVariationSettings = "'FILL' 1";
   }
   if (pin.ui && pin.ui.fontSize) txt.style.fontSize = pin.ui.fontSize;
   if (pin.ui && pin.ui.fontWeight) txt.style.fontWeight = pin.ui.fontWeight;
@@ -2649,12 +2760,92 @@ function sektion73ZoomToPinThenOpenModal(pin) {
   });
 }
 
+/* --- Pin click-tooltip --- */
 
+let sektion73ActiveTooltipEl = null;
+let sektion73ActiveTooltipPinId = null;
+
+function sektion73ClosePinTooltip() {
+  if (sektion73ActiveTooltipEl) {
+    sektion73ActiveTooltipEl.classList.remove("is-visible");
+    const el = sektion73ActiveTooltipEl;
+    setTimeout(() => { el.remove(); }, 300);
+    sektion73ActiveTooltipEl = null;
+    sektion73ActiveTooltipPinId = null;
+  }
+}
+
+function sektion73ShowPinTooltip(pin, wrapEl) {
+  // Stäng ev. öppen tooltip
+  const wasOpen = sektion73ActiveTooltipPinId === pin.id;
+  sektion73ClosePinTooltip();
+  if (wasOpen) return; // toggle off
+
+  // Zooma in (samma logik som modal-pins)
+  const targetZoom = Math.min(sektion73PinZoom, sektion73MaxZoom);
+  const currentZoom = sektion73Map.getZoom();
+  const zoomDelta = Math.abs(targetZoom - currentZoom);
+  const zoomDeltaNorm = Math.min(1, zoomDelta / 4.2);
+  const dur = sektion73PinZoomDur + Math.round(zoomDeltaNorm * sektion73PinZoomDurExtraMax);
+  const ease = (t) => (t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2);
+
+  sektion73Map.easeTo({
+    center: pin.lngLat,
+    zoom: targetZoom,
+    pitch: sektion73Pitch,
+    bearing: sektion73Bearing,
+    duration: dur,
+    easing: ease
+  });
+
+  // Skapa tooltip-element
+  const tt = document.createElement("div");
+  tt.className = "sektion73PinClickTooltip";
+  tt.innerHTML =
+    '<span class="sektion73PinClickTooltipIcon material-symbols-outlined">' + (pin.tooltip.icon || "") + '</span>' +
+    '<span class="sektion73PinClickTooltipText">' + (pin.tooltip.text || "") + '</span>' +
+    '<button type="button" class="sektion73PinClickTooltipClose" aria-label="Stäng">' +
+      '<svg fill="currentcolor" height="12" viewBox="0 0 1000 1000" width="12" xmlns="http://www.w3.org/2000/svg"><path d="M159 204l55-54 659 659-55 55-659-660m709 5L205 877l-55-59 664-664"></path></svg>' +
+    '</button>';
+
+  // Close-knapp
+  tt.querySelector(".sektion73PinClickTooltipClose").addEventListener("click", (e) => {
+    e.stopPropagation();
+    sektion73ClosePinTooltip();
+  });
+
+  wrapEl.appendChild(tt);
+  sektion73ActiveTooltipEl = tt;
+  sektion73ActiveTooltipPinId = pin.id;
+
+  // Fade in efter zoom startar
+  requestAnimationFrame(() => {
+    requestAnimationFrame(() => {
+      tt.classList.add("is-visible");
+    });
+  });
+
+  // Stäng vid klick utanför
+  const closeOnClick = (e) => {
+    if (!wrapEl.contains(e.target)) {
+      sektion73ClosePinTooltip();
+      document.removeEventListener("click", closeOnClick, true);
+    }
+  };
+  setTimeout(() => {
+    document.addEventListener("click", closeOnClick, true);
+  }, 50);
+}
 
  function sektion73AddPin(pin) {
   const { wrap, btn } = sektion73CreatePinEl(pin);
 
   btn.addEventListener("click", () => {
+    // Tooltip-pin (ingen modal)
+    if (!pin.modal && pin.tooltip) {
+      sektion73ShowPinTooltip(pin, wrap);
+      return;
+    }
     if (!pin.modal) return;           // inget modal-data → bara markör
     // används av filter för att kunna stänga modal om pin filtreras bort
     window.__sektion73LastOpenedPinId = pin.id;
@@ -2752,7 +2943,7 @@ sektion73Map.once("load", function () {
         to: [12.247868, 57.087934],
         btnText: "Hitta receptionen",
         btnIcon: "route",
-        profile: "walking",
+        profile: "driving",
         line: {
           color: "#F0A500",
           casingColor: "rgba(240,165,0,.18)",
@@ -2761,7 +2952,7 @@ sektion73Map.once("load", function () {
           opacity: 1
         },
         driving: {
-          profile: "driving",
+          profile: "walking",
           line: {
             color: "#336aea",
             casingColor: "rgba(51,106,234,.14)",
@@ -2770,7 +2961,7 @@ sektion73Map.once("load", function () {
             opacity: 1,
             dasharray: [2, 3]
           },
-          divergeThresholdM: 50
+          divergeThresholdM: 4
         },
         anim: {
           durationMs: 5000,
@@ -2855,10 +3046,10 @@ sektion73Map.once("load", function () {
 
     function sektion73Lerp(a, b, t) { return a + (b - a) * t; }
 
-    // Find where two routes diverge (returns index on walkCoords)
+    // Find where two routes diverge (returns index on primary route coords)
     // Strategy: first find where routes become close (shared segment start),
     // then find where they stop being close (diverge point).
-    // This handles Mapbox snapping walking/driving to different start points.
+    // This handles Mapbox snapping driving/walking to different start points.
     function sektion73FindDivergeIndex(walkCoords, driveCoords, thresholdM) {
       const threshold = thresholdM || 30;
 
@@ -2899,7 +3090,7 @@ sektion73Map.once("load", function () {
       return walkCoords.length - 1; // never diverge
     }
 
-    // Extract driving-only segment (from diverge point to destination)
+    // Extract secondary route segment (from diverge point to destination)
     function sektion73GetDrivingBranch(driveCoords, divergePoint, thresholdM) {
       const threshold = thresholdM || 30;
       // Find the closest point on the driving route to the diverge point
@@ -2968,7 +3159,7 @@ sektion73Map.once("load", function () {
       // Driving branch setup
       const drv = routeCfg.driving;
       let drvBranch = null, drvDists = null, drvTotalDist = 0;
-      let drvDivergeDistOnWalk = 0; // distance along walking route where diverge happens
+      let drvDivergeDistOnWalk = 0; // distance along primary route where diverge happens
       const srcDrv = "sektion73_rsrc_drv_" + id;
       const layerDrvCasing = "sektion73_rcas_drv_" + id;
       const layerDrvLine = "sektion73_rlin_drv_" + id;
@@ -3037,7 +3228,7 @@ sektion73Map.once("load", function () {
           "driving branch length:", Math.round(drvTotalDist) + "m");
       }
 
-      // Head dot (walking)
+      // Head dot (primary / driving)
       const dot = sektion73CreateHeadDot();
       dot.setLngLat(coords[0]).addTo(sektion73Map);
 
@@ -3047,7 +3238,7 @@ sektion73Map.once("load", function () {
       /* --- Phase 1: Overview (fly out to see the whole route) --- */
       if (onPhaseChange) onPhaseChange("overview");
 
-      // Camera follows walking route only — driving doesn't affect bounds
+      // Camera follows primary (driving) route only — walking branch doesn't affect bounds
       const lngs = coords.map(c => c[0]);
       const lats = coords.map(c => c[1]);
       const bounds = [
@@ -3092,7 +3283,7 @@ sektion73Map.once("load", function () {
           const head = slice[slice.length - 1];
           dot.setLngLat(head);
 
-          // Driving branch: create layers + animate ONLY after walking passes diverge
+          // Walking branch: create layers + animate ONLY after driving passes diverge
           if (drvBranch && drvDists && dist >= drvDivergeDistOnWalk) {
             // Lazy-create source, layers, and dot the FIRST time we pass diverge
             if (!drvLayersCreated) {
@@ -3195,7 +3386,7 @@ sektion73Map.once("load", function () {
               setTimeout(() => { drvDot.remove(); }, 1200);
             }
 
-            // Draw complete driving branch
+            // Draw complete walking branch
             if (drvBranch && drvDists) {
               sektion73Map.getSource(srcDrv).setData({
                 type: "Feature",
@@ -3223,11 +3414,11 @@ sektion73Map.once("load", function () {
         el.innerHTML =
           '<div class="sektion73RouteLegendItem">' +
             '<span class="sektion73RouteLegendLine" style="background:#F0A500"></span>' +
-            '<span>Gångväg</span>' +
+            '<span>Bilväg</span>' +
           '</div>' +
           '<div class="sektion73RouteLegendItem">' +
             '<span class="sektion73RouteLegendLine sektion73RouteLegendDash"></span>' +
-            '<span>Bilväg</span>' +
+            '<span>Gångväg</span>' +
           '</div>';
         root.appendChild(el);
       }
@@ -3285,7 +3476,7 @@ sektion73Map.once("load", function () {
       style.textContent = `
         /* Pulsing head dot */
         .sektion73RouteHeadDot {
-          width: 14px; height: 14px;
+          width: 19px; height: 19px;
           border-radius: 50%;
           background: #F0A500;
           border: 2.5px solid #fff;
@@ -3484,13 +3675,13 @@ sektion73Map.once("load", function () {
           gap: 12px;
         }
         .sektion73RouteCardDot {
-          width: 15px; height: 15px;
+          width: 19px; height: 19px;
           border-radius: 50%;
           flex-shrink: 0;
           box-shadow: 0 0 0 3px rgba(0,0,0,.06);
         }
         .sektion73RouteCardDotDash {
-          width: 15px; height: 15px;
+          width: 19px; height: 19px;
           border-radius: 50%;
           flex-shrink: 0;
           border: 3px solid #336aea;
@@ -3532,8 +3723,8 @@ sektion73Map.once("load", function () {
           align-items: center;
           justify-content: center;
           gap: 3px;
-          padding: 11px 16px;
-          font: 600 13px/1 'Inter','Manrope',system-ui,sans-serif;
+          padding: 13px 16px;
+          font: 600 14px/1 'Inter','Manrope',system-ui,sans-serif;
           color: #1a1a1a;
           cursor: pointer;
           transition: background .15s ease;
@@ -3602,18 +3793,18 @@ sektion73Map.once("load", function () {
               '<div class="sektion73RouteCardRow">' +
                 '<span class="sektion73RouteCardDot" style="background:#F0A500"></span>' +
                 '<span class="sektion73RouteCardInfo">' +
-                  '<span class="sektion73RouteCardType">Gångväg</span>' +
-                  '<span class="sektion73RouteCardTime" id="sektion73WalkTime_' + route.id + '"></span>' +
-                '</span>' +
-                '<span class="sektion73RouteCardDist" id="sektion73WalkDist_' + route.id + '"></span>' +
-              '</div>' +
-              '<div class="sektion73RouteCardRow">' +
-                '<span class="sektion73RouteCardDotDash"></span>' +
-                '<span class="sektion73RouteCardInfo">' +
                   '<span class="sektion73RouteCardType">Bilväg</span>' +
                   '<span class="sektion73RouteCardTime" id="sektion73DriveTime_' + route.id + '"></span>' +
                 '</span>' +
                 '<span class="sektion73RouteCardDist" id="sektion73DriveDist_' + route.id + '"></span>' +
+              '</div>' +
+              '<div class="sektion73RouteCardRow">' +
+                '<span class="sektion73RouteCardDotDash"></span>' +
+                '<span class="sektion73RouteCardInfo">' +
+                  '<span class="sektion73RouteCardType">Gångväg</span>' +
+                  '<span class="sektion73RouteCardTime" id="sektion73WalkTime_' + route.id + '"></span>' +
+                '</span>' +
+                '<span class="sektion73RouteCardDist" id="sektion73WalkDist_' + route.id + '"></span>' +
               '</div>' +
             '</div>' +
             '<div class="sektion73RouteCardSep"></div>' +
@@ -3677,12 +3868,12 @@ sektion73Map.once("load", function () {
             btn.classList.remove("is-loading");
             btn.classList.add("is-active");
 
-            // Populate route card — time prominent, distance secondary
-            walkTimeEl.textContent = sektion73FormatTime(cachedRoute.durationS);
-            walkDistEl.textContent = sektion73FormatDist(cachedRoute.distanceM);
+            // Populate route card — primary is driving, secondary is walking
+            driveTimeEl.textContent = sektion73FormatTime(cachedRoute.durationS);
+            driveDistEl.textContent = sektion73FormatDist(cachedRoute.distanceM);
             if (cachedDriving) {
-              driveTimeEl.textContent = sektion73FormatTime(cachedDriving.durationS);
-              driveDistEl.textContent = sektion73FormatDist(cachedDriving.distanceM);
+              walkTimeEl.textContent = sektion73FormatTime(cachedDriving.durationS);
+              walkDistEl.textContent = sektion73FormatDist(cachedDriving.distanceM);
             }
 
             sektion73AnimateRoute(route, cachedRoute, (phase) => {
