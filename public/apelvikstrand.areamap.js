@@ -809,12 +809,12 @@ display: none !important;
 
     /* Numbered pins only — smaller size */
     .sektion73PinWrap:not(.sektion73PinIconOnly):not(.sektion73PinTooltip) .sektion73PinBtn {
-      width: 19px;
-      height: 19px;
+      width: 21px;
+      height: 21px;
     }
     .sektion73PinWrap:not(.sektion73PinIconOnly):not(.sektion73PinTooltip) .sektion73PinBubble {
-      width: 19px;
-      height: 19px;
+      width: 21px;
+      height: 21px;
     }
 
     /* Ikon-only pins (ingen bubbla, bara ikonen) */
