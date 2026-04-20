@@ -386,7 +386,10 @@ function sektion73InjectModalCSS() {
 #sektion73MapCanvas .sektion73PinWrap:active .sektion73PinBtn{
   transform: scale(1) !important;
 }
-/* Text-only pins: no hover/active transform */
+/* Text-only pins: no hover/active transform or transition */
+#sektion73MapCanvas .sektion73PinWrap.sektion73PinTextOnly .sektion73PinBtn{
+  transition: none !important;
+}
 #sektion73MapCanvas .sektion73PinWrap.sektion73PinTextOnly:hover .sektion73PinBtn{
   transform: rotate(var(--sektion73-pin-rotate, 68deg)) !important;
 }
