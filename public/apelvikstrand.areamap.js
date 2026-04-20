@@ -834,6 +834,23 @@ display: none !important;
       color: #222 !important;
     }
 
+    /* Text-only pins (no bubble, just text) */
+    .sektion73PinTextOnly .sektion73PinBtn {
+      background: none !important;
+      border: none !important;
+      box-shadow: none !important;
+      padding: 0 !important;
+      width: auto !important;
+      height: auto !important;
+      aspect-ratio: auto !important;
+      border-radius: 0 !important;
+    }
+    .sektion73PinTextOnly .sektion73PinText {
+      color: #000 !important;
+      font-size: 11px;
+      font-weight: 600;
+    }
+
     /* Tooltip-pin */
     .sektion73PinTooltip .sektion73PinBtn {
       border-radius: 8px;
@@ -2125,7 +2142,7 @@ const sektion73Pins = [
   lngLat: [12.263996, 57.08116],
   filter: "",
   priority: "priority",
-  ui: { bubbleBg: "#88706A" },
+  ui: { bubbleBg: "#88706A", textOnly: true },
   modal: {
     imgSrc: "https://res.cloudinary.com/dmgmoisae/image/upload/f_auto,q_auto,dpr_auto,c_limit,w_1440/v1771931935/jpeg-optimizer_IMG_1406_qo03oc.jpg",
     h: "Strandlägenhet 133",
@@ -2147,7 +2164,7 @@ const sektion73Pins = [
   lngLat: [12.264066, 57.081179],
   filter: "",
   priority: "priority",
-  ui: { bubbleBg: "#88706A" },
+  ui: { bubbleBg: "#88706A", textOnly: true },
   modal: {
     imgSrc: "https://res.cloudinary.com/dmgmoisae/image/upload/f_auto,q_auto,dpr_auto,c_limit,w_1440/v1771931935/jpeg-optimizer_IMG_1406_qo03oc.jpg",
     h: "Strandlägenhet 134",
@@ -2169,7 +2186,7 @@ const sektion73Pins = [
   lngLat: [12.264135, 57.081198],
   filter: "",
   priority: "priority",
-  ui: { bubbleBg: "#88706A" },
+  ui: { bubbleBg: "#88706A", textOnly: true },
   modal: {
     imgSrc: "https://res.cloudinary.com/dmgmoisae/image/upload/f_auto,q_auto,dpr_auto,c_limit,w_1440/v1771931935/jpeg-optimizer_IMG_1406_qo03oc.jpg",
     h: "Strandlägenhet 135",
@@ -2191,7 +2208,7 @@ const sektion73Pins = [
   lngLat: [12.264205, 57.081217],
   filter: "",
   priority: "priority",
-  ui: { bubbleBg: "#88706A" },
+  ui: { bubbleBg: "#88706A", textOnly: true },
   modal: {
     imgSrc: "https://res.cloudinary.com/dmgmoisae/image/upload/f_auto,q_auto,dpr_auto,c_limit,w_1440/v1771931935/jpeg-optimizer_IMG_1406_qo03oc.jpg",
     h: "Strandlägenhet 136",
@@ -2213,7 +2230,7 @@ const sektion73Pins = [
   lngLat: [12.264309, 57.081139],
   filter: "",
   priority: "priority",
-  ui: { bubbleBg: "#88706A" },
+  ui: { bubbleBg: "#88706A", textOnly: true },
   modal: {
     imgSrc: "https://res.cloudinary.com/dmgmoisae/image/upload/f_auto,q_auto,dpr_auto,c_limit,w_1440/v1771931935/jpeg-optimizer_IMG_1406_qo03oc.jpg",
     h: "Strandlägenhet 137",
@@ -2235,7 +2252,7 @@ const sektion73Pins = [
   lngLat: [12.264355, 57.081149],
   filter: "",
   priority: "priority",
-  ui: { bubbleBg: "#88706A" },
+  ui: { bubbleBg: "#88706A", textOnly: true },
   modal: {
     imgSrc: "https://res.cloudinary.com/dmgmoisae/image/upload/f_auto,q_auto,dpr_auto,c_limit,w_1440/v1771931935/jpeg-optimizer_IMG_1406_qo03oc.jpg",
     h: "Strandlägenhet 138",
@@ -2257,7 +2274,7 @@ const sektion73Pins = [
   lngLat: [12.264405, 57.081158],
   filter: "",
   priority: "priority",
-  ui: { bubbleBg: "#88706A" },
+  ui: { bubbleBg: "#88706A", textOnly: true },
   modal: {
     imgSrc: "https://res.cloudinary.com/dmgmoisae/image/upload/f_auto,q_auto,dpr_auto,c_limit,w_1440/v1771931935/jpeg-optimizer_IMG_1406_qo03oc.jpg",
     h: "Strandlägenhet 139",
@@ -2279,7 +2296,7 @@ const sektion73Pins = [
   lngLat: [12.264461, 57.081179],
   filter: "",
   priority: "priority",
-  ui: { bubbleBg: "#9E8CA0" },
+  ui: { bubbleBg: "#9E8CA0", textOnly: true },
   modal: {
     imgSrc: "https://res.cloudinary.com/dmgmoisae/image/upload/f_auto,q_auto,dpr_auto,c_limit,w_1440/v1771931935/jpeg-optimizer_IMG_1406_qo03oc.jpg",
     h: "Strandlägenhet 140",
@@ -2301,7 +2318,7 @@ const sektion73Pins = [
   lngLat: [12.264520, 57.081192],
   filter: "",
   priority: "priority",
-  ui: { bubbleBg: "#9E8CA0" },
+  ui: { bubbleBg: "#9E8CA0", textOnly: true },
   modal: {
     imgSrc: "https://res.cloudinary.com/dmgmoisae/image/upload/f_auto,q_auto,dpr_auto,c_limit,w_1440/v1771931935/jpeg-optimizer_IMG_1406_qo03oc.jpg",
     h: "Strandlägenhet 141",
@@ -2323,7 +2340,7 @@ const sektion73Pins = [
   lngLat: [12.264281, 57.080851],
   filter: "",
   priority: "priority",
-  ui: { bubbleBg: "#9E8CA0" },
+  ui: { bubbleBg: "#9E8CA0", textOnly: true },
   modal: {
     imgSrc: "https://res.cloudinary.com/dmgmoisae/image/upload/f_auto,q_auto,dpr_auto,c_limit,w_1440/v1771931935/jpeg-optimizer_IMG_1406_qo03oc.jpg",
     h: "Strandlägenhet 142",
@@ -2431,6 +2448,8 @@ function sektion73CreatePinEl(pin) {
 
   // Tooltip-stil
   if (pin.ui && pin.ui.tooltip) wrap.classList.add("sektion73PinTooltip");
+  // Text-only stil (ingen bubbla, bara text)
+  if (pin.ui && pin.ui.textOnly) wrap.classList.add("sektion73PinTextOnly");
 
   const btn = document.createElement("button");
   btn.type = "button";
