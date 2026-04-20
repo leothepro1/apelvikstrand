@@ -1239,14 +1239,14 @@ const sektion73Pins = [
 {
   id: "sektion73Pin_00001",
   label: "Pin 1",
-  labelText: "1",
+  labelText: "101",
   lngLat: [12.26197312396269, 57.08162693545353],
   filter: "",
   priority: "priority",
   ui: { bubbleBg: "#A88867" },
   modal: {
     imgSrc: "https://res.cloudinary.com/dmgmoisae/image/upload/v1769875471/strandhuse21q_hh50lb.png",
-    h: "Strandhus 1",
+    h: "Strandhus 101",
     p: "Bo precis vid havet i Apelviken, i ett av våra strandhus. Här bor du med stranden alldeles intill och med plats att vara på under hela dagen. Egen dörr, egen uteplats och ett boende som fungerar lika bra mellan strandpassen som på kvällen.",
     iconItems: [
       {
@@ -1268,14 +1268,14 @@ const sektion73Pins = [
 {
   id: "sektion73Pin_00002",
   label: "Pin 2",
-  labelText: "2",
+  labelText: "102",
   lngLat: [12.262082176983768, 57.081600917569034],
   filter: "",
   priority: "priority",
   ui: { bubbleBg: "#A88867" },
   modal: {
     imgSrc: "https://res.cloudinary.com/dmgmoisae/image/upload/v1769875471/strandhuse21q_hh50lb.png",
-    h: "Strandhus 2  ",
+    h: "Strandhus 102  ",
     p: "Bo precis vid havet i Apelviken, i ett av våra strandhus. Här bor du med stranden alldeles intill och med plats att vara på under hela dagen. Egen dörr, egen uteplats och ett boende som fungerar lika bra mellan strandpassen som på kvällen.",
     icons: [
       '<span class="material-symbols-outlined" style="font-size:22px">group</span>',
@@ -1295,14 +1295,14 @@ const sektion73Pins = [
 {
   id: "sektion73Pin_00003",
   label: "Pin 3",
-  labelText: "3",
+  labelText: "103",
   lngLat: [12.262318128134382, 57.08166527756367],
   filter: "",
   priority: "priority",
   ui: { bubbleBg: "#A88867" },
   modal: {
     imgSrc: "https://res.cloudinary.com/dmgmoisae/image/upload/v1769875471/strandhuse21q_hh50lb.png",
-    h: "Strandhus 3  ",
+    h: "Strandhus 103  ",
     p: "Bo precis vid havet i Apelviken, i ett av våra strandhus. Här bor du med stranden alldeles intill och med plats att vara på under hela dagen. Egen dörr, egen uteplats och ett boende som fungerar lika bra mellan strandpassen som på kvällen.",
     icons: [
       '<span class="material-symbols-outlined" style="font-size:22px">group</span>',
@@ -1322,14 +1322,14 @@ const sektion73Pins = [
 {
   id: "sektion73Pin_00004",
   label: "Pin 4",
-  labelText: "4",
+  labelText: "104",
   lngLat: [12.262428503055986, 57.081637688307154],
   filter: "",
   priority: "priority",
   ui: { bubbleBg: "#A88867" },
   modal: {
     imgSrc: "https://res.cloudinary.com/dmgmoisae/image/upload/v1769875471/strandhuse21q_hh50lb.png",
-    h: "Strandhus 4  ",
+    h: "Strandhus 104  ",
     p: "Bo precis vid havet i Apelviken, i ett av våra strandhus. Här bor du med stranden alldeles intill och med plats att vara på under hela dagen. Egen dörr, egen uteplats och ett boende som fungerar lika bra mellan strandpassen som på kvällen.",
     icons: [
       '<span class="material-symbols-outlined" style="font-size:22px">group</span>',
@@ -1349,14 +1349,14 @@ const sektion73Pins = [
 {
   id: "sektion73Pin_00005",
   label: "Pin 5",
-  labelText: "5",
+  labelText: "105",
   lngLat: [12.26266048860353, 57.08170492165513],
   filter: "",
   priority: "priority",
   ui: { bubbleBg: "#A88867" },
   modal: {
     imgSrc: "https://res.cloudinary.com/dmgmoisae/image/upload/v1769875471/strandhuse21q_hh50lb.png",
-    h: "Strandhus 5  ",
+    h: "Strandhus 105  ",
     p: "Bo precis vid havet i Apelviken, i ett av våra strandhus. Här bor du med stranden alldeles intill och med plats att vara på under hela dagen. Egen dörr, egen uteplats och ett boende som fungerar lika bra mellan strandpassen som på kvällen.",
     icons: [
       '<span class="material-symbols-outlined" style="font-size:22px">group</span>',
@@ -1376,14 +1376,14 @@ const sektion73Pins = [
 {
   id: "sektion73Pin_00006",
   label: "Pin 6",
-  labelText: "6",
+  labelText: "106",
   lngLat: [12.262768219804656, 57.08167948749295],
   filter: "",
   priority: "priority",
   ui: { bubbleBg: "#A88867" },
   modal: {
     imgSrc: "https://res.cloudinary.com/dmgmoisae/image/upload/v1769875471/strandhuse21q_hh50lb.png",
-    h: "Strandhus 6  ",
+    h: "Strandhus 106  ",
     p: "Bo precis vid havet i Apelviken, i ett av våra strandhus. Här bor du med stranden alldeles intill och med plats att vara på under hela dagen. Egen dörr, egen uteplats och ett boende som fungerar lika bra mellan strandpassen som på kvällen.",
     icons: [
       '<span class="material-symbols-outlined" style="font-size:22px">group</span>',
@@ -1403,14 +1403,14 @@ const sektion73Pins = [
 {
   id: "sektion73Pin_00007",
   label: "Pin 7",
-  labelText: "7",
+  labelText: "107",
   lngLat: [12.26300152723178, 57.081747439114935],
   filter: "",
   priority: "priority",
   ui: { bubbleBg: "#7A936B" },
   modal: {
     imgSrc: "https://res.cloudinary.com/dmgmoisae/image/upload/v1769875471/strandhuse21q_hh50lb.png",
-    h: "Strandhus 7  ",
+    h: "Strandhus 107  ",
     p: "Bo precis vid havet i Apelviken, i ett av våra strandhus. Här bor du med stranden alldeles intill och med plats att vara på under hela dagen. Egen dörr, egen uteplats och ett boende som fungerar lika bra mellan strandpassen som på kvällen.",
     icons: [
       '<span class="material-symbols-outlined" style="font-size:22px">group</span>',
@@ -1432,14 +1432,14 @@ const sektion73Pins = [
 {
   id: "sektion73Pin_00008",
   label: "Pin 9",
-  labelText: "8",
+  labelText: "108",
   lngLat: [12.263106614727718, 57.081720568270754],
   filter: "",
   priority: "priority",
   ui: { bubbleBg: "#7A936B" },
   modal: {
     imgSrc: "https://res.cloudinary.com/dmgmoisae/image/upload/v1769875471/strandhuse21q_hh50lb.png",
-    h: "Strandhus 8  ",
+    h: "Strandhus 108  ",
     p: "Bo precis vid havet i Apelviken, i ett av våra strandhus. Här bor du med stranden alldeles intill och med plats att vara på under hela dagen. Egen dörr, egen uteplats och ett boende som fungerar lika bra mellan strandpassen som på kvällen.",
     icons: [
            '<span class="material-symbols-outlined" style="font-size:22px">group</span>',
@@ -1461,14 +1461,14 @@ const sektion73Pins = [
 {
   id: "sektion73Pin_00009",
   label: "Pin 9",
-  labelText: "9",
+  labelText: "109",
   lngLat: [12.262194869335389, 57.08127715798125],
   filter: "",
   priority: "priority",
   ui: { bubbleBg: "#446D74" },
   modal: {
     imgSrc: "https://res.cloudinary.com/dmgmoisae/image/upload/v1769875471/strandhuse21q_hh50lb.png",
-    h: "Strandhus 9  ",
+    h: "Strandhus 109  ",
     p: "Bo precis vid havet i Apelviken, i ett av våra strandhus. Här bor du med stranden alldeles intill och med plats att vara på under hela dagen. Egen dörr, egen uteplats och ett boende som fungerar lika bra mellan strandpassen som på kvällen.",
     icons: [
       '<span class="material-symbols-outlined" style="font-size:22px">group</span>',
@@ -1488,14 +1488,14 @@ const sektion73Pins = [
 {
   id: "sektion73Pin_00010",
   label: "Pin 11",
-  labelText: "10",
+  labelText: "110",
   lngLat: [12.262270876009751, 57.081331461506295],
   filter: "",
   priority: "priority",
   ui: { bubbleBg: "#446D74" },
   modal: {
     imgSrc: "https://res.cloudinary.com/dmgmoisae/image/upload/v1769875471/strandhuse21q_hh50lb.png",
-    h: "Strandhus 10  ",
+    h: "Strandhus 110  ",
     p: "Bo precis vid havet i Apelviken, i ett av våra strandhus. Här bor du med stranden alldeles intill och med plats att vara på under hela dagen. Egen dörr, egen uteplats och ett boende som fungerar lika bra mellan strandpassen som på kvällen.",
     icons: [
       '<span class="material-symbols-outlined" style="font-size:22px">group</span>',
@@ -1515,14 +1515,14 @@ const sektion73Pins = [
 {
   id: "sektion73Pin_00011",
   label: "Pin 12",
-  labelText: "11",
+  labelText: "111",
   lngLat: [12.262477746343166, 57.08131249231994],
   filter: "",
   priority: "priority",
   ui: { bubbleBg: "#446D74" },
   modal: {
     imgSrc: "https://res.cloudinary.com/dmgmoisae/image/upload/v1769800477/jpeg-optimizer_ApelvikStrand_0356_1_llpb1s.jpg",
-    h: "Strandhus 11  ",
+    h: "Strandhus 111  ",
     p: "Bo precis vid havet i Apelviken, i ett av våra strandhus. Här bor du med stranden alldeles intill och med plats att vara på under hela dagen. Egen dörr, egen uteplats och ett boende som fungerar lika bra mellan strandpassen som på kvällen.",
     icons: [
       '<span class="material-symbols-outlined" style="font-size:22px">group</span>',
@@ -1542,14 +1542,14 @@ const sektion73Pins = [
 {
   id: "sektion73Pin_00012",
   label: "Pin 13",
-  labelText: "12",
+  labelText: "112",
   lngLat: [12.262555074877127, 57.081368232510044],
   filter: "",
   priority: "priority",
   ui: { bubbleBg: "#446D74" },
   modal: {
     imgSrc: "https://res.cloudinary.com/dmgmoisae/image/upload/v1769800477/jpeg-optimizer_ApelvikStrand_0356_1_llpb1s.jpg",
-    h: "Strandhus 12  ",
+    h: "Strandhus 112  ",
     p: "Bo precis vid havet i Apelviken, i ett av våra strandhus. Här bor du med stranden alldeles intill och med plats att vara på under hela dagen. Egen dörr, egen uteplats och ett boende som fungerar lika bra mellan strandpassen som på kvällen.",
     icons: [
       '<span class="material-symbols-outlined" style="font-size:22px">group</span>',
@@ -1569,14 +1569,14 @@ const sektion73Pins = [
 {
   id: "sektion73Pin_00013",
   label: "Pin 14",
-  labelText: "13",
+  labelText: "113",
   lngLat: [12.262769876313968, 57.08134782663265],
   filter: "",
   priority: "priority",
   ui: { bubbleBg: "#446D74" },
   modal: {
     imgSrc: "https://res.cloudinary.com/dmgmoisae/image/upload/v1769800477/jpeg-optimizer_ApelvikStrand_0356_1_llpb1s.jpg",
-    h: "Strandhus 13  ",
+    h: "Strandhus 113  ",
     p: "Bo precis vid havet i Apelviken, i ett av våra strandhus. Här bor du med stranden alldeles intill och med plats att vara på under hela dagen. Egen dörr, egen uteplats och ett boende som fungerar lika bra mellan strandpassen som på kvällen.",
     icons: [
       '<span class="material-symbols-outlined" style="font-size:22px">group</span>',
@@ -1596,14 +1596,14 @@ const sektion73Pins = [
 {
   id: "sektion73Pin_00014",
   label: "Pin 15",
-  labelText: "14",
+  labelText: "114",
   lngLat: [12.262845536788006, 57.081402712344186],
   filter: "",
   priority: "priority",
   ui: { bubbleBg: "#446D74" },
   modal: {
     imgSrc: "https://res.cloudinary.com/dmgmoisae/image/upload/v1769800477/jpeg-optimizer_ApelvikStrand_0356_1_llpb1s.jpg",
-    h: "Strandhus 14  ",
+    h: "Strandhus 114  ",
     p: "Bo precis vid havet i Apelviken, i ett av våra strandhus. Här bor du med stranden alldeles intill och med plats att vara på under hela dagen. Egen dörr, egen uteplats och ett boende som fungerar lika bra mellan strandpassen som på kvällen.",
     icons: [
       '<span class="material-symbols-outlined" style="font-size:22px">group</span>',
@@ -1623,14 +1623,14 @@ const sektion73Pins = [
 {
   id: "sektion73Pin_00015",
   label: "Pin 16",
-  labelText: "15",
+  labelText: "115",
   lngLat: [12.263068269369796, 57.08138589827087],
   filter: "",
   priority: "priority",
   ui: { bubbleBg: "#7A936B" },
   modal: {
     imgSrc: "https://res.cloudinary.com/dmgmoisae/image/upload/v1769800477/jpeg-optimizer_ApelvikStrand_0356_1_llpb1s.jpg",
-    h: "Strandhus 15  ",
+    h: "Strandhus 115  ",
     p: "Bo precis vid havet i Apelviken, i ett av våra strandhus. Här bor du med stranden alldeles intill och med plats att vara på under hela dagen. Egen dörr, egen uteplats och ett boende som fungerar lika bra mellan strandpassen som på kvällen.",
     icons: [
            '<span class="material-symbols-outlined" style="font-size:22px">group</span>',
@@ -1652,14 +1652,14 @@ const sektion73Pins = [
 {
   id: "sektion73Pin_00016",
   label: "Pin 17",
-  labelText: "16",
+  labelText: "116",
   lngLat: [12.263144276036485, 57.08143589149515],
   filter: "",
   priority: "priority",
   ui: { bubbleBg: "#7A936B" },
   modal: {
     imgSrc: "https://res.cloudinary.com/dmgmoisae/image/upload/v1769800477/jpeg-optimizer_ApelvikStrand_0356_1_llpb1s.jpg",
-    h: "Strandhus 16  ",
+    h: "Strandhus 116  ",
     p: "Bo precis vid havet i Apelviken, i ett av våra strandhus. Här bor du med stranden alldeles intill och med plats att vara på under hela dagen. Egen dörr, egen uteplats och ett boende som fungerar lika bra mellan strandpassen som på kvällen.",
     icons: [
            '<span class="material-symbols-outlined" style="font-size:22px">group</span>',
@@ -1681,14 +1681,14 @@ const sektion73Pins = [
 {
   id: "sektion73Pin_00017",
   label: "Pin 18",
-  labelText: "17",
+  labelText: "117",
   lngLat: [12.262463879109788, 57.08101975420533],
   filter: "",
   priority: "priority",
   ui: { bubbleBg: "#A88867" },
   modal: {
     imgSrc: "https://res.cloudinary.com/dmgmoisae/image/upload/v1769800477/jpeg-optimizer_ApelvikStrand_0356_1_llpb1s.jpg",
-    h: "Strandhus 17  ",
+    h: "Strandhus 117  ",
     p: "Bo precis vid havet i Apelviken, i ett av våra strandhus. Här bor du med stranden alldeles intill och med plats att vara på under hela dagen. Egen dörr, egen uteplats och ett boende som fungerar lika bra mellan strandpassen som på kvällen.",
     icons: [
       '<span class="material-symbols-outlined" style="font-size:22px">group</span>',
@@ -1708,14 +1708,14 @@ const sektion73Pins = [
 {
   id: "sektion73Pin_00018",
   label: "Pin 19",
-  labelText: "18",
+  labelText: "118",
   lngLat: [12.262570288438837, 57.08098569917749],
   filter: "",
   priority: "priority",
   ui: { bubbleBg: "#A88867" },
   modal: {
     imgSrc: "https://res.cloudinary.com/dmgmoisae/image/upload/v1769800477/jpeg-optimizer_ApelvikStrand_0356_1_llpb1s.jpg",
-    h: "Strandhus 18  ",
+    h: "Strandhus 118  ",
     p: "Bo precis vid havet i Apelviken, i ett av våra strandhus. Här bor du med stranden alldeles intill och med plats att vara på under hela dagen. Egen dörr, egen uteplats och ett boende som fungerar lika bra mellan strandpassen som på kvällen.",
     icons: [
       '<span class="material-symbols-outlined" style="font-size:22px">group</span>',
@@ -1735,14 +1735,14 @@ const sektion73Pins = [
 {
   id: "sektion73Pin_00019",
   label: "Pin 20",
-  labelText: "19",
+  labelText: "119",
   lngLat: [12.262750721669505, 57.08105293370133],
   filter: "",
   priority: "priority",
   ui: { bubbleBg: "#A88867" },
   modal: {
     imgSrc: "https://res.cloudinary.com/dmgmoisae/image/upload/v1769800477/jpeg-optimizer_ApelvikStrand_0356_1_llpb1s.jpg",
-    h: "Strandhus 19  ",
+    h: "Strandhus 119  ",
     p: "Bo precis vid havet i Apelviken, i ett av våra strandhus. Här bor du med stranden alldeles intill och med plats att vara på under hela dagen. Egen dörr, egen uteplats och ett boende som fungerar lika bra mellan strandpassen som på kvällen.",
     icons: [
       '<span class="material-symbols-outlined" style="font-size:22px">group</span>',
@@ -1762,14 +1762,14 @@ const sektion73Pins = [
 {
   id: "sektion73Pin_00020",
   label: "Pin 21",
-  labelText: "20",
+  labelText: "120",
   lngLat: [12.262854487289673, 57.08102103379619],
   filter: "",
   priority: "priority",
   ui: { bubbleBg: "#A88867" },
   modal: {
     imgSrc: "https://res.cloudinary.com/dmgmoisae/image/upload/v1769800477/jpeg-optimizer_ApelvikStrand_0356_1_llpb1s.jpg",
-    h: "Strandhus 20  ",
+    h: "Strandhus 120  ",
     p: "Bo precis vid havet i Apelviken, i ett av våra strandhus. Här bor du med stranden alldeles intill och med plats att vara på under hela dagen. Egen dörr, egen uteplats och ett boende som fungerar lika bra mellan strandpassen som på kvällen.",
     icons: [
       '<span class="material-symbols-outlined" style="font-size:22px">group</span>',
@@ -1789,14 +1789,14 @@ const sektion73Pins = [
 {
   id: "sektion73Pin_00021",
   label: "Pin 22",
-  labelText: "21",
+  labelText: "121",
   lngLat: [12.263044173496866, 57.08108754989141],
   filter: "",
   priority: "priority",
   ui: { bubbleBg: "#A88867" },
   modal: {
     imgSrc: "https://res.cloudinary.com/dmgmoisae/image/upload/v1769800477/jpeg-optimizer_ApelvikStrand_0356_1_llpb1s.jpg",
-    h: "Strandhus 21  ",
+    h: "Strandhus 121  ",
     p: "Bo precis vid havet i Apelviken, i ett av våra strandhus. Här bor du med stranden alldeles intill och med plats att vara på under hela dagen. Egen dörr, egen uteplats och ett boende som fungerar lika bra mellan strandpassen som på kvällen.",
     icons: [
       '<span class="material-symbols-outlined" style="font-size:22px">group</span>',
@@ -1816,14 +1816,14 @@ const sektion73Pins = [
 {
   id: "sektion73Pin_00022",
   label: "Pin 23",
-  labelText: "22",
+  labelText: "122",
   lngLat: [12.263142651741532, 57.08105636837058],
   filter: "",
   priority: "priority",
   ui: { bubbleBg: "#A88867" },
   modal: {
     imgSrc: "https://res.cloudinary.com/dmgmoisae/image/upload/v1769800477/jpeg-optimizer_ApelvikStrand_0356_1_llpb1s.jpg",
-    h: "Strandhus 22  ",
+    h: "Strandhus 122  ",
     p: "Bo precis vid havet i Apelviken, i ett av våra strandhus. Här bor du med stranden alldeles intill och med plats att vara på under hela dagen. Egen dörr, egen uteplats och ett boende som fungerar lika bra mellan strandpassen som på kvällen.",
     icons: [
       '<span class="material-symbols-outlined" style="font-size:22px">group</span>',
@@ -1843,14 +1843,14 @@ const sektion73Pins = [
 {
   id: "sektion73Pin_00023",
   label: "Pin 24",
-  labelText: "23",
+  labelText: "123",
   lngLat: [12.263333659783598, 57.08112001095327],
   filter: "",
   priority: "priority",
   ui: { bubbleBg: "#7A936B" },
   modal: {
     imgSrc: "https://res.cloudinary.com/dmgmoisae/image/upload/v1769800477/jpeg-optimizer_ApelvikStrand_0356_1_llpb1s.jpg",
-    h: "Strandhus 23  ",
+    h: "Strandhus 123  ",
     p: "Bo precis vid havet i Apelviken, i ett av våra strandhus. Här bor du med stranden alldeles intill och med plats att vara på under hela dagen. Egen dörr, egen uteplats och ett boende som fungerar lika bra mellan strandpassen som på kvällen.",
     icons: [
            '<span class="material-symbols-outlined" style="font-size:22px">group</span>',
@@ -1872,14 +1872,14 @@ const sektion73Pins = [
 {
   id: "sektion73Pin_00024",
   label: "Pin 25",
-  labelText: "24",
+  labelText: "124",
   lngLat: [12.263433459837302, 57.081090266196355],
   filter: "",
   priority: "priority",
   ui: { bubbleBg: "#7A936B" },
   modal: {
     imgSrc: "https://res.cloudinary.com/dmgmoisae/image/upload/v1769800477/jpeg-optimizer_ApelvikStrand_0356_1_llpb1s.jpg",
-    h: "Strandhus 24  ",
+    h: "Strandhus 124  ",
     p: "Bo precis vid havet i Apelviken, i ett av våra strandhus. Här bor du med stranden alldeles intill och med plats att vara på under hela dagen. Egen dörr, egen uteplats och ett boende som fungerar lika bra mellan strandpassen som på kvällen.",
     icons: [
            '<span class="material-symbols-outlined" style="font-size:22px">group</span>',
@@ -1901,14 +1901,14 @@ const sektion73Pins = [
 {
   id: "sektion73Pin_00025",
   label: "Pin 26",
-  labelText: "25",
+  labelText: "125",
   lngLat: [12.262675279675818, 57.080665309036135],
   filter: "",
   priority: "priority",
   ui: { bubbleBg: "#446D74" },
   modal: {
     imgSrc: "https://res.cloudinary.com/dmgmoisae/image/upload/v1769800477/jpeg-optimizer_ApelvikStrand_0356_1_llpb1s.jpg",
-    h: "Strandhus 25  ",
+    h: "Strandhus 125  ",
     p: "Bo precis vid havet i Apelviken, i ett av våra strandhus. Här bor du med stranden alldeles intill och med plats att vara på under hela dagen. Egen dörr, egen uteplats och ett boende som fungerar lika bra mellan strandpassen som på kvällen.",
     icons: [
       '<span class="material-symbols-outlined" style="font-size:22px">group</span>',
@@ -1928,14 +1928,14 @@ const sektion73Pins = [
 {
   id: "sektion73Pin_00026",
   label: "Pin 27",
-  labelText: "26",
+  labelText: "126",
   lngLat: [12.262745995033498, 57.08071961344976],
   filter: "",
   priority: "priority",
   ui: { bubbleBg: "#446D74" },
   modal: {
     imgSrc: "https://res.cloudinary.com/dmgmoisae/image/upload/v1769800477/jpeg-optimizer_ApelvikStrand_0356_1_llpb1s.jpg",
-    h: "Strandhus 26  ",
+    h: "Strandhus 126  ",
     p: "Bo precis vid havet i Apelviken, i ett av våra strandhus. Här bor du med stranden alldeles intill och med plats att vara på under hela dagen. Egen dörr, egen uteplats och ett boende som fungerar lika bra mellan strandpassen som på kvällen.",
     icons: [
       '<span class="material-symbols-outlined" style="font-size:22px">group</span>',
@@ -1955,14 +1955,14 @@ const sektion73Pins = [
 {
   id: "sektion73Pin_00027",
   label: "Pin 28",
-  labelText: "27",
+  labelText: "127",
   lngLat: [12.26301367068126, 57.08070064395787],
   filter: "",
   priority: "priority",
   ui: { bubbleBg: "#446D74" },
   modal: {
     imgSrc: "https://res.cloudinary.com/dmgmoisae/image/upload/v1769800477/jpeg-optimizer_ApelvikStrand_0356_1_llpb1s.jpg",
-    h: "Strandhus 27  ",
+    h: "Strandhus 127  ",
     p: "Bo precis vid havet i Apelviken, i ett av våra strandhus. Här bor du med stranden alldeles intill och med plats att vara på under hela dagen. Egen dörr, egen uteplats och ett boende som fungerar lika bra mellan strandpassen som på kvällen.",
     icons: [
       '<span class="material-symbols-outlined" style="font-size:22px">group</span>',
@@ -1982,14 +1982,14 @@ const sektion73Pins = [
 {
   id: "sektion73Pin_00028",
   label: "Pin 29",
-  labelText: "28",
+  labelText: "128",
   lngLat: [12.263080424389472, 57.08075782180549],
   filter: "",
   priority: "priority",
   ui: { bubbleBg: "#446D74" },
   modal: {
     imgSrc: "https://res.cloudinary.com/dmgmoisae/image/upload/v1769800477/jpeg-optimizer_ApelvikStrand_0356_1_llpb1s.jpg",
-    h: "Strandhus 28  ",
+    h: "Strandhus 128  ",
     p: "Bo precis vid havet i Apelviken, i ett av våra strandhus. Här bor du med stranden alldeles intill och med plats att vara på under hela dagen. Egen dörr, egen uteplats och ett boende som fungerar lika bra mellan strandpassen som på kvällen.",
     icons: [
       '<span class="material-symbols-outlined" style="font-size:22px">group</span>',
@@ -2009,14 +2009,14 @@ const sektion73Pins = [
 {
   id: "sektion73Pin_00029",
   label: "Pin 30",
-  labelText: "29",
+  labelText: "129",
   lngLat: [12.263353387445193, 57.080743162558974],
   filter: "",
   priority: "priority",
   ui: { bubbleBg: "#446D74" },
   modal: {
     imgSrc: "https://res.cloudinary.com/dmgmoisae/image/upload/v1769800477/jpeg-optimizer_ApelvikStrand_0356_1_llpb1s.jpg",
-    h: "Strandhus 29  ",
+    h: "Strandhus 129  ",
     p: "Bo precis vid havet i Apelviken, i ett av våra strandhus. Här bor du med stranden alldeles intill och med plats att vara på under hela dagen. Egen dörr, egen uteplats och ett boende som fungerar lika bra mellan strandpassen som på kvällen.",
     icons: [
       '<span class="material-symbols-outlined" style="font-size:22px">group</span>',
@@ -2036,14 +2036,14 @@ const sektion73Pins = [
 {
   id: "sektion73Pin_00030",
   label: "Pin 31",
-  labelText: "30",
+  labelText: "130",
   lngLat: [12.263421462996916, 57.08080105871713],
   filter: "",
   priority: "priority",
   ui: { bubbleBg: "#446D74" },
   modal: {
     imgSrc: "https://res.cloudinary.com/dmgmoisae/image/upload/v1769800477/jpeg-optimizer_ApelvikStrand_0356_1_llpb1s.jpg",
-    h: "Strandhus 30  ",
+    h: "Strandhus 130  ",
     p: "Bo precis vid havet i Apelviken, i ett av våra strandhus. Här bor du med stranden alldeles intill och med plats att vara på under hela dagen. Egen dörr, egen uteplats och ett boende som fungerar lika bra mellan strandpassen som på kvällen.",
     icons: [
       '<span class="material-symbols-outlined" style="font-size:22px">group</span>',
@@ -2063,14 +2063,14 @@ const sektion73Pins = [
 {
   id: "sektion73Pin_00031",
   label: "Pin 32",
-  labelText: "31",
+  labelText: "131",
   lngLat: [12.263694426079951, 57.08078208926068],
   filter: "",
   priority: "priority",
   ui: { bubbleBg: "#7A936B" },
   modal: {
     imgSrc: "https://res.cloudinary.com/dmgmoisae/image/upload/v1769800477/jpeg-optimizer_ApelvikStrand_0356_1_llpb1s.jpg",
-    h: "Strandhus 31  ",
+    h: "Strandhus 131  ",
     p: "Bo precis vid havet i Apelviken, i ett av våra strandhus. Här bor du med stranden alldeles intill och med plats att vara på under hela dagen. Egen dörr, egen uteplats och ett boende som fungerar lika bra mellan strandpassen som på kvällen.",
     icons: [
            '<span class="material-symbols-outlined" style="font-size:22px">group</span>',
@@ -2092,14 +2092,14 @@ const sektion73Pins = [
 {
   id: "sektion73Pin_00032",
   label: "Pin 33",
-  labelText: "32",
+  labelText: "132",
   lngLat: [12.263763823459442, 57.080838548618544],
   filter: "",
   priority: "priority",
   ui: { bubbleBg: "#7A936B" },
   modal: {
     imgSrc: "https://res.cloudinary.com/dmgmoisae/image/upload/v1769800477/jpeg-optimizer_ApelvikStrand_0356_1_llpb1s.jpg",
-    h: "Strandhus 32  ",
+    h: "Strandhus 132  ",
     p: "Bo precis vid havet i Apelviken, i ett av våra strandhus. Här bor du med stranden alldeles intill och med plats att vara på under hela dagen. Egen dörr, egen uteplats och ett boende som fungerar lika bra mellan strandpassen som på kvällen.",
     icons: [
            '<span class="material-symbols-outlined" style="font-size:22px">group</span>',
@@ -2121,14 +2121,14 @@ const sektion73Pins = [
 {
   id: "sektion73Pin_00033",
   label: "Pin 33",
-  labelText: "1",
+  labelText: "133",
   lngLat: [12.263996, 57.08116],
   filter: "",
   priority: "priority",
   ui: { bubbleBg: "#88706A" },
   modal: {
     imgSrc: "https://res.cloudinary.com/dmgmoisae/image/upload/f_auto,q_auto,dpr_auto,c_limit,w_1440/v1771931935/jpeg-optimizer_IMG_1406_qo03oc.jpg",
-    h: "Strandlägenhet 1",
+    h: "Strandlägenhet 133",
     p: "Varje strandlägenhet är 21 m² och utformad som compact living, där allt ryms på en sammanhållen yta. Här finns kombinerat vardagsrum, sovalkov och kokvrå samt eget badrum. Planlösningen är gjord för att fungera under dagen – inte bara för natten. Du har egen dörr och egen uteplats, med stranden på nära avstånd. Ett boende att använda mellan strandbesök, måltider och vila.",
     noReadMore: true,
     icons: [],
@@ -2143,14 +2143,14 @@ const sektion73Pins = [
 {
   id: "sektion73Pin_00034",
   label: "Pin 34",
-  labelText: "2",
+  labelText: "134",
   lngLat: [12.264066, 57.081179],
   filter: "",
   priority: "priority",
   ui: { bubbleBg: "#88706A" },
   modal: {
     imgSrc: "https://res.cloudinary.com/dmgmoisae/image/upload/f_auto,q_auto,dpr_auto,c_limit,w_1440/v1771931935/jpeg-optimizer_IMG_1406_qo03oc.jpg",
-    h: "Strandlägenhet 2",
+    h: "Strandlägenhet 134",
     p: "Varje strandlägenhet är 21 m² och utformad som compact living, där allt ryms på en sammanhållen yta. Här finns kombinerat vardagsrum, sovalkov och kokvrå samt eget badrum. Planlösningen är gjord för att fungera under dagen – inte bara för natten. Du har egen dörr och egen uteplats, med stranden på nära avstånd. Ett boende att använda mellan strandbesök, måltider och vila.",
     noReadMore: true,
     icons: [],
@@ -2165,14 +2165,14 @@ const sektion73Pins = [
 {
   id: "sektion73Pin_00035",
   label: "Pin 35",
-  labelText: "3",
+  labelText: "135",
   lngLat: [12.264135, 57.081198],
   filter: "",
   priority: "priority",
   ui: { bubbleBg: "#88706A" },
   modal: {
     imgSrc: "https://res.cloudinary.com/dmgmoisae/image/upload/f_auto,q_auto,dpr_auto,c_limit,w_1440/v1771931935/jpeg-optimizer_IMG_1406_qo03oc.jpg",
-    h: "Strandlägenhet 3",
+    h: "Strandlägenhet 135",
     p: "Varje strandlägenhet är 21 m² och utformad som compact living, där allt ryms på en sammanhållen yta. Här finns kombinerat vardagsrum, sovalkov och kokvrå samt eget badrum. Planlösningen är gjord för att fungera under dagen – inte bara för natten. Du har egen dörr och egen uteplats, med stranden på nära avstånd. Ett boende att använda mellan strandbesök, måltider och vila.",
     noReadMore: true,
     icons: [],
@@ -2187,14 +2187,14 @@ const sektion73Pins = [
 {
   id: "sektion73Pin_00036",
   label: "Pin 36",
-  labelText: "4",
+  labelText: "136",
   lngLat: [12.264205, 57.081217],
   filter: "",
   priority: "priority",
   ui: { bubbleBg: "#88706A" },
   modal: {
     imgSrc: "https://res.cloudinary.com/dmgmoisae/image/upload/f_auto,q_auto,dpr_auto,c_limit,w_1440/v1771931935/jpeg-optimizer_IMG_1406_qo03oc.jpg",
-    h: "Strandlägenhet 4",
+    h: "Strandlägenhet 136",
     p: "Varje strandlägenhet är 21 m² och utformad som compact living, där allt ryms på en sammanhållen yta. Här finns kombinerat vardagsrum, sovalkov och kokvrå samt eget badrum. Planlösningen är gjord för att fungera under dagen – inte bara för natten. Du har egen dörr och egen uteplats, med stranden på nära avstånd. Ett boende att använda mellan strandbesök, måltider och vila.",
     noReadMore: true,
     icons: [],
@@ -2209,14 +2209,14 @@ const sektion73Pins = [
 {
   id: "sektion73Pin_00037",
   label: "Pin 37",
-  labelText: "5",
+  labelText: "137",
   lngLat: [12.264309, 57.081139],
   filter: "",
   priority: "priority",
   ui: { bubbleBg: "#88706A" },
   modal: {
     imgSrc: "https://res.cloudinary.com/dmgmoisae/image/upload/f_auto,q_auto,dpr_auto,c_limit,w_1440/v1771931935/jpeg-optimizer_IMG_1406_qo03oc.jpg",
-    h: "Strandlägenhet 5",
+    h: "Strandlägenhet 137",
     p: "Varje strandlägenhet är 21 m² och utformad som compact living, där allt ryms på en sammanhållen yta. Här finns kombinerat vardagsrum, sovalkov och kokvrå samt eget badrum. Planlösningen är gjord för att fungera under dagen – inte bara för natten. Du har egen dörr och egen uteplats, med stranden på nära avstånd. Ett boende att använda mellan strandbesök, måltider och vila.",
     noReadMore: true,
     icons: [],
@@ -2231,14 +2231,14 @@ const sektion73Pins = [
 {
   id: "sektion73Pin_00038",
   label: "Pin 38",
-  labelText: "6",
+  labelText: "138",
   lngLat: [12.264355, 57.081149],
   filter: "",
   priority: "priority",
   ui: { bubbleBg: "#88706A" },
   modal: {
     imgSrc: "https://res.cloudinary.com/dmgmoisae/image/upload/f_auto,q_auto,dpr_auto,c_limit,w_1440/v1771931935/jpeg-optimizer_IMG_1406_qo03oc.jpg",
-    h: "Strandlägenhet 6",
+    h: "Strandlägenhet 138",
     p: "Varje strandlägenhet är 21 m² och utformad som compact living, där allt ryms på en sammanhållen yta. Här finns kombinerat vardagsrum, sovalkov och kokvrå samt eget badrum. Planlösningen är gjord för att fungera under dagen – inte bara för natten. Du har egen dörr och egen uteplats, med stranden på nära avstånd. Ett boende att använda mellan strandbesök, måltider och vila.",
     noReadMore: true,
     icons: [],
@@ -2253,14 +2253,14 @@ const sektion73Pins = [
 {
   id: "sektion73Pin_00039",
   label: "Pin 39",
-  labelText: "7",
+  labelText: "139",
   lngLat: [12.264405, 57.081158],
   filter: "",
   priority: "priority",
   ui: { bubbleBg: "#88706A" },
   modal: {
     imgSrc: "https://res.cloudinary.com/dmgmoisae/image/upload/f_auto,q_auto,dpr_auto,c_limit,w_1440/v1771931935/jpeg-optimizer_IMG_1406_qo03oc.jpg",
-    h: "Strandlägenhet 7",
+    h: "Strandlägenhet 139",
     p: "Varje strandlägenhet är 21 m² och utformad som compact living, där allt ryms på en sammanhållen yta. Här finns kombinerat vardagsrum, sovalkov och kokvrå samt eget badrum. Planlösningen är gjord för att fungera under dagen – inte bara för natten. Du har egen dörr och egen uteplats, med stranden på nära avstånd. Ett boende att använda mellan strandbesök, måltider och vila.",
     noReadMore: true,
     icons: [],
@@ -2275,14 +2275,14 @@ const sektion73Pins = [
 {
   id: "sektion73Pin_00040",
   label: "Pin 40",
-  labelText: "8",
+  labelText: "140",
   lngLat: [12.264461, 57.081179],
   filter: "",
   priority: "priority",
   ui: { bubbleBg: "#9E8CA0" },
   modal: {
     imgSrc: "https://res.cloudinary.com/dmgmoisae/image/upload/f_auto,q_auto,dpr_auto,c_limit,w_1440/v1771931935/jpeg-optimizer_IMG_1406_qo03oc.jpg",
-    h: "Strandlägenhet 8",
+    h: "Strandlägenhet 140",
     p: "Varje strandlägenhet är 21 m² och utformad som compact living, där allt ryms på en sammanhållen yta. Här finns kombinerat vardagsrum, sovalkov och kokvrå samt eget badrum. Planlösningen är gjord för att fungera under dagen – inte bara för natten. Du har egen dörr och egen uteplats, med stranden på nära avstånd. Ett boende att använda mellan strandbesök, måltider och vila.",
     noReadMore: true,
     icons: [],
@@ -2297,14 +2297,14 @@ const sektion73Pins = [
 {
   id: "sektion73Pin_00041",
   label: "Pin 41",
-  labelText: "9",
+  labelText: "141",
   lngLat: [12.264520, 57.081192],
   filter: "",
   priority: "priority",
   ui: { bubbleBg: "#9E8CA0" },
   modal: {
     imgSrc: "https://res.cloudinary.com/dmgmoisae/image/upload/f_auto,q_auto,dpr_auto,c_limit,w_1440/v1771931935/jpeg-optimizer_IMG_1406_qo03oc.jpg",
-    h: "Strandlägenhet 9",
+    h: "Strandlägenhet 141",
     p: "Varje strandlägenhet är 21 m² och utformad som compact living, där allt ryms på en sammanhållen yta. Här finns kombinerat vardagsrum, sovalkov och kokvrå samt eget badrum. Planlösningen är gjord för att fungera under dagen – inte bara för natten. Du har egen dörr och egen uteplats, med stranden på nära avstånd. Ett boende att använda mellan strandbesök, måltider och vila.",
     noReadMore: true,
     icons: [],
@@ -2319,14 +2319,14 @@ const sektion73Pins = [
 {
   id: "sektion73Pin_00042",
   label: "Pin 42",
-  labelText: "10",
+  labelText: "142",
   lngLat: [12.264281, 57.080851],
   filter: "",
   priority: "priority",
   ui: { bubbleBg: "#9E8CA0" },
   modal: {
     imgSrc: "https://res.cloudinary.com/dmgmoisae/image/upload/f_auto,q_auto,dpr_auto,c_limit,w_1440/v1771931935/jpeg-optimizer_IMG_1406_qo03oc.jpg",
-    h: "Strandlägenhet 10",
+    h: "Strandlägenhet 142",
     p: "Varje strandlägenhet är 21 m² och utformad som compact living, där allt ryms på en sammanhållen yta. Här finns kombinerat vardagsrum, sovalkov och kokvrå samt eget badrum. Planlösningen är gjord för att fungera under dagen – inte bara för natten. Du har egen dörr och egen uteplats, med stranden på nära avstånd. Ett boende att använda mellan strandbesök, måltider och vila.",
     noReadMore: true,
     icons: [],
