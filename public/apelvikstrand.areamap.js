@@ -27,6 +27,98 @@
     } 
 
     /* =========================
+       i18n (sv / en / de)
+       ========================= */
+
+    function sektion73GetLang() {
+      const htmlLang = String((document.documentElement && document.documentElement.lang) || "").trim().toLowerCase();
+      if (htmlLang === "en" || htmlLang === "de" || htmlLang === "sv") return htmlLang;
+      const path = String((location && location.pathname) || "/");
+      if (path === "/en" || path.indexOf("/en/") === 0) return "en";
+      if (path === "/de" || path.indexOf("/de/") === 0) return "de";
+      return "sv";
+    }
+
+    function sektion73Pick(val, fallback) {
+      if (typeof val === "string") return val;
+      if (val && typeof val === "object") {
+        var v = val[sektion73Lang] != null ? val[sektion73Lang] : (val.sv != null ? val.sv : (val.en != null ? val.en : val.de));
+        if (typeof v === "string") return v;
+      }
+      return (typeof fallback === "string") ? fallback : "";
+    }
+
+    const sektion73Lang = sektion73GetLang();
+
+    const sektion73I18N = {
+      sv: {
+        route: {
+          findReception: "Hitta receptionen",
+          showRoute: "Visa rutt",
+          driving: "Bilväg",
+          walking: "Gångväg",
+          fetching: "Hämtar rutt…",
+          backToMap: "Tillbaka till kartan"
+        },
+        tooltip: {
+          parking: "Parkering",
+          grill: "Grillplats",
+          playground: "Lekplats",
+          trash: "Soprum"
+        }
+      },
+      en: {
+        route: {
+          findReception: "Find reception",
+          showRoute: "Show route",
+          driving: "Driving",
+          walking: "Walking",
+          fetching: "Fetching route…",
+          backToMap: "Back to map"
+        },
+        tooltip: {
+          parking: "Parking",
+          grill: "Barbecue area",
+          playground: "Playground",
+          trash: "Waste room"
+        }
+      },
+      de: {
+        route: {
+          findReception: "Rezeption finden",
+          showRoute: "Route anzeigen",
+          driving: "Autoroute",
+          walking: "Fußweg",
+          fetching: "Route wird geladen…",
+          backToMap: "Zurück zur Karte"
+        },
+        tooltip: {
+          parking: "Parkplatz",
+          grill: "Grillplatz",
+          playground: "Spielplatz",
+          trash: "Müllraum"
+        }
+      }
+    };
+
+    function sektion73T(path, fallback) {
+      var parts = String(path || "").split(".");
+      var cur = (sektion73I18N[sektion73Lang] || sektion73I18N.sv);
+      for (var i = 0; i < parts.length; i++) {
+        if (!cur || typeof cur !== "object" || !(parts[i] in cur)) { cur = null; break; }
+        cur = cur[parts[i]];
+      }
+      if (typeof cur === "string") return cur;
+      cur = sektion73I18N.sv;
+      for (var j = 0; j < parts.length; j++) {
+        if (!cur || typeof cur !== "object" || !(parts[j] in cur)) { cur = null; break; }
+        cur = cur[parts[j]];
+      }
+      if (typeof cur === "string") return cur;
+      return (typeof fallback === "string") ? fallback : "";
+    }
+
+    /* =========================
        CONFIG
        ========================= */
 
@@ -1096,8 +1188,8 @@ let sektion73ReturnView = null;
 function sektion73OpenModal(payload) {
   const { overlay, modal } = sektion73EnsureModalDOM();
 
-  document.getElementById("sektion73ModalBodyH").textContent = payload.h || "";
-  document.getElementById("sektion73ModalBodyP").textContent = payload.p || "";
+  document.getElementById("sektion73ModalBodyH").textContent = sektion73Pick(payload.h, "");
+  document.getElementById("sektion73ModalBodyP").textContent = sektion73Pick(payload.p, "");
 
   const iconWrap = document.getElementById("sektion73ModalTitleIcons");
 
@@ -1125,9 +1217,9 @@ function sektion73OpenModal(payload) {
   const svg2 = (i2 && i2.svg != null) ? i2.svg : (legacyIcons[1] || "");
   const svg3 = (i3 && i3.svg != null) ? i3.svg : (legacyIcons[2] || "");
 
-  const t1 = (i1 && i1.text != null) ? i1.text : (legacyTexts[0] || "");
-  const t2 = (i2 && i2.text != null) ? i2.text : (legacyTexts[1] || "");
-  const t3 = (i3 && i3.text != null) ? i3.text : (legacyTexts[2] || "");
+  const t1 = (i1 && i1.text != null) ? sektion73Pick(i1.text, "") : sektion73Pick(legacyTexts[0], "");
+  const t2 = (i2 && i2.text != null) ? sektion73Pick(i2.text, "") : sektion73Pick(legacyTexts[1], "");
+  const t3 = (i3 && i3.text != null) ? sektion73Pick(i3.text, "") : sektion73Pick(legacyTexts[2], "");
 
   if (icon1) icon1.innerHTML = svg1 || "";
   if (icon2) icon2.innerHTML = svg2 || "";
@@ -1173,12 +1265,14 @@ function sektion73OpenModal(payload) {
 
   const actionsWrap = modal ? modal.querySelector(".sektion73ModalActions") : null;
 
-  const hasCta1 = Boolean(payload && payload.cta1Text && String(payload.cta1Text).trim());
-  const hasCta2 = Boolean(payload && payload.cta2Text && String(payload.cta2Text).trim());
+  const cta1Str = sektion73Pick(payload.cta1Text, "");
+  const cta2Str = sektion73Pick(payload.cta2Text, "");
+  const hasCta1 = Boolean(cta1Str && cta1Str.trim());
+  const hasCta2 = Boolean(cta2Str && cta2Str.trim());
   const hasAnyCta = Boolean(hasCta1 || hasCta2);
 
-  if (cta1t) cta1t.textContent = payload.cta1Text || "";
-  if (cta2t) cta2t.textContent = payload.cta2Text || "";
+  if (cta1t) cta1t.textContent = cta1Str;
+  if (cta2t) cta2t.textContent = cta2Str;
 
   if (cta1) cta1.style.display = hasCta1 ? "" : "none";
   if (cta2) cta2.style.display = hasCta2 ? "" : "none";
@@ -1279,20 +1373,20 @@ const sektion73Pins = [
   ui: { bubbleBg: "#A88867" },
   modal: {
     imgSrc: "https://res.cloudinary.com/dmgmoisae/image/upload/v1769875471/strandhuse21q_hh50lb.png",
-    h: "Strandhus 101",
-    p: "Bo precis vid havet i Apelviken, i ett av våra strandhus. Här bor du med stranden alldeles intill och med plats att vara på under hela dagen. Egen dörr, egen uteplats och ett boende som fungerar lika bra mellan strandpassen som på kvällen.",
+    h: { sv: "Strandhus 101", en: "Beach House 101", de: "Strandhaus 101" },
+    p: { sv: "Bo precis vid havet i Apelviken, i ett av våra strandhus. Här bor du med stranden alldeles intill och med plats att vara på under hela dagen. Egen dörr, egen uteplats och ett boende som fungerar lika bra mellan strandpassen som på kvällen.", en: "Stay right by the sea in Apelviken, in one of our beach houses. Here you live with the beach right next to you and room to spend the whole day. Your own door, your own terrace, and accommodation that works just as well between beach visits as in the evening.", de: "Wohnen Sie direkt am Meer in Apelviken, in einem unserer Strandhäuser. Hier wohnen Sie mit dem Strand direkt nebenan und haben Platz für den ganzen Tag. Eigene Tür, eigene Terrasse und eine Unterkunft, die zwischen den Strandbesuchen genauso gut funktioniert wie am Abend." },
     iconItems: [
       {
         svg: '<span class="material-symbols-outlined" style="font-size:22px">group</span>',
-        text: "4 vuxna & 2 barn"
+        text: { sv: "4 vuxna & 2 barn", en: "4 adults & 2 children", de: "4 Erwachsene & 2 Kinder" }
       },
       {
         svg: '<span class="material-symbols-outlined" style="font-size:22px">sunny</span>',
-        text: "Morgonsol"
+        text: { sv: "Morgonsol", en: "Morning sun", de: "Morgensonne" }
       }
     ],
     images: ["", "", "", ""],
-    cta1Text: "Vägbeskrivning",
+    cta1Text: { sv: "Vägbeskrivning", en: "Get directions", de: "Wegbeschreibung" },
     cta1Href: "https://www.google.com/maps/dir/?api=1&destination=ApelvikStrand,+Surbrunnsv%C3%A4gen+2-8,+432+53+Varberg",
     cta2Text: "",
     cta2Href: ""
@@ -1308,18 +1402,18 @@ const sektion73Pins = [
   ui: { bubbleBg: "#A88867" },
   modal: {
     imgSrc: "https://res.cloudinary.com/dmgmoisae/image/upload/v1769875471/strandhuse21q_hh50lb.png",
-    h: "Strandhus 102  ",
-    p: "Bo precis vid havet i Apelviken, i ett av våra strandhus. Här bor du med stranden alldeles intill och med plats att vara på under hela dagen. Egen dörr, egen uteplats och ett boende som fungerar lika bra mellan strandpassen som på kvällen.",
+    h: { sv: "Strandhus 102", en: "Beach House 102", de: "Strandhaus 102" },
+    p: { sv: "Bo precis vid havet i Apelviken, i ett av våra strandhus. Här bor du med stranden alldeles intill och med plats att vara på under hela dagen. Egen dörr, egen uteplats och ett boende som fungerar lika bra mellan strandpassen som på kvällen.", en: "Stay right by the sea in Apelviken, in one of our beach houses. Here you live with the beach right next to you and room to spend the whole day. Your own door, your own terrace, and accommodation that works just as well between beach visits as in the evening.", de: "Wohnen Sie direkt am Meer in Apelviken, in einem unserer Strandhäuser. Hier wohnen Sie mit dem Strand direkt nebenan und haben Platz für den ganzen Tag. Eigene Tür, eigene Terrasse und eine Unterkunft, die zwischen den Strandbesuchen genauso gut funktioniert wie am Abend." },
     icons: [
       '<span class="material-symbols-outlined" style="font-size:22px">group</span>',
       '<span class="material-symbols-outlined" style="font-size:22px">sunny</span>'
     ],
     iconTexts: [
-      "4 vuxna & 2 barn",
-      "Morgonsol"
+      { sv: "4 vuxna & 2 barn", en: "4 adults & 2 children", de: "4 Erwachsene & 2 Kinder" },
+      { sv: "Morgonsol", en: "Morning sun", de: "Morgensonne" }
     ],
     images: ["", "", "", ""],
-    cta1Text: "Vägbeskrivning",
+    cta1Text: { sv: "Vägbeskrivning", en: "Get directions", de: "Wegbeschreibung" },
     cta1Href: "https://www.google.com/maps/dir/?api=1&destination=ApelvikStrand,+Surbrunnsv%C3%A4gen+2-8,+432+53+Varberg",
     cta2Text: "",
     cta2Href: ""
@@ -1335,18 +1429,18 @@ const sektion73Pins = [
   ui: { bubbleBg: "#A88867" },
   modal: {
     imgSrc: "https://res.cloudinary.com/dmgmoisae/image/upload/v1769875471/strandhuse21q_hh50lb.png",
-    h: "Strandhus 103  ",
-    p: "Bo precis vid havet i Apelviken, i ett av våra strandhus. Här bor du med stranden alldeles intill och med plats att vara på under hela dagen. Egen dörr, egen uteplats och ett boende som fungerar lika bra mellan strandpassen som på kvällen.",
+    h: { sv: "Strandhus 103", en: "Beach House 103", de: "Strandhaus 103" },
+    p: { sv: "Bo precis vid havet i Apelviken, i ett av våra strandhus. Här bor du med stranden alldeles intill och med plats att vara på under hela dagen. Egen dörr, egen uteplats och ett boende som fungerar lika bra mellan strandpassen som på kvällen.", en: "Stay right by the sea in Apelviken, in one of our beach houses. Here you live with the beach right next to you and room to spend the whole day. Your own door, your own terrace, and accommodation that works just as well between beach visits as in the evening.", de: "Wohnen Sie direkt am Meer in Apelviken, in einem unserer Strandhäuser. Hier wohnen Sie mit dem Strand direkt nebenan und haben Platz für den ganzen Tag. Eigene Tür, eigene Terrasse und eine Unterkunft, die zwischen den Strandbesuchen genauso gut funktioniert wie am Abend." },
     icons: [
       '<span class="material-symbols-outlined" style="font-size:22px">group</span>',
       '<span class="material-symbols-outlined" style="font-size:22px">sunny</span>'
     ],
     iconTexts: [
-      "4 vuxna & 2 barn",
-      "Morgonsol"
+      { sv: "4 vuxna & 2 barn", en: "4 adults & 2 children", de: "4 Erwachsene & 2 Kinder" },
+      { sv: "Morgonsol", en: "Morning sun", de: "Morgensonne" }
     ],
     images: ["", "", "", ""],
-    cta1Text: "Vägbeskrivning",
+    cta1Text: { sv: "Vägbeskrivning", en: "Get directions", de: "Wegbeschreibung" },
     cta1Href: "https://www.google.com/maps/dir/?api=1&destination=ApelvikStrand,+Surbrunnsv%C3%A4gen+2-8,+432+53+Varberg",
     cta2Text: "",
     cta2Href: ""
@@ -1362,18 +1456,18 @@ const sektion73Pins = [
   ui: { bubbleBg: "#A88867" },
   modal: {
     imgSrc: "https://res.cloudinary.com/dmgmoisae/image/upload/v1769875471/strandhuse21q_hh50lb.png",
-    h: "Strandhus 104  ",
-    p: "Bo precis vid havet i Apelviken, i ett av våra strandhus. Här bor du med stranden alldeles intill och med plats att vara på under hela dagen. Egen dörr, egen uteplats och ett boende som fungerar lika bra mellan strandpassen som på kvällen.",
+    h: { sv: "Strandhus 104", en: "Beach House 104", de: "Strandhaus 104" },
+    p: { sv: "Bo precis vid havet i Apelviken, i ett av våra strandhus. Här bor du med stranden alldeles intill och med plats att vara på under hela dagen. Egen dörr, egen uteplats och ett boende som fungerar lika bra mellan strandpassen som på kvällen.", en: "Stay right by the sea in Apelviken, in one of our beach houses. Here you live with the beach right next to you and room to spend the whole day. Your own door, your own terrace, and accommodation that works just as well between beach visits as in the evening.", de: "Wohnen Sie direkt am Meer in Apelviken, in einem unserer Strandhäuser. Hier wohnen Sie mit dem Strand direkt nebenan und haben Platz für den ganzen Tag. Eigene Tür, eigene Terrasse und eine Unterkunft, die zwischen den Strandbesuchen genauso gut funktioniert wie am Abend." },
     icons: [
       '<span class="material-symbols-outlined" style="font-size:22px">group</span>',
       '<span class="material-symbols-outlined" style="font-size:22px">sunny</span>'
     ],
     iconTexts: [
-      "4 vuxna & 2 barn",
-      "Morgonsol"
+      { sv: "4 vuxna & 2 barn", en: "4 adults & 2 children", de: "4 Erwachsene & 2 Kinder" },
+      { sv: "Morgonsol", en: "Morning sun", de: "Morgensonne" }
     ],
     images: ["", "", "", ""],
-    cta1Text: "Vägbeskrivning",
+    cta1Text: { sv: "Vägbeskrivning", en: "Get directions", de: "Wegbeschreibung" },
     cta1Href: "https://www.google.com/maps/dir/?api=1&destination=ApelvikStrand,+Surbrunnsv%C3%A4gen+2-8,+432+53+Varberg",
     cta2Text: "",
     cta2Href: ""
@@ -1389,18 +1483,18 @@ const sektion73Pins = [
   ui: { bubbleBg: "#A88867" },
   modal: {
     imgSrc: "https://res.cloudinary.com/dmgmoisae/image/upload/v1769875471/strandhuse21q_hh50lb.png",
-    h: "Strandhus 105  ",
-    p: "Bo precis vid havet i Apelviken, i ett av våra strandhus. Här bor du med stranden alldeles intill och med plats att vara på under hela dagen. Egen dörr, egen uteplats och ett boende som fungerar lika bra mellan strandpassen som på kvällen.",
+    h: { sv: "Strandhus 105", en: "Beach House 105", de: "Strandhaus 105" },
+    p: { sv: "Bo precis vid havet i Apelviken, i ett av våra strandhus. Här bor du med stranden alldeles intill och med plats att vara på under hela dagen. Egen dörr, egen uteplats och ett boende som fungerar lika bra mellan strandpassen som på kvällen.", en: "Stay right by the sea in Apelviken, in one of our beach houses. Here you live with the beach right next to you and room to spend the whole day. Your own door, your own terrace, and accommodation that works just as well between beach visits as in the evening.", de: "Wohnen Sie direkt am Meer in Apelviken, in einem unserer Strandhäuser. Hier wohnen Sie mit dem Strand direkt nebenan und haben Platz für den ganzen Tag. Eigene Tür, eigene Terrasse und eine Unterkunft, die zwischen den Strandbesuchen genauso gut funktioniert wie am Abend." },
     icons: [
       '<span class="material-symbols-outlined" style="font-size:22px">group</span>',
       '<span class="material-symbols-outlined" style="font-size:22px">sunny</span>'
     ],
     iconTexts: [
-      "4 vuxna & 2 barn",
-      "Morgonsol"
+      { sv: "4 vuxna & 2 barn", en: "4 adults & 2 children", de: "4 Erwachsene & 2 Kinder" },
+      { sv: "Morgonsol", en: "Morning sun", de: "Morgensonne" }
     ],
     images: ["", "", "", ""],
-    cta1Text: "Vägbeskrivning",
+    cta1Text: { sv: "Vägbeskrivning", en: "Get directions", de: "Wegbeschreibung" },
     cta1Href: "https://www.google.com/maps/dir/?api=1&destination=ApelvikStrand,+Surbrunnsv%C3%A4gen+2-8,+432+53+Varberg",
     cta2Text: "",
     cta2Href: ""
@@ -1416,18 +1510,18 @@ const sektion73Pins = [
   ui: { bubbleBg: "#A88867" },
   modal: {
     imgSrc: "https://res.cloudinary.com/dmgmoisae/image/upload/v1769875471/strandhuse21q_hh50lb.png",
-    h: "Strandhus 106  ",
-    p: "Bo precis vid havet i Apelviken, i ett av våra strandhus. Här bor du med stranden alldeles intill och med plats att vara på under hela dagen. Egen dörr, egen uteplats och ett boende som fungerar lika bra mellan strandpassen som på kvällen.",
+    h: { sv: "Strandhus 106", en: "Beach House 106", de: "Strandhaus 106" },
+    p: { sv: "Bo precis vid havet i Apelviken, i ett av våra strandhus. Här bor du med stranden alldeles intill och med plats att vara på under hela dagen. Egen dörr, egen uteplats och ett boende som fungerar lika bra mellan strandpassen som på kvällen.", en: "Stay right by the sea in Apelviken, in one of our beach houses. Here you live with the beach right next to you and room to spend the whole day. Your own door, your own terrace, and accommodation that works just as well between beach visits as in the evening.", de: "Wohnen Sie direkt am Meer in Apelviken, in einem unserer Strandhäuser. Hier wohnen Sie mit dem Strand direkt nebenan und haben Platz für den ganzen Tag. Eigene Tür, eigene Terrasse und eine Unterkunft, die zwischen den Strandbesuchen genauso gut funktioniert wie am Abend." },
     icons: [
       '<span class="material-symbols-outlined" style="font-size:22px">group</span>',
       '<span class="material-symbols-outlined" style="font-size:22px">sunny</span>'
     ],
     iconTexts: [
-      "4 vuxna & 2 barn",
-      "Morgonsol"
+      { sv: "4 vuxna & 2 barn", en: "4 adults & 2 children", de: "4 Erwachsene & 2 Kinder" },
+      { sv: "Morgonsol", en: "Morning sun", de: "Morgensonne" }
     ],
     images: ["", "", "", ""],
-    cta1Text: "Vägbeskrivning",
+    cta1Text: { sv: "Vägbeskrivning", en: "Get directions", de: "Wegbeschreibung" },
     cta1Href: "https://www.google.com/maps/dir/?api=1&destination=ApelvikStrand,+Surbrunnsv%C3%A4gen+2-8,+432+53+Varberg",
     cta2Text: "",
     cta2Href: ""
@@ -1443,20 +1537,20 @@ const sektion73Pins = [
   ui: { bubbleBg: "#7A936B" },
   modal: {
     imgSrc: "https://res.cloudinary.com/dmgmoisae/image/upload/v1769875471/strandhuse21q_hh50lb.png",
-    h: "Strandhus 107  ",
-    p: "Bo precis vid havet i Apelviken, i ett av våra strandhus. Här bor du med stranden alldeles intill och med plats att vara på under hela dagen. Egen dörr, egen uteplats och ett boende som fungerar lika bra mellan strandpassen som på kvällen.",
+    h: { sv: "Strandhus 107", en: "Beach House 107", de: "Strandhaus 107" },
+    p: { sv: "Bo precis vid havet i Apelviken, i ett av våra strandhus. Här bor du med stranden alldeles intill och med plats att vara på under hela dagen. Egen dörr, egen uteplats och ett boende som fungerar lika bra mellan strandpassen som på kvällen.", en: "Stay right by the sea in Apelviken, in one of our beach houses. Here you live with the beach right next to you and room to spend the whole day. Your own door, your own terrace, and accommodation that works just as well between beach visits as in the evening.", de: "Wohnen Sie direkt am Meer in Apelviken, in einem unserer Strandhäuser. Hier wohnen Sie mit dem Strand direkt nebenan und haben Platz für den ganzen Tag. Eigene Tür, eigene Terrasse und eine Unterkunft, die zwischen den Strandbesuchen genauso gut funktioniert wie am Abend." },
     icons: [
       '<span class="material-symbols-outlined" style="font-size:22px">group</span>',
      '<span class="material-symbols-outlined" style="font-size:22px">pet_supplies</span>',
             '<span class="material-symbols-outlined" style="font-size:22px">accessible</span>'
     ],
     iconTexts: [
-      "4 vuxna & 2 barn",
-      "Djurvänlig",
-      "Funktionsanpassade"     
+      { sv: "4 vuxna & 2 barn", en: "4 adults & 2 children", de: "4 Erwachsene & 2 Kinder" },
+      { sv: "Djurvänlig", en: "Pet friendly", de: "Tierfreundlich" },
+      { sv: "Funktionsanpassade", en: "Accessible", de: "Barrierefrei" }     
     ],
     images: ["", "", "", ""],
-    cta1Text: "Vägbeskrivning",
+    cta1Text: { sv: "Vägbeskrivning", en: "Get directions", de: "Wegbeschreibung" },
     cta1Href: "https://www.google.com/maps/dir/?api=1&destination=ApelvikStrand,+Surbrunnsv%C3%A4gen+2-8,+432+53+Varberg",
     cta2Text: "",
     cta2Href: ""
@@ -1472,20 +1566,20 @@ const sektion73Pins = [
   ui: { bubbleBg: "#7A936B" },
   modal: {
     imgSrc: "https://res.cloudinary.com/dmgmoisae/image/upload/v1769875471/strandhuse21q_hh50lb.png",
-    h: "Strandhus 108  ",
-    p: "Bo precis vid havet i Apelviken, i ett av våra strandhus. Här bor du med stranden alldeles intill och med plats att vara på under hela dagen. Egen dörr, egen uteplats och ett boende som fungerar lika bra mellan strandpassen som på kvällen.",
+    h: { sv: "Strandhus 108", en: "Beach House 108", de: "Strandhaus 108" },
+    p: { sv: "Bo precis vid havet i Apelviken, i ett av våra strandhus. Här bor du med stranden alldeles intill och med plats att vara på under hela dagen. Egen dörr, egen uteplats och ett boende som fungerar lika bra mellan strandpassen som på kvällen.", en: "Stay right by the sea in Apelviken, in one of our beach houses. Here you live with the beach right next to you and room to spend the whole day. Your own door, your own terrace, and accommodation that works just as well between beach visits as in the evening.", de: "Wohnen Sie direkt am Meer in Apelviken, in einem unserer Strandhäuser. Hier wohnen Sie mit dem Strand direkt nebenan und haben Platz für den ganzen Tag. Eigene Tür, eigene Terrasse und eine Unterkunft, die zwischen den Strandbesuchen genauso gut funktioniert wie am Abend." },
     icons: [
            '<span class="material-symbols-outlined" style="font-size:22px">group</span>',
      '<span class="material-symbols-outlined" style="font-size:22px">pet_supplies</span>',
             '<span class="material-symbols-outlined" style="font-size:22px">accessible</span>'
     ],
     iconTexts: [
-      "4 vuxna & 2 barn",
-      "Djurvänlig",
-      "Funktionsanpassade"
+      { sv: "4 vuxna & 2 barn", en: "4 adults & 2 children", de: "4 Erwachsene & 2 Kinder" },
+      { sv: "Djurvänlig", en: "Pet friendly", de: "Tierfreundlich" },
+      { sv: "Funktionsanpassade", en: "Accessible", de: "Barrierefrei" }
     ],
     images: ["", "", "", ""],
-    cta1Text: "Vägbeskrivning",
+    cta1Text: { sv: "Vägbeskrivning", en: "Get directions", de: "Wegbeschreibung" },
     cta1Href: "https://www.google.com/maps/dir/?api=1&destination=ApelvikStrand,+Surbrunnsv%C3%A4gen+2-8,+432+53+Varberg",
     cta2Text: "",
     cta2Href: ""
@@ -1501,18 +1595,18 @@ const sektion73Pins = [
   ui: { bubbleBg: "#446D74" },
   modal: {
     imgSrc: "https://res.cloudinary.com/dmgmoisae/image/upload/v1769875471/strandhuse21q_hh50lb.png",
-    h: "Strandhus 109  ",
-    p: "Bo precis vid havet i Apelviken, i ett av våra strandhus. Här bor du med stranden alldeles intill och med plats att vara på under hela dagen. Egen dörr, egen uteplats och ett boende som fungerar lika bra mellan strandpassen som på kvällen.",
+    h: { sv: "Strandhus 109", en: "Beach House 109", de: "Strandhaus 109" },
+    p: { sv: "Bo precis vid havet i Apelviken, i ett av våra strandhus. Här bor du med stranden alldeles intill och med plats att vara på under hela dagen. Egen dörr, egen uteplats och ett boende som fungerar lika bra mellan strandpassen som på kvällen.", en: "Stay right by the sea in Apelviken, in one of our beach houses. Here you live with the beach right next to you and room to spend the whole day. Your own door, your own terrace, and accommodation that works just as well between beach visits as in the evening.", de: "Wohnen Sie direkt am Meer in Apelviken, in einem unserer Strandhäuser. Hier wohnen Sie mit dem Strand direkt nebenan und haben Platz für den ganzen Tag. Eigene Tür, eigene Terrasse und eine Unterkunft, die zwischen den Strandbesuchen genauso gut funktioniert wie am Abend." },
     icons: [
       '<span class="material-symbols-outlined" style="font-size:22px">group</span>',
       '<span class="material-symbols-outlined" style="font-size:22px">sunny</span>'
     ],
     iconTexts: [
-      "4 vuxna & 2 barn",
-      "Kvällssol"
+      { sv: "4 vuxna & 2 barn", en: "4 adults & 2 children", de: "4 Erwachsene & 2 Kinder" },
+      { sv: "Kvällssol", en: "Evening sun", de: "Abendsonne" }
     ],
     images: ["", "", "", ""],
-    cta1Text: "Vägbeskrivning",
+    cta1Text: { sv: "Vägbeskrivning", en: "Get directions", de: "Wegbeschreibung" },
     cta1Href: "https://www.google.com/maps/dir/?api=1&destination=ApelvikStrand,+Surbrunnsv%C3%A4gen+2-8,+432+53+Varberg",
     cta2Text: "",
     cta2Href: ""
@@ -1528,18 +1622,18 @@ const sektion73Pins = [
   ui: { bubbleBg: "#446D74" },
   modal: {
     imgSrc: "https://res.cloudinary.com/dmgmoisae/image/upload/v1769875471/strandhuse21q_hh50lb.png",
-    h: "Strandhus 110  ",
-    p: "Bo precis vid havet i Apelviken, i ett av våra strandhus. Här bor du med stranden alldeles intill och med plats att vara på under hela dagen. Egen dörr, egen uteplats och ett boende som fungerar lika bra mellan strandpassen som på kvällen.",
+    h: { sv: "Strandhus 110", en: "Beach House 110", de: "Strandhaus 110" },
+    p: { sv: "Bo precis vid havet i Apelviken, i ett av våra strandhus. Här bor du med stranden alldeles intill och med plats att vara på under hela dagen. Egen dörr, egen uteplats och ett boende som fungerar lika bra mellan strandpassen som på kvällen.", en: "Stay right by the sea in Apelviken, in one of our beach houses. Here you live with the beach right next to you and room to spend the whole day. Your own door, your own terrace, and accommodation that works just as well between beach visits as in the evening.", de: "Wohnen Sie direkt am Meer in Apelviken, in einem unserer Strandhäuser. Hier wohnen Sie mit dem Strand direkt nebenan und haben Platz für den ganzen Tag. Eigene Tür, eigene Terrasse und eine Unterkunft, die zwischen den Strandbesuchen genauso gut funktioniert wie am Abend." },
     icons: [
       '<span class="material-symbols-outlined" style="font-size:22px">group</span>',
       '<span class="material-symbols-outlined" style="font-size:22px">sunny</span>'
     ],
     iconTexts: [
-      "4 vuxna & 2 barn",
-      "Kvällssol"
+      { sv: "4 vuxna & 2 barn", en: "4 adults & 2 children", de: "4 Erwachsene & 2 Kinder" },
+      { sv: "Kvällssol", en: "Evening sun", de: "Abendsonne" }
     ],
     images: ["", "", "", ""],
-    cta1Text: "Vägbeskrivning",
+    cta1Text: { sv: "Vägbeskrivning", en: "Get directions", de: "Wegbeschreibung" },
     cta1Href: "https://www.google.com/maps/dir/?api=1&destination=ApelvikStrand,+Surbrunnsv%C3%A4gen+2-8,+432+53+Varberg",
     cta2Text: "",
     cta2Href: ""
@@ -1555,18 +1649,18 @@ const sektion73Pins = [
   ui: { bubbleBg: "#446D74" },
   modal: {
     imgSrc: "https://res.cloudinary.com/dmgmoisae/image/upload/v1769800477/jpeg-optimizer_ApelvikStrand_0356_1_llpb1s.jpg",
-    h: "Strandhus 111  ",
-    p: "Bo precis vid havet i Apelviken, i ett av våra strandhus. Här bor du med stranden alldeles intill och med plats att vara på under hela dagen. Egen dörr, egen uteplats och ett boende som fungerar lika bra mellan strandpassen som på kvällen.",
+    h: { sv: "Strandhus 111", en: "Beach House 111", de: "Strandhaus 111" },
+    p: { sv: "Bo precis vid havet i Apelviken, i ett av våra strandhus. Här bor du med stranden alldeles intill och med plats att vara på under hela dagen. Egen dörr, egen uteplats och ett boende som fungerar lika bra mellan strandpassen som på kvällen.", en: "Stay right by the sea in Apelviken, in one of our beach houses. Here you live with the beach right next to you and room to spend the whole day. Your own door, your own terrace, and accommodation that works just as well between beach visits as in the evening.", de: "Wohnen Sie direkt am Meer in Apelviken, in einem unserer Strandhäuser. Hier wohnen Sie mit dem Strand direkt nebenan und haben Platz für den ganzen Tag. Eigene Tür, eigene Terrasse und eine Unterkunft, die zwischen den Strandbesuchen genauso gut funktioniert wie am Abend." },
     icons: [
       '<span class="material-symbols-outlined" style="font-size:22px">group</span>',
       '<span class="material-symbols-outlined" style="font-size:22px">sunny</span>'
     ],
     iconTexts: [
-      "4 vuxna & 2 barn",
-      "Kvällssol"
+      { sv: "4 vuxna & 2 barn", en: "4 adults & 2 children", de: "4 Erwachsene & 2 Kinder" },
+      { sv: "Kvällssol", en: "Evening sun", de: "Abendsonne" }
     ],
     images: ["", "", "", ""],
-    cta1Text: "Vägbeskrivning",
+    cta1Text: { sv: "Vägbeskrivning", en: "Get directions", de: "Wegbeschreibung" },
     cta1Href: "https://www.google.com/maps/dir/?api=1&destination=ApelvikStrand,+Surbrunnsv%C3%A4gen+2-8,+432+53+Varberg",
     cta2Text: "",
     cta2Href: ""
@@ -1582,18 +1676,18 @@ const sektion73Pins = [
   ui: { bubbleBg: "#446D74" },
   modal: {
     imgSrc: "https://res.cloudinary.com/dmgmoisae/image/upload/v1769800477/jpeg-optimizer_ApelvikStrand_0356_1_llpb1s.jpg",
-    h: "Strandhus 112  ",
-    p: "Bo precis vid havet i Apelviken, i ett av våra strandhus. Här bor du med stranden alldeles intill och med plats att vara på under hela dagen. Egen dörr, egen uteplats och ett boende som fungerar lika bra mellan strandpassen som på kvällen.",
+    h: { sv: "Strandhus 112", en: "Beach House 112", de: "Strandhaus 112" },
+    p: { sv: "Bo precis vid havet i Apelviken, i ett av våra strandhus. Här bor du med stranden alldeles intill och med plats att vara på under hela dagen. Egen dörr, egen uteplats och ett boende som fungerar lika bra mellan strandpassen som på kvällen.", en: "Stay right by the sea in Apelviken, in one of our beach houses. Here you live with the beach right next to you and room to spend the whole day. Your own door, your own terrace, and accommodation that works just as well between beach visits as in the evening.", de: "Wohnen Sie direkt am Meer in Apelviken, in einem unserer Strandhäuser. Hier wohnen Sie mit dem Strand direkt nebenan und haben Platz für den ganzen Tag. Eigene Tür, eigene Terrasse und eine Unterkunft, die zwischen den Strandbesuchen genauso gut funktioniert wie am Abend." },
     icons: [
       '<span class="material-symbols-outlined" style="font-size:22px">group</span>',
       '<span class="material-symbols-outlined" style="font-size:22px">sunny</span>'
     ],
     iconTexts: [
-       "4 vuxna & 2 barn",
-      "Kvällssol"
+       { sv: "4 vuxna & 2 barn", en: "4 adults & 2 children", de: "4 Erwachsene & 2 Kinder" },
+      { sv: "Kvällssol", en: "Evening sun", de: "Abendsonne" }
     ],
     images: ["", "", "", ""],
-    cta1Text: "Vägbeskrivning",
+    cta1Text: { sv: "Vägbeskrivning", en: "Get directions", de: "Wegbeschreibung" },
     cta1Href: "https://www.google.com/maps/dir/?api=1&destination=ApelvikStrand,+Surbrunnsv%C3%A4gen+2-8,+432+53+Varberg",
     cta2Text: "",
     cta2Href: ""
@@ -1609,18 +1703,18 @@ const sektion73Pins = [
   ui: { bubbleBg: "#446D74" },
   modal: {
     imgSrc: "https://res.cloudinary.com/dmgmoisae/image/upload/v1769800477/jpeg-optimizer_ApelvikStrand_0356_1_llpb1s.jpg",
-    h: "Strandhus 113  ",
-    p: "Bo precis vid havet i Apelviken, i ett av våra strandhus. Här bor du med stranden alldeles intill och med plats att vara på under hela dagen. Egen dörr, egen uteplats och ett boende som fungerar lika bra mellan strandpassen som på kvällen.",
+    h: { sv: "Strandhus 113", en: "Beach House 113", de: "Strandhaus 113" },
+    p: { sv: "Bo precis vid havet i Apelviken, i ett av våra strandhus. Här bor du med stranden alldeles intill och med plats att vara på under hela dagen. Egen dörr, egen uteplats och ett boende som fungerar lika bra mellan strandpassen som på kvällen.", en: "Stay right by the sea in Apelviken, in one of our beach houses. Here you live with the beach right next to you and room to spend the whole day. Your own door, your own terrace, and accommodation that works just as well between beach visits as in the evening.", de: "Wohnen Sie direkt am Meer in Apelviken, in einem unserer Strandhäuser. Hier wohnen Sie mit dem Strand direkt nebenan und haben Platz für den ganzen Tag. Eigene Tür, eigene Terrasse und eine Unterkunft, die zwischen den Strandbesuchen genauso gut funktioniert wie am Abend." },
     icons: [
       '<span class="material-symbols-outlined" style="font-size:22px">group</span>',
       '<span class="material-symbols-outlined" style="font-size:22px">sunny</span>'
     ],
     iconTexts: [
-      "4 vuxna & 2 barn",
-      "Kvällssol"
+      { sv: "4 vuxna & 2 barn", en: "4 adults & 2 children", de: "4 Erwachsene & 2 Kinder" },
+      { sv: "Kvällssol", en: "Evening sun", de: "Abendsonne" }
     ],
     images: ["", "", "", ""],
-    cta1Text: "Vägbeskrivning",
+    cta1Text: { sv: "Vägbeskrivning", en: "Get directions", de: "Wegbeschreibung" },
     cta1Href: "https://www.google.com/maps/dir/?api=1&destination=ApelvikStrand,+Surbrunnsv%C3%A4gen+2-8,+432+53+Varberg",
     cta2Text: "",
     cta2Href: ""
@@ -1636,18 +1730,18 @@ const sektion73Pins = [
   ui: { bubbleBg: "#446D74" },
   modal: {
     imgSrc: "https://res.cloudinary.com/dmgmoisae/image/upload/v1769800477/jpeg-optimizer_ApelvikStrand_0356_1_llpb1s.jpg",
-    h: "Strandhus 114  ",
-    p: "Bo precis vid havet i Apelviken, i ett av våra strandhus. Här bor du med stranden alldeles intill och med plats att vara på under hela dagen. Egen dörr, egen uteplats och ett boende som fungerar lika bra mellan strandpassen som på kvällen.",
+    h: { sv: "Strandhus 114", en: "Beach House 114", de: "Strandhaus 114" },
+    p: { sv: "Bo precis vid havet i Apelviken, i ett av våra strandhus. Här bor du med stranden alldeles intill och med plats att vara på under hela dagen. Egen dörr, egen uteplats och ett boende som fungerar lika bra mellan strandpassen som på kvällen.", en: "Stay right by the sea in Apelviken, in one of our beach houses. Here you live with the beach right next to you and room to spend the whole day. Your own door, your own terrace, and accommodation that works just as well between beach visits as in the evening.", de: "Wohnen Sie direkt am Meer in Apelviken, in einem unserer Strandhäuser. Hier wohnen Sie mit dem Strand direkt nebenan und haben Platz für den ganzen Tag. Eigene Tür, eigene Terrasse und eine Unterkunft, die zwischen den Strandbesuchen genauso gut funktioniert wie am Abend." },
     icons: [
       '<span class="material-symbols-outlined" style="font-size:22px">group</span>',
       '<span class="material-symbols-outlined" style="font-size:22px">sunny</span>'
     ],
     iconTexts: [
-      "4 vuxna & 2 barn",
-      "Kvällssol"
+      { sv: "4 vuxna & 2 barn", en: "4 adults & 2 children", de: "4 Erwachsene & 2 Kinder" },
+      { sv: "Kvällssol", en: "Evening sun", de: "Abendsonne" }
     ],
     images: ["", "", "", ""],
-    cta1Text: "Vägbeskrivning",
+    cta1Text: { sv: "Vägbeskrivning", en: "Get directions", de: "Wegbeschreibung" },
     cta1Href: "https://www.google.com/maps/dir/?api=1&destination=ApelvikStrand,+Surbrunnsv%C3%A4gen+2-8,+432+53+Varberg",
     cta2Text: "",
     cta2Href: ""
@@ -1663,20 +1757,20 @@ const sektion73Pins = [
   ui: { bubbleBg: "#7A936B" },
   modal: {
     imgSrc: "https://res.cloudinary.com/dmgmoisae/image/upload/v1769800477/jpeg-optimizer_ApelvikStrand_0356_1_llpb1s.jpg",
-    h: "Strandhus 115  ",
-    p: "Bo precis vid havet i Apelviken, i ett av våra strandhus. Här bor du med stranden alldeles intill och med plats att vara på under hela dagen. Egen dörr, egen uteplats och ett boende som fungerar lika bra mellan strandpassen som på kvällen.",
+    h: { sv: "Strandhus 115", en: "Beach House 115", de: "Strandhaus 115" },
+    p: { sv: "Bo precis vid havet i Apelviken, i ett av våra strandhus. Här bor du med stranden alldeles intill och med plats att vara på under hela dagen. Egen dörr, egen uteplats och ett boende som fungerar lika bra mellan strandpassen som på kvällen.", en: "Stay right by the sea in Apelviken, in one of our beach houses. Here you live with the beach right next to you and room to spend the whole day. Your own door, your own terrace, and accommodation that works just as well between beach visits as in the evening.", de: "Wohnen Sie direkt am Meer in Apelviken, in einem unserer Strandhäuser. Hier wohnen Sie mit dem Strand direkt nebenan und haben Platz für den ganzen Tag. Eigene Tür, eigene Terrasse und eine Unterkunft, die zwischen den Strandbesuchen genauso gut funktioniert wie am Abend." },
     icons: [
            '<span class="material-symbols-outlined" style="font-size:22px">group</span>',
      '<span class="material-symbols-outlined" style="font-size:22px">pet_supplies</span>',
             '<span class="material-symbols-outlined" style="font-size:22px">accessible</span>'
     ],
     iconTexts: [
-      "4 vuxna & 2 barn",
-      "Djurvänlig",
-      "Funktionsanpassade"
+      { sv: "4 vuxna & 2 barn", en: "4 adults & 2 children", de: "4 Erwachsene & 2 Kinder" },
+      { sv: "Djurvänlig", en: "Pet friendly", de: "Tierfreundlich" },
+      { sv: "Funktionsanpassade", en: "Accessible", de: "Barrierefrei" }
     ],
     images: ["", "", "", ""],
-    cta1Text: "Vägbeskrivning",
+    cta1Text: { sv: "Vägbeskrivning", en: "Get directions", de: "Wegbeschreibung" },
     cta1Href: "https://www.google.com/maps/dir/?api=1&destination=ApelvikStrand,+Surbrunnsv%C3%A4gen+2-8,+432+53+Varberg",
     cta2Text: "",
     cta2Href: ""
@@ -1692,20 +1786,20 @@ const sektion73Pins = [
   ui: { bubbleBg: "#7A936B" },
   modal: {
     imgSrc: "https://res.cloudinary.com/dmgmoisae/image/upload/v1769800477/jpeg-optimizer_ApelvikStrand_0356_1_llpb1s.jpg",
-    h: "Strandhus 116  ",
-    p: "Bo precis vid havet i Apelviken, i ett av våra strandhus. Här bor du med stranden alldeles intill och med plats att vara på under hela dagen. Egen dörr, egen uteplats och ett boende som fungerar lika bra mellan strandpassen som på kvällen.",
+    h: { sv: "Strandhus 116", en: "Beach House 116", de: "Strandhaus 116" },
+    p: { sv: "Bo precis vid havet i Apelviken, i ett av våra strandhus. Här bor du med stranden alldeles intill och med plats att vara på under hela dagen. Egen dörr, egen uteplats och ett boende som fungerar lika bra mellan strandpassen som på kvällen.", en: "Stay right by the sea in Apelviken, in one of our beach houses. Here you live with the beach right next to you and room to spend the whole day. Your own door, your own terrace, and accommodation that works just as well between beach visits as in the evening.", de: "Wohnen Sie direkt am Meer in Apelviken, in einem unserer Strandhäuser. Hier wohnen Sie mit dem Strand direkt nebenan und haben Platz für den ganzen Tag. Eigene Tür, eigene Terrasse und eine Unterkunft, die zwischen den Strandbesuchen genauso gut funktioniert wie am Abend." },
     icons: [
            '<span class="material-symbols-outlined" style="font-size:22px">group</span>',
      '<span class="material-symbols-outlined" style="font-size:22px">pet_supplies</span>',
             '<span class="material-symbols-outlined" style="font-size:22px">accessible</span>'
     ],
     iconTexts: [
-      "4 vuxna & 2 barn",
-      "Djurvänlig",
-      "Funktionsanpassade"
+      { sv: "4 vuxna & 2 barn", en: "4 adults & 2 children", de: "4 Erwachsene & 2 Kinder" },
+      { sv: "Djurvänlig", en: "Pet friendly", de: "Tierfreundlich" },
+      { sv: "Funktionsanpassade", en: "Accessible", de: "Barrierefrei" }
     ],
     images: ["", "", "", ""],
-    cta1Text: "Vägbeskrivning",
+    cta1Text: { sv: "Vägbeskrivning", en: "Get directions", de: "Wegbeschreibung" },
     cta1Href: "https://www.google.com/maps/dir/?api=1&destination=ApelvikStrand,+Surbrunnsv%C3%A4gen+2-8,+432+53+Varberg",
     cta2Text: "",
     cta2Href: ""
@@ -1721,18 +1815,18 @@ const sektion73Pins = [
   ui: { bubbleBg: "#A88867" },
   modal: {
     imgSrc: "https://res.cloudinary.com/dmgmoisae/image/upload/v1769800477/jpeg-optimizer_ApelvikStrand_0356_1_llpb1s.jpg",
-    h: "Strandhus 117  ",
-    p: "Bo precis vid havet i Apelviken, i ett av våra strandhus. Här bor du med stranden alldeles intill och med plats att vara på under hela dagen. Egen dörr, egen uteplats och ett boende som fungerar lika bra mellan strandpassen som på kvällen.",
+    h: { sv: "Strandhus 117", en: "Beach House 117", de: "Strandhaus 117" },
+    p: { sv: "Bo precis vid havet i Apelviken, i ett av våra strandhus. Här bor du med stranden alldeles intill och med plats att vara på under hela dagen. Egen dörr, egen uteplats och ett boende som fungerar lika bra mellan strandpassen som på kvällen.", en: "Stay right by the sea in Apelviken, in one of our beach houses. Here you live with the beach right next to you and room to spend the whole day. Your own door, your own terrace, and accommodation that works just as well between beach visits as in the evening.", de: "Wohnen Sie direkt am Meer in Apelviken, in einem unserer Strandhäuser. Hier wohnen Sie mit dem Strand direkt nebenan und haben Platz für den ganzen Tag. Eigene Tür, eigene Terrasse und eine Unterkunft, die zwischen den Strandbesuchen genauso gut funktioniert wie am Abend." },
     icons: [
       '<span class="material-symbols-outlined" style="font-size:22px">group</span>',
       '<span class="material-symbols-outlined" style="font-size:22px">sunny</span>'
     ],
     iconTexts: [
-      "4 vuxna & 2 barn",
-      "Morgonsol"
+      { sv: "4 vuxna & 2 barn", en: "4 adults & 2 children", de: "4 Erwachsene & 2 Kinder" },
+      { sv: "Morgonsol", en: "Morning sun", de: "Morgensonne" }
     ],
     images: ["", "", "", ""],
-    cta1Text: "Vägbeskrivning",
+    cta1Text: { sv: "Vägbeskrivning", en: "Get directions", de: "Wegbeschreibung" },
     cta1Href: "https://www.google.com/maps/dir/?api=1&destination=ApelvikStrand,+Surbrunnsv%C3%A4gen+2-8,+432+53+Varberg",
     cta2Text: "",
     cta2Href: ""
@@ -1748,18 +1842,18 @@ const sektion73Pins = [
   ui: { bubbleBg: "#A88867" },
   modal: {
     imgSrc: "https://res.cloudinary.com/dmgmoisae/image/upload/v1769800477/jpeg-optimizer_ApelvikStrand_0356_1_llpb1s.jpg",
-    h: "Strandhus 118  ",
-    p: "Bo precis vid havet i Apelviken, i ett av våra strandhus. Här bor du med stranden alldeles intill och med plats att vara på under hela dagen. Egen dörr, egen uteplats och ett boende som fungerar lika bra mellan strandpassen som på kvällen.",
+    h: { sv: "Strandhus 118", en: "Beach House 118", de: "Strandhaus 118" },
+    p: { sv: "Bo precis vid havet i Apelviken, i ett av våra strandhus. Här bor du med stranden alldeles intill och med plats att vara på under hela dagen. Egen dörr, egen uteplats och ett boende som fungerar lika bra mellan strandpassen som på kvällen.", en: "Stay right by the sea in Apelviken, in one of our beach houses. Here you live with the beach right next to you and room to spend the whole day. Your own door, your own terrace, and accommodation that works just as well between beach visits as in the evening.", de: "Wohnen Sie direkt am Meer in Apelviken, in einem unserer Strandhäuser. Hier wohnen Sie mit dem Strand direkt nebenan und haben Platz für den ganzen Tag. Eigene Tür, eigene Terrasse und eine Unterkunft, die zwischen den Strandbesuchen genauso gut funktioniert wie am Abend." },
     icons: [
       '<span class="material-symbols-outlined" style="font-size:22px">group</span>',
       '<span class="material-symbols-outlined" style="font-size:22px">sunny</span>'
     ],
     iconTexts: [
-      "4 vuxna & 2 barn",
-      "Morgonsol"
+      { sv: "4 vuxna & 2 barn", en: "4 adults & 2 children", de: "4 Erwachsene & 2 Kinder" },
+      { sv: "Morgonsol", en: "Morning sun", de: "Morgensonne" }
     ],
     images: ["", "", "", ""],
-    cta1Text: "Vägbeskrivning",
+    cta1Text: { sv: "Vägbeskrivning", en: "Get directions", de: "Wegbeschreibung" },
     cta1Href: "https://www.google.com/maps/dir/?api=1&destination=ApelvikStrand,+Surbrunnsv%C3%A4gen+2-8,+432+53+Varberg",
     cta2Text: "",
     cta2Href: ""
@@ -1775,18 +1869,18 @@ const sektion73Pins = [
   ui: { bubbleBg: "#A88867" },
   modal: {
     imgSrc: "https://res.cloudinary.com/dmgmoisae/image/upload/v1769800477/jpeg-optimizer_ApelvikStrand_0356_1_llpb1s.jpg",
-    h: "Strandhus 119  ",
-    p: "Bo precis vid havet i Apelviken, i ett av våra strandhus. Här bor du med stranden alldeles intill och med plats att vara på under hela dagen. Egen dörr, egen uteplats och ett boende som fungerar lika bra mellan strandpassen som på kvällen.",
+    h: { sv: "Strandhus 119", en: "Beach House 119", de: "Strandhaus 119" },
+    p: { sv: "Bo precis vid havet i Apelviken, i ett av våra strandhus. Här bor du med stranden alldeles intill och med plats att vara på under hela dagen. Egen dörr, egen uteplats och ett boende som fungerar lika bra mellan strandpassen som på kvällen.", en: "Stay right by the sea in Apelviken, in one of our beach houses. Here you live with the beach right next to you and room to spend the whole day. Your own door, your own terrace, and accommodation that works just as well between beach visits as in the evening.", de: "Wohnen Sie direkt am Meer in Apelviken, in einem unserer Strandhäuser. Hier wohnen Sie mit dem Strand direkt nebenan und haben Platz für den ganzen Tag. Eigene Tür, eigene Terrasse und eine Unterkunft, die zwischen den Strandbesuchen genauso gut funktioniert wie am Abend." },
     icons: [
       '<span class="material-symbols-outlined" style="font-size:22px">group</span>',
       '<span class="material-symbols-outlined" style="font-size:22px">sunny</span>'
     ],
     iconTexts: [
-      "4 vuxna & 2 barn",
-      "Morgonsol"
+      { sv: "4 vuxna & 2 barn", en: "4 adults & 2 children", de: "4 Erwachsene & 2 Kinder" },
+      { sv: "Morgonsol", en: "Morning sun", de: "Morgensonne" }
     ],
     images: ["", "", "", ""],
-    cta1Text: "Vägbeskrivning",
+    cta1Text: { sv: "Vägbeskrivning", en: "Get directions", de: "Wegbeschreibung" },
     cta1Href: "https://www.google.com/maps/dir/?api=1&destination=ApelvikStrand,+Surbrunnsv%C3%A4gen+2-8,+432+53+Varberg",
     cta2Text: "",
     cta2Href: ""
@@ -1802,18 +1896,18 @@ const sektion73Pins = [
   ui: { bubbleBg: "#A88867" },
   modal: {
     imgSrc: "https://res.cloudinary.com/dmgmoisae/image/upload/v1769800477/jpeg-optimizer_ApelvikStrand_0356_1_llpb1s.jpg",
-    h: "Strandhus 120  ",
-    p: "Bo precis vid havet i Apelviken, i ett av våra strandhus. Här bor du med stranden alldeles intill och med plats att vara på under hela dagen. Egen dörr, egen uteplats och ett boende som fungerar lika bra mellan strandpassen som på kvällen.",
+    h: { sv: "Strandhus 120", en: "Beach House 120", de: "Strandhaus 120" },
+    p: { sv: "Bo precis vid havet i Apelviken, i ett av våra strandhus. Här bor du med stranden alldeles intill och med plats att vara på under hela dagen. Egen dörr, egen uteplats och ett boende som fungerar lika bra mellan strandpassen som på kvällen.", en: "Stay right by the sea in Apelviken, in one of our beach houses. Here you live with the beach right next to you and room to spend the whole day. Your own door, your own terrace, and accommodation that works just as well between beach visits as in the evening.", de: "Wohnen Sie direkt am Meer in Apelviken, in einem unserer Strandhäuser. Hier wohnen Sie mit dem Strand direkt nebenan und haben Platz für den ganzen Tag. Eigene Tür, eigene Terrasse und eine Unterkunft, die zwischen den Strandbesuchen genauso gut funktioniert wie am Abend." },
     icons: [
       '<span class="material-symbols-outlined" style="font-size:22px">group</span>',
       '<span class="material-symbols-outlined" style="font-size:22px">sunny</span>'
     ],
     iconTexts: [
-      "4 vuxna & 2 barn",
-      "Morgonsol"
+      { sv: "4 vuxna & 2 barn", en: "4 adults & 2 children", de: "4 Erwachsene & 2 Kinder" },
+      { sv: "Morgonsol", en: "Morning sun", de: "Morgensonne" }
     ],
     images: ["", "", "", ""],
-    cta1Text: "Vägbeskrivning",
+    cta1Text: { sv: "Vägbeskrivning", en: "Get directions", de: "Wegbeschreibung" },
     cta1Href: "https://www.google.com/maps/dir/?api=1&destination=ApelvikStrand,+Surbrunnsv%C3%A4gen+2-8,+432+53+Varberg",
     cta2Text: "",
     cta2Href: ""
@@ -1829,18 +1923,18 @@ const sektion73Pins = [
   ui: { bubbleBg: "#A88867" },
   modal: {
     imgSrc: "https://res.cloudinary.com/dmgmoisae/image/upload/v1769800477/jpeg-optimizer_ApelvikStrand_0356_1_llpb1s.jpg",
-    h: "Strandhus 121  ",
-    p: "Bo precis vid havet i Apelviken, i ett av våra strandhus. Här bor du med stranden alldeles intill och med plats att vara på under hela dagen. Egen dörr, egen uteplats och ett boende som fungerar lika bra mellan strandpassen som på kvällen.",
+    h: { sv: "Strandhus 121", en: "Beach House 121", de: "Strandhaus 121" },
+    p: { sv: "Bo precis vid havet i Apelviken, i ett av våra strandhus. Här bor du med stranden alldeles intill och med plats att vara på under hela dagen. Egen dörr, egen uteplats och ett boende som fungerar lika bra mellan strandpassen som på kvällen.", en: "Stay right by the sea in Apelviken, in one of our beach houses. Here you live with the beach right next to you and room to spend the whole day. Your own door, your own terrace, and accommodation that works just as well between beach visits as in the evening.", de: "Wohnen Sie direkt am Meer in Apelviken, in einem unserer Strandhäuser. Hier wohnen Sie mit dem Strand direkt nebenan und haben Platz für den ganzen Tag. Eigene Tür, eigene Terrasse und eine Unterkunft, die zwischen den Strandbesuchen genauso gut funktioniert wie am Abend." },
     icons: [
       '<span class="material-symbols-outlined" style="font-size:22px">group</span>',
       '<span class="material-symbols-outlined" style="font-size:22px">sunny</span>'
     ],
     iconTexts: [
-      "4 vuxna & 2 barn",
-      "Morgonsol"
+      { sv: "4 vuxna & 2 barn", en: "4 adults & 2 children", de: "4 Erwachsene & 2 Kinder" },
+      { sv: "Morgonsol", en: "Morning sun", de: "Morgensonne" }
     ],
     images: ["", "", "", ""],
-    cta1Text: "Vägbeskrivning",
+    cta1Text: { sv: "Vägbeskrivning", en: "Get directions", de: "Wegbeschreibung" },
     cta1Href: "https://www.google.com/maps/dir/?api=1&destination=ApelvikStrand,+Surbrunnsv%C3%A4gen+2-8,+432+53+Varberg",
     cta2Text: "",
     cta2Href: ""
@@ -1856,18 +1950,18 @@ const sektion73Pins = [
   ui: { bubbleBg: "#A88867" },
   modal: {
     imgSrc: "https://res.cloudinary.com/dmgmoisae/image/upload/v1769800477/jpeg-optimizer_ApelvikStrand_0356_1_llpb1s.jpg",
-    h: "Strandhus 122  ",
-    p: "Bo precis vid havet i Apelviken, i ett av våra strandhus. Här bor du med stranden alldeles intill och med plats att vara på under hela dagen. Egen dörr, egen uteplats och ett boende som fungerar lika bra mellan strandpassen som på kvällen.",
+    h: { sv: "Strandhus 122", en: "Beach House 122", de: "Strandhaus 122" },
+    p: { sv: "Bo precis vid havet i Apelviken, i ett av våra strandhus. Här bor du med stranden alldeles intill och med plats att vara på under hela dagen. Egen dörr, egen uteplats och ett boende som fungerar lika bra mellan strandpassen som på kvällen.", en: "Stay right by the sea in Apelviken, in one of our beach houses. Here you live with the beach right next to you and room to spend the whole day. Your own door, your own terrace, and accommodation that works just as well between beach visits as in the evening.", de: "Wohnen Sie direkt am Meer in Apelviken, in einem unserer Strandhäuser. Hier wohnen Sie mit dem Strand direkt nebenan und haben Platz für den ganzen Tag. Eigene Tür, eigene Terrasse und eine Unterkunft, die zwischen den Strandbesuchen genauso gut funktioniert wie am Abend." },
     icons: [
       '<span class="material-symbols-outlined" style="font-size:22px">group</span>',
       '<span class="material-symbols-outlined" style="font-size:22px">sunny</span>'
     ],
     iconTexts: [
-      "4 vuxna & 2 barn",
-      "Morgonsol"
+      { sv: "4 vuxna & 2 barn", en: "4 adults & 2 children", de: "4 Erwachsene & 2 Kinder" },
+      { sv: "Morgonsol", en: "Morning sun", de: "Morgensonne" }
     ],
     images: ["", "", "", ""],
-    cta1Text: "Vägbeskrivning",
+    cta1Text: { sv: "Vägbeskrivning", en: "Get directions", de: "Wegbeschreibung" },
     cta1Href: "https://www.google.com/maps/dir/?api=1&destination=ApelvikStrand,+Surbrunnsv%C3%A4gen+2-8,+432+53+Varberg",
     cta2Text: "",
     cta2Href: ""
@@ -1883,20 +1977,20 @@ const sektion73Pins = [
   ui: { bubbleBg: "#7A936B" },
   modal: {
     imgSrc: "https://res.cloudinary.com/dmgmoisae/image/upload/v1769800477/jpeg-optimizer_ApelvikStrand_0356_1_llpb1s.jpg",
-    h: "Strandhus 123  ",
-    p: "Bo precis vid havet i Apelviken, i ett av våra strandhus. Här bor du med stranden alldeles intill och med plats att vara på under hela dagen. Egen dörr, egen uteplats och ett boende som fungerar lika bra mellan strandpassen som på kvällen.",
+    h: { sv: "Strandhus 123", en: "Beach House 123", de: "Strandhaus 123" },
+    p: { sv: "Bo precis vid havet i Apelviken, i ett av våra strandhus. Här bor du med stranden alldeles intill och med plats att vara på under hela dagen. Egen dörr, egen uteplats och ett boende som fungerar lika bra mellan strandpassen som på kvällen.", en: "Stay right by the sea in Apelviken, in one of our beach houses. Here you live with the beach right next to you and room to spend the whole day. Your own door, your own terrace, and accommodation that works just as well between beach visits as in the evening.", de: "Wohnen Sie direkt am Meer in Apelviken, in einem unserer Strandhäuser. Hier wohnen Sie mit dem Strand direkt nebenan und haben Platz für den ganzen Tag. Eigene Tür, eigene Terrasse und eine Unterkunft, die zwischen den Strandbesuchen genauso gut funktioniert wie am Abend." },
     icons: [
            '<span class="material-symbols-outlined" style="font-size:22px">group</span>',
      '<span class="material-symbols-outlined" style="font-size:22px">pet_supplies</span>',
             '<span class="material-symbols-outlined" style="font-size:22px">accessible</span>'
     ],
     iconTexts: [
-      "4 vuxna & 2 barn",
-      "Djurvänlig",
-      "Funktionsanpassade"
+      { sv: "4 vuxna & 2 barn", en: "4 adults & 2 children", de: "4 Erwachsene & 2 Kinder" },
+      { sv: "Djurvänlig", en: "Pet friendly", de: "Tierfreundlich" },
+      { sv: "Funktionsanpassade", en: "Accessible", de: "Barrierefrei" }
     ],
     images: ["", "", "", ""],
-    cta1Text: "Vägbeskrivning",
+    cta1Text: { sv: "Vägbeskrivning", en: "Get directions", de: "Wegbeschreibung" },
     cta1Href: "https://www.google.com/maps/dir/?api=1&destination=ApelvikStrand,+Surbrunnsv%C3%A4gen+2-8,+432+53+Varberg",
     cta2Text: "",
     cta2Href: ""
@@ -1912,20 +2006,20 @@ const sektion73Pins = [
   ui: { bubbleBg: "#7A936B" },
   modal: {
     imgSrc: "https://res.cloudinary.com/dmgmoisae/image/upload/v1769800477/jpeg-optimizer_ApelvikStrand_0356_1_llpb1s.jpg",
-    h: "Strandhus 124  ",
-    p: "Bo precis vid havet i Apelviken, i ett av våra strandhus. Här bor du med stranden alldeles intill och med plats att vara på under hela dagen. Egen dörr, egen uteplats och ett boende som fungerar lika bra mellan strandpassen som på kvällen.",
+    h: { sv: "Strandhus 124", en: "Beach House 124", de: "Strandhaus 124" },
+    p: { sv: "Bo precis vid havet i Apelviken, i ett av våra strandhus. Här bor du med stranden alldeles intill och med plats att vara på under hela dagen. Egen dörr, egen uteplats och ett boende som fungerar lika bra mellan strandpassen som på kvällen.", en: "Stay right by the sea in Apelviken, in one of our beach houses. Here you live with the beach right next to you and room to spend the whole day. Your own door, your own terrace, and accommodation that works just as well between beach visits as in the evening.", de: "Wohnen Sie direkt am Meer in Apelviken, in einem unserer Strandhäuser. Hier wohnen Sie mit dem Strand direkt nebenan und haben Platz für den ganzen Tag. Eigene Tür, eigene Terrasse und eine Unterkunft, die zwischen den Strandbesuchen genauso gut funktioniert wie am Abend." },
     icons: [
            '<span class="material-symbols-outlined" style="font-size:22px">group</span>',
      '<span class="material-symbols-outlined" style="font-size:22px">pet_supplies</span>',
             '<span class="material-symbols-outlined" style="font-size:22px">accessible</span>'
     ],
     iconTexts: [
-      "4 vuxna & 2 barn",
-      "Djurvänlig",
-      "Funktionsanpassade"
+      { sv: "4 vuxna & 2 barn", en: "4 adults & 2 children", de: "4 Erwachsene & 2 Kinder" },
+      { sv: "Djurvänlig", en: "Pet friendly", de: "Tierfreundlich" },
+      { sv: "Funktionsanpassade", en: "Accessible", de: "Barrierefrei" }
     ],
     images: ["", "", "", ""],
-    cta1Text: "Vägbeskrivning",
+    cta1Text: { sv: "Vägbeskrivning", en: "Get directions", de: "Wegbeschreibung" },
     cta1Href: "https://www.google.com/maps/dir/?api=1&destination=ApelvikStrand,+Surbrunnsv%C3%A4gen+2-8,+432+53+Varberg",
     cta2Text: "",
     cta2Href: ""
@@ -1941,18 +2035,18 @@ const sektion73Pins = [
   ui: { bubbleBg: "#446D74" },
   modal: {
     imgSrc: "https://res.cloudinary.com/dmgmoisae/image/upload/v1769800477/jpeg-optimizer_ApelvikStrand_0356_1_llpb1s.jpg",
-    h: "Strandhus 125  ",
-    p: "Bo precis vid havet i Apelviken, i ett av våra strandhus. Här bor du med stranden alldeles intill och med plats att vara på under hela dagen. Egen dörr, egen uteplats och ett boende som fungerar lika bra mellan strandpassen som på kvällen.",
+    h: { sv: "Strandhus 125", en: "Beach House 125", de: "Strandhaus 125" },
+    p: { sv: "Bo precis vid havet i Apelviken, i ett av våra strandhus. Här bor du med stranden alldeles intill och med plats att vara på under hela dagen. Egen dörr, egen uteplats och ett boende som fungerar lika bra mellan strandpassen som på kvällen.", en: "Stay right by the sea in Apelviken, in one of our beach houses. Here you live with the beach right next to you and room to spend the whole day. Your own door, your own terrace, and accommodation that works just as well between beach visits as in the evening.", de: "Wohnen Sie direkt am Meer in Apelviken, in einem unserer Strandhäuser. Hier wohnen Sie mit dem Strand direkt nebenan und haben Platz für den ganzen Tag. Eigene Tür, eigene Terrasse und eine Unterkunft, die zwischen den Strandbesuchen genauso gut funktioniert wie am Abend." },
     icons: [
       '<span class="material-symbols-outlined" style="font-size:22px">group</span>',
       '<span class="material-symbols-outlined" style="font-size:22px">sunny</span>'
     ],
     iconTexts: [
-       "4 vuxna & 2 barn",
-      "Kvällssol"
+       { sv: "4 vuxna & 2 barn", en: "4 adults & 2 children", de: "4 Erwachsene & 2 Kinder" },
+      { sv: "Kvällssol", en: "Evening sun", de: "Abendsonne" }
     ],
     images: ["", "", "", ""],
-    cta1Text: "Vägbeskrivning",
+    cta1Text: { sv: "Vägbeskrivning", en: "Get directions", de: "Wegbeschreibung" },
     cta1Href: "https://www.google.com/maps/dir/?api=1&destination=ApelvikStrand,+Surbrunnsv%C3%A4gen+2-8,+432+53+Varberg",
     cta2Text: "",
     cta2Href: ""
@@ -1968,18 +2062,18 @@ const sektion73Pins = [
   ui: { bubbleBg: "#446D74" },
   modal: {
     imgSrc: "https://res.cloudinary.com/dmgmoisae/image/upload/v1769800477/jpeg-optimizer_ApelvikStrand_0356_1_llpb1s.jpg",
-    h: "Strandhus 126  ",
-    p: "Bo precis vid havet i Apelviken, i ett av våra strandhus. Här bor du med stranden alldeles intill och med plats att vara på under hela dagen. Egen dörr, egen uteplats och ett boende som fungerar lika bra mellan strandpassen som på kvällen.",
+    h: { sv: "Strandhus 126", en: "Beach House 126", de: "Strandhaus 126" },
+    p: { sv: "Bo precis vid havet i Apelviken, i ett av våra strandhus. Här bor du med stranden alldeles intill och med plats att vara på under hela dagen. Egen dörr, egen uteplats och ett boende som fungerar lika bra mellan strandpassen som på kvällen.", en: "Stay right by the sea in Apelviken, in one of our beach houses. Here you live with the beach right next to you and room to spend the whole day. Your own door, your own terrace, and accommodation that works just as well between beach visits as in the evening.", de: "Wohnen Sie direkt am Meer in Apelviken, in einem unserer Strandhäuser. Hier wohnen Sie mit dem Strand direkt nebenan und haben Platz für den ganzen Tag. Eigene Tür, eigene Terrasse und eine Unterkunft, die zwischen den Strandbesuchen genauso gut funktioniert wie am Abend." },
     icons: [
       '<span class="material-symbols-outlined" style="font-size:22px">group</span>',
       '<span class="material-symbols-outlined" style="font-size:22px">sunny</span>'
     ],
     iconTexts: [
-       "4 vuxna & 2 barn",
-      "Kvällssol"
+       { sv: "4 vuxna & 2 barn", en: "4 adults & 2 children", de: "4 Erwachsene & 2 Kinder" },
+      { sv: "Kvällssol", en: "Evening sun", de: "Abendsonne" }
     ],
     images: ["", "", "", ""],
-    cta1Text: "Vägbeskrivning",
+    cta1Text: { sv: "Vägbeskrivning", en: "Get directions", de: "Wegbeschreibung" },
     cta1Href: "https://www.google.com/maps/dir/?api=1&destination=ApelvikStrand,+Surbrunnsv%C3%A4gen+2-8,+432+53+Varberg",
     cta2Text: "",
     cta2Href: ""
@@ -1995,18 +2089,18 @@ const sektion73Pins = [
   ui: { bubbleBg: "#446D74" },
   modal: {
     imgSrc: "https://res.cloudinary.com/dmgmoisae/image/upload/v1769800477/jpeg-optimizer_ApelvikStrand_0356_1_llpb1s.jpg",
-    h: "Strandhus 127  ",
-    p: "Bo precis vid havet i Apelviken, i ett av våra strandhus. Här bor du med stranden alldeles intill och med plats att vara på under hela dagen. Egen dörr, egen uteplats och ett boende som fungerar lika bra mellan strandpassen som på kvällen.",
+    h: { sv: "Strandhus 127", en: "Beach House 127", de: "Strandhaus 127" },
+    p: { sv: "Bo precis vid havet i Apelviken, i ett av våra strandhus. Här bor du med stranden alldeles intill och med plats att vara på under hela dagen. Egen dörr, egen uteplats och ett boende som fungerar lika bra mellan strandpassen som på kvällen.", en: "Stay right by the sea in Apelviken, in one of our beach houses. Here you live with the beach right next to you and room to spend the whole day. Your own door, your own terrace, and accommodation that works just as well between beach visits as in the evening.", de: "Wohnen Sie direkt am Meer in Apelviken, in einem unserer Strandhäuser. Hier wohnen Sie mit dem Strand direkt nebenan und haben Platz für den ganzen Tag. Eigene Tür, eigene Terrasse und eine Unterkunft, die zwischen den Strandbesuchen genauso gut funktioniert wie am Abend." },
     icons: [
       '<span class="material-symbols-outlined" style="font-size:22px">group</span>',
       '<span class="material-symbols-outlined" style="font-size:22px">sunny</span>'
     ],
     iconTexts: [
-       "4 vuxna & 2 barn",
-      "Kvällssol"
+       { sv: "4 vuxna & 2 barn", en: "4 adults & 2 children", de: "4 Erwachsene & 2 Kinder" },
+      { sv: "Kvällssol", en: "Evening sun", de: "Abendsonne" }
     ],
     images: ["", "", "", ""],
-    cta1Text: "Vägbeskrivning",
+    cta1Text: { sv: "Vägbeskrivning", en: "Get directions", de: "Wegbeschreibung" },
     cta1Href: "https://www.google.com/maps/dir/?api=1&destination=ApelvikStrand,+Surbrunnsv%C3%A4gen+2-8,+432+53+Varberg",
     cta2Text: "",
     cta2Href: ""
@@ -2022,18 +2116,18 @@ const sektion73Pins = [
   ui: { bubbleBg: "#446D74" },
   modal: {
     imgSrc: "https://res.cloudinary.com/dmgmoisae/image/upload/v1769800477/jpeg-optimizer_ApelvikStrand_0356_1_llpb1s.jpg",
-    h: "Strandhus 128  ",
-    p: "Bo precis vid havet i Apelviken, i ett av våra strandhus. Här bor du med stranden alldeles intill och med plats att vara på under hela dagen. Egen dörr, egen uteplats och ett boende som fungerar lika bra mellan strandpassen som på kvällen.",
+    h: { sv: "Strandhus 128", en: "Beach House 128", de: "Strandhaus 128" },
+    p: { sv: "Bo precis vid havet i Apelviken, i ett av våra strandhus. Här bor du med stranden alldeles intill och med plats att vara på under hela dagen. Egen dörr, egen uteplats och ett boende som fungerar lika bra mellan strandpassen som på kvällen.", en: "Stay right by the sea in Apelviken, in one of our beach houses. Here you live with the beach right next to you and room to spend the whole day. Your own door, your own terrace, and accommodation that works just as well between beach visits as in the evening.", de: "Wohnen Sie direkt am Meer in Apelviken, in einem unserer Strandhäuser. Hier wohnen Sie mit dem Strand direkt nebenan und haben Platz für den ganzen Tag. Eigene Tür, eigene Terrasse und eine Unterkunft, die zwischen den Strandbesuchen genauso gut funktioniert wie am Abend." },
     icons: [
       '<span class="material-symbols-outlined" style="font-size:22px">group</span>',
       '<span class="material-symbols-outlined" style="font-size:22px">sunny</span>'
     ],
     iconTexts: [
-       "4 vuxna & 2 barn",
-      "Kvällssol"
+       { sv: "4 vuxna & 2 barn", en: "4 adults & 2 children", de: "4 Erwachsene & 2 Kinder" },
+      { sv: "Kvällssol", en: "Evening sun", de: "Abendsonne" }
     ],
     images: ["", "", "", ""],
-    cta1Text: "Vägbeskrivning",
+    cta1Text: { sv: "Vägbeskrivning", en: "Get directions", de: "Wegbeschreibung" },
     cta1Href: "https://www.google.com/maps/dir/?api=1&destination=ApelvikStrand,+Surbrunnsv%C3%A4gen+2-8,+432+53+Varberg",
     cta2Text: "",
     cta2Href: ""
@@ -2049,18 +2143,18 @@ const sektion73Pins = [
   ui: { bubbleBg: "#446D74" },
   modal: {
     imgSrc: "https://res.cloudinary.com/dmgmoisae/image/upload/v1769800477/jpeg-optimizer_ApelvikStrand_0356_1_llpb1s.jpg",
-    h: "Strandhus 129  ",
-    p: "Bo precis vid havet i Apelviken, i ett av våra strandhus. Här bor du med stranden alldeles intill och med plats att vara på under hela dagen. Egen dörr, egen uteplats och ett boende som fungerar lika bra mellan strandpassen som på kvällen.",
+    h: { sv: "Strandhus 129", en: "Beach House 129", de: "Strandhaus 129" },
+    p: { sv: "Bo precis vid havet i Apelviken, i ett av våra strandhus. Här bor du med stranden alldeles intill och med plats att vara på under hela dagen. Egen dörr, egen uteplats och ett boende som fungerar lika bra mellan strandpassen som på kvällen.", en: "Stay right by the sea in Apelviken, in one of our beach houses. Here you live with the beach right next to you and room to spend the whole day. Your own door, your own terrace, and accommodation that works just as well between beach visits as in the evening.", de: "Wohnen Sie direkt am Meer in Apelviken, in einem unserer Strandhäuser. Hier wohnen Sie mit dem Strand direkt nebenan und haben Platz für den ganzen Tag. Eigene Tür, eigene Terrasse und eine Unterkunft, die zwischen den Strandbesuchen genauso gut funktioniert wie am Abend." },
     icons: [
       '<span class="material-symbols-outlined" style="font-size:22px">group</span>',
       '<span class="material-symbols-outlined" style="font-size:22px">sunny</span>'
     ],
     iconTexts: [
-       "4 vuxna & 2 barn",
-      "Kvällssol"
+       { sv: "4 vuxna & 2 barn", en: "4 adults & 2 children", de: "4 Erwachsene & 2 Kinder" },
+      { sv: "Kvällssol", en: "Evening sun", de: "Abendsonne" }
     ],
     images: ["", "", "", ""],
-    cta1Text: "Vägbeskrivning",
+    cta1Text: { sv: "Vägbeskrivning", en: "Get directions", de: "Wegbeschreibung" },
     cta1Href: "https://www.google.com/maps/dir/?api=1&destination=ApelvikStrand,+Surbrunnsv%C3%A4gen+2-8,+432+53+Varberg",
     cta2Text: "",
     cta2Href: ""
@@ -2076,18 +2170,18 @@ const sektion73Pins = [
   ui: { bubbleBg: "#446D74" },
   modal: {
     imgSrc: "https://res.cloudinary.com/dmgmoisae/image/upload/v1769800477/jpeg-optimizer_ApelvikStrand_0356_1_llpb1s.jpg",
-    h: "Strandhus 130  ",
-    p: "Bo precis vid havet i Apelviken, i ett av våra strandhus. Här bor du med stranden alldeles intill och med plats att vara på under hela dagen. Egen dörr, egen uteplats och ett boende som fungerar lika bra mellan strandpassen som på kvällen.",
+    h: { sv: "Strandhus 130", en: "Beach House 130", de: "Strandhaus 130" },
+    p: { sv: "Bo precis vid havet i Apelviken, i ett av våra strandhus. Här bor du med stranden alldeles intill och med plats att vara på under hela dagen. Egen dörr, egen uteplats och ett boende som fungerar lika bra mellan strandpassen som på kvällen.", en: "Stay right by the sea in Apelviken, in one of our beach houses. Here you live with the beach right next to you and room to spend the whole day. Your own door, your own terrace, and accommodation that works just as well between beach visits as in the evening.", de: "Wohnen Sie direkt am Meer in Apelviken, in einem unserer Strandhäuser. Hier wohnen Sie mit dem Strand direkt nebenan und haben Platz für den ganzen Tag. Eigene Tür, eigene Terrasse und eine Unterkunft, die zwischen den Strandbesuchen genauso gut funktioniert wie am Abend." },
     icons: [
       '<span class="material-symbols-outlined" style="font-size:22px">group</span>',
       '<span class="material-symbols-outlined" style="font-size:22px">sunny</span>'
     ],
     iconTexts: [
-       "4 vuxna & 2 barn",
-      "Kvällssol"
+       { sv: "4 vuxna & 2 barn", en: "4 adults & 2 children", de: "4 Erwachsene & 2 Kinder" },
+      { sv: "Kvällssol", en: "Evening sun", de: "Abendsonne" }
     ],
     images: ["", "", "", ""],
-    cta1Text: "Vägbeskrivning",
+    cta1Text: { sv: "Vägbeskrivning", en: "Get directions", de: "Wegbeschreibung" },
     cta1Href: "https://www.google.com/maps/dir/?api=1&destination=ApelvikStrand,+Surbrunnsv%C3%A4gen+2-8,+432+53+Varberg",
     cta2Text: "",
     cta2Href: ""
@@ -2103,20 +2197,20 @@ const sektion73Pins = [
   ui: { bubbleBg: "#7A936B" },
   modal: {
     imgSrc: "https://res.cloudinary.com/dmgmoisae/image/upload/v1769800477/jpeg-optimizer_ApelvikStrand_0356_1_llpb1s.jpg",
-    h: "Strandhus 131  ",
-    p: "Bo precis vid havet i Apelviken, i ett av våra strandhus. Här bor du med stranden alldeles intill och med plats att vara på under hela dagen. Egen dörr, egen uteplats och ett boende som fungerar lika bra mellan strandpassen som på kvällen.",
+    h: { sv: "Strandhus 131", en: "Beach House 131", de: "Strandhaus 131" },
+    p: { sv: "Bo precis vid havet i Apelviken, i ett av våra strandhus. Här bor du med stranden alldeles intill och med plats att vara på under hela dagen. Egen dörr, egen uteplats och ett boende som fungerar lika bra mellan strandpassen som på kvällen.", en: "Stay right by the sea in Apelviken, in one of our beach houses. Here you live with the beach right next to you and room to spend the whole day. Your own door, your own terrace, and accommodation that works just as well between beach visits as in the evening.", de: "Wohnen Sie direkt am Meer in Apelviken, in einem unserer Strandhäuser. Hier wohnen Sie mit dem Strand direkt nebenan und haben Platz für den ganzen Tag. Eigene Tür, eigene Terrasse und eine Unterkunft, die zwischen den Strandbesuchen genauso gut funktioniert wie am Abend." },
     icons: [
            '<span class="material-symbols-outlined" style="font-size:22px">group</span>',
      '<span class="material-symbols-outlined" style="font-size:22px">pet_supplies</span>',
             '<span class="material-symbols-outlined" style="font-size:22px">accessible</span>'
     ],
     iconTexts: [
-      "4 vuxna & 2 barn",
-      "Djurvänlig",
-      "Funktionsanpassade"
+      { sv: "4 vuxna & 2 barn", en: "4 adults & 2 children", de: "4 Erwachsene & 2 Kinder" },
+      { sv: "Djurvänlig", en: "Pet friendly", de: "Tierfreundlich" },
+      { sv: "Funktionsanpassade", en: "Accessible", de: "Barrierefrei" }
     ],
     images: ["", "", "", ""],
-    cta1Text: "Vägbeskrivning",
+    cta1Text: { sv: "Vägbeskrivning", en: "Get directions", de: "Wegbeschreibung" },
     cta1Href: "https://www.google.com/maps/dir/?api=1&destination=ApelvikStrand,+Surbrunnsv%C3%A4gen+2-8,+432+53+Varberg",
     cta2Text: "",
     cta2Href: ""
@@ -2132,20 +2226,20 @@ const sektion73Pins = [
   ui: { bubbleBg: "#7A936B" },
   modal: {
     imgSrc: "https://res.cloudinary.com/dmgmoisae/image/upload/v1769800477/jpeg-optimizer_ApelvikStrand_0356_1_llpb1s.jpg",
-    h: "Strandhus 132  ",
-    p: "Bo precis vid havet i Apelviken, i ett av våra strandhus. Här bor du med stranden alldeles intill och med plats att vara på under hela dagen. Egen dörr, egen uteplats och ett boende som fungerar lika bra mellan strandpassen som på kvällen.",
+    h: { sv: "Strandhus 132", en: "Beach House 132", de: "Strandhaus 132" },
+    p: { sv: "Bo precis vid havet i Apelviken, i ett av våra strandhus. Här bor du med stranden alldeles intill och med plats att vara på under hela dagen. Egen dörr, egen uteplats och ett boende som fungerar lika bra mellan strandpassen som på kvällen.", en: "Stay right by the sea in Apelviken, in one of our beach houses. Here you live with the beach right next to you and room to spend the whole day. Your own door, your own terrace, and accommodation that works just as well between beach visits as in the evening.", de: "Wohnen Sie direkt am Meer in Apelviken, in einem unserer Strandhäuser. Hier wohnen Sie mit dem Strand direkt nebenan und haben Platz für den ganzen Tag. Eigene Tür, eigene Terrasse und eine Unterkunft, die zwischen den Strandbesuchen genauso gut funktioniert wie am Abend." },
     icons: [
            '<span class="material-symbols-outlined" style="font-size:22px">group</span>',
      '<span class="material-symbols-outlined" style="font-size:22px">pet_supplies</span>',
             '<span class="material-symbols-outlined" style="font-size:22px">accessible</span>'
     ],
     iconTexts: [
-      "4 vuxna & 2 barn",
-      "Djurvänlig",
-      "Funktionsanpassade"
+      { sv: "4 vuxna & 2 barn", en: "4 adults & 2 children", de: "4 Erwachsene & 2 Kinder" },
+      { sv: "Djurvänlig", en: "Pet friendly", de: "Tierfreundlich" },
+      { sv: "Funktionsanpassade", en: "Accessible", de: "Barrierefrei" }
     ],
     images: ["", "", "", ""],
-    cta1Text: "Vägbeskrivning",
+    cta1Text: { sv: "Vägbeskrivning", en: "Get directions", de: "Wegbeschreibung" },
     cta1Href: "https://www.google.com/maps/dir/?api=1&destination=ApelvikStrand,+Surbrunnsv%C3%A4gen+2-8,+432+53+Varberg",
     cta2Text: "",
     cta2Href: ""
@@ -2161,8 +2255,8 @@ const sektion73Pins = [
   ui: { bubbleBg: "#88706A", textOnly: true },
   modal: {
     imgSrc: "https://res.cloudinary.com/dmgmoisae/image/upload/f_auto,q_auto,dpr_auto,c_limit,w_1440/v1771931935/jpeg-optimizer_IMG_1406_qo03oc.jpg",
-    h: "Strandlägenhet 133",
-    p: "Varje strandlägenhet är 21 m² och utformad som compact living, där allt ryms på en sammanhållen yta. Här finns kombinerat vardagsrum, sovalkov och kokvrå samt eget badrum. Planlösningen är gjord för att fungera under dagen – inte bara för natten. Du har egen dörr och egen uteplats, med stranden på nära avstånd. Ett boende att använda mellan strandbesök, måltider och vila.",
+    h: { sv: "Strandlägenhet 133", en: "Beach Apartment 133", de: "Strandwohnung 133" },
+    p: { sv: "Varje strandlägenhet är 21 m² och utformad som compact living, där allt ryms på en sammanhållen yta. Här finns kombinerat vardagsrum, sovalkov och kokvrå samt eget badrum. Planlösningen är gjord för att fungera under dagen – inte bara för natten. Du har egen dörr och egen uteplats, med stranden på nära avstånd. Ett boende att använda mellan strandbesök, måltider och vila.", en: "Each beach apartment is 21 m² and designed as compact living, where everything fits in a cohesive space. Here you find a combined living room, sleeping alcove and kitchenette as well as your own bathroom. The layout is made to work during the day – not just at night. You have your own door and terrace, with the beach close by. Accommodation to use between beach visits, meals and rest.", de: "Jede Strandwohnung ist 21 m² groß und als Compact Living gestaltet, wo alles auf einer zusammenhängenden Fläche Platz findet. Hier gibt es kombiniertes Wohnzimmer, Schlafnische und Kochnische sowie ein eigenes Badezimmer. Der Grundriss ist für den Tag gemacht – nicht nur für die Nacht. Sie haben eine eigene Tür und Terrasse, mit dem Strand in der Nähe. Eine Unterkunft für die Zeit zwischen Strandbesuchen, Mahlzeiten und Erholung." },
     noReadMore: true,
     icons: [],
     iconTexts: [],
@@ -2183,8 +2277,8 @@ const sektion73Pins = [
   ui: { bubbleBg: "#88706A", textOnly: true },
   modal: {
     imgSrc: "https://res.cloudinary.com/dmgmoisae/image/upload/f_auto,q_auto,dpr_auto,c_limit,w_1440/v1771931935/jpeg-optimizer_IMG_1406_qo03oc.jpg",
-    h: "Strandlägenhet 134",
-    p: "Varje strandlägenhet är 21 m² och utformad som compact living, där allt ryms på en sammanhållen yta. Här finns kombinerat vardagsrum, sovalkov och kokvrå samt eget badrum. Planlösningen är gjord för att fungera under dagen – inte bara för natten. Du har egen dörr och egen uteplats, med stranden på nära avstånd. Ett boende att använda mellan strandbesök, måltider och vila.",
+    h: { sv: "Strandlägenhet 134", en: "Beach Apartment 134", de: "Strandwohnung 134" },
+    p: { sv: "Varje strandlägenhet är 21 m² och utformad som compact living, där allt ryms på en sammanhållen yta. Här finns kombinerat vardagsrum, sovalkov och kokvrå samt eget badrum. Planlösningen är gjord för att fungera under dagen – inte bara för natten. Du har egen dörr och egen uteplats, med stranden på nära avstånd. Ett boende att använda mellan strandbesök, måltider och vila.", en: "Each beach apartment is 21 m² and designed as compact living, where everything fits in a cohesive space. Here you find a combined living room, sleeping alcove and kitchenette as well as your own bathroom. The layout is made to work during the day – not just at night. You have your own door and terrace, with the beach close by. Accommodation to use between beach visits, meals and rest.", de: "Jede Strandwohnung ist 21 m² groß und als Compact Living gestaltet, wo alles auf einer zusammenhängenden Fläche Platz findet. Hier gibt es kombiniertes Wohnzimmer, Schlafnische und Kochnische sowie ein eigenes Badezimmer. Der Grundriss ist für den Tag gemacht – nicht nur für die Nacht. Sie haben eine eigene Tür und Terrasse, mit dem Strand in der Nähe. Eine Unterkunft für die Zeit zwischen Strandbesuchen, Mahlzeiten und Erholung." },
     noReadMore: true,
     icons: [],
     iconTexts: [],
@@ -2205,8 +2299,8 @@ const sektion73Pins = [
   ui: { bubbleBg: "#88706A", textOnly: true },
   modal: {
     imgSrc: "https://res.cloudinary.com/dmgmoisae/image/upload/f_auto,q_auto,dpr_auto,c_limit,w_1440/v1771931935/jpeg-optimizer_IMG_1406_qo03oc.jpg",
-    h: "Strandlägenhet 135",
-    p: "Varje strandlägenhet är 21 m² och utformad som compact living, där allt ryms på en sammanhållen yta. Här finns kombinerat vardagsrum, sovalkov och kokvrå samt eget badrum. Planlösningen är gjord för att fungera under dagen – inte bara för natten. Du har egen dörr och egen uteplats, med stranden på nära avstånd. Ett boende att använda mellan strandbesök, måltider och vila.",
+    h: { sv: "Strandlägenhet 135", en: "Beach Apartment 135", de: "Strandwohnung 135" },
+    p: { sv: "Varje strandlägenhet är 21 m² och utformad som compact living, där allt ryms på en sammanhållen yta. Här finns kombinerat vardagsrum, sovalkov och kokvrå samt eget badrum. Planlösningen är gjord för att fungera under dagen – inte bara för natten. Du har egen dörr och egen uteplats, med stranden på nära avstånd. Ett boende att använda mellan strandbesök, måltider och vila.", en: "Each beach apartment is 21 m² and designed as compact living, where everything fits in a cohesive space. Here you find a combined living room, sleeping alcove and kitchenette as well as your own bathroom. The layout is made to work during the day – not just at night. You have your own door and terrace, with the beach close by. Accommodation to use between beach visits, meals and rest.", de: "Jede Strandwohnung ist 21 m² groß und als Compact Living gestaltet, wo alles auf einer zusammenhängenden Fläche Platz findet. Hier gibt es kombiniertes Wohnzimmer, Schlafnische und Kochnische sowie ein eigenes Badezimmer. Der Grundriss ist für den Tag gemacht – nicht nur für die Nacht. Sie haben eine eigene Tür und Terrasse, mit dem Strand in der Nähe. Eine Unterkunft für die Zeit zwischen Strandbesuchen, Mahlzeiten und Erholung." },
     noReadMore: true,
     icons: [],
     iconTexts: [],
@@ -2227,8 +2321,8 @@ const sektion73Pins = [
   ui: { bubbleBg: "#88706A", textOnly: true },
   modal: {
     imgSrc: "https://res.cloudinary.com/dmgmoisae/image/upload/f_auto,q_auto,dpr_auto,c_limit,w_1440/v1771931935/jpeg-optimizer_IMG_1406_qo03oc.jpg",
-    h: "Strandlägenhet 136",
-    p: "Varje strandlägenhet är 21 m² och utformad som compact living, där allt ryms på en sammanhållen yta. Här finns kombinerat vardagsrum, sovalkov och kokvrå samt eget badrum. Planlösningen är gjord för att fungera under dagen – inte bara för natten. Du har egen dörr och egen uteplats, med stranden på nära avstånd. Ett boende att använda mellan strandbesök, måltider och vila.",
+    h: { sv: "Strandlägenhet 136", en: "Beach Apartment 136", de: "Strandwohnung 136" },
+    p: { sv: "Varje strandlägenhet är 21 m² och utformad som compact living, där allt ryms på en sammanhållen yta. Här finns kombinerat vardagsrum, sovalkov och kokvrå samt eget badrum. Planlösningen är gjord för att fungera under dagen – inte bara för natten. Du har egen dörr och egen uteplats, med stranden på nära avstånd. Ett boende att använda mellan strandbesök, måltider och vila.", en: "Each beach apartment is 21 m² and designed as compact living, where everything fits in a cohesive space. Here you find a combined living room, sleeping alcove and kitchenette as well as your own bathroom. The layout is made to work during the day – not just at night. You have your own door and terrace, with the beach close by. Accommodation to use between beach visits, meals and rest.", de: "Jede Strandwohnung ist 21 m² groß und als Compact Living gestaltet, wo alles auf einer zusammenhängenden Fläche Platz findet. Hier gibt es kombiniertes Wohnzimmer, Schlafnische und Kochnische sowie ein eigenes Badezimmer. Der Grundriss ist für den Tag gemacht – nicht nur für die Nacht. Sie haben eine eigene Tür und Terrasse, mit dem Strand in der Nähe. Eine Unterkunft für die Zeit zwischen Strandbesuchen, Mahlzeiten und Erholung." },
     noReadMore: true,
     icons: [],
     iconTexts: [],
@@ -2249,8 +2343,8 @@ const sektion73Pins = [
   ui: { bubbleBg: "#88706A", textOnly: true },
   modal: {
     imgSrc: "https://res.cloudinary.com/dmgmoisae/image/upload/f_auto,q_auto,dpr_auto,c_limit,w_1440/v1771931935/jpeg-optimizer_IMG_1406_qo03oc.jpg",
-    h: "Strandlägenhet 137",
-    p: "Varje strandlägenhet är 21 m² och utformad som compact living, där allt ryms på en sammanhållen yta. Här finns kombinerat vardagsrum, sovalkov och kokvrå samt eget badrum. Planlösningen är gjord för att fungera under dagen – inte bara för natten. Du har egen dörr och egen uteplats, med stranden på nära avstånd. Ett boende att använda mellan strandbesök, måltider och vila.",
+    h: { sv: "Strandlägenhet 137", en: "Beach Apartment 137", de: "Strandwohnung 137" },
+    p: { sv: "Varje strandlägenhet är 21 m² och utformad som compact living, där allt ryms på en sammanhållen yta. Här finns kombinerat vardagsrum, sovalkov och kokvrå samt eget badrum. Planlösningen är gjord för att fungera under dagen – inte bara för natten. Du har egen dörr och egen uteplats, med stranden på nära avstånd. Ett boende att använda mellan strandbesök, måltider och vila.", en: "Each beach apartment is 21 m² and designed as compact living, where everything fits in a cohesive space. Here you find a combined living room, sleeping alcove and kitchenette as well as your own bathroom. The layout is made to work during the day – not just at night. You have your own door and terrace, with the beach close by. Accommodation to use between beach visits, meals and rest.", de: "Jede Strandwohnung ist 21 m² groß und als Compact Living gestaltet, wo alles auf einer zusammenhängenden Fläche Platz findet. Hier gibt es kombiniertes Wohnzimmer, Schlafnische und Kochnische sowie ein eigenes Badezimmer. Der Grundriss ist für den Tag gemacht – nicht nur für die Nacht. Sie haben eine eigene Tür und Terrasse, mit dem Strand in der Nähe. Eine Unterkunft für die Zeit zwischen Strandbesuchen, Mahlzeiten und Erholung." },
     noReadMore: true,
     icons: [],
     iconTexts: [],
@@ -2271,8 +2365,8 @@ const sektion73Pins = [
   ui: { bubbleBg: "#88706A", textOnly: true },
   modal: {
     imgSrc: "https://res.cloudinary.com/dmgmoisae/image/upload/f_auto,q_auto,dpr_auto,c_limit,w_1440/v1771931935/jpeg-optimizer_IMG_1406_qo03oc.jpg",
-    h: "Strandlägenhet 138",
-    p: "Varje strandlägenhet är 21 m² och utformad som compact living, där allt ryms på en sammanhållen yta. Här finns kombinerat vardagsrum, sovalkov och kokvrå samt eget badrum. Planlösningen är gjord för att fungera under dagen – inte bara för natten. Du har egen dörr och egen uteplats, med stranden på nära avstånd. Ett boende att använda mellan strandbesök, måltider och vila.",
+    h: { sv: "Strandlägenhet 138", en: "Beach Apartment 138", de: "Strandwohnung 138" },
+    p: { sv: "Varje strandlägenhet är 21 m² och utformad som compact living, där allt ryms på en sammanhållen yta. Här finns kombinerat vardagsrum, sovalkov och kokvrå samt eget badrum. Planlösningen är gjord för att fungera under dagen – inte bara för natten. Du har egen dörr och egen uteplats, med stranden på nära avstånd. Ett boende att använda mellan strandbesök, måltider och vila.", en: "Each beach apartment is 21 m² and designed as compact living, where everything fits in a cohesive space. Here you find a combined living room, sleeping alcove and kitchenette as well as your own bathroom. The layout is made to work during the day – not just at night. You have your own door and terrace, with the beach close by. Accommodation to use between beach visits, meals and rest.", de: "Jede Strandwohnung ist 21 m² groß und als Compact Living gestaltet, wo alles auf einer zusammenhängenden Fläche Platz findet. Hier gibt es kombiniertes Wohnzimmer, Schlafnische und Kochnische sowie ein eigenes Badezimmer. Der Grundriss ist für den Tag gemacht – nicht nur für die Nacht. Sie haben eine eigene Tür und Terrasse, mit dem Strand in der Nähe. Eine Unterkunft für die Zeit zwischen Strandbesuchen, Mahlzeiten und Erholung." },
     noReadMore: true,
     icons: [],
     iconTexts: [],
@@ -2293,8 +2387,8 @@ const sektion73Pins = [
   ui: { bubbleBg: "#88706A", textOnly: true },
   modal: {
     imgSrc: "https://res.cloudinary.com/dmgmoisae/image/upload/f_auto,q_auto,dpr_auto,c_limit,w_1440/v1771931935/jpeg-optimizer_IMG_1406_qo03oc.jpg",
-    h: "Strandlägenhet 139",
-    p: "Varje strandlägenhet är 21 m² och utformad som compact living, där allt ryms på en sammanhållen yta. Här finns kombinerat vardagsrum, sovalkov och kokvrå samt eget badrum. Planlösningen är gjord för att fungera under dagen – inte bara för natten. Du har egen dörr och egen uteplats, med stranden på nära avstånd. Ett boende att använda mellan strandbesök, måltider och vila.",
+    h: { sv: "Strandlägenhet 139", en: "Beach Apartment 139", de: "Strandwohnung 139" },
+    p: { sv: "Varje strandlägenhet är 21 m² och utformad som compact living, där allt ryms på en sammanhållen yta. Här finns kombinerat vardagsrum, sovalkov och kokvrå samt eget badrum. Planlösningen är gjord för att fungera under dagen – inte bara för natten. Du har egen dörr och egen uteplats, med stranden på nära avstånd. Ett boende att använda mellan strandbesök, måltider och vila.", en: "Each beach apartment is 21 m² and designed as compact living, where everything fits in a cohesive space. Here you find a combined living room, sleeping alcove and kitchenette as well as your own bathroom. The layout is made to work during the day – not just at night. You have your own door and terrace, with the beach close by. Accommodation to use between beach visits, meals and rest.", de: "Jede Strandwohnung ist 21 m² groß und als Compact Living gestaltet, wo alles auf einer zusammenhängenden Fläche Platz findet. Hier gibt es kombiniertes Wohnzimmer, Schlafnische und Kochnische sowie ein eigenes Badezimmer. Der Grundriss ist für den Tag gemacht – nicht nur für die Nacht. Sie haben eine eigene Tür und Terrasse, mit dem Strand in der Nähe. Eine Unterkunft für die Zeit zwischen Strandbesuchen, Mahlzeiten und Erholung." },
     noReadMore: true,
     icons: [],
     iconTexts: [],
@@ -2315,8 +2409,8 @@ const sektion73Pins = [
   ui: { bubbleBg: "#9E8CA0", textOnly: true },
   modal: {
     imgSrc: "https://res.cloudinary.com/dmgmoisae/image/upload/f_auto,q_auto,dpr_auto,c_limit,w_1440/v1771931935/jpeg-optimizer_IMG_1406_qo03oc.jpg",
-    h: "Strandlägenhet 140",
-    p: "Varje strandlägenhet är 21 m² och utformad som compact living, där allt ryms på en sammanhållen yta. Här finns kombinerat vardagsrum, sovalkov och kokvrå samt eget badrum. Planlösningen är gjord för att fungera under dagen – inte bara för natten. Du har egen dörr och egen uteplats, med stranden på nära avstånd. Ett boende att använda mellan strandbesök, måltider och vila.",
+    h: { sv: "Strandlägenhet 140", en: "Beach Apartment 140", de: "Strandwohnung 140" },
+    p: { sv: "Varje strandlägenhet är 21 m² och utformad som compact living, där allt ryms på en sammanhållen yta. Här finns kombinerat vardagsrum, sovalkov och kokvrå samt eget badrum. Planlösningen är gjord för att fungera under dagen – inte bara för natten. Du har egen dörr och egen uteplats, med stranden på nära avstånd. Ett boende att använda mellan strandbesök, måltider och vila.", en: "Each beach apartment is 21 m² and designed as compact living, where everything fits in a cohesive space. Here you find a combined living room, sleeping alcove and kitchenette as well as your own bathroom. The layout is made to work during the day – not just at night. You have your own door and terrace, with the beach close by. Accommodation to use between beach visits, meals and rest.", de: "Jede Strandwohnung ist 21 m² groß und als Compact Living gestaltet, wo alles auf einer zusammenhängenden Fläche Platz findet. Hier gibt es kombiniertes Wohnzimmer, Schlafnische und Kochnische sowie ein eigenes Badezimmer. Der Grundriss ist für den Tag gemacht – nicht nur für die Nacht. Sie haben eine eigene Tür und Terrasse, mit dem Strand in der Nähe. Eine Unterkunft für die Zeit zwischen Strandbesuchen, Mahlzeiten und Erholung." },
     noReadMore: true,
     icons: [],
     iconTexts: [],
@@ -2337,8 +2431,8 @@ const sektion73Pins = [
   ui: { bubbleBg: "#9E8CA0", textOnly: true },
   modal: {
     imgSrc: "https://res.cloudinary.com/dmgmoisae/image/upload/f_auto,q_auto,dpr_auto,c_limit,w_1440/v1771931935/jpeg-optimizer_IMG_1406_qo03oc.jpg",
-    h: "Strandlägenhet 141",
-    p: "Varje strandlägenhet är 21 m² och utformad som compact living, där allt ryms på en sammanhållen yta. Här finns kombinerat vardagsrum, sovalkov och kokvrå samt eget badrum. Planlösningen är gjord för att fungera under dagen – inte bara för natten. Du har egen dörr och egen uteplats, med stranden på nära avstånd. Ett boende att använda mellan strandbesök, måltider och vila.",
+    h: { sv: "Strandlägenhet 141", en: "Beach Apartment 141", de: "Strandwohnung 141" },
+    p: { sv: "Varje strandlägenhet är 21 m² och utformad som compact living, där allt ryms på en sammanhållen yta. Här finns kombinerat vardagsrum, sovalkov och kokvrå samt eget badrum. Planlösningen är gjord för att fungera under dagen – inte bara för natten. Du har egen dörr och egen uteplats, med stranden på nära avstånd. Ett boende att använda mellan strandbesök, måltider och vila.", en: "Each beach apartment is 21 m² and designed as compact living, where everything fits in a cohesive space. Here you find a combined living room, sleeping alcove and kitchenette as well as your own bathroom. The layout is made to work during the day – not just at night. You have your own door and terrace, with the beach close by. Accommodation to use between beach visits, meals and rest.", de: "Jede Strandwohnung ist 21 m² groß und als Compact Living gestaltet, wo alles auf einer zusammenhängenden Fläche Platz findet. Hier gibt es kombiniertes Wohnzimmer, Schlafnische und Kochnische sowie ein eigenes Badezimmer. Der Grundriss ist für den Tag gemacht – nicht nur für die Nacht. Sie haben eine eigene Tür und Terrasse, mit dem Strand in der Nähe. Eine Unterkunft für die Zeit zwischen Strandbesuchen, Mahlzeiten und Erholung." },
     noReadMore: true,
     icons: [],
     iconTexts: [],
@@ -2359,8 +2453,8 @@ const sektion73Pins = [
   ui: { bubbleBg: "#9E8CA0", textOnly: true, rotate: "37deg" },
   modal: {
     imgSrc: "https://res.cloudinary.com/dmgmoisae/image/upload/f_auto,q_auto,dpr_auto,c_limit,w_1440/v1771931935/jpeg-optimizer_IMG_1406_qo03oc.jpg",
-    h: "Strandlägenhet 142",
-    p: "Varje strandlägenhet är 21 m² och utformad som compact living, där allt ryms på en sammanhållen yta. Här finns kombinerat vardagsrum, sovalkov och kokvrå samt eget badrum. Planlösningen är gjord för att fungera under dagen – inte bara för natten. Du har egen dörr och egen uteplats, med stranden på nära avstånd. Ett boende att använda mellan strandbesök, måltider och vila.",
+    h: { sv: "Strandlägenhet 142", en: "Beach Apartment 142", de: "Strandwohnung 142" },
+    p: { sv: "Varje strandlägenhet är 21 m² och utformad som compact living, där allt ryms på en sammanhållen yta. Här finns kombinerat vardagsrum, sovalkov och kokvrå samt eget badrum. Planlösningen är gjord för att fungera under dagen – inte bara för natten. Du har egen dörr och egen uteplats, med stranden på nära avstånd. Ett boende att använda mellan strandbesök, måltider och vila.", en: "Each beach apartment is 21 m² and designed as compact living, where everything fits in a cohesive space. Here you find a combined living room, sleeping alcove and kitchenette as well as your own bathroom. The layout is made to work during the day – not just at night. You have your own door and terrace, with the beach close by. Accommodation to use between beach visits, meals and rest.", de: "Jede Strandwohnung ist 21 m² groß und als Compact Living gestaltet, wo alles auf einer zusammenhängenden Fläche Platz findet. Hier gibt es kombiniertes Wohnzimmer, Schlafnische und Kochnische sowie ein eigenes Badezimmer. Der Grundriss ist für den Tag gemacht – nicht nur für die Nacht. Sie haben eine eigene Tür und Terrasse, mit dem Strand in der Nähe. Eine Unterkunft für die Zeit zwischen Strandbesuchen, Mahlzeiten und Erholung." },
     noReadMore: true,
     icons: [],
     iconTexts: [],
@@ -2380,7 +2474,7 @@ const sektion73Pins = [
   priority: "priority",
   ui: { bubbleBg: "#303030", fontWeight: "700", fontSize: "15px", padding: "4px" },
   modal: null,
-  tooltip: { icon: "parking_sign", text: "Parkering" }
+  tooltip: { icon: "parking_sign", text: { sv: "Parkering", en: "Parking", de: "Parkplatz" } }
 },
 {
   id: "sektion73Pin_parking_02",
@@ -2391,7 +2485,7 @@ const sektion73Pins = [
   priority: "priority",
   ui: { bubbleBg: "#303030", fontWeight: "700", fontSize: "15px", padding: "4px" },
   modal: null,
-  tooltip: { icon: "parking_sign", text: "Parkering" }
+  tooltip: { icon: "parking_sign", text: { sv: "Parkering", en: "Parking", de: "Parkplatz" } }
 },
 {
   id: "sektion73Pin_heat_01",
@@ -2402,7 +2496,7 @@ const sektion73Pins = [
   priority: "priority",
   ui: { bubbleBg: "#303030", iconFont: true, iconFill: true },
   modal: null,
-  tooltip: { icon: "outdoor_grill", text: "Grillplats" }
+  tooltip: { icon: "outdoor_grill", text: { sv: "Grillplats", en: "Barbecue area", de: "Grillplatz" } }
 },
 {
   id: "sektion73Pin_playground_01",
@@ -2413,7 +2507,7 @@ const sektion73Pins = [
   priority: "priority",
   ui: { bubbleBg: "#303030", iconFont: true, iconFill: true },
   modal: null,
-  tooltip: { icon: "playground_2", text: "Lekplats" }
+  tooltip: { icon: "playground_2", text: { sv: "Lekplats", en: "Playground", de: "Spielplatz" } }
 },
 {
   id: "sektion73Pin_recycling_01",
@@ -2424,7 +2518,7 @@ const sektion73Pins = [
   priority: "priority",
   ui: { bubbleBg: "#303030", iconFont: true, iconFill: true },
   modal: null,
-  tooltip: { icon: "delete", text: "Soprum" }
+  tooltip: { icon: "delete", text: { sv: "Soprum", en: "Waste room", de: "Müllraum" } }
 },
 {
   id: "sektion73Pin_reception_01",
@@ -2436,15 +2530,15 @@ const sektion73Pins = [
   ui: { bubbleBg: "#222", tooltip: true, noZoom: true },
   modal: {
     imgSrc: "https://res.cloudinary.com/dmgmoisae/image/upload/v1770067031/original_ao0xjw.png",
-    h: "Vår reception",
-    p: "Receptionen finns här om något dyker upp under vistelsen. Frågor, funderingar eller bara ett behov av att få lite hjälp på vägen. Här får man tips om området, praktiska svar och hjälp med det som behövs. Aktuella öppettider hittar du via länken nedan.",
+    h: { sv: "Vår reception", en: "Our reception", de: "Unsere Rezeption" },
+    p: { sv: "Receptionen finns här om något dyker upp under vistelsen. Frågor, funderingar eller bara ett behov av att få lite hjälp på vägen. Här får man tips om området, praktiska svar och hjälp med det som behövs. Aktuella öppettider hittar du via länken nedan.", en: "Reception is here if anything comes up during your stay. Questions, thoughts or simply a need for a bit of help along the way. You will get local tips, practical answers and assistance with what you need. Current opening hours can be found via the link below.", de: "Die Rezeption ist da, wenn während des Aufenthalts etwas auftaucht – Fragen, Anliegen oder einfach der Bedarf an ein wenig Hilfe. Hier gibt es Tipps zur Umgebung, praktische Antworten und Unterstützung bei dem, was man braucht. Die aktuellen Öffnungszeiten findest du über den Link unten." },
     noReadMore: true,
     icons: [],
     iconTexts: [],
     images: ["", "", "", ""],
-    cta1Text: "Ring oss",
+    cta1Text: { sv: "Ring oss", en: "Call us", de: "Rufen Sie uns an" },
     cta1Href: "tel:034086828",
-    cta2Text: "Se öppettider",
+    cta2Text: { sv: "Se öppettider", en: "See opening hours", de: "Öffnungszeiten" },
     cta2Href: "/kundservice"
   }
 }
@@ -2980,7 +3074,7 @@ sektion73Map.once("load", function () {
         id: "route_to_reception",
         from: sektion73Home.lngLat,
         to: [12.247868, 57.087934],
-        btnText: "Hitta receptionen",
+        btnText: { sv: "Hitta receptionen", en: "Find reception", de: "Rezeption finden" },
         btnIcon: "route",
         profile: "driving",
         line: {
@@ -3453,11 +3547,11 @@ sektion73Map.once("load", function () {
         el.innerHTML =
           '<div class="sektion73RouteLegendItem">' +
             '<span class="sektion73RouteLegendLine" style="background:#F0A500"></span>' +
-            '<span>Bilväg</span>' +
+            '<span>' + sektion73T('route.driving', 'Bilväg') + '</span>' +
           '</div>' +
           '<div class="sektion73RouteLegendItem">' +
             '<span class="sektion73RouteLegendLine sektion73RouteLegendDash"></span>' +
-            '<span>Gångväg</span>' +
+            '<span>' + sektion73T('route.walking', 'Gångväg') + '</span>' +
           '</div>';
         root.appendChild(el);
       }
@@ -3824,7 +3918,7 @@ sektion73Map.once("load", function () {
         btn.innerHTML =
           '<span class="sektion73RouteBtnIcon">' + (route.btnIcon || "route") + '</span>' +
           '<span class="sektion73RouteBtnBody">' +
-            '<span class="sektion73RouteBtnLabel">' + (route.btnText || "Visa rutt") + '</span>' +
+            '<span class="sektion73RouteBtnLabel">' + (sektion73Pick(route.btnText, sektion73T('route.showRoute', 'Visa rutt'))) + '</span>' +
             '<span class="sektion73RouteBtnMeta"></span>' +
           '</span>' +
           '<div class="sektion73RouteCard">' +
@@ -3832,7 +3926,7 @@ sektion73Map.once("load", function () {
               '<div class="sektion73RouteCardRow">' +
                 '<span class="sektion73RouteCardDot" style="background:#F0A500"></span>' +
                 '<span class="sektion73RouteCardInfo">' +
-                  '<span class="sektion73RouteCardType">Bilväg</span>' +
+                  '<span class="sektion73RouteCardType">' + sektion73T('route.driving', 'Bilväg') + '</span>' +
                   '<span class="sektion73RouteCardTime" id="sektion73DriveTime_' + route.id + '"></span>' +
                 '</span>' +
                 '<span class="sektion73RouteCardDist" id="sektion73DriveDist_' + route.id + '"></span>' +
@@ -3840,7 +3934,7 @@ sektion73Map.once("load", function () {
               '<div class="sektion73RouteCardRow">' +
                 '<span class="sektion73RouteCardDotDash"></span>' +
                 '<span class="sektion73RouteCardInfo">' +
-                  '<span class="sektion73RouteCardType">Gångväg</span>' +
+                  '<span class="sektion73RouteCardType">' + sektion73T('route.walking', 'Gångväg') + '</span>' +
                   '<span class="sektion73RouteCardTime" id="sektion73WalkTime_' + route.id + '"></span>' +
                 '</span>' +
                 '<span class="sektion73RouteCardDist" id="sektion73WalkDist_' + route.id + '"></span>' +
@@ -3849,7 +3943,7 @@ sektion73Map.once("load", function () {
             '<div class="sektion73RouteCardSep"></div>' +
             '<button type="button" class="sektion73RouteCardBack" id="sektion73BackBtn_' + route.id + '">' +
               '<span class="sektion73RouteCardBackIcon">arrow_back</span>' +
-              '<span>Tillbaka till kartan</span>' +
+              '<span>' + sektion73T('route.backToMap', 'Tillbaka till kartan') + '</span>' +
             '</button>' +
           '</div>';
 
@@ -3869,7 +3963,7 @@ sektion73Map.once("load", function () {
         function closeRoute() {
           active = false;
           btn.classList.remove("is-active", "is-loading");
-          labelEl.textContent = route.btnText || "Visa rutt";
+          labelEl.textContent = sektion73Pick(route.btnText, sektion73T('route.showRoute', 'Visa rutt'));
           iconEl.textContent = route.btnIcon || "route";
           sektion73ClearRoute(route.id);
           sektion73Map.easeTo({
@@ -3894,7 +3988,7 @@ sektion73Map.once("load", function () {
           if (e.target.closest(".sektion73RouteCardBack")) return;
 
           btn.classList.add("is-loading");
-          labelEl.textContent = "Hämtar rutt…";
+          labelEl.textContent = sektion73T('route.fetching', 'Hämtar rutt…');
           iconEl.textContent = "sync";
 
           try {
@@ -3921,7 +4015,7 @@ sektion73Map.once("load", function () {
           } catch (err) {
             console.error("Route error:", err);
             btn.classList.remove("is-loading");
-            labelEl.textContent = route.btnText || "Visa rutt";
+            labelEl.textContent = sektion73Pick(route.btnText, sektion73T('route.showRoute', 'Visa rutt'));
             iconEl.textContent = route.btnIcon || "route";
           }
         });
