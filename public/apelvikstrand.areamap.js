@@ -844,6 +844,7 @@ display: none !important;
       height: auto !important;
       aspect-ratio: auto !important;
       border-radius: 0 !important;
+      transform: rotate(var(--sektion73-pin-rotate, 68deg));
     }
     .sektion73PinTextOnly .sektion73PinText {
       color: #000 !important;
@@ -2340,7 +2341,7 @@ const sektion73Pins = [
   lngLat: [12.264281, 57.080851],
   filter: "",
   priority: "priority",
-  ui: { bubbleBg: "#9E8CA0", textOnly: true },
+  ui: { bubbleBg: "#9E8CA0", textOnly: true, rotate: "37deg" },
   modal: {
     imgSrc: "https://res.cloudinary.com/dmgmoisae/image/upload/f_auto,q_auto,dpr_auto,c_limit,w_1440/v1771931935/jpeg-optimizer_IMG_1406_qo03oc.jpg",
     h: "Strandlägenhet 142",
@@ -2450,6 +2451,8 @@ function sektion73CreatePinEl(pin) {
   if (pin.ui && pin.ui.tooltip) wrap.classList.add("sektion73PinTooltip");
   // Text-only stil (ingen bubbla, bara text)
   if (pin.ui && pin.ui.textOnly) wrap.classList.add("sektion73PinTextOnly");
+  // Per-pin rotation override
+  if (pin.ui && pin.ui.rotate) wrap.style.setProperty("--sektion73-pin-rotate", pin.ui.rotate);
 
   const btn = document.createElement("button");
   btn.type = "button";
