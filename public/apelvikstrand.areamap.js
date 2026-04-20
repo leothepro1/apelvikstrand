@@ -861,6 +861,11 @@ display: none !important;
       font-size: 11px;
       font-weight: 600;
     }
+    @media (max-width: 740px) {
+      .sektion73PinTextOnly .sektion73PinText {
+        font-size: 8px;
+      }
+    }
 
     /* Tooltip-pin */
     .sektion73PinTooltip .sektion73PinBtn {
