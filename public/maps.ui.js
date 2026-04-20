@@ -643,10 +643,10 @@
       h: "Varbergs kusthotell",
       p: "Varbergs Kusthotell ligger precis vid havet, och i huset finns restaurang Severins som många söker sig till för maten i sig. Här står fisk, skaldjur och säsongens råvaror i centrum, ofta med nordiska smaker och ett lugnt, genomarbetat uttryck. Restaurangen serverar frukost, lunch, middag och brunch, liksom vin och drinkar som passar både vardag och helg, oavsett om man bor på hotellet eller bara kommer hit för att äta.",
       cta1Text: "Visa meny",
-      cta1Href: "https://www.apelviken.se/solviken-meny",
+      cta1Href: "https://varbergskusthotell.se/restaurang-varbergs-kusthotell/",
       cta2Text: "Vägbeskrivning",
       cta2Href:
-        "https://www.google.com/maps/dir/57.502272,12.087438/Solviken,+T%C3%A5ngk%C3%B6rarv%C3%A4gen+1,+432+54+Varberg/@57.2950696,11.8317533,75989m/data=!3m1!1e3!4m9!4m8!1m1!4e1!1m5!1m1!1s0x46502af989b79f2d:0xfb2919c395412c94!2m2!1d12.2488569!2d57.084622?entry=ttu&g_ep=EgoyMDI2MDEyOC4wIKXMDSoASAFQAw%3D%3D"
+        "https://www.google.com/maps/place/Varbergs+Kusthotell/@57.0885389,12.2401506,746m/data=!3m2!1e3!4b1!4m9!3m8!1s0x46502af651691e5d:0x49fe854c8fb40468!5m2!4m1!1i2!8m2!3d57.088536!4d12.2427309!16s%2Fg%2F1ypvssh_w?entry=tts&g_ep=EgoyMDI1MDUwNi4wIPu8ASoASAFQAw%3D%3D&skid=bc7f868c-27a0-49ff-a0b4-cbb4fc5922ec"
     }
   },
  {
@@ -780,7 +780,7 @@
       h: "Vår reception",
       p: "Receptionen finns här om något dyker upp under vistelsen. Frågor, funderingar eller bara ett behov av att få lite hjälp på vägen. Här får man tips om området, praktiska svar och hjälp med det som behövs.Aktuella öppettider hittar du via länken nedan.",
       cta1Text: "Se öppetider",
-      cta1Href: "/kundButiker",
+      cta1Href: "https://apelvikstrand.se/kundservice",
       cta2Text: "Visa vägen",
       cta2Href: "https://www.google.com/maps/dir/57.502272,12.087438/Destination+Apelviken+AB,+Sanatoriev%C3%A4gen+4,+432+53+Varberg/@57.2985223,11.831482,75982m/data=!3m1!1e3!4m9!4m8!1m1!4e1!1m5!1m1!1s0x46502af829613979:0x5e859dbc3c4cea18!2m2!1d12.2478642!2d57.0879688?entry=ttu&g_ep=EgoyMDI2MDEyOC4wIKXMDSoASAFQAw%3D%3D"
     }
