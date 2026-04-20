@@ -2936,7 +2936,7 @@ function sektion73ShowPinTooltip(pin, wrapEl) {
   tt.className = "sektion73PinClickTooltip";
   tt.innerHTML =
     '<span class="sektion73PinClickTooltipIcon material-symbols-outlined">' + (pin.tooltip.icon || "") + '</span>' +
-    '<span class="sektion73PinClickTooltipText">' + (pin.tooltip.text || "") + '</span>' +
+    '<span class="sektion73PinClickTooltipText">' + sektion73Pick(pin.tooltip.text, "") + '</span>' +
     '<button type="button" class="sektion73PinClickTooltipClose" aria-label="Stäng">' +
       '<svg fill="currentcolor" height="12" viewBox="0 0 1000 1000" width="12" xmlns="http://www.w3.org/2000/svg"><path d="M159 204l55-54 659 659-55 55-659-660m709 5L205 877l-55-59 664-664"></path></svg>' +
     '</button>';
