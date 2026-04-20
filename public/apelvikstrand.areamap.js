@@ -2140,7 +2140,7 @@ const sektion73Pins = [
   id: "sektion73Pin_00033",
   label: "Pin 33",
   labelText: "133",
-  lngLat: [12.263990, 57.081155],
+  lngLat: [12.263990, 57.081162],
   filter: "",
   priority: "priority",
   ui: { bubbleBg: "#88706A", textOnly: true },
