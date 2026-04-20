@@ -2523,7 +2523,7 @@ const sektion73Pins = [
 {
   id: "sektion73Pin_reception_01",
   label: "Reception",
-  labelText: "Reception",
+  labelText: { sv: "Reception", en: "Reception", de: "Rezeption" },
   lngLat: [12.247868, 57.087934],
   filter: "",
   priority: "priority",
@@ -2581,7 +2581,7 @@ function sektion73CreatePinEl(pin) {
   if (pin.ui && pin.ui.fontSize) txt.style.fontSize = pin.ui.fontSize;
   if (pin.ui && pin.ui.fontWeight) txt.style.fontWeight = pin.ui.fontWeight;
   if (pin.ui && pin.ui.padding) btn.style.padding = pin.ui.padding;
-  txt.textContent = String(pin.labelText || "");
+  txt.textContent = sektion73Pick(pin.labelText, "");
   txt.setAttribute("aria-hidden", "true");
 
   btn.appendChild(txt);
