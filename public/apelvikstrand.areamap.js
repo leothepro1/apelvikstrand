@@ -2488,15 +2488,17 @@ function sektion73CreatePinEl(pin) {
   btn.appendChild(txt);
   wrap.appendChild(btn);
 
-  // micro hover (behåll neutral, ingen layout-shift)
-  btn.addEventListener("mouseenter", () => {
-    btn.style.transform = "translateY(0px)";
-    btn.style.boxShadow = "";
-  });
-  btn.addEventListener("mouseleave", () => {
-    btn.style.transform = "translateY(0)";
-    btn.style.boxShadow = "";
-  });
+  // micro hover (behåll neutral, ingen layout-shift) — skip for text-only
+  if (!(pin.ui && pin.ui.textOnly)) {
+    btn.addEventListener("mouseenter", () => {
+      btn.style.transform = "translateY(0px)";
+      btn.style.boxShadow = "";
+    });
+    btn.addEventListener("mouseleave", () => {
+      btn.style.transform = "translateY(0)";
+      btn.style.boxShadow = "";
+    });
+  }
 
   return { wrap, btn };
 }
